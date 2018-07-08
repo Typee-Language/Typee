@@ -131,6 +131,11 @@ __Typee__ implements no _optimizer_. This step is left to the final interpreters
 The final step for the user is then to run the compiler or the interpretor of the targetted language. Of course, this step can be automated via scripting and __Typee__ project aims at providing such scripts to ease the whole process.
 
 
+## Visit us
+
+See http://www.typee.ovh and  https://typee-language.github.io/Typee/
+
+
 ## That's it
 
 Enjoy!
