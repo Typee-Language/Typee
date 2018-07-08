@@ -3,7 +3,7 @@
 The directory `XML-configs` contains three `.xml` files:
 - grammars.xml
 - langs.model.xml
-- typhon.xml
+- typee.xml
 
 These files contain descriptions of language and syntax coloring specification 
 for:
