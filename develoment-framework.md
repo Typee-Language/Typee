@@ -1,4 +1,4 @@
-# Project Typhon - Development environment recommendations
+# Project Typee - Development environment recommendations
 
 For the ones who would like to contribute, or the ones who would like to get
 access and modify code files by their own, here are the few recommendations we
@@ -6,7 +6,7 @@ make and a detailed description of how-to install the recommended development
 framework.
 
 Please notice that the use of the recommended development environment is _not_
-mandatory to use or to modify __Typhon__. This Open Source project, provided
+mandatory to use or to modify __Typee__. This Open Source project, provided
 with the MIT license, may be used or modified with many other environments.
 
 Finally, the next text is for Windows and Linux users only. If you develop
@@ -15,7 +15,7 @@ under MacOS you can skip all these details.
 
 ## A four-steps installation
 
-To modify Typhon, you will need to install:
+To modify Typee, you will need to install:
 - Eclipse, the development framework;
 - Java, the language Eclipse has been developped with;
 - PyDev, the Eclipse plug-in to develop in Python;
@@ -30,10 +30,10 @@ your Operating System and the CPU architecture (32- vs. 64-bits) are directly
 available for download here: 
 [http://www.eclipse.org/downloads/](http://www.eclipse.org/downloads/)
 
-The one we use for Typhon programmation is Eclipse Photon (4.8 - June 2018).
+The one we use for Typee programmation is Eclipse Photon (4.8 - June 2018).
 So, this is the recommended version of Eclipse to use. If you do so, you will
 take immediate benefit of the two files `.project` and `.pydevproject` that
-are provided at the root of the Typhon repository.
+are provided at the root of the Typee repository.
 But you may also use an older version of Eclipse (see item __More Downloads__
 for a list of former versions of Eclipse, available here:
 [http://www.eclipse.org/downloads/eclipse-packages/](http://www.eclipse.org/downloads/eclipse-packages/]
@@ -77,7 +77,7 @@ on so many different kinds of machines...
 
 Once Eclipse has been installed, in its Java framework version, you cannot yet
 program in Python. Sob: this is the language we are using to develop the very
-first version of the Typhon translator.
+first version of the Typee translator.
 
 _PyDev_ is a dedicated plug-in that allows Python programming with Eclipse. You
 do not have to download and install it by yourself. You rather have to ask for
@@ -162,13 +162,13 @@ libraries).
 - For downloading `Anaconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://www.anaconda.com/download/](https://www.anaconda.com/download/) and
-ask for the installation of Python 3.6. This is mandatory to use our Typhon
+ask for the installation of Python 3.6. This is mandatory to use our Typee
 project since this is the version of Python we are currently using for our
 developments. 
 - For downloading `Miniconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://conda.io/miniconda.html](https://conda.io/miniconda.html) and
-ask for the installation of Python 3.6. This is mandatory to use our Typhon
+ask for the installation of Python 3.6. This is mandatory to use our Typee
 project since this is the version of Python we are currently using for our
 developments.
 
