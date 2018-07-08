@@ -139,3 +139,6 @@ See http://www.typee.ovh and  https://typee-language.github.io/Typee/
 ## That's it
 
 Enjoy!
+
+
+(see also: https://typee-language.github.io/Typee/)
