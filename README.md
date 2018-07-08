@@ -133,12 +133,10 @@ The final step for the user is then to run the compiler or the interpretor of th
 
 ## Visit us
 
-See http://www.typee.ovh and  https://typee-language.github.io/Typee/
+at http://www.typee.ovh and  https://typee-language.github.io/Typee/
 
 
 ## That's it
 
 Enjoy!
 
-
-(see also: https://typee-language.github.io/Typee/)
