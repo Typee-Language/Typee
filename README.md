@@ -134,3 +134,6 @@ The final step for the user is then to run the compiler or the interpretor of th
 ## That's it
 
 Enjoy!
+
+
+(see also: https://typee-language.github.io/Typee/)
