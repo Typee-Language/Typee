@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2018 Philippe Schmouker, Typhon project, http://www.typhon.eu
+Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -29,9 +29,10 @@ SOFTWARE.
 #=============================================================================
 FEIntermediateCode = list
 """
-Well, intermediate code for the Typhon Front-End will be 
+Well, intermediate code for the Typee Front-End will be 
 a simple list: a list of intermediate code Nodes.
-Nevertheless, we still declare a dedicated type for it.
+Nevertheless,  we still declare a dedicated type for it
+for the clearness of the developed code.
 """    
 
 #=====   end of   FrontEnd.fe_intermediate_code   =====#
