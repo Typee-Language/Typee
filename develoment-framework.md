@@ -85,7 +85,7 @@ its installation via Eclipse. This is the reason why you first have to install
 Java and Eclipse.
 
 To install _PyDev_ plug-in go to Eclipse, click `Help` (sic!) in the menu bar
-and click on the `Ìnstall New Software` item:
+and click on the `Install New Software` item:
 
 ![screen copy image](./Pictures/1-install-new-software.png)
 
@@ -182,6 +182,15 @@ Python interpreter at the correct place by itself, just asking you to confirm
 that this is the correct interpreter you want to use.
 This way, you will also be able to state other versions of Python interpreter
 you would have formerly or lately installed.
+
+
+## Why Python 3.6 rather than 3.7?
+
+Well, by July 2018 Python 3.7 has been very newly released (Release Date: 
+2018-06-27) and many external libraries do not yet support this new version
+of the interpreter. So, Anaconda 3 does not support yet Python 3.6. We
+recommend then to use Python 3.6 until all external libraries will have been
+upgraded.
 
 
 ## That's it
