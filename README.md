@@ -19,7 +19,10 @@ __Typee__ is an Object Oriented Programming language. Its syntax is derived from
 
 At first, this was a personnal project. It aimed at developping an upper layer to Python with a true type verification. This had already been partially addressed by Google with their project [PyType](https://opensource.google.com/projects/pytype). The kind of annotations this project proposes is now widely accepted and inserted in new Python code. PyType is a static analyzer that infers and checks types for Python code.
 
-```Pytype is a static type inferencer and type checker for Python code. It is capable of analyzing existing Python code to determine what possible types could be used on APIs throughout the program.``` (source: Google project PyType)
+```
+Pytype is a static type inferencer and type checker for Python code. It is capable of analyzing existing Python code to determine what possible types could be used on APIs throughout the program.
+```
+(source: Google project PyType)
 
 Well. This is not exactly full type checking - while it is perfectly adapted to Python programming for which no type declaration is needed before manipulating objects.
 
