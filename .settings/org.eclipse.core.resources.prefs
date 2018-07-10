@@ -1,3 +1,9 @@
 eclipse.preferences.version=1
+encoding//src/Commons/access.py=utf-8
+encoding//src/FrontEnd/IntermediateCode/fe_icode_node.py=utf-8
+encoding//src/FrontEnd/IntermediateCode/fe_icode_tokens.py=utf-8
+encoding//src/FrontEnd/IntermediateCode/fe_intermediate_code.py=utf-8
+encoding//src/Utils/ut_serialized_enum.py=utf-8
 encoding//src/local_tools/template_class.py=utf-8
 encoding//src/local_tools/template_main.py=utf-8
+encoding//src/local_tools/tool_generate_feicodenode_module.py=utf-8
