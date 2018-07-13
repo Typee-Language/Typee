@@ -24,7 +24,7 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.tokens_test_base import TokensTestBase
+from Tests.Tokens.tokens_test_base import TokensTestBase
 
 #=============================================================================
 if __name__ == '__main__':
