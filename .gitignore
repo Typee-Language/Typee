@@ -1,1 +1,10 @@
 .metadata
+.project
+.pydevproject
+.settings
+.gitignore
+_config.yml
+__pycache__
+*/__pycache__
+*/*/__pycache__
+*/*/*/__pycache__
