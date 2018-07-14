@@ -1,4 +1,4 @@
-# Front-End Scanner : Tests Documentation
+# Front-End Scanner: Tests Documentation
 
 Currently, those tests are not automated. It is the responsability of the
 coder to manually run the scripts that check for the correctness of the
