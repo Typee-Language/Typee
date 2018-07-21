@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Copyright (c) 2018 Philippe Schmouker, Typhon project, http://www.typhon.eu
+Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -32,7 +32,7 @@ from FrontEnd.IntermediateCode.fe_icode_tokens import FEICodeTokens, FEICodeToke
 #-------------------------------------------------------------------------
 def generate_baseclass_properties(fp):
     '''
-    Generates the "is_XXX" properties in class FEIcodeNode.
+    Generates the "is_XXX" properties in class FEICodeTokenNode.
     
     Args:
         fp: file
@@ -52,7 +52,7 @@ def generate_module_footer(fp):
         fp: file
             The reference to the generated module file.
     '''
-    fp.write( "\n#=====   end of   FrontEnd.IntermediateCode.fe_icode_node   =====#\n" )
+    fp.write( "\n#=====   end of   FrontEnd.IntermediateCode.fe_icode_token_node   =====#\n" )
 
 #-------------------------------------------------------------------------
 def generate_nodes_classes(fp):
@@ -69,12 +69,12 @@ def generate_nodes_classes(fp):
     for tk_nm in sorted( [tk for tk in FEICodeTokens.__dict__ if tk[:3] == 'TK_'] ):
         if tk_nm in protection_classes:
             fp.write( """
-class ICNode_{:s}( FEICodeNodeProtection ):
+class ICTokenNode_{:s}( FEICodeTokenNodeProtection ):
     def __init__(self, scanner=None, data='{:s}'):
             super().__init__( scanner, Access.{:s}, FEICodeTokens.{:s}, data )
 """.format( tk_nm[3:], str(FEICodeTokensData.get(tk_nm)), tk_nm[3:], tk_nm) )
         else:
-            fp.write( "\nclass ICNode_{:s}( FEICodeNode ):\n    def __init__(self, scanner=None, data='{:s}'):\n        super().__init__( scanner, FEICodeTokens.{:s}, data )\n".format(
+            fp.write( "\nclass ICTokenNode_{:s}( FEICodeTokenNode ):\n    def __init__(self, scanner=None, data='{:s}'):\n        super().__init__( scanner, FEICodeTokens.{:s}, data )\n".format(
                 tk_nm[3:], str(FEICodeTokensData.get(tk_nm)), tk_nm) )
 
 #-------------------------------------------------------------------------
@@ -90,16 +90,16 @@ def generate_protection_class(fp):
 
 
 #=============================================================================
-class FEICodeNodeProtection( FEICodeNode ):
+class FEICodeTokenNodeProtection( FEICodeTokenNode ):
     \"\"\"
     The class of nodes describing protection modes for the Front End 
-    Intermediate Code of the Typhon Scanner.
+    Intermediate Code Token Nodes of the Typee Scanner.
     \"\"\"
     #-------------------------------------------------------------------------
     def __init__(self, scanner, protection_mode:Access, tk_id:int, tk_data=None):
         '''
         Creates a node describing protection modes of Intermediate Code 
-        for the Front-End Typhon Scanner.
+        Token Nodes for the Front-End Typee Scanner.
         
         Args:
             scanner: FEScanner
@@ -113,7 +113,7 @@ class FEICodeNodeProtection( FEICodeNode ):
                 The data related to this node. Defaults to None.
         '''
         super().__init__( scanner, tk_id, tk_data )
-        self.protection = protection_mode""")
+        self.tk_protection = protection_mode""")
 
 #-------------------------------------------------------------------------
 def generate_template_header(fp, class_name:str):
@@ -147,12 +147,12 @@ from FrontEnd.IntermediateCode.fe_icode_tokens  import FEICodeTokens
 #=============================================================================
 class {:s}:
     \"""
-    The class of nodes for the Front End Intermediate Code of the Typhon Scanner.
+    The class of nodes for the Front End Intermediate Code of the Typee Scanner.
     \"""    
     #-------------------------------------------------------------------------
     def __init__(self, scanner, tk_id:int, tk_data=None):
         '''
-        Creates a node of Intermediate Code for the Front-End Typhon Scanner.
+        Creates a node of Intermediate Code for the Front-End Typee Scanner.
         
         Args:
             tk_id: int
@@ -180,8 +180,8 @@ if __name__ == '__main__':
     Automated generation of module FeontEnd.fe_icode_node.py.
     """
     #-------------------------------------------------------------------------
-    with open( "../FrontEnd/IntermediateCode/fe_icode_node.py", 'w' ) as fp:
-        generate_template_header( fp, 'FEICodeNode')
+    with open( "../FrontEnd/IntermediateCode/fe_icode_token_node.py", 'w' ) as fp:
+        generate_template_header( fp, 'FEICodeTokenNode')
         generate_baseclass_properties( fp )
         generate_protection_class( fp )
         generate_nodes_classes( fp )
@@ -189,5 +189,5 @@ if __name__ == '__main__':
    
     print( '-- done!' )
 
-#=====   end of   local_tools.tool_generate_feicodenode_module   =====#
+#=====   end of   local_tools.tool_generate_feicode_token_node_module   =====#
         

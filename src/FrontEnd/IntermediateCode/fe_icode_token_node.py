@@ -33,14 +33,14 @@ from FrontEnd.IntermediateCode.fe_icode_tokens  import FEICodeTokens
 
 
 #=============================================================================
-class FEICodeNode:
+class FEICodeTokenNode:
     """
-    The class of nodes for the Front End Intermediate Code of the Typhon Scanner.
+    The class of nodes for the Front End Intermediate Code of the Typee Scanner.
     """    
     #-------------------------------------------------------------------------
     def __init__(self, scanner, tk_id:int, tk_data=None):
         '''
-        Creates a node of Intermediate Code for the Front-End Typhon Scanner.
+        Creates a node of Intermediate Code for the Front-End Typee Scanner.
         
         Args:
             tk_id: int
@@ -446,16 +446,16 @@ class FEICodeNode:
 
 
 #=============================================================================
-class FEICodeNodeProtection( FEICodeNode ):
+class FEICodeTokenNodeProtection( FEICodeTokenNode ):
     """
     The class of nodes describing protection modes for the Front End 
-    Intermediate Code of the Typhon Scanner.
+    Intermediate Code Token Nodes of the Typee Scanner.
     """
     #-------------------------------------------------------------------------
     def __init__(self, scanner, protection_mode:Access, tk_id:int, tk_data=None):
         '''
         Creates a node describing protection modes of Intermediate Code 
-        for the Front-End Typhon Scanner.
+        Token Nodes for the Front-End Typee Scanner.
         
         Args:
             scanner: FEScanner
@@ -469,520 +469,520 @@ class FEICodeNodeProtection( FEICodeNode ):
                 The data related to this node. Defaults to None.
         '''
         super().__init__( scanner, tk_id, tk_data )
-        self.protection = protection_mode
+        self.tk_protection = protection_mode
 
 
 #=============================================================================
-class ICNode_ABSTRACT( FEICodeNode ):
+class ICTokenNode_ABSTRACT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='abstract'):
         super().__init__( scanner, FEICodeTokens.TK_ABSTRACT, data )
 
-class ICNode_ALL( FEICodeNode ):
+class ICTokenNode_ALL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='all'):
         super().__init__( scanner, FEICodeTokens.TK_ALL, data )
 
-class ICNode_AND( FEICodeNode ):
+class ICTokenNode_AND( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='and'):
         super().__init__( scanner, FEICodeTokens.TK_AND, data )
 
-class ICNode_ANY_TYPE( FEICodeNode ):
+class ICTokenNode_ANY_TYPE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='?'):
         super().__init__( scanner, FEICodeTokens.TK_ANY_TYPE, data )
 
-class ICNode_AROBASE( FEICodeNode ):
+class ICTokenNode_AROBASE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='@'):
         super().__init__( scanner, FEICodeTokens.TK_AROBASE, data )
 
-class ICNode_ARRAY( FEICodeNode ):
+class ICTokenNode_ARRAY( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='array'):
         super().__init__( scanner, FEICodeTokens.TK_ARRAY, data )
 
-class ICNode_AS( FEICodeNode ):
+class ICTokenNode_AS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='as'):
         super().__init__( scanner, FEICodeTokens.TK_AS, data )
 
-class ICNode_ASSERT( FEICodeNode ):
+class ICTokenNode_ASSERT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='assert'):
         super().__init__( scanner, FEICodeTokens.TK_ASSERT, data )
 
-class ICNode_ASSIGN( FEICodeNode ):
+class ICTokenNode_ASSIGN( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='='):
         super().__init__( scanner, FEICodeTokens.TK_ASSIGN, data )
 
-class ICNode_AUG_2COLN( FEICodeNode ):
+class ICTokenNode_AUG_2COLN( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='::='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_2COLN, data )
 
-class ICNode_AUG_2EXCL( FEICodeNode ):
+class ICTokenNode_AUG_2EXCL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='!!='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_2EXCL, data )
 
-class ICNode_AUG_2QUEST( FEICodeNode ):
+class ICTokenNode_AUG_2QUEST( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='??='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_2QUEST, data )
 
-class ICNode_AUG_AROBASE( FEICodeNode ):
+class ICTokenNode_AUG_AROBASE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='@='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_AROBASE, data )
 
-class ICNode_AUG_BITAND( FEICodeNode ):
+class ICTokenNode_AUG_BITAND( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='&='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_BITAND, data )
 
-class ICNode_AUG_BITOR( FEICodeNode ):
+class ICTokenNode_AUG_BITOR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='|='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_BITOR, data )
 
-class ICNode_AUG_BITXOR( FEICodeNode ):
+class ICTokenNode_AUG_BITXOR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='^='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_BITXOR, data )
 
-class ICNode_AUG_DIV( FEICodeNode ):
+class ICTokenNode_AUG_DIV( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='/='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_DIV, data )
 
-class ICNode_AUG_GRLE( FEICodeNode ):
+class ICTokenNode_AUG_GRLE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='><='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_GRLE, data )
 
-class ICNode_AUG_MINUS( FEICodeNode ):
+class ICTokenNode_AUG_MINUS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='-='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_MINUS, data )
 
-class ICNode_AUG_MOD( FEICodeNode ):
+class ICTokenNode_AUG_MOD( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='%='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_MOD, data )
 
-class ICNode_AUG_MUL( FEICodeNode ):
+class ICTokenNode_AUG_MUL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='*='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_MUL, data )
 
-class ICNode_AUG_PLUS( FEICodeNode ):
+class ICTokenNode_AUG_PLUS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='+='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_PLUS, data )
 
-class ICNode_AUG_POWER( FEICodeNode ):
+class ICTokenNode_AUG_POWER( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='^^='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_POWER, data )
 
-class ICNode_AUG_SHIFT0L( FEICodeNode ):
+class ICTokenNode_AUG_SHIFT0L( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='<<<='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_SHIFT0L, data )
 
-class ICNode_AUG_SHIFT0R( FEICodeNode ):
+class ICTokenNode_AUG_SHIFT0R( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='>>>='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_SHIFT0R, data )
 
-class ICNode_AUG_SHIFTL( FEICodeNode ):
+class ICTokenNode_AUG_SHIFTL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='<<='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_SHIFTL, data )
 
-class ICNode_AUG_SHIFTR( FEICodeNode ):
+class ICTokenNode_AUG_SHIFTR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='>>='):
         super().__init__( scanner, FEICodeTokens.TK_AUG_SHIFTR, data )
 
-class ICNode_BITAND( FEICodeNode ):
+class ICTokenNode_BITAND( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='&'):
         super().__init__( scanner, FEICodeTokens.TK_BITAND, data )
 
-class ICNode_BITOR( FEICodeNode ):
+class ICTokenNode_BITOR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='|'):
         super().__init__( scanner, FEICodeTokens.TK_BITOR, data )
 
-class ICNode_BITXOR( FEICodeNode ):
+class ICTokenNode_BITXOR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='^'):
         super().__init__( scanner, FEICodeTokens.TK_BITXOR, data )
 
-class ICNode_BRACECL( FEICodeNode ):
+class ICTokenNode_BRACECL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='}'):
         super().__init__( scanner, FEICodeTokens.TK_BRACECL, data )
 
-class ICNode_BRACEOP( FEICodeNode ):
+class ICTokenNode_BRACEOP( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='{'):
         super().__init__( scanner, FEICodeTokens.TK_BRACEOP, data )
 
-class ICNode_BRACKETCL( FEICodeNode ):
+class ICTokenNode_BRACKETCL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data=']'):
         super().__init__( scanner, FEICodeTokens.TK_BRACKETCL, data )
 
-class ICNode_BRACKETOP( FEICodeNode ):
+class ICTokenNode_BRACKETOP( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='['):
         super().__init__( scanner, FEICodeTokens.TK_BRACKETOP, data )
 
-class ICNode_BREAK( FEICodeNode ):
+class ICTokenNode_BREAK( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='break'):
         super().__init__( scanner, FEICodeTokens.TK_BREAK, data )
 
-class ICNode_CASE( FEICodeNode ):
+class ICTokenNode_CASE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='case'):
         super().__init__( scanner, FEICodeTokens.TK_CASE, data )
 
-class ICNode_CAST( FEICodeNode ):
+class ICTokenNode_CAST( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='cast'):
         super().__init__( scanner, FEICodeTokens.TK_CAST, data )
 
-class ICNode_CLASS( FEICodeNode ):
+class ICTokenNode_CLASS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='class'):
         super().__init__( scanner, FEICodeTokens.TK_CLASS, data )
 
-class ICNode_COLON( FEICodeNode ):
+class ICTokenNode_COLON( FEICodeTokenNode ):
     def __init__(self, scanner=None, data=':'):
         super().__init__( scanner, FEICodeTokens.TK_COLON, data )
 
-class ICNode_COMMA( FEICodeNode ):
+class ICTokenNode_COMMA( FEICodeTokenNode ):
     def __init__(self, scanner=None, data=','):
         super().__init__( scanner, FEICodeTokens.TK_COMMA, data )
 
-class ICNode_COMMENT( FEICodeNode ):
+class ICTokenNode_COMMENT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_COMMENT, data )
 
-class ICNode_COMMENT_ML( FEICodeNode ):
+class ICTokenNode_COMMENT_ML( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_COMMENT_ML, data )
 
-class ICNode_CONST( FEICodeNode ):
+class ICTokenNode_CONST( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='const'):
         super().__init__( scanner, FEICodeTokens.TK_CONST, data )
 
-class ICNode_CONTINUE( FEICodeNode ):
+class ICTokenNode_CONTINUE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='continue'):
         super().__init__( scanner, FEICodeTokens.TK_CONTINUE, data )
 
-class ICNode_DECR( FEICodeNode ):
+class ICTokenNode_DECR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='--'):
         super().__init__( scanner, FEICodeTokens.TK_DECR, data )
 
-class ICNode_DEL( FEICodeNode ):
+class ICTokenNode_DEL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='del'):
         super().__init__( scanner, FEICodeTokens.TK_DEL, data )
 
-class ICNode_DIV( FEICodeNode ):
+class ICTokenNode_DIV( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='/'):
         super().__init__( scanner, FEICodeTokens.TK_DIV, data )
 
-class ICNode_DOT( FEICodeNode ):
+class ICTokenNode_DOT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='.'):
         super().__init__( scanner, FEICodeTokens.TK_DOT, data )
 
-class ICNode_ELIF( FEICodeNode ):
+class ICTokenNode_ELIF( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='elif'):
         super().__init__( scanner, FEICodeTokens.TK_ELIF, data )
 
-class ICNode_ELLIPSIS( FEICodeNode ):
+class ICTokenNode_ELLIPSIS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='...'):
         super().__init__( scanner, FEICodeTokens.TK_ELLIPSIS, data )
 
-class ICNode_ELSE( FEICodeNode ):
+class ICTokenNode_ELSE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='else'):
         super().__init__( scanner, FEICodeTokens.TK_ELSE, data )
 
-class ICNode_EMBED( FEICodeNode ):
+class ICTokenNode_EMBED( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='embed'):
         super().__init__( scanner, FEICodeTokens.TK_EMBED, data )
 
-class ICNode_EMBED_CODE( FEICodeNode ):
+class ICTokenNode_EMBED_CODE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_EMBED_CODE, data )
 
-class ICNode_ENSURE( FEICodeNode ):
+class ICTokenNode_ENSURE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='ensure'):
         super().__init__( scanner, FEICodeTokens.TK_ENSURE, data )
 
-class ICNode_ENUM( FEICodeNode ):
+class ICTokenNode_ENUM( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='enum'):
         super().__init__( scanner, FEICodeTokens.TK_ENUM, data )
 
-class ICNode_EOF( FEICodeNode ):
+class ICTokenNode_EOF( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_EOF, data )
 
-class ICNode_EQ( FEICodeNode ):
+class ICTokenNode_EQ( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='=='):
         super().__init__( scanner, FEICodeTokens.TK_EQ, data )
 
-class ICNode_EXCEPT( FEICodeNode ):
+class ICTokenNode_EXCEPT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='except'):
         super().__init__( scanner, FEICodeTokens.TK_EXCEPT, data )
 
-class ICNode_FALSE( FEICodeNode ):
+class ICTokenNode_FALSE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='false'):
         super().__init__( scanner, FEICodeTokens.TK_FALSE, data )
 
-class ICNode_FILE( FEICodeNode ):
+class ICTokenNode_FILE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='file'):
         super().__init__( scanner, FEICodeTokens.TK_FILE, data )
 
-class ICNode_FINAL( FEICodeNode ):
+class ICTokenNode_FINAL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='final'):
         super().__init__( scanner, FEICodeTokens.TK_FINAL, data )
 
-class ICNode_FINALLY( FEICodeNode ):
+class ICTokenNode_FINALLY( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='finally'):
         super().__init__( scanner, FEICodeTokens.TK_FINALLY, data )
 
-class ICNode_FLOAT( FEICodeNode ):
+class ICTokenNode_FLOAT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_FLOAT, data )
 
-class ICNode_FOR( FEICodeNode ):
+class ICTokenNode_FOR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='for'):
         super().__init__( scanner, FEICodeTokens.TK_FOR, data )
 
-class ICNode_FOREVER( FEICodeNode ):
+class ICTokenNode_FOREVER( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='forever'):
         super().__init__( scanner, FEICodeTokens.TK_FOREVER, data )
 
-class ICNode_FROM( FEICodeNode ):
+class ICTokenNode_FROM( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='from'):
         super().__init__( scanner, FEICodeTokens.TK_FROM, data )
 
-class ICNode_GE( FEICodeNode ):
+class ICTokenNode_GE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='>='):
         super().__init__( scanner, FEICodeTokens.TK_GE, data )
 
-class ICNode_GT( FEICodeNode ):
+class ICTokenNode_GT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='>'):
         super().__init__( scanner, FEICodeTokens.TK_GT, data )
 
-class ICNode_HASH( FEICodeNode ):
+class ICTokenNode_HASH( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='#'):
         super().__init__( scanner, FEICodeTokens.TK_HASH, data )
 
-class ICNode_HIDDEN( FEICodeNodeProtection ):
+class ICTokenNode_HIDDEN( FEICodeTokenNodeProtection ):
     def __init__(self, scanner=None, data='hidden'):
             super().__init__( scanner, Access.HIDDEN, FEICodeTokens.TK_HIDDEN, data )
 
-class ICNode_IDENT( FEICodeNode ):
+class ICTokenNode_IDENT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_IDENT, data )
 
-class ICNode_IF( FEICodeNode ):
+class ICTokenNode_IF( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='if'):
         super().__init__( scanner, FEICodeTokens.TK_IF, data )
 
-class ICNode_IMPORT( FEICodeNode ):
+class ICTokenNode_IMPORT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='import'):
         super().__init__( scanner, FEICodeTokens.TK_IMPORT, data )
 
-class ICNode_IN( FEICodeNode ):
+class ICTokenNode_IN( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='in'):
         super().__init__( scanner, FEICodeTokens.TK_IN, data )
 
-class ICNode_INCR( FEICodeNode ):
+class ICTokenNode_INCR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='++'):
         super().__init__( scanner, FEICodeTokens.TK_INCR, data )
 
-class ICNode_INTEGER( FEICodeNode ):
+class ICTokenNode_INTEGER( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_INTEGER, data )
 
-class ICNode_IS( FEICodeNode ):
+class ICTokenNode_IS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='is'):
         super().__init__( scanner, FEICodeTokens.TK_IS, data )
 
-class ICNode_ISOF( FEICodeNode ):
+class ICTokenNode_ISOF( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='->'):
         super().__init__( scanner, FEICodeTokens.TK_ISOF, data )
 
-class ICNode_LANGUAGE( FEICodeNode ):
+class ICTokenNode_LANGUAGE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='language'):
         super().__init__( scanner, FEICodeTokens.TK_LANGUAGE, data )
 
-class ICNode_LE( FEICodeNode ):
+class ICTokenNode_LE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='<='):
         super().__init__( scanner, FEICodeTokens.TK_LE, data )
 
-class ICNode_LIST( FEICodeNode ):
+class ICTokenNode_LIST( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='list'):
         super().__init__( scanner, FEICodeTokens.TK_LIST, data )
 
-class ICNode_LT( FEICodeNode ):
+class ICTokenNode_LT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='<'):
         super().__init__( scanner, FEICodeTokens.TK_LT, data )
 
-class ICNode_MAP( FEICodeNode ):
+class ICTokenNode_MAP( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='map'):
         super().__init__( scanner, FEICodeTokens.TK_MAP, data )
 
-class ICNode_ME( FEICodeNode ):
+class ICTokenNode_ME( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='me'):
         super().__init__( scanner, FEICodeTokens.TK_ME, data )
 
-class ICNode_MINUS( FEICodeNode ):
+class ICTokenNode_MINUS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='-'):
         super().__init__( scanner, FEICodeTokens.TK_MINUS, data )
 
-class ICNode_MOD( FEICodeNode ):
+class ICTokenNode_MOD( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='%'):
         super().__init__( scanner, FEICodeTokens.TK_MOD, data )
 
-class ICNode_MUL( FEICodeNode ):
+class ICTokenNode_MUL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='*'):
         super().__init__( scanner, FEICodeTokens.TK_MUL, data )
 
-class ICNode_NE( FEICodeNode ):
+class ICTokenNode_NE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='!='):
         super().__init__( scanner, FEICodeTokens.TK_NE, data )
 
-class ICNode_NL( FEICodeNode ):
+class ICTokenNode_NL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='new line'):
         super().__init__( scanner, FEICodeTokens.TK_NL, data )
 
-class ICNode_NONE( FEICodeNode ):
+class ICTokenNode_NONE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='none'):
         super().__init__( scanner, FEICodeTokens.TK_NONE, data )
 
-class ICNode_NOP( FEICodeNode ):
+class ICTokenNode_NOP( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='nop'):
         super().__init__( scanner, FEICodeTokens.TK_NOP, data )
 
-class ICNode_NOT( FEICodeNode ):
+class ICTokenNode_NOT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='not'):
         super().__init__( scanner, FEICodeTokens.TK_NOT, data )
 
-class ICNode_OPERATOR( FEICodeNode ):
+class ICTokenNode_OPERATOR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='operator'):
         super().__init__( scanner, FEICodeTokens.TK_OPERATOR, data )
 
-class ICNode_OP_2COLN( FEICodeNode ):
+class ICTokenNode_OP_2COLN( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='::'):
         super().__init__( scanner, FEICodeTokens.TK_OP_2COLN, data )
 
-class ICNode_OP_2EXCL( FEICodeNode ):
+class ICTokenNode_OP_2EXCL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='!!'):
         super().__init__( scanner, FEICodeTokens.TK_OP_2EXCL, data )
 
-class ICNode_OP_2QUEST( FEICodeNode ):
+class ICTokenNode_OP_2QUEST( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='??'):
         super().__init__( scanner, FEICodeTokens.TK_OP_2QUEST, data )
 
-class ICNode_OP_GRLE( FEICodeNode ):
+class ICTokenNode_OP_GRLE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='><'):
         super().__init__( scanner, FEICodeTokens.TK_OP_GRLE, data )
 
-class ICNode_OR( FEICodeNode ):
+class ICTokenNode_OR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='or'):
         super().__init__( scanner, FEICodeTokens.TK_OR, data )
 
-class ICNode_PARCL( FEICodeNode ):
+class ICTokenNode_PARCL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data=')'):
         super().__init__( scanner, FEICodeTokens.TK_PARCL, data )
 
-class ICNode_PAROP( FEICodeNode ):
+class ICTokenNode_PAROP( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='('):
         super().__init__( scanner, FEICodeTokens.TK_PAROP, data )
 
-class ICNode_PLUS( FEICodeNode ):
+class ICTokenNode_PLUS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='+'):
         super().__init__( scanner, FEICodeTokens.TK_PLUS, data )
 
-class ICNode_POWER( FEICodeNode ):
+class ICTokenNode_POWER( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='^^'):
         super().__init__( scanner, FEICodeTokens.TK_POWER, data )
 
-class ICNode_PROTECTED( FEICodeNodeProtection ):
+class ICTokenNode_PROTECTED( FEICodeTokenNodeProtection ):
     def __init__(self, scanner=None, data='protected'):
             super().__init__( scanner, Access.PROTECTED, FEICodeTokens.TK_PROTECTED, data )
 
-class ICNode_PUBLIC( FEICodeNodeProtection ):
+class ICTokenNode_PUBLIC( FEICodeTokenNodeProtection ):
     def __init__(self, scanner=None, data='public'):
             super().__init__( scanner, Access.PUBLIC, FEICodeTokens.TK_PUBLIC, data )
 
-class ICNode_RAISE( FEICodeNode ):
+class ICTokenNode_RAISE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='raise'):
         super().__init__( scanner, FEICodeTokens.TK_RAISE, data )
 
-class ICNode_REPEAT( FEICodeNode ):
+class ICTokenNode_REPEAT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='repeat'):
         super().__init__( scanner, FEICodeTokens.TK_REPEAT, data )
 
-class ICNode_REQUIRE( FEICodeNode ):
+class ICTokenNode_REQUIRE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='require'):
         super().__init__( scanner, FEICodeTokens.TK_REQUIRE, data )
 
-class ICNode_RETURN( FEICodeNode ):
+class ICTokenNode_RETURN( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='return'):
         super().__init__( scanner, FEICodeTokens.TK_RETURN, data )
 
-class ICNode_SCALAR_TYPE( FEICodeNode ):
+class ICTokenNode_SCALAR_TYPE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_SCALAR_TYPE, data )
 
-class ICNode_SEMICOLON( FEICodeNode ):
+class ICTokenNode_SEMICOLON( FEICodeTokenNode ):
     def __init__(self, scanner=None, data=';'):
         super().__init__( scanner, FEICodeTokens.TK_SEMICOLON, data )
 
-class ICNode_SET( FEICodeNode ):
+class ICTokenNode_SET( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='set'):
         super().__init__( scanner, FEICodeTokens.TK_SET, data )
 
-class ICNode_SHIFT0L( FEICodeNode ):
+class ICTokenNode_SHIFT0L( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='<<<'):
         super().__init__( scanner, FEICodeTokens.TK_SHIFT0L, data )
 
-class ICNode_SHIFT0R( FEICodeNode ):
+class ICTokenNode_SHIFT0R( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='>>>'):
         super().__init__( scanner, FEICodeTokens.TK_SHIFT0R, data )
 
-class ICNode_SHIFTL( FEICodeNode ):
+class ICTokenNode_SHIFTL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='<<'):
         super().__init__( scanner, FEICodeTokens.TK_SHIFTL, data )
 
-class ICNode_SHIFTR( FEICodeNode ):
+class ICTokenNode_SHIFTR( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='>>'):
         super().__init__( scanner, FEICodeTokens.TK_SHIFTR, data )
 
-class ICNode_STATIC( FEICodeNode ):
+class ICTokenNode_STATIC( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='static'):
         super().__init__( scanner, FEICodeTokens.TK_STATIC, data )
 
-class ICNode_STRING( FEICodeNode ):
+class ICTokenNode_STRING( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_STRING, data )
 
-class ICNode_SWITCH( FEICodeNode ):
+class ICTokenNode_SWITCH( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='switch'):
         super().__init__( scanner, FEICodeTokens.TK_SWITCH, data )
 
-class ICNode_TILD( FEICodeNode ):
+class ICTokenNode_TILD( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='~'):
         super().__init__( scanner, FEICodeTokens.TK_TILD, data )
 
-class ICNode_TRUE( FEICodeNode ):
+class ICTokenNode_TRUE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='true'):
         super().__init__( scanner, FEICodeTokens.TK_TRUE, data )
 
-class ICNode_TRY( FEICodeNode ):
+class ICTokenNode_TRY( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='try'):
         super().__init__( scanner, FEICodeTokens.TK_TRY, data )
 
-class ICNode_TYPE_ALIAS( FEICodeNode ):
+class ICTokenNode_TYPE_ALIAS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='type'):
         super().__init__( scanner, FEICodeTokens.TK_TYPE_ALIAS, data )
 
-class ICNode_UNEXPECTED( FEICodeNode ):
+class ICTokenNode_UNEXPECTED( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='None'):
         super().__init__( scanner, FEICodeTokens.TK_UNEXPECTED, data )
 
-class ICNode_UNNAMED( FEICodeNode ):
+class ICTokenNode_UNNAMED( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='unnamed'):
         super().__init__( scanner, FEICodeTokens.TK_UNNAMED, data )
 
-class ICNode_UNTIL( FEICodeNode ):
+class ICTokenNode_UNTIL( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='until'):
         super().__init__( scanner, FEICodeTokens.TK_UNTIL, data )
 
-class ICNode_VOLATILE( FEICodeNode ):
+class ICTokenNode_VOLATILE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='volatile'):
         super().__init__( scanner, FEICodeTokens.TK_VOLATILE, data )
 
-class ICNode_WHILE( FEICodeNode ):
+class ICTokenNode_WHILE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='while'):
         super().__init__( scanner, FEICodeTokens.TK_WHILE, data )
 
-class ICNode_WITH( FEICodeNode ):
+class ICTokenNode_WITH( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='with'):
         super().__init__( scanner, FEICodeTokens.TK_WITH, data )
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icode_node   =====#
+#=====   end of   FrontEnd.IntermediateCode.fe_icode_token_node   =====#
