@@ -71,16 +71,15 @@ manipulations.
 
 This __Scanner__ module implements the _tokenization_ of __Typee__ source 
 code. It defines (as extracted from the _Python_ source code) this class:
-```
-class FEScanner:
-    """
-    This is the class of the Typhon Front-End Scanner.
-    It is the very first stage of the front-end pipeline of  the  Typhon
-    compiler.
-    It scans Typhon source code and produces tokenized Intermediate Code
-    that will be parsed by the Typhon Front-End Parser.
-    """
-```
+
+    class FEScanner:
+        """
+        This is the class of the Typhon Front-End Scanner.
+        It is the very first stage of the front-end pipeline of  the  Typhon
+        compiler.
+        It scans Typhon source code and produces tokenized Intermediate Code
+        that will be parsed by the Typhon Front-End Parser.
+        """
 
 
 #### 2.1.1 The Scanning Interface
@@ -92,6 +91,8 @@ Method ```scan_memory()``` takes as input a string, the one which contains the
 whole source code to be scanned, and maybe scan arguments that are currently 
 unused but which are yet present for possible future use. It generates as its
 result a list of token nodes.
+
+```
     def scan_memory(self, src_code:str, **parse_args) -> FEIntermediateCode:
         '''
         Scans the source code,  according to some parsing arguments  passed  at
@@ -109,12 +110,15 @@ result a list of token nodes.
         Returns:
             A reference to the generated Front-End Intermediate Code.
         '''
+```
 
 Method ```scan_file()``` is also provided to ease the parsing of __Typee__
 source code from module files. it takes as input the path to the module to be
 scanned and maybe scan arguments that are currently unused but which are yet 
 present for possible future use. It generates as its result a list of token 
 nodes.
+
+```
     def scan_file(self, filepath:str, **parse_args) -> FEIntermediateCode:
         '''
         Runs the Typhon scanner on a specified file.
@@ -132,6 +136,7 @@ nodes.
         Raises:
             IOError: source file not found or unavailable for reading.
         '''
+```
 
         
 #### 2.1.2 The internal _tokenization_
@@ -148,16 +153,17 @@ For this purpose, tokens are classified among:
 - \_SIMPLE_TOKEN
 - \_COMPOUND_TOKEN
 - \_ NAME_ALPHA_CHARS
-- \_ 8NUM_CHARS
-- \_ 8ENDLINE
+- \_ NUM_CHARS
+- \_ ENDLINE
 - \_ SPACE
 - and single or double quotes
 
 Anything else is condisered to be \_UNEXPECTED and is not rejected but 
-processed as an unexpected token.
+processed as an unexpected token. This is a sepcial type of Token Node which
+is appended to the tokens series in the Intermediate Code list.
 
 According to their detected classification, the scanned tokens are processed
-by the related private method, as being called by the _tokenize_r.
+by the related private method, as being called by the _tokenizer_.
 
 
 #### 2.1.3 Tokens processing
@@ -183,7 +189,7 @@ processing, which contains factorized code: ```_check_augmented_operator()```.
 
 The next (and last) list of private methods in the __Scanner__ module lists in
 alphabetical order all the methods that are used for the internal functionning 
-of the _Scanner__.
+of the _Scanner_.
 
 These are from ```_append_node()``` to ```_skip_space()```. Their roles are 
 the skipping of characters, keywords, or new lines, the reading of next
@@ -228,23 +234,24 @@ __Typee__ grammar (or language) specification is documented in documents
 prefixed with ```typee_specs_LL1```. They are suffixed with file type
 ```.grm```. They are versionned with ```-v``` and a number put just after
 ```LL1``` in their file name. The first version of the grammar specification
-gets no version numbering in its name.
+gets no version numbering in its name. By July 2018, the last version of
+__Typee__ grammar specification is version v8.
 
-The ```.grm``` suffix is used to get coloured syntax with Notepad++ (sorry,
+The ```.grm``` suffix is used to get colored syntax with Notepad++ (sorry,
 for sole Windows users). The associated language rules for Notepad++ and their
 coloring are defined in file ```Notepad++XML-configs/grammars.xml```. See 
 document ```notepad-readme.md``` directly available at the root of __Typee__
 repository, to get an understanding of how to use this .xml file. It is very
-easy and Windows programmers re strongly recommended to use it and Notepad++.
+easy and Windows programmers are strongly recommended to use it and Notepad++.
 
 Once you take a look to the __Typee__ grammar specification, you will get that 
 it is an LL(1) grammar. What is this, you might be asking. Just have a look to
-this formal (but clear) definition orf LL(1) grammars just here:
+this formal (but clear) definition of LL(1) grammars just here:
 ```http://www.csd.uwo.ca/~moreno/CS447/Lectures/Syntax.html/node14.html```.
 Such grammars have the immense double advantage to be __not ambiguous__ and
 __not left-recursive__. They are then easy to define, easy to validate and
-more over very intuitive to implement. Do not hesitate to search for more
-information on the Web for LL(1) (and LL(_k_) grammars.
+moreover are very intuitive to implement. Do not hesitate to search for more
+information on the Web for LL(1) (and LL(_k_) grammars).
 
 Since __Typee__ is defined with an LL(1) grammar, it is an LL(1) language.
 
@@ -276,7 +283,7 @@ to be further used when comparing tokens.
 
 The __Typee__ tokens identifiers are set in class ```FEICodeTokens```.
 Do not be confused by the way this is implemented. Each constant gets, at 
-first sight, the same constant value: ```0```.
+first sight, a same constant value: ```0```.
 
 Moreover, a class attribute is defined next after the identifiers constants 
 declarations. This is ```_TOKEN_NAMES``` and it is a _Python_ dictionary. In 
@@ -291,7 +298,7 @@ this token identifier.
 
 The way all of this stuff is initialized is inherent to _Python_ modules
 parsing. Next after the definition of class ```FEICodeTokens```, there are 
-four lines of code. The first one initalize a constant at the module level:
+four lines of code. The first one initalizes a constant at the module level:
 
     _OFFSET = 1000  # 1000 here is an arbitrary default value - do not change it...
     
@@ -309,8 +316,8 @@ token identifier is automatically set and the adding of any new token, due to
 any enhancement, modification or augmentation of __Typee__ language grammar is
 then straightforward.
 
-Iy a new token is added to the language specification, we just have to add a
-constant class identifier by the end of their list, just before this line
+If a new token is added to the language specification, we just have to add a
+constant class identifier by the end of their list, just before this line:
 
     ##--- Add new tokens JUST BEFORE this line ---##
 
@@ -402,7 +409,7 @@ So, only check for it when you are sure to test on instances of class
 #### 2.3.2 Token Nodes Operators and Methods
 
 Every Token Node can be compared for equality with any other Token Node. This
-is implemented with operator wrapper method ```__eq()``` as usual with
+is implemented with operator wrapper method ```__eq__()``` as usual with
 _Python_ programming. Equality is said to be ```True``` when tokens 
 identifiers (```tk_ident```) and tokens data (```tk_data```) compare the same.
 
@@ -469,5 +476,6 @@ _<small intro>_
 
 | Date  | Rev.  | Author(s)  | Comments  |
 |---|---|---|---|
-| 2018-07-22 | 0.0.1  | Kerm  | Very first creation. Errors processing still to be documented |
+| 2018-07-22 | 0.0.1 | Kerm | Very first creation. Errors processing still to be documented |
+| 2018-07-23 | 0.0.2 | Schmouk | Minot typo correction, a few text addings. |
 |  |  |  |  |
