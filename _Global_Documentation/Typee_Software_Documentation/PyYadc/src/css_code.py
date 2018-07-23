@@ -22,16 +22,6 @@ OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-
-#=============================================================================
-# no imports
-
-
-#=============================================================================
-# Versions:
-#    0.0.1 - 2016-06-24 - schmoukerp - Creation.
-#    0.0.2 - 2016-07-01 - schmoukerp - Added colors classes.
-
 #-------------------------------------------------------------------------
 '''This is the CSS3 code associated with pyYadc documentation files.'''
 myDoc_css_code = '''<!-- pyYadc CSS description -->

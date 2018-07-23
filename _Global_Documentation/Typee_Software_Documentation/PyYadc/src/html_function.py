@@ -22,17 +22,14 @@ SOFTWARE.
 
 
 #=============================================================================
-from utils import Utils
+from PyYadc.src.utils import Utils
 
 
 #=============================================================================
 class HtmlFunction:
     """
     All manipulations on functions content.
-    """
-    # Versions:
-    #    0.0.1 - 2016-07-04 - schmoukerp - Creation.
-    
+    """    
     #-------------------------------------------------------------------------
     def __init__(self, parsed_module ,
                        function_name ,

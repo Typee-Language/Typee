@@ -1,5 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
-Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -20,26 +22,31 @@ OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-
 #=============================================================================
-import os.path
-import sys
-
-from PyYadc.src.html_generator  import HtmlGenerator
+from os import rename as os_rename, remove as os_remove
+from PyYadc.src.html_generator import HtmlGenerator
 
 
 #=============================================================================
 if __name__ == '__main__':
+    """
+    This script runs PyYadc onto directory 'src/' of this Typee software.
+    """
 
+    print( "Generating documentation for Typee Project" )
+    HtmlGenerator( '../../src', "Typee Software Documentation" )
+    
+    
+    src_docpath = '../../src/src_doc.html'
+    dst_docpath = 'typee_software_doc.html'
+    
     try:
-        root_dirpath = sys.argv[1]
-    except:
-        root_dirpath = '.'
+        os_rename( src_docpath, dst_docpath )
+    except OSError:
+        os_remove( dst_docpath )
+        os_rename( src_docpath, dst_docpath )
+            
+    
+    print( '-- done!' )
 
-    print( "Generating documentation for html_package '{}'".format(root_dirpath) )
-    HtmlGenerator( root_dirpath, os.path.basename(root_dirpath) )
-
-    print( '\n-- done!' )
- 
-
-#=====   end of module   pyYadc.py   =====#
+#=====   end of   _Global_Documentation.Typee_Software_Documentation.typee_automated_documentation_script   =====#

@@ -24,10 +24,10 @@ SOFTWARE.
 #=============================================================================
 ##import ast 
 
-from html_class      import HtmlClass
-from html_function   import HtmlFunction
-from module_parser   import ModuleParser
-from utils           import Utils
+from PyYadc.src.html_class      import HtmlClass
+from PyYadc.src.html_function   import HtmlFunction
+from PyYadc.src.module_parser   import ModuleParser
+from PyYadc.src.utils           import Utils
 
 
 #=============================================================================
@@ -35,9 +35,6 @@ class HtmlModule:
     """
     All manipulations on modules content.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-26 - PhSch - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, package_path, package_name, module_name, html_indent_level):
         '''

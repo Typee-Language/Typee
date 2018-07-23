@@ -24,9 +24,9 @@ SOFTWARE.
 #=============================================================================
 import os.path
 
-from directory   import DirectoryDescr
-from html_module import HtmlModule
-from utils       import Utils
+from PyYadc.src.directory   import DirectoryDescr
+from PyYadc.src.html_module import HtmlModule
+from PyYadc.src.utils       import Utils
 
 
 #=============================================================================
@@ -34,9 +34,6 @@ class HtmlPackage:
     """
     All manipulation on packages content.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-24 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     #def __init__(self, package_descr, root_package_name, html_indent_level=0):
     def __init__(self, package_descr, html_indent_level=0):

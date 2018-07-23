@@ -33,10 +33,6 @@ class DirectoryDescr:
         - the list of sub-directories
         - the list of contained files (without '.' and '..')
     """
-    # Versions:
-    #    0.0.1 - 2016-06-23 - schmoukerp - Creation.
-    #    0.0.2 - 2016-06-25 - schmoukerp - Enhanced package detection.
-
     #-------------------------------------------------------------------------
     def __init__(self, main_root, root, dirs, files):
         '''
@@ -93,9 +89,6 @@ class DirectoryTree:
     """
     Description of a whole directories tree.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-23 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, root_dirpath='.'):
         '''
