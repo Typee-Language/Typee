@@ -34,7 +34,7 @@ if __name__ == '__main__':
     """
 
     print( "Generating documentation for Typee Project" )
-    HtmlGenerator( '../../src', "Typee Software Documentation" )
+    HtmlGenerator( '../../../Typee/src', "Typee Software Documentation" )
     
     
     src_docpath = '../../src/src_doc.html'

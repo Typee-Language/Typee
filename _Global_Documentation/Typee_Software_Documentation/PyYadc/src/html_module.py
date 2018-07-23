@@ -121,9 +121,10 @@ class HtmlModule:
         Returns:
             The HTML code, embedded in a string, related to this module.
         '''
+        package_path = self._package_path.replace('../','')
         my_html_code = Utils.html_indent( self._indent_level+1,
-                                          '<p>back to package <a class="package_end" href="#{:s}">{:s}</a></p>\n'.format( Utils.path_to_id( self._package_path ),
-                                                                                                                  self._package_path                      ) )
+                                          '<p>back to package <a class="package_end" href="#{:s}">{:s}</a></p>\n'.format( Utils.path_to_id(package_path),
+                                                                                                                          package_path                    ) )
         my_html_code += Utils.html_indent(self._indent_level,
                                           '</div> <!-- end of module {:s} -->\n\n'.format( self.get_html_id() ) )
 
@@ -139,7 +140,7 @@ class HtmlModule:
             The header HTML code, embedded in a string, related to this module.
         '''
         #self._root_package_name = Utils.replace_backslash( self._package_path )
-        self._root_package_name = Utils.replace_backslash( self._package_name )
+        self._root_package_name = Utils.replace_backslash( self._package_name ).replace('../','')
         
         my_html_code  = Utils.html_indent(self._indent_level,
                                           '<div class="module_container" id="{:s}">\n'.format( Utils.path_to_id(self.get_html_id()) ) )

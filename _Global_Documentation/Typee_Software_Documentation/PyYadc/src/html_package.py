@@ -92,7 +92,7 @@ class HtmlPackage:
         Returns:
             The HTML code, embedded in a string, related to this package.
         '''
-        my_parent_package_path = os.path.dirname( self._package_dirpath )
+        my_parent_package_path = os.path.dirname( self._package_dirpath ).replace('../','')
         
         return Utils.html_indent(
                     self._html_indent+1,
@@ -101,7 +101,7 @@ class HtmlPackage:
                         Utils.path_to_id( my_parent_package_path ),
                         my_parent_package_path                    ,
                         '/' if my_parent_package_path != '' else '',
-                        Utils.path_to_id( self._package_dirpath ) ,
+                        Utils.path_to_id( self._package_dirpath.replace('../','') ) ,
                         self._root_package_name                     )
                ) + \
                Utils.html_indent(
@@ -117,11 +117,12 @@ class HtmlPackage:
         Returns:
             The header HTML code, embedded in a string, related to this package.
         '''
-        my_parent_package_path = os.path.dirname( self._package_dirpath )
+        my_package_dirpath = self._package_dirpath.replace('../','')
+        my_parent_package_path = os.path.dirname( my_package_dirpath )
         my_parent_package_id   = Utils.path_to_id( my_parent_package_path )
         
         my_html_code  = Utils.html_indent( self._html_indent,
-                                           '<div class="package_container" id="{:s}">\n'.format( Utils.path_to_id(self._package_dirpath) ) )
+                                           '<div class="package_container" id="{:s}">\n'.format( Utils.path_to_id(my_package_dirpath) ) )
         if my_parent_package_id == '':
             my_html_code += Utils.html_indent( self._html_indent+1,
                                                '<p class="package_def">package <b><span class="package_def">{:s}</span></b></p>\n\n'.format( 
@@ -151,15 +152,16 @@ class HtmlPackage:
         
         if len(self._package_descr.dirs) > 0:
             # sub-packages are embedded in current package
+            package_dirpath = self._package_dirpath.replace('../','')
             my_html_code += Utils.html_indent( self._html_indent+1, 
                                                '<div class="packages-list">\n' )
             my_html_code += Utils.html_indent( self._html_indent+2,
-                                               '<p><b>List of sub-packages for package {:s}</b></p>\n'.format( self._package_dirpath ) )
+                                               '<p><b>List of sub-packages for package {:s}</b></p>\n'.format( package_dirpath ) )
             my_html_code += Utils.html_indent( self._html_indent+2,
                                                '<p class="packages-names">\n' )
             
             for sub_package_name in sorted( self._package_descr.dirs ):
-                my_sub_package_name = '/'.join( (self._package_dirpath, sub_package_name) )
+                my_sub_package_name = '/'.join( (package_dirpath, sub_package_name) )
                 my_html_code += Utils.html_indent( self._html_indent+3,
                                                    '<a href="#{:s}">{:s}</a><br />\n'.format( Utils.path_to_id(my_sub_package_name),
                                                                                               my_sub_package_name                    ) )
