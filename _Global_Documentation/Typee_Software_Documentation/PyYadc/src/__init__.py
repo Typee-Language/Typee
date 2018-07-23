@@ -45,11 +45,11 @@ SOFTWARE.
 """
 
 
-from directory       import DirectoryDescr, DirectoryTree
-from html_class      import HtmlClass
-from html_function   import HtmlFunction
-from html_generator  import HtmlGenerator
-from html_module     import HtmlModule
-from html_package    import HtmlPackage
-from module_parser   import ModuleParser
-from utils           import Utils
+from PyYadc.src.directory       import DirectoryDescr, DirectoryTree
+from PyYadc.src.html_class      import HtmlClass
+from PyYadc.src.html_function   import HtmlFunction
+from PyYadc.src.html_generator  import HtmlGenerator
+from PyYadc.src.html_module     import HtmlModule
+from PyYadc.src.html_package    import HtmlPackage
+from PyYadc.src.module_parser   import ModuleParser
+from PyYadc.src.utils           import Utils

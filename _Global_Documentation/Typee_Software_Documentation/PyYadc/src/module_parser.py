@@ -31,9 +31,6 @@ class AssignDescr:
     """
     Description of ast.Assign nodes as being parsed.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-29 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, ast_node):
         '''
@@ -54,9 +51,6 @@ class ClassDescr:
     """
     Description of an ast.ClassDef node as being parsed.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-27 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, ast_node):
         '''
@@ -82,9 +76,6 @@ class FunctionDescr:
     """
     Description of an ast.FunctionDef node as being parsed.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-27 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, ast_node):
         '''
@@ -108,9 +99,6 @@ class ImportDescr:
     """
     Description of ast.Import and ast.ImportFrom nodes as being parsed.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-27 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, ast_node):
         '''
@@ -132,9 +120,6 @@ class ModuleDescr:
     """
     Description of a parsed Python module.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-27 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self):
         '''Constructor.'''
@@ -214,9 +199,6 @@ class ModuleParser( ast.NodeVisitor ):
     """
     Definition of the parsing of Python modules.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-27 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, package_path, module_name):
         '''

@@ -22,8 +22,8 @@ SOFTWARE.
 
 
 #=============================================================================
-from html_function   import HtmlFunction
-from utils           import Utils
+from PyYadc.src.html_function   import HtmlFunction
+from PyYadc.src.utils           import Utils
 
 
 #=============================================================================
@@ -31,9 +31,6 @@ class HtmlClass:
     """
     All manipulations on classes content.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-26 - PhSch - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, module_ref   ,
                        parsed_module,
@@ -196,11 +193,6 @@ class HtmlClass:
         except Exception as _e:
             # Python 2.x - no 'keywords' attribute
             pass
-            #===================================================================
-            # if len(my_ast_node.bases) > 0:
-            #     my_html_code += '&nbsp;( {:s}'.format( _my_list_bases(my_ast_node) )
-            #     my_text_inserted = True
-            #===================================================================
                 
         
         if my_text_inserted:

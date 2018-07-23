@@ -24,9 +24,9 @@ SOFTWARE.
 #=============================================================================
 import os.path
 
-from directory       import DirectoryTree
-from css_code        import myDoc_css_code
-from html_package    import HtmlPackage
+from PyYadc.src.directory       import DirectoryTree
+from PyYadc.src.css_code        import myDoc_css_code
+from PyYadc.src.html_package    import HtmlPackage
 
 
 #=============================================================================
@@ -34,9 +34,6 @@ class HtmlGenerator:
     """
     This is the generator of the HTML documentation.
     """
-    # Versions:
-    #    0.0.1 - 2016-06-23 - schmoukerp - Creation.
-    
     #-------------------------------------------------------------------------
     def __init__(self, root_dirpath='.', doc_title=None):
         '''
