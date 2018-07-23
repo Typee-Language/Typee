@@ -58,4 +58,5 @@ same document could be appearing in multiple topics_)
 | 2018-07-14 | 0.0.1 | Schmouk | Very first creation |
 | 2018-07-15 | 0.0.2 | Schmouk | Minor typo correction; modified ordering of documents; added column __Topic__ |
 | 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and index to the Front-End Parser documentation |
+| 2018-07-23 | 0.0.4 | Schmouk | Added reference to the Front-End Scanner S/W architecture documentation |
 |  |  |  |  |
