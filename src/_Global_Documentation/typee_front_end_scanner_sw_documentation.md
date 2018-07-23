@@ -477,5 +477,5 @@ _<small intro>_
 | Date  | Rev.  | Author(s)  | Comments  |
 |---|---|---|---|
 | 2018-07-22 | 0.0.1 | Kerm | Very first creation. Errors processing still to be documented |
-| 2018-07-23 | 0.0.2 | Schmouk | Minot typo correction, a few text addings. |
+| 2018-07-23 | 0.0.2 | Schmouk | Minor typo corrections, a few text addings. |
 |  |  |  |  |
