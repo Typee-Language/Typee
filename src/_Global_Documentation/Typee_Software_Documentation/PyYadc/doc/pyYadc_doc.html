@@ -1,0 +1,1557 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PyYadc</title>
+  <style media="screen" type="text/css">
+<!-- pyYadc CSS description -->
+body {
+    font-family: calibri, arial, helvetica, tahoma, sans-serif;
+}
+
+pre {
+    font-size: 0.75em;  //0.85em;  //0.95em;
+    color    : #141528;
+    font-family: "Courier New";
+}
+
+.dir_struct {
+    border-color : #000000;
+    border-radius: 8px 8px 0px 0px;
+    border-style : solid;
+    border-width : 2px;
+}
+
+.package_container {
+    font-family  : calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    border-color : #A4091D;
+    border-radius: 10px 10px 0px 0px;
+    border-style : solid;
+    border-width : 6px;
+    margin       : 6px;
+    margin-bottom: 60px;
+    padding      : 5px;
+}
+
+.package_def {
+    font-family: calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    font-size  : 1.30em; //1.45em;
+    color      : #A4091D;
+    padding    : 1px 8px 4px 4px;
+    background-color: #F2F2F2; //#FFF2F2;
+    border-color : #ED5656;
+    border-width : 3px 0px 0px 0px;
+    border-style : solid;
+}
+
+.package_end {
+    font-family: calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    font-size  : 0.90em; //1.0em;
+    color      : #A4091D;
+}
+
+a .package_def {
+    color: #A4091D;
+}
+
+a .package_end {
+    color: #A4091D;
+}
+
+.packages-list {
+    color        : #141528;
+    font-size    : 1.0em; //1.10em;
+    border-color : #A4091D;
+    border-radius: 5px 5px 0px 0px;
+    border-style : solid;
+    border-width : 2px;
+    margin       : 6px;
+    margin-bottom: 20px;
+    padding      : 5px;
+}
+
+.packages-names {
+    color        : #141528;
+    font-size    : 1.0em; //1.10em;
+    margin       : 6px 6px 35px 20px;
+    margin-bottom: 20px;
+    padding      : 5px 5px 5px 15px;
+    line-height  : 165%;
+}
+
+.module_container {
+    border-color : #13269C;
+    border-radius: 6px 6px 0px 0px;
+    border-style : solid;
+    border-width : 3px;
+    //box-shadow   : 4px 4px 3px;
+    padding      : 5px;
+    margin-bottom: 40px;
+    color: #091DF4;
+}
+
+.module_def {
+    font-family: calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    font-size  : 1.12em; //1.25em;
+    color      : #13269C;
+    padding    : 4px 16px 4px 8px;
+    background-color: #F2F2F2; //#CCF1FF;
+    border-color : #8697FF;
+    border-width : 3px 0px 0px 0px;
+    border-style : solid;
+}
+
+.module_end {
+    font-family: calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    font-size  : 0.90em; //1.0em;
+    color      : #13269C;
+    font-weight: bold;
+}
+
+.modules-list {
+    color        : #141528;
+    font-size    : 0.97em; //1.08em;
+    border-color : #141528;
+    border-radius: 5px 5px 0px 0px;
+    border-style : solid;
+    border-width : 2px;
+    //margin       : 6px;
+    margin-bottom: 40px;
+    padding      : 5px;
+}
+
+.modules-data-list {
+    color        : #141528;
+    font-size    : 0.75em; //1.08em;
+}
+
+.modules-names {
+    color        : #141528;
+    font-size    : 0.97em; //1.08em;
+    margin       : 6px 6px 20px 20px;
+    padding      : 5px 5px 5px 15px;
+    line-height  : 165%;
+}
+
+.modules-comments {
+    color        : #141528;
+    font-size    : 0.97em; //1.08em;
+    margin       : 6px 6px 20px 20px;
+    padding      : 5px 5px 5px 15px;
+}
+
+.imports-list {
+    color        : #141528;
+    font-size    : 1.05em; //0.95em; //1.04em;
+    border-color : #141528;
+    border-radius: 4px 4px 0px 0px;
+    border-style : solid;
+    border-width : 1px;
+    margin       : 6px;
+    margin-bottom: 8px;
+    padding      : 4px;
+}
+
+.imports-def {
+    color        : #141528;
+    font-size    : 1.00em; //0.97em; //1.08em;
+    font-style   : bold;
+    background-color: #F2F2F2;
+    padding      : 2px 2px 2px 6px;
+    border-color : #A9A9A9;
+    border-width : 3px 0px 0px 0px;
+    border-style : solid;
+}
+
+.class_container {
+    border-color : #091DF4;
+    border-radius: 5px 5px 0px 0px;
+    border-style : solid;
+    border-width : 2px;
+    padding      : 4px;
+    margin       : 6px;
+    margin-bottom: 16px;
+}
+
+.class_def {
+    font-family: calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    font-size  : 1.05em; //1.15em;
+    padding    : 4px 16px 4px 8px;
+    margin-left: 4px;
+    background-color: #F2F2F2;
+    border-color    : #AEAEFC;
+    border-width    : 3px 0px 0px 0px;
+    border-style : solid;
+}
+
+.class_end {
+    font-family: calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    font-size  : 0.90em; //1.0em;
+    color      : blue;  //#13269C;
+    font-weight: bold;
+}
+
+.classes_list {
+    color        : #141528;
+    font-size    : 1.05em; //1.15em;
+    border-color : #141528;
+    border-radius: 4px 4px 0px 0px;
+    border-style : solid;
+    border-width : 1px;
+    margin       : 6px;
+    margin-bottom: 8px;
+    padding      : 4px;
+}
+
+.class_decorators {
+    font-family: calibri, arial, helvetica, tahoma, "Courier New", sans-serif;
+    font-size  : 0.90em; //1.10em;
+    background-color: #F2F2F2;
+}
+
+.function_div {
+    font-family     : calibri, arial, helvetica, tahoma, sans-serif;
+    font-size       : 0.95em; //1.05em;
+    padding         : 4px 16px 4px 8px;
+    margin-left     : 12px;
+    margin-right    : 12px;
+    background-color: #F2F2F2;
+    border-color    : #AEAEFC;
+    border-width    : 1px 0px 0px 0px;
+    border-style    : solid;
+}
+
+.function_def {
+    font-family     : calibri, arial, helvetica, tahoma, sans-serif;
+    font-size       : 0.95em; //1.05em;
+    padding         : 4px 8px 4px 40px;
+    text-indent     : -32px;
+    //padding-left    : 32px;
+    margin-left     : 12px;
+    margin-right    : 12px;
+    background-color: #F2F2F2;
+    border-color    : #AEAEFC;
+    border-width    : 1px 0px 0px 0px;
+    border-style    : solid;
+}
+
+.function_decorators {
+    //font-family: calibri, arial, helvetica, tahoma, sans-serif;
+    font-size  : 0.85em; //1.00em;
+}
+
+.navy {
+    color: navy;
+}
+.MediumBlue {
+    color: MediumBlue;
+}
+.blue {
+    color: blue;
+}
+.keyword {
+    color: blue; // #13269C;
+    //font-style: italic;
+    font-weight: bold;
+}
+.module-color {
+    color: #13269C;
+}
+
+.class-color {
+    color : #13269C;
+}
+
+  </style>
+</head>
+<body>
+<div class="package_container" id="PyYadc">
+  <p class="package_def">package <b><span class="package_def">PyYadc</span></b></p>
+  
+  <div class="modules-list">
+    <p><b>List of modules for package PyYadc</b></p>
+    <p class="modules-names">
+      <a href="#PyYadc___init__.py">__init__.py</a><br />
+      <a href="#PyYadc_css_code.py">css_code.py</a><br />
+      <a href="#PyYadc_directory.py">directory.py</a><br />
+      <a href="#PyYadc_html_class.py">html_class.py</a><br />
+      <a href="#PyYadc_html_function.py">html_function.py</a><br />
+      <a href="#PyYadc_html_generator.py">html_generator.py</a><br />
+      <a href="#PyYadc_html_module.py">html_module.py</a><br />
+      <a href="#PyYadc_html_package.py">html_package.py</a><br />
+      <a href="#PyYadc_module_parser.py">module_parser.py</a><br />
+      <a href="#PyYadc_pyYadc.py">pyYadc.py</a><br />
+      <a href="#PyYadc_utils.py">utils.py</a><br />
+    </p>
+  </div>
+  
+  <div class="module_container" id="PyYadc___init__.py">
+    <p class="module_def">module <b>__init__.py</b></p>
+    
+    <pre>
+  pyYadc stands for "Python - Yet Another Documentation Compiler".
+  
+  This is an automated generator of HTML documentation.  It  provides  automatic 
+  formatting  of  documentation for Python packages.  Any available docstring is 
+  extracted and put as is near the documented items, i.e.:
+    - modules (as contained in the package);
+    - classes (as defined in each module);
+    - functions (as defined in each module and in each
+      class).
+  
+  User is advised that when generating  documentation  for  Python 2  syntax,  a 
+  Python 2.x interpreter has  to be used while when generating documentation for 
+  Python 3 syntax, a Python 3.x interpreter should be used.
+  
+  Usage:
+  The working directory is the directory which contains the Python package to be 
+  documented. Command is then:
+  $ python &lt;path_to_pyYadc_dir&gt;/pyYadc.py &lt;package_name&gt;
+  
+  No options are currently available with this version 1.0.
+  
+  
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">from </span>directory       <span class="keyword">import </span>DirectoryDescr, DirectoryTree
+  <span class="keyword">from </span>html_class      <span class="keyword">import </span>HtmlClass
+  <span class="keyword">from </span>html_function   <span class="keyword">import </span>HtmlFunction
+  <span class="keyword">from </span>html_generator  <span class="keyword">import </span>HtmlGenerator
+  <span class="keyword">from </span>html_module     <span class="keyword">import </span>HtmlModule
+  <span class="keyword">from </span>html_package    <span class="keyword">import </span>HtmlPackage
+  <span class="keyword">from </span>module_parser   <span class="keyword">import </span>ModuleParser
+  <span class="keyword">from </span>utils           <span class="keyword">import </span>Utils
+      </pre>
+    </div>
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc___init__.py -->
+  
+  <div class="module_container" id="PyYadc_css_code.py">
+    <p class="module_def">module <b>css_code.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <p class="modules-comments"><i>no imports.</i></p>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of data</b> defined in module <b><span class="module-color">css_code.py</span></b></p>
+      <pre class="modules-data-list">
+  <i>line 36</i> | myDoc_css_code = '''<!-- pyYadc CSS description -->
+  <i>line 37</i> | body {
+  <i>line 38</i> |     font-family: calibri, arial, helvetica, tahoma, sans-serif;
+  <i>line 39</i> | }
+  <i>line 40</i> | 
+  <i>line 41</i> | pre {
+  <i>line 42</i> |     font-size: 0.75em;  //0.85em;  //0.95em;
+  <i>line 43</i> |     color    : #141528;
+  <i>line 44</i> |     font-family: "Courier New";
+  <i>line 45</i> | }
+               ... (<i>249 more lines</i>)      </pre>
+    </div>
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_css_code.py -->
+  
+  <div class="module_container" id="PyYadc_directory.py">
+    <p class="module_def">module <b>directory.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">import </span>os
+      </pre>
+    </div>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">directory.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_directory.py_DirectoryDescr">DirectoryDescr</a><br />
+        class <a href="#PyYadc_directory.py_DirectoryTree">DirectoryTree</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_directory.py_DirectoryDescr">
+      <p class="class_def">class <b>DirectoryDescr</b>      </p>
+      <pre>
+  Descriptors of directories contain:
+          - the name of or the path to this directory
+          - the list of sub-directories
+          - the list of contained files (without '.' and '..')</pre>
+      <p class="function_def">def <b>__init__</b> (self, main_root, root, dirs, files)</p>
+      <pre>
+        Constructor.
+        
+        Args:
+            main_root: str or bytes
+                A string or a bytes containing the name of the full path to
+                the overall root directory that is currently scanned.
+            root: str or bytes
+                A string or a bytes containing the name or the full path to
+                this directory.
+            dirs: list of (str or bytes)
+                A reference to a list containing all sub-directories of this
+                directory.
+            files: list of (str or bytes)
+                A reference to a list containing all files present  in  this
+                directory.      
+      </pre>
+      
+      <p class="function_def">def <b>is_package</b> (self)</p>
+      <pre>
+        Returns:
+            True if this directory is a Python html_package, and False else.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_directory.py_DirectoryDescr">DirectoryDescr</a><br />
+      back to module <a class="module_end" href="#PyYadc_directory.py">directory.py</a></p>
+    </div> <!-- end of class DirectoryDescr -->
+    
+    <div class="class_container" id="PyYadc_directory.py_DirectoryTree">
+      <p class="class_def">class <b>DirectoryTree</b>      </p>
+      <pre>
+  Description of a whole directories tree.</pre>
+      <p class="function_def">def <b>__init__</b> (self, root_dirpath='.')</p>
+      <pre>
+        Constructor.
+        
+        Args:
+            root_dirparth: str
+                The root directory path to be walked through.
+                Defaults to '.' .
+            
+        Raises:
+            TypeError:
+                Type of root_dirpath is not string or byte.
+            OSError, IOError:
+                Some I/O error occurred,  maybe because  root
+                directory was not found or for any OS reason.      
+      </pre>
+      
+      <p class="function_def">def <b>get_packages_and_modules</b> (self, root_dirpath=None)</p>
+      <pre>
+        Evaluates the directory structure.
+        
+        Args:
+            root_dirparth: str
+                The root directory path to be walked  through.
+                If None, the root_dirpath used at construction
+                time is used. Defaults to None.
+        
+        Returns:
+            A  list  of  directories  descriptors  with   only
+            packages and modules.
+            
+        Raises:
+            TypeError:
+                Type of root_dirpath is not str or byte.
+            OSError, IOError:
+                Some I/O error occurred,  maybe  because  root
+                directory was not found or for any OS reason.      
+      </pre>
+      
+      <p class="function_def">def <b>__get_directories_structure</b> (self, root_dirpath='.')</p>
+      <pre>
+        Evaluates the whole directory structure.
+        
+        Args:
+            root_dirpath: str
+                The root directory path to be walked through.
+                Defaults to current working directory.
+        
+        Returns:
+            A list of directories  descriptors  -  see  class
+            DirectoryDescr in this same module.
+            
+        Raises:
+            TypeError:
+                Type of root_dirpath is not str or byte.
+            OSError, IOError:
+                Some I/O error occurred,  maybe because  root
+                directory was not found or for any OS reason.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_directory.py_DirectoryTree">DirectoryTree</a><br />
+      back to module <a class="module_end" href="#PyYadc_directory.py">directory.py</a></p>
+    </div> <!-- end of class DirectoryTree -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_directory.py -->
+  
+  <div class="module_container" id="PyYadc_html_class.py">
+    <p class="module_def">module <b>html_class.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">from </span>html_function   <span class="keyword">import </span>HtmlFunction
+  <span class="keyword">from </span>utils           <span class="keyword">import </span>Utils
+      </pre>
+    </div>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">html_class.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_html_class.py_HtmlClass">HtmlClass</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_html_class.py_HtmlClass">
+      <p class="class_def">class <b>HtmlClass</b>      </p>
+      <pre>
+  All manipulations on classes content.</pre>
+      <p class="function_def">def <b>__init__</b> (self, module_ref,  parsed_module,  class_name,  class_descr,  indent_level)</p>
+      <pre>
+        Constructor.
+        
+        Args:
+            module_ref: HtmlModule
+                A reference to the HTML descriptor of  the  embedding 
+                module.
+            parsed_module: ModuleParser - see module_parser.py
+                A reference to the module parser as a result  of  the 
+                ast parsing of the embedding module.
+            class_name: str
+                The name of this class.
+            class_descr: ClassDescr - see module_parser.py
+                A reference to the internal descriptor of this class.
+            indent_level: int
+                The level of indentation in the  HTML  code  for  the
+                container of this class.      
+      </pre>
+      
+      <p class="function_def">@staticmethod def <b>get_class_id</b> (html_module_id, class_name)</p>
+      <pre>
+        Evaluates the HTML id to be associated to some class.
+        
+        Args:
+            html_module_id: str
+                The HTML id associated with the embedding module.
+            class_name: str
+                The name of the class.
+        
+        Returns:
+            A string containing the HTML  id  for  the  specified
+            class.      
+      </pre>
+      
+      <p class="function_def">def <b>get_html_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the documentation of this module.
+        
+        Returns:
+            The HTML code, embedded in a string, related to this module.      
+      </pre>
+      
+      <p class="function_def">def <b>get_html_id</b> (self)</p>
+      <pre>
+        Gets an HTML identifier associated with a module and its embedding package.
+        
+        Returns:
+            A string containing the CSS id associated with the specified module.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_class_body_code</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for the internal description  of  this  class 
+        documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string, related to this class.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_class_footer_code</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for the footer of this class documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string, related to this class.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_class_header_code</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for the header of this class documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string, related to this class.      
+      </pre>
+      
+      <p class="function_def">def <b>_insert_assigns</b> (self)</p>
+      <pre>
+        Returns:
+            The HTML code related to the assignments of class data.      
+      </pre>
+      
+      <p class="function_def">def <b>_insert_decorators</b> (self)</p>
+      <pre>
+        Returns:
+            The HTML code related to the decorators applied to this class.      
+      </pre>
+      
+      <p class="function_def">def <b>_insert_docstring</b> (self)</p>
+      <pre>
+        Returns:
+            The HTML code related to the docstring associated with this class.      
+      </pre>
+      
+      <p class="function_def">def <b>_insert_methods</b> (self)</p>
+      <pre>
+        Returns:
+            The HTML code related to all the methods defined within this class.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_html_class.py_HtmlClass">HtmlClass</a><br />
+      back to module <a class="module_end" href="#PyYadc_html_class.py">html_class.py</a></p>
+    </div> <!-- end of class HtmlClass -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_html_class.py -->
+  
+  <div class="module_container" id="PyYadc_html_function.py">
+    <p class="module_def">module <b>html_function.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">from </span>utils <span class="keyword">import </span>Utils
+      </pre>
+    </div>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">html_function.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_html_function.py_HtmlFunction">HtmlFunction</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_html_function.py_HtmlFunction">
+      <p class="class_def">class <b>HtmlFunction</b>      </p>
+      <pre>
+  All manipulations on functions content.</pre>
+      <p class="function_def">def <b>__init__</b> (self, parsed_module,  function_name,  function_descr,  indent_level)</p>
+      <pre>
+        Constructor.
+        
+        Args:
+            parsed_module: ModuleParser - see module_parser.py
+                A reference to the module parser as a result of the 
+                ast parsing of the embedding module.
+            function_name: str
+                The name of this function.
+            function_descr: FunctionDescr - see module_parser.py
+                A reference to  the  internal  descriptor  of  this 
+                function.
+            indent_level: int
+                The level of indentation in the HTML code  for  the
+                container of this class.      
+      </pre>
+      
+      <p class="function_def">def <b>get_html_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the documentation of this function.
+        
+        Returns:
+            The HTML code, embedded in a string, related to this function.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_function_body_code</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for the body of this function documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string,  related to this function.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_function_footer_code</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for the footer of this function documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string,  related to this function.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_function_header_code</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for the header of this function documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string,  related to this function.      
+      </pre>
+      
+      <p class="function_def">def <b>_insert_decorators</b> (self)</p>
+      <pre>
+        Returns:
+            The HTML code related to the decorators applied to this class.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_html_function.py_HtmlFunction">HtmlFunction</a><br />
+      back to module <a class="module_end" href="#PyYadc_html_function.py">html_function.py</a></p>
+    </div> <!-- end of class HtmlFunction -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_html_function.py -->
+  
+  <div class="module_container" id="PyYadc_html_generator.py">
+    <p class="module_def">module <b>html_generator.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">import </span>os.path
+  <span class="keyword">from </span>directory       <span class="keyword">import </span>DirectoryTree
+  <span class="keyword">from </span>css_code        <span class="keyword">import </span>myDoc_css_code
+  <span class="keyword">from </span>html_package    <span class="keyword">import </span>HtmlPackage
+      </pre>
+    </div>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">html_generator.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_html_generator.py_HtmlGenerator">HtmlGenerator</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_html_generator.py_HtmlGenerator">
+      <p class="class_def">class <b>HtmlGenerator</b>      </p>
+      <pre>
+  This is the generator of the HTML documentation.</pre>
+      <p class="function_def">def <b>__init__</b> (self, root_dirpath='.', doc_title=None)</p>
+      <pre>
+        Constructor.
+        
+        Automatically initializes its attribute 'doc_text' which contains
+        the whole HTML code related to the documentation.
+        Saves this HTML code into file '<root_dirpath>_myDoc.html', or in
+        file 'pyYadc.html' if root_dirpath is '.'.
+        
+        Args:
+            root_dirpath: str
+                The directory path of the software to be documented. Defaults
+                to the current working directory.
+            doc_title: str
+                The title of this documentation.  May be None,  in which case
+                no title is added to the document.      
+      </pre>
+      
+      <p class="function_def">def <b>_save_documentation</b> (self, root_dirpath)</p>
+      <pre>
+        Finally, saves the documentation HTML code into file.
+        
+        Raises:
+            OSError, IOError:
+                File could not be opened, created or written.      
+      </pre>
+      
+      <p class="function_def">def <b>_set_body</b> (self, root_dirpath)</p>
+      <pre>
+        Sets the body of this HTML documentation.      
+      </pre>
+      
+      <p class="function_def">def <b>_set_footer</b> (self)</p>
+      <pre>
+        Closes the description of this HTML documentation.      
+      </pre>
+      
+      <p class="function_def">def <b>_set_header</b> (self, doc_title=None)</p>
+      <pre>
+        Sets the header of this HTML documentation.
+        
+        Args:
+            doc_title: str
+                The title of this documentation. May be None, in which case
+                no title is added to the document.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_html_generator.py_HtmlGenerator">HtmlGenerator</a><br />
+      back to module <a class="module_end" href="#PyYadc_html_generator.py">html_generator.py</a></p>
+    </div> <!-- end of class HtmlGenerator -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_html_generator.py -->
+  
+  <div class="module_container" id="PyYadc_html_module.py">
+    <p class="module_def">module <b>html_module.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">from </span>html_class      <span class="keyword">import </span>HtmlClass
+  <span class="keyword">from </span>html_function   <span class="keyword">import </span>HtmlFunction
+  <span class="keyword">from </span>module_parser   <span class="keyword">import </span>ModuleParser
+  <span class="keyword">from </span>utils           <span class="keyword">import </span>Utils
+      </pre>
+    </div>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">html_module.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_html_module.py_HtmlModule">HtmlModule</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_html_module.py_HtmlModule">
+      <p class="class_def">class <b>HtmlModule</b>      </p>
+      <pre>
+  All manipulations on modules content.</pre>
+      <p class="function_def">def <b>__init__</b> (self, package_path, package_name, module_name, html_indent_level)</p>
+      <pre>
+        Constructor.
+                
+        Args:
+            package_path: str
+                the path to the embedding package.
+            module_name: str
+                the name of this embedded module.
+            html_indent_level: int
+                The level of indentation in the HTML code for this module.      
+      </pre>
+      
+      <p class="function_def">def <b>get_html_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the documentation of this module.
+        
+        Returns:
+            The HTML code, embedded in a string, related to this module.      
+      </pre>
+      
+      <p class="function_def">def <b>get_html_id</b> (self)</p>
+      <pre>
+        Gets an HTML identifier associated with a module and its embedding package.
+        
+        Returns:
+            A string containing the CSS id associated with the specified module.      
+      </pre>
+      
+      <p class="function_def">def <b>_empty_module</b> (self)</p>
+      <pre>
+        Sets the HTML code for stating that this module contains no definition
+        or even nothing at all.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_module_footer_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the footer of the module documentation.
+        
+        Returns:
+            The HTML code, embedded in a string, related to this module.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_module_header_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the header of the module documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string, related to this module.      
+      </pre>
+      
+      <p class="function_def">def <b>_insert_docstring</b> (self)</p>
+      <pre>
+        Inserts docstring for this module.      
+      </pre>
+      
+      <p class="function_def">def <b>_is_empty_module</b> (self)</p>
+      <pre>
+        Returns:
+            True if this module contains no definition or is fully empty.      
+      </pre>
+      
+      <p class="function_def">def <b>_list_assigns</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for all the assignments defined in this module.
+        
+        Returns:
+            The HTML code associated with the list of all assignments  defined
+            in this module.      
+      </pre>
+      
+      <p class="function_def">def <b>_list_classes</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for all the classes defined in this module.
+        
+        Returns:
+            The HTML code associated with the list of all classes  defined  in
+            this module.      
+      </pre>
+      
+      <p class="function_def">def <b>_list_functions</b> (self)</p>
+      <pre>
+        Evaluates the HTML code for all the functions defined at the  module
+        level within this module.
+        
+        Returns:
+            The HTML code associated with the list of all classes defined in
+            this module.      
+      </pre>
+      
+      <p class="function_def">def <b>_list_imports</b> (self)</p>
+      <pre>
+        Evaluates HTML code for listing all the 'import' and 'from ... import'
+        instructions inf this module      
+      </pre>
+      
+      <p class="function_def">def <b>_parse_module</b> (self)</p>
+      <pre>
+        Parses this module.
+        
+        Returns:
+            The overall structure of the parsed module, with information on:
+              - classes definitions, and associated docstring;
+              - functions and methods definitions, and associated docstring;
+              - list of imports;
+              - and maybe list of attributes.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_html_module.py_HtmlModule">HtmlModule</a><br />
+      back to module <a class="module_end" href="#PyYadc_html_module.py">html_module.py</a></p>
+    </div> <!-- end of class HtmlModule -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_html_module.py -->
+  
+  <div class="module_container" id="PyYadc_html_package.py">
+    <p class="module_def">module <b>html_package.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">import </span>os.path
+  <span class="keyword">from </span>directory   <span class="keyword">import </span>DirectoryDescr
+  <span class="keyword">from </span>html_module <span class="keyword">import </span>HtmlModule
+  <span class="keyword">from </span>utils       <span class="keyword">import </span>Utils
+      </pre>
+    </div>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">html_package.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_html_package.py_HtmlPackage">HtmlPackage</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_html_package.py_HtmlPackage">
+      <p class="class_def">class <b>HtmlPackage</b>      </p>
+      <pre>
+  All manipulation on packages content.</pre>
+      <p class="function_def">def <b>__init__</b> (self, package_descr, html_indent_level=0)</p>
+      <pre>
+        Evaluates HTML code for the documentation of a  specified  package.
+        Once  instantiated,  Package  objects  can  be applied their method
+        get_html_code().
+        
+        Args:
+            package_descr: DirectoryDescr
+                A reference to the descriptor of this package  -  which  is 
+                also a directory on disk.
+            html_indent_level: int
+                The level of indentation in the HTML code for this package.
+                Defaults to 0.
+        
+        Raises:
+            AssertError: the  passed  argument  'package_descr'  is not  an
+                instance of class DirectoryDescr.      
+      </pre>
+      
+      <p class="function_def">def <b>get_html_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the documentation of a specified package.
+        
+        Returns:
+            The HTML code, embedded in a string, related to this package.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_package_footer_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the footer of the package documentation.
+        
+        Returns:
+            The HTML code, embedded in a string, related to this package.      
+      </pre>
+      
+      <p class="function_def">def <b>_get_package_header_code</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the header of the package documentation.
+        
+        Returns:
+            The header HTML code, embedded in a string, related to this package.      
+      </pre>
+      
+      <p class="function_def">def <b>_list_modules</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the list of modules contained within
+        this package.
+
+        Returns:
+            The HTML code, embedded in a string, related to this package.      
+      </pre>
+      
+      <p class="function_def">def <b>_list_sub_packages</b> (self)</p>
+      <pre>
+        Evaluates HTML code for the list of sub_packages contained within
+        this package.
+        
+        Returns:
+            The HTML code, embedded in a string, related to this package.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_html_package.py_HtmlPackage">HtmlPackage</a><br />
+      back to module <a class="module_end" href="#PyYadc_html_package.py">html_package.py</a></p>
+    </div> <!-- end of class HtmlPackage -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_html_package.py -->
+  
+  <div class="module_container" id="PyYadc_module_parser.py">
+    <p class="module_def">module <b>module_parser.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">import </span>ast
+  <span class="keyword">from </span>os.path <span class="keyword">import </span>join<span class="keyword"> as </span>os_path_join
+      </pre>
+    </div>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">module_parser.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_module_parser.py_AssignDescr">AssignDescr</a><br />
+        class <a href="#PyYadc_module_parser.py_ClassDescr">ClassDescr</a><br />
+        class <a href="#PyYadc_module_parser.py_FunctionDescr">FunctionDescr</a><br />
+        class <a href="#PyYadc_module_parser.py_ImportDescr">ImportDescr</a><br />
+        class <a href="#PyYadc_module_parser.py_ModuleDescr">ModuleDescr</a><br />
+        class <a href="#PyYadc_module_parser.py_ModuleParser">ModuleParser</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_module_parser.py_AssignDescr">
+      <p class="class_def">class <b>AssignDescr</b>      </p>
+      <pre>
+  Description of ast.Assign nodes as being parsed.</pre>
+      <p class="function_def">def <b>__init__</b> (self, ast_node)</p>
+      <pre>
+        Constructor.
+        
+        Once instantiated, this class offers access to attributes:
+          - self.assign_def, of class ast.Assign.
+        
+        Args:
+            ast_node: ast.FunctionDef
+                A reference to the currently parsed node with ast. Within 
+                current class, this is a ast.Assign instance.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_module_parser.py_AssignDescr">AssignDescr</a><br />
+      back to module <a class="module_end" href="#PyYadc_module_parser.py">module_parser.py</a></p>
+    </div> <!-- end of class AssignDescr -->
+    
+    <div class="class_container" id="PyYadc_module_parser.py_ClassDescr">
+      <p class="class_def">class <b>ClassDescr</b>      </p>
+      <pre>
+  Description of an ast.ClassDef node as being parsed.</pre>
+      <p class="function_def">def <b>__init__</b> (self, ast_node)</p>
+      <pre>
+        Constructor.
+        
+        Once instantiated, this class offers access to attributes:
+
+          - self.class_node, of class ast.ClassDef;
+          - self.docstring, the associated doc string.
+        
+        Args:
+            ast_node: ast.ClassDef
+                A reference to the currently parsed node with ast.
+                Within  current  class,  this  is  an ast.ClassDef 
+                instance.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_module_parser.py_ClassDescr">ClassDescr</a><br />
+      back to module <a class="module_end" href="#PyYadc_module_parser.py">module_parser.py</a></p>
+    </div> <!-- end of class ClassDescr -->
+    
+    <div class="class_container" id="PyYadc_module_parser.py_FunctionDescr">
+      <p class="class_def">class <b>FunctionDescr</b>      </p>
+      <pre>
+  Description of an ast.FunctionDef node as being parsed.</pre>
+      <p class="function_def">def <b>__init__</b> (self, ast_node)</p>
+      <pre>
+        Constructor.
+        
+        Once instantiated, this class offers access to attributes:
+          - self.function_def, of class ast.FunctionDef;
+          - self.docstring, the associated doc string.
+        
+        Args:
+            ast_node: ast.FunctionDef
+                A reference to the currently parsed node with ast. Within 
+                current class, this is a ast.FunctionDef instance.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_module_parser.py_FunctionDescr">FunctionDescr</a><br />
+      back to module <a class="module_end" href="#PyYadc_module_parser.py">module_parser.py</a></p>
+    </div> <!-- end of class FunctionDescr -->
+    
+    <div class="class_container" id="PyYadc_module_parser.py_ImportDescr">
+      <p class="class_def">class <b>ImportDescr</b>      </p>
+      <pre>
+  Description of ast.Import and ast.ImportFrom nodes as being parsed.</pre>
+      <p class="function_def">def <b>__init__</b> (self, ast_node)</p>
+      <pre>
+        Constructor.
+        
+        Once instantiated, this class offers access to attributes:
+          - self.import_def, of class ast.Import or ast.ImportFrom.
+        
+        Args:
+            ast_node: ast.FunctionDef
+                A reference to the currently parsed node with ast. Within 
+                current class, this is a ast.FunctionDef instance.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_module_parser.py_ImportDescr">ImportDescr</a><br />
+      back to module <a class="module_end" href="#PyYadc_module_parser.py">module_parser.py</a></p>
+    </div> <!-- end of class ImportDescr -->
+    
+    <div class="class_container" id="PyYadc_module_parser.py_ModuleDescr">
+      <p class="class_def">class <b>ModuleDescr</b>      </p>
+      <pre>
+  Description of a parsed Python module.</pre>
+      <p class="function_def">def <b>__init__</b> (self)</p>
+      <pre>     Constructor.      
+      </pre>
+      
+      <p class="function_def">def <b>add_new_assign</b> (self, class_name, ast_node)</p>
+      <pre>
+        Adds a new assignment descriptor either to the module description
+        or to some class definition.
+                
+        Args:
+            class_name: str
+                The name of the currently parsed class, or None if this
+                function definition is to be associated with a module.
+            ast_node: ast.Assign
+                A reference to the currently parsed node with ast.      
+      </pre>
+      
+      <p class="function_def">def <b>add_new_class</b> (self, ast_node)</p>
+      <pre>
+        Adds a new class descriptor to the module description.
+                
+        Args:
+            ast_node: ast.ClassDef
+                A reference to the currently parsed node with ast. Within 
+                current class, this is an ast.ClassDef instance.      
+      </pre>
+      
+      <p class="function_def">def <b>add_new_function</b> (self, class_name, ast_node)</p>
+      <pre>
+        Adds a new function descriptor either to the module description
+        or to some class definition.
+                
+        Args:
+            class_name: str
+                The name of the currently parsed class, or None if this
+                function definition is to be associated with a module.
+            ast_node: ast.FunctionDef
+                A reference to the currently parsed node with ast.      
+      </pre>
+      
+      <p class="function_def">def <b>add_new_import</b> (self, ast_node)</p>
+      <pre>
+        Adds a new 'import' or 'from ... import'  to the module description.
+        
+        Args:
+            ast_node: ast.Import of ast.ImportFrom
+                A reference to the currently parsed node with ast.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_module_parser.py_ModuleDescr">ModuleDescr</a><br />
+      back to module <a class="module_end" href="#PyYadc_module_parser.py">module_parser.py</a></p>
+    </div> <!-- end of class ModuleDescr -->
+    
+    <div class="class_container" id="PyYadc_module_parser.py_ModuleParser">
+      <p class="class_def">class <b>ModuleParser</b>&nbsp;( ast.NodeVisitor )      </p>
+      <pre>
+  Definition of the parsing of Python modules.</pre>
+      <p class="function_def">def <b>__init__</b> (self, package_path, module_name)</p>
+      <pre>
+        Constructor.
+        
+        Args:
+            package_path: str
+                the path to the embedding package.
+            module_name: str
+                the name of this embedded module.      
+      </pre>
+      
+      <p class="function_def">def <b>visit_Assign</b> (self, ast_node)</p>
+      <pre>
+        Actions to be taken when parsing an assignment definition at the
+        module level.
+        
+        Args:
+            ast_node: ast.AST or any inheriting Node class
+                A reference to the currently parsed not with ast.      
+      </pre>
+      
+      <p class="function_def">def <b>visit_ClassDef</b> (self, ast_node)</p>
+      <pre>
+        Actions to be taken when parsing a class definition.
+        
+        Args:
+            ast_node: ast.ClassDef
+                A reference to the currently parsed not with ast.      
+      </pre>
+      
+      <p class="function_def">def <b>visit_FunctionDef</b> (self, ast_node)</p>
+      <pre>
+        Actions to be taken when parsing a function definition.
+        
+        Args:
+            ast_node: ast.FucntionDef
+                A reference to the currently parsed not with ast.      
+      </pre>
+      
+      <p class="function_def">def <b>visit_If</b> (self, ast_node)</p>
+      <pre>
+        Checks for the 'if __name__ == "__main__"' instruction of scripts.
+        Once detected, stops the down-tree parsing of this module.      
+      </pre>
+      
+      <p class="function_def">def <b>visit_Import</b> (self, ast_node)</p>
+      <pre>
+        Actions to be taken when parsing an 'import' declaration.
+        
+        Args:
+            ast_node: ast.Import
+                A reference to the currently parsed not with ast.      
+      </pre>
+      
+      <p class="function_def">def <b>visit_ImportFrom</b> (self, ast_node)</p>
+      <pre>
+        Actions to be taken when parsing an 'from ... import' declaration.
+        
+        Args:
+            ast_node: ast.ImportFrom
+                A reference to the currently parsed not with ast.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_module_parser.py_ModuleParser">ModuleParser</a><br />
+      back to module <a class="module_end" href="#PyYadc_module_parser.py">module_parser.py</a></p>
+    </div> <!-- end of class ModuleParser -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_module_parser.py -->
+  
+  <div class="module_container" id="PyYadc_pyYadc.py">
+    <p class="module_def">module <b>pyYadc.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <div class="imports-list">
+      <p class="imports-def"><b>Imports</b></p>
+      <pre>
+  <span class="keyword">import </span>os.path
+  <span class="keyword">import </span>sys
+  <span class="keyword">from </span>html_generator  <span class="keyword">import </span>HtmlGenerator
+      </pre>
+    </div>
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_pyYadc.py -->
+  
+  <div class="module_container" id="PyYadc_utils.py">
+    <p class="module_def">module <b>utils.py</b></p>
+    
+    <pre>
+  Copyright (c) 2016-2018 Philippe Schmouker, PyYadc project, https://github.com/schmouk/PyYadc
+  
+  Permission is hereby granted,  free of charge,  to any person obtaining a copy
+  of this software and associated documentation files (the "Software"),  to deal
+  in the Software without restriction, including  without  limitation the rights
+  to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+  copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+  IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+  AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+  OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</pre>
+    <p class="modules-comments"><i>no imports.</i></p>
+    <div class="classes_list">
+      <p class="imports-def"><b>List of classes</b> for module <b><span class="module-color">utils.py</span></b></p>
+      <p class="modules-names">
+        class <a href="#PyYadc_utils.py_Utils">Utils</a><br />
+      </p>
+    </div>
+    
+    <div class="class_container" id="PyYadc_utils.py_Utils">
+      <p class="class_def">class <b>Utils</b>      </p>
+      <pre>
+  This class is used as a namespace for utilities definitions</pre>
+      <div class="imports-list">
+        <p class="imports-def"><b>List of data</b> for class <b><span class="blue">Utils</span></b></p>
+        <pre>
+  <i>line 35</i> |     K_HTML_INDENT_SPACES = 2
+  <i>line 36</i> |     K_MAX_ASSIGNS_LINES  = 10        </pre>
+      </div>
+      <p class="function_def">@staticmethod def <b>get_decorators_str</b> (decorator_list, module_lines)</p>
+      <pre>
+        Transforms a list of decorators as specified in ast into a string.
+        
+        Args:
+            decorator_list: list
+                A reference to a list of decorators descriptors.
+            module_lines: list
+                A reference to the content of the parsed module,
+                one line per entry.
+        
+        Returns:
+            A string describing the whole decorators.      
+      </pre>
+      
+      <p class="function_def">@staticmethod def <b>html_indent</b> (indent_level, html_str)</p>
+      <pre>
+        Inserts spaces in front of html string according to specified level 
+        of indentation.
+        
+        Args:
+            indent_level: int
+                The level of indentation.  Please notice that this function
+                uses the class constant K_HTML_INDENT_SPACES which defaults
+                to 2.
+            html_str: str
+                The HTML code to be indented.
+        
+        Returns:
+            The indented HTML code, every inner '\n' being modified accord-
+            ingly.      
+      </pre>
+      
+      <p class="function_def">@staticmethod def <b>path_to_id</b> (path)</p>
+      <pre>
+        Evaluates an HTML id from a path.
+        
+        Args:
+            path: str
+                The path name to be transformed as an id.
+        
+        Returns:
+            A string corresponding to the transformed path.      
+      </pre>
+      
+      <p class="function_def">@staticmethod def <b>replace_backslash</b> (path)</p>
+      <pre>
+        Replaces every backslash with a slash.
+        
+        Args:
+            path: str
+                The path name to be transformed.
+        
+        Returns:
+            A string corresponding to the transformed path.      
+      </pre>
+      
+      <p>up to class <a class="class_end" href="#PyYadc_utils.py_Utils">Utils</a><br />
+      back to module <a class="module_end" href="#PyYadc_utils.py">utils.py</a></p>
+    </div> <!-- end of class Utils -->
+    
+    <p>back to package <a class="package_end" href="#PyYadc">PyYadc</a></p>
+  </div> <!-- end of module PyYadc_utils.py -->
+  
+  <p class="package_end">end of package <b><a class="package_end" href="#"></a>&nbsp;<a class="package_end" href="#PyYadc">PyYadc</a></b></p>
+</div> <!-- end of package container PyYadc -->
+
+</body>
+</html>
