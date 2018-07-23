@@ -45,7 +45,7 @@ class TokensTestBase:
             test_title: str
                 The title (i.e. name) of this test
             test_src_path: str
-                the path to the Typhon test file
+                the path to the Typee test file
             soluce_path: str
                 the path to the file that contains the  expected  list  of
                 Intermediate Code nodes. This list HAS TO BE NAMED soluce.
