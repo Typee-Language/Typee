@@ -30,11 +30,11 @@ from FrontEnd.IntermediateCode.fe_intermediate_code  import FEIntermediateCode
 #=============================================================================
 class FEScanner:
     """
-    This is the class of the Typhon Front-End Scanner.
-    It is the very first stage of the front-end pipeline of  the  Typhon
-    compiler.
-    It scans Typhon source code and produces tokenized Intermediate Code
-    that will be parsed by the Typhon Front-End Parser.
+    This is the class of the Typee Front-End Scanner.
+    It is the very first stage of the front-end  pipeline of  the  Typee
+    translator.
+    It scans Typee source code and produces tokenized Intermediate  Code
+    that will be parsed by the Typee Front-End Parser.
     """
     
     #-------------------------------------------------------------------------
@@ -50,7 +50,7 @@ class FEScanner:
     #-------------------------------------------------------------------------
     def scan_file(self, filepath:str, **parse_args) -> FEIntermediateCode:
         '''
-        Runs the Typhon scanner on a specified file.
+        Runs the Typee scanner on a specified file.
         
         Args:
             filepath: str
