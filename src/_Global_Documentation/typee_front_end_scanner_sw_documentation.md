@@ -467,8 +467,31 @@ to the Front-End __Parser__.
 
 ## 3. Errors Processing Description
 
-_<small intro>_
+The __Typee__ __Scanner__ detects errors every time some token is badly
+formed. For instance, something like _125abc_ is __neither__ a correct number 
+__nor__ a valid identifier in __Typee__. A valid number would have been
+_0x125abc_ and a valid identifier would habe been _\_125abc_.
 
+So, every time token errors are detected by the Front-End __Scanner__, a 
+specific Token Node is appended to the Intermediate Code list. This is a 
+Token Node of type ```ICTokenNode_UNEXPECTED```.
+
+Unexpected Token Nodes are appended to the list of token nodes at the exact 
+place where the erroneous token has been detected, with line number and column 
+index set into the attributes of the node and most of the time with the 
+corresponding erroneous string set in attribute ```tk_data```.
+
+This is the only processing of _tokenization_ errors that are held by the
+Front-End __Scanner__. Such errors are passed to the Front-End __Parser__, via
+the Intermediate Code list of Token Nodes, for the __Parser__ to be informed 
+of some badly formed token.
+
+The Front-End __Scanner__ does not print or log any error message. The 
+printing or the logging of this kind of errors is delayed after the last stage 
+of the Front-End __Parser__, once any other syntaxic or types errors have been 
+detected. This way, all detected errors can be printed or logged in the order 
+of the line numbers they are appearing within the translated __Typee__ 
+module.
 
 
 
@@ -478,4 +501,6 @@ _<small intro>_
 |---|---|---|---|
 | 2018-07-22 | 0.0.1 | Kerm | Very first creation. Errors processing still to be documented |
 | 2018-07-23 | 0.0.2 | Schmouk | Minor typo corrections, a few text addings. |
+| 2018-07-23 | 0.0.3 | Kerm | Completed section 3. Errors Processing |
+| 2018-07-23 | 1.0 | Kerm | This document is now considered as being validated |
 |  |  |  |  |
