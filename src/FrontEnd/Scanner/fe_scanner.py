@@ -23,8 +23,7 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icode_node         import *  ## to get access to all ICNode_XXX classes
-
+from FrontEnd.IntermediateCode.fe_icode_token_node   import *  ## to get direct access to all ICTokenNode_XXX classes
 from FrontEnd.IntermediateCode.fe_intermediate_code  import FEIntermediateCode
 
 
@@ -104,7 +103,7 @@ class FEScanner:
         
         while not self._eof:
             self._tokenize()
-        self._append_node( ICNode_EOF )
+        self._append_node( ICTokenNode_EOF )
         
         return  self.intermediate_code
 
@@ -135,7 +134,7 @@ class FEScanner:
             self._skip_space()
             
         else:
-            self._append_node( ICNode_UNEXPECTED, self._current )
+            self._append_node( ICTokenNode_UNEXPECTED, self._current )
             self._next_char()
 
 
@@ -151,7 +150,7 @@ class FEScanner:
             self._next_char()
             self._append_node( augmented_class, data+'=' )
         else:
-            if base_class is ICNode_UNEXPECTED:
+            if base_class is ICTokenNode_UNEXPECTED:
                 self._append_node( base_class, self._current )
             else:
                 self._append_node( base_class, data )
@@ -160,20 +159,20 @@ class FEScanner:
         self._next_char()
         for _ in range(count):
             if self._eof:
-                self._append_node( ICNode_UNEXPECTED, 'end of file' )
+                self._append_node( ICTokenNode_UNEXPECTED, 'end of file' )
                 break
             elif self._current in FEScanner._ENDLINE:
-                self._append_node( ICNode_UNEXPECTED, 'end of line' )
+                self._append_node( ICTokenNode_UNEXPECTED, 'end of line' )
                 break
             elif self._current not in base_chars:
-                self._append_node( ICNode_UNEXPECTED, self._current )
+                self._append_node( ICTokenNode_UNEXPECTED, self._current )
             self._next_char()
     #-------------------------------------------------------------------------
     def _comment(self):
         start = self.idx + 1
         while not self._eof  and  self._current not in self._ENDLINE:
             self._next_char()
-        self._append_node( ICNode_COMMENT, self.code[start:self.idx] )
+        self._append_node( ICTokenNode_COMMENT, self.code[start:self.idx] )
         if not self._eof:
             self._next_line( True )
     #-------------------------------------------------------------------------
@@ -184,7 +183,7 @@ class FEScanner:
             fract_part = self._fraction_part()
             expon_part = self._exponent_part()
             if not self._error:
-                self._append_node( ICNode_FLOAT if fract_part or expon_part else ICNode_INTEGER,
+                self._append_node( ICTokenNode_FLOAT if fract_part or expon_part else ICTokenNode_INTEGER,
                                    self.code[start:self.idx] )
     #-------------------------------------------------------------------------
     def _decimal_part(self) -> bool:
@@ -197,7 +196,7 @@ class FEScanner:
                     start = self.idx
                     while self._current in self._DOTTED_NAME_CHARS:
                         self._next_char()
-                    self._append_node( ICNode_UNEXPECTED, self.code[start:self.idx] )
+                    self._append_node( ICTokenNode_UNEXPECTED, self.code[start:self.idx] )
                     return False
             else:
                 self._next_char()
@@ -205,7 +204,7 @@ class FEScanner:
             start = self.idx
             while self._current in self._NOT_DEC_CHARS:
                 self._next_char()
-            self._append_node( ICNode_UNEXPECTED, self.code[start:self.idx] )
+            self._append_node( ICTokenNode_UNEXPECTED, self.code[start:self.idx] )
             return False
         else:
             return True
@@ -216,14 +215,14 @@ class FEScanner:
             self._next_char()
             if self._current == '.':
                 self._next_char()
-                self._append_node( ICNode_ELLIPSIS, '...' )
+                self._append_node( ICTokenNode_ELLIPSIS, '...' )
                 return True
             else:
-                self._append_node( ICNode_UNEXPECTED, self._current )
+                self._append_node( ICTokenNode_UNEXPECTED, self._current )
                 self._next_char()
                 return False
         else:
-            self._append_node( ICNode_DOT, '.' )
+            self._append_node( ICTokenNode_DOT, '.' )
             return True
     #-------------------------------------------------------------------------
     def _embedded_code(self):
@@ -232,7 +231,7 @@ class FEScanner:
             if self._current == '}':
                 self._next_char()
                 if self._current == '}':
-                    self._append_node( ICNode_EMBED_CODE, self.code[start:self.idx-1] )
+                    self._append_node( ICTokenNode_EMBED_CODE, self.code[start:self.idx-1] )
                     self._next_char()
                     break
             self._next_char()
@@ -248,9 +247,9 @@ class FEScanner:
             elif self._current == '0':
                 self._check_escaped_char( 3, FEScanner._OCTAL_CHARS )
             else:
-                self._append_node( ICNode_UNEXPECTED, self._current )
+                self._append_node( ICTokenNode_UNEXPECTED, self._current )
         else:
-            self._append_node( ICNode_UNEXPECTED, self._current )
+            self._append_node( ICTokenNode_UNEXPECTED, self._current )
     #-------------------------------------------------------------------------
     def _exponent_part(self) -> bool:
         if self._current in "eE":
@@ -283,11 +282,11 @@ class FEScanner:
                 self._next_char()
                 if self._current == '/':
                     self._next_char()
-                    self._append_node( ICNode_COMMENT_ML, self.code[start:self.idx-2] )
+                    self._append_node( ICTokenNode_COMMENT_ML, self.code[start:self.idx-2] )
                     break
             elif self._eof:
-                self._append_node( ICNode_COMMENT_ML, self.code[start:] )
-                self._append_node( ICNode_UNEXPECTED, 'end of file' )
+                self._append_node( ICTokenNode_COMMENT_ML, self.code[start:] )
+                self._append_node( ICTokenNode_UNEXPECTED, 'end of file' )
                 break
             else:
                 self._next_char()
@@ -301,9 +300,9 @@ class FEScanner:
             kw_type = FEScanner._KEYWORDS[name]
             self._append_node( kw_type, name )
         elif name in FEScanner._LANGUAGE_KWDS:
-            self._append_node( ICNode_LANGUAGE, name )
+            self._append_node( ICTokenNode_LANGUAGE, name )
         else:
-            self._append_node( ICNode_IDENT, name )
+            self._append_node( ICTokenNode_IDENT, name )
     #-------------------------------------------------------------------------
     def _number(self):
         if self._current == '0':
@@ -322,7 +321,7 @@ class FEScanner:
         elif self._current in self._OCTAL_CHARS:
             self._octal_number()
         else:
-            self._append_node( ICNode_INTEGER, '0' )
+            self._append_node( ICTokenNode_INTEGER, '0' )
     #-------------------------------------------------------------------------
     def _octal_number(self):
         self._parse_number( self._OCTAL_CHARS )
@@ -332,12 +331,12 @@ class FEScanner:
             self._next_char()
             start = self.idx - (3 if spec_char else 2)
             if self._parse_subnumber( num_chars ):
-                self._append_node( ICNode_INTEGER, self.code[start : self.idx] )
+                self._append_node( ICTokenNode_INTEGER, self.code[start : self.idx] )
                 return True
             else:
                 return False
         else:
-            self._append_node( ICNode_UNEXPECTED, self._current )
+            self._append_node( ICTokenNode_UNEXPECTED, self._current )
             return False
     #-------------------------------------------------------------------------
     def _parse_subnumber(self, num_chars ) -> bool:
@@ -347,7 +346,7 @@ class FEScanner:
                 if self._current in num_chars:
                     self._next_char()
                 else:
-                    self._append_node( ICNode_UNEXPECTED, self._current )
+                    self._append_node( ICTokenNode_UNEXPECTED, self._current )
                     while self._current in self._NAME_CHARS:
                         self._next_char()          
                     return False
@@ -355,7 +354,7 @@ class FEScanner:
                 self._next_char()
         if self._current in self._NAME_CHARS:
             while self._current in self._NAME_CHARS:
-                self._append_node( ICNode_UNEXPECTED, self._current )
+                self._append_node( ICTokenNode_UNEXPECTED, self._current )
                 self._next_char()
             return False
         else:
@@ -384,9 +383,9 @@ class FEScanner:
                 self._escaped_char()
             else:
                 self._next_char()
-        self._append_node( ICNode_STRING, self.code[start:self.idx] )
+        self._append_node( ICTokenNode_STRING, self.code[start:self.idx] )
         if error:
-            self._append_node( ICNode_UNEXPECTED, 'end of '+error )
+            self._append_node( ICTokenNode_UNEXPECTED, 'end of '+error )
         return True
     #-------------------------------------------------------------------------
     def _string_double_quote(self) -> bool:
@@ -399,16 +398,16 @@ class FEScanner:
     #=========================================================================
     #-------------------------------------------------------------------------
     def _arobase(self):
-        self._check_augmented_operator( ICNode_AROBASE, ICNode_AUG_AROBASE, '@' )
+        self._check_augmented_operator( ICTokenNode_AROBASE, ICTokenNode_AUG_AROBASE, '@' )
     #-------------------------------------------------------------------------
     def _assign(self):
-        self._check_augmented_operator( ICNode_ASSIGN, ICNode_EQ, '=' )
+        self._check_augmented_operator( ICTokenNode_ASSIGN, ICTokenNode_EQ, '=' )
     #-------------------------------------------------------------------------
     def _bitand(self):
-        self._check_augmented_operator( ICNode_BITAND, ICNode_AUG_BITAND, '&' )
+        self._check_augmented_operator( ICTokenNode_BITAND, ICTokenNode_AUG_BITAND, '&' )
     #-------------------------------------------------------------------------
     def _bitor(self):
-        self._check_augmented_operator( ICNode_BITOR, ICNode_AUG_BITOR, '|' )
+        self._check_augmented_operator( ICTokenNode_BITOR, ICTokenNode_AUG_BITOR, '|' )
     #-------------------------------------------------------------------------
     def _brace_op(self):
         self._next_char()
@@ -416,21 +415,21 @@ class FEScanner:
             self._next_char()
             self._embedded_code()
         else:
-            self._append_node( ICNode_BRACEOP, '{' )
+            self._append_node( ICTokenNode_BRACEOP, '{' )
     #-------------------------------------------------------------------------
     def _caret(self):
         self._next_char()
         if self._current == '^':
-            self._check_augmented_operator( ICNode_POWER, ICNode_AUG_POWER, '^^' )
+            self._check_augmented_operator( ICTokenNode_POWER, ICTokenNode_AUG_POWER, '^^' )
         else:
-            self._check_augmented_operator( ICNode_BITXOR, ICNode_AUG_BITXOR, '^', False )
+            self._check_augmented_operator( ICTokenNode_BITXOR, ICTokenNode_AUG_BITXOR, '^', False )
     #-------------------------------------------------------------------------
     def _colon(self):
         self._next_char()
         if self._current == ':':
-            self._check_augmented_operator( ICNode_OP_2COLN, ICNode_AUG_2COLN, '::' )
+            self._check_augmented_operator( ICTokenNode_OP_2COLN, ICTokenNode_AUG_2COLN, '::' )
         else:
-            self._append_node( ICNode_COLON, ':' )
+            self._append_node( ICTokenNode_COLON, ':' )
     #-------------------------------------------------------------------------
     def _div(self):
         self._next_char()
@@ -439,78 +438,78 @@ class FEScanner:
         elif self._current == '*':
             self._multi_lines_comment()
         else:
-            self._check_augmented_operator( ICNode_DIV, ICNode_AUG_DIV, '/', False )
+            self._check_augmented_operator( ICTokenNode_DIV, ICTokenNode_AUG_DIV, '/', False )
     #-------------------------------------------------------------------------
     def _eq(self):
-        self._check_augmented_operator( ICNode_ASSIGN, ICNode_EQ, '==' )
+        self._check_augmented_operator( ICTokenNode_ASSIGN, ICTokenNode_EQ, '==' )
     #-------------------------------------------------------------------------
     def _excl(self):
         self._next_char()
         if self._current == '!':
-            self._check_augmented_operator( ICNode_OP_2EXCL, ICNode_AUG_2EXCL, '!!' )
+            self._check_augmented_operator( ICTokenNode_OP_2EXCL, ICTokenNode_AUG_2EXCL, '!!' )
         else:
-            self._check_augmented_operator( ICNode_UNEXPECTED, ICNode_NE, '!', False )
+            self._check_augmented_operator( ICTokenNode_UNEXPECTED, ICTokenNode_NE, '!', False )
     #-------------------------------------------------------------------------
     def _greater(self):
         self._next_char()
         if self._current == '>':
             self._next_char()
             if self._current == '>':
-                self._check_augmented_operator( ICNode_SHIFT0R, ICNode_AUG_SHIFT0R, '>>>' )
+                self._check_augmented_operator( ICTokenNode_SHIFT0R, ICTokenNode_AUG_SHIFT0R, '>>>' )
             else:
-                self._check_augmented_operator( ICNode_SHIFTR, ICNode_AUG_SHIFTR, '>>', False )
+                self._check_augmented_operator( ICTokenNode_SHIFTR, ICTokenNode_AUG_SHIFTR, '>>', False )
         elif self._current == '<':
-            self._check_augmented_operator( ICNode_OP_GRLE, ICNode_AUG_GRLE, '><' )
+            self._check_augmented_operator( ICTokenNode_OP_GRLE, ICTokenNode_AUG_GRLE, '><' )
         else:
-            self._check_augmented_operator( ICNode_GT, ICNode_GE, '>', False )
+            self._check_augmented_operator( ICTokenNode_GT, ICTokenNode_GE, '>', False )
     #-------------------------------------------------------------------------
     def _less(self):
         self._next_char()
         if self._current == '<':
             self._next_char()
             if self._current == '<':
-                self._check_augmented_operator( ICNode_SHIFT0L, ICNode_AUG_SHIFT0L, '<<<' )
+                self._check_augmented_operator( ICTokenNode_SHIFT0L, ICTokenNode_AUG_SHIFT0L, '<<<' )
             else:
-                self._check_augmented_operator( ICNode_SHIFTL, ICNode_AUG_SHIFTL, '<<', False )
+                self._check_augmented_operator( ICTokenNode_SHIFTL, ICTokenNode_AUG_SHIFTL, '<<', False )
         else:
-            self._check_augmented_operator( ICNode_LT, ICNode_LE, '<', False )
+            self._check_augmented_operator( ICTokenNode_LT, ICTokenNode_LE, '<', False )
     #-------------------------------------------------------------------------
     def _minus(self):
         self._next_char()
         if self._current == '-':
             self._next_char()
-            self._append_node( ICNode_DECR, '--' )
+            self._append_node( ICTokenNode_DECR, '--' )
         elif self._current == '>':
             self._next_char()
-            self._append_node( ICNode_ISOF, '->' )
+            self._append_node( ICTokenNode_ISOF, '->' )
         else:
-            self._check_augmented_operator( ICNode_MINUS, ICNode_AUG_MINUS, '-', False )
+            self._check_augmented_operator( ICTokenNode_MINUS, ICTokenNode_AUG_MINUS, '-', False )
     #-------------------------------------------------------------------------
     def _mod(self):
-        self._check_augmented_operator( ICNode_MOD, ICNode_AUG_MOD, '%' )
+        self._check_augmented_operator( ICTokenNode_MOD, ICTokenNode_AUG_MOD, '%' )
     #-------------------------------------------------------------------------
     def _plus(self):
         self._next_char()
         if self._current == '+':
             self._next_char()
-            self._append_node( ICNode_INCR, '++' )
+            self._append_node( ICTokenNode_INCR, '++' )
         else:
-            self._check_augmented_operator( ICNode_PLUS, ICNode_AUG_PLUS, '+', False )
+            self._check_augmented_operator( ICTokenNode_PLUS, ICTokenNode_AUG_PLUS, '+', False )
     #-------------------------------------------------------------------------
     def _quest(self):
         self._next_char()
         if self._current == '?':
-            self._check_augmented_operator( ICNode_OP_2QUEST, ICNode_AUG_2QUEST, '??' )
+            self._check_augmented_operator( ICTokenNode_OP_2QUEST, ICTokenNode_AUG_2QUEST, '??' )
         else:
-            self._append_node( ICNode_ANY_TYPE, '?' ) 
+            self._append_node( ICTokenNode_ANY_TYPE, '?' ) 
 
     #-------------------------------------------------------------------------
     def _star(self):
         self._next_char()
         if self._current == '*':
-            self._check_augmented_operator( ICNode_POWER, ICNode_AUG_POWER, '**' )
+            self._check_augmented_operator( ICTokenNode_POWER, ICTokenNode_AUG_POWER, '**' )
         else:
-            self._check_augmented_operator( ICNode_MUL, ICNode_AUG_MUL, '*', False )
+            self._check_augmented_operator( ICTokenNode_MUL, ICTokenNode_AUG_MUL, '*', False )
             
             
     #=========================================================================
@@ -550,7 +549,7 @@ class FEScanner:
         self.num_coln  = 1
         self._next_char()
         if append_nl:
-            self._append_node( ICNode_NL, 'new line' )
+            self._append_node( ICTokenNode_NL, 'new line' )
     #-------------------------------------------------------------------------
     def _skip_chars(self, n:int, skip_space:bool=True):
         self.idx += n
@@ -590,15 +589,15 @@ class FEScanner:
     _END_OF_FILE        = 0x00
     
     _SIMPLE_TOKEN = {
-        '}':    ICNode_BRACECL,
-        ']':    ICNode_BRACKETCL,
-        '[':    ICNode_BRACKETOP,
-        ',':    ICNode_COMMA,
-        '#':    ICNode_HASH,
-        '(':    ICNode_PAROP,
-        ')':    ICNode_PARCL,
-        ';':    ICNode_SEMICOLON,
-        '~':    ICNode_TILD,
+        '}':    ICTokenNode_BRACECL,
+        ']':    ICTokenNode_BRACKETCL,
+        '[':    ICTokenNode_BRACKETOP,
+        ',':    ICTokenNode_COMMA,
+        '#':    ICTokenNode_HASH,
+        '(':    ICTokenNode_PAROP,
+        ')':    ICTokenNode_PARCL,
+        ';':    ICTokenNode_SEMICOLON,
+        '~':    ICTokenNode_TILD,
     }
     
     _COMPOUND_TOKEN = {
@@ -622,87 +621,87 @@ class FEScanner:
     }
     
     _KEYWORDS = {
-        'abstract':     ICNode_ABSTRACT,
-        'all':          ICNode_ALL,
-        'and':          ICNode_AND,
-        'array':        ICNode_ARRAY,
-        'as':           ICNode_AS,
-        'assert':       ICNode_ASSERT,
-        'bool':         ICNode_SCALAR_TYPE,
-        'break':        ICNode_BREAK,
-        'case':         ICNode_CASE,
-        'cast':         ICNode_CAST,
-        'char':         ICNode_SCALAR_TYPE,
-        'char16':       ICNode_SCALAR_TYPE,
-        'class':        ICNode_CLASS,
-        'continue':     ICNode_CONTINUE,
-        'const':        ICNode_CONST,
-        'del':          ICNode_DEL,
-        'elif':         ICNode_ELIF,
-        'else':         ICNode_ELSE,
-        'elseif':       ICNode_ELIF,
-        'elsif':        ICNode_ELIF,
-        'embed':        ICNode_EMBED,
-        'ensure':       ICNode_ENSURE,
-        'enum':         ICNode_ENUM,
-        'except':       ICNode_EXCEPT,
-        'file':         ICNode_FILE,
-        'False':        ICNode_FALSE,
-        'false':        ICNode_FALSE,
-        'final':        ICNode_FINAL,
-        'finally':      ICNode_FINALLY,
-        'float32':      ICNode_SCALAR_TYPE,
-        'float64':      ICNode_SCALAR_TYPE,
-        'for':          ICNode_FOR,
-        'forever':      ICNode_FOREVER,
-        'from':         ICNode_FROM,
-        'hidden':       ICNode_HIDDEN,
-        'if':           ICNode_IF,
-        'import':       ICNode_IMPORT,
-        'in':           ICNode_IN,
-        'int8':         ICNode_SCALAR_TYPE,
-        'int16':        ICNode_SCALAR_TYPE,
-        'int32':        ICNode_SCALAR_TYPE,
-        'int64':        ICNode_SCALAR_TYPE,
-        'is':           ICNode_IS,
-        'lambda':       ICNode_UNNAMED,
-        'list':         ICNode_LIST,
-        'local':        ICNode_HIDDEN,
-        'map':          ICNode_MAP,
-        'me':           ICNode_ME,
-        'None':         ICNode_NONE,
-        'none':         ICNode_NONE,
-        'nop':          ICNode_NOP,
-        'not':          ICNode_NOT,
-        'operator':     ICNode_OPERATOR,
-        'or':           ICNode_OR,
-        'pass':         ICNode_NOP,
-        'private':      ICNode_HIDDEN,
-        'protected':    ICNode_PROTECTED,
-        'public':       ICNode_PUBLIC,
-        'raise':        ICNode_RAISE,
-        'repeat':       ICNode_REPEAT,
-        'require':      ICNode_REQUIRE,
-        'ret':          ICNode_RETURN,
-        'return':       ICNode_RETURN,
-        'set':          ICNode_SET,
-        'static':       ICNode_STATIC,
-        'str':          ICNode_SCALAR_TYPE,
-        'str16':        ICNode_SCALAR_TYPE,
-        'switch':       ICNode_SWITCH,
-        'True':         ICNode_TRUE,
-        'true':         ICNode_TRUE,
-        'try':          ICNode_TRY,
-        'type':         ICNode_TYPE_ALIAS,
-        'uint8':        ICNode_SCALAR_TYPE,
-        'uint16':       ICNode_SCALAR_TYPE,
-        'uint32':       ICNode_SCALAR_TYPE,
-        'uint64':       ICNode_SCALAR_TYPE,
-        'unnamed':      ICNode_UNNAMED,
-        'until':        ICNode_UNTIL,
-        'volatile':     ICNode_VOLATILE,
-        'while':        ICNode_WHILE,
-        'with':         ICNode_WITH
+        'abstract':     ICTokenNode_ABSTRACT,
+        'all':          ICTokenNode_ALL,
+        'and':          ICTokenNode_AND,
+        'array':        ICTokenNode_ARRAY,
+        'as':           ICTokenNode_AS,
+        'assert':       ICTokenNode_ASSERT,
+        'bool':         ICTokenNode_SCALAR_TYPE,
+        'break':        ICTokenNode_BREAK,
+        'case':         ICTokenNode_CASE,
+        'cast':         ICTokenNode_CAST,
+        'char':         ICTokenNode_SCALAR_TYPE,
+        'char16':       ICTokenNode_SCALAR_TYPE,
+        'class':        ICTokenNode_CLASS,
+        'continue':     ICTokenNode_CONTINUE,
+        'const':        ICTokenNode_CONST,
+        'del':          ICTokenNode_DEL,
+        'elif':         ICTokenNode_ELIF,
+        'else':         ICTokenNode_ELSE,
+        'elseif':       ICTokenNode_ELIF,
+        'elsif':        ICTokenNode_ELIF,
+        'embed':        ICTokenNode_EMBED,
+        'ensure':       ICTokenNode_ENSURE,
+        'enum':         ICTokenNode_ENUM,
+        'except':       ICTokenNode_EXCEPT,
+        'file':         ICTokenNode_FILE,
+        'False':        ICTokenNode_FALSE,
+        'false':        ICTokenNode_FALSE,
+        'final':        ICTokenNode_FINAL,
+        'finally':      ICTokenNode_FINALLY,
+        'float32':      ICTokenNode_SCALAR_TYPE,
+        'float64':      ICTokenNode_SCALAR_TYPE,
+        'for':          ICTokenNode_FOR,
+        'forever':      ICTokenNode_FOREVER,
+        'from':         ICTokenNode_FROM,
+        'hidden':       ICTokenNode_HIDDEN,
+        'if':           ICTokenNode_IF,
+        'import':       ICTokenNode_IMPORT,
+        'in':           ICTokenNode_IN,
+        'int8':         ICTokenNode_SCALAR_TYPE,
+        'int16':        ICTokenNode_SCALAR_TYPE,
+        'int32':        ICTokenNode_SCALAR_TYPE,
+        'int64':        ICTokenNode_SCALAR_TYPE,
+        'is':           ICTokenNode_IS,
+        'lambda':       ICTokenNode_UNNAMED,
+        'list':         ICTokenNode_LIST,
+        'local':        ICTokenNode_HIDDEN,
+        'map':          ICTokenNode_MAP,
+        'me':           ICTokenNode_ME,
+        'None':         ICTokenNode_NONE,
+        'none':         ICTokenNode_NONE,
+        'nop':          ICTokenNode_NOP,
+        'not':          ICTokenNode_NOT,
+        'operator':     ICTokenNode_OPERATOR,
+        'or':           ICTokenNode_OR,
+        'pass':         ICTokenNode_NOP,
+        'private':      ICTokenNode_HIDDEN,
+        'protected':    ICTokenNode_PROTECTED,
+        'public':       ICTokenNode_PUBLIC,
+        'raise':        ICTokenNode_RAISE,
+        'repeat':       ICTokenNode_REPEAT,
+        'require':      ICTokenNode_REQUIRE,
+        'ret':          ICTokenNode_RETURN,
+        'return':       ICTokenNode_RETURN,
+        'set':          ICTokenNode_SET,
+        'static':       ICTokenNode_STATIC,
+        'str':          ICTokenNode_SCALAR_TYPE,
+        'str16':        ICTokenNode_SCALAR_TYPE,
+        'switch':       ICTokenNode_SWITCH,
+        'True':         ICTokenNode_TRUE,
+        'true':         ICTokenNode_TRUE,
+        'try':          ICTokenNode_TRY,
+        'type':         ICTokenNode_TYPE_ALIAS,
+        'uint8':        ICTokenNode_SCALAR_TYPE,
+        'uint16':       ICTokenNode_SCALAR_TYPE,
+        'uint32':       ICTokenNode_SCALAR_TYPE,
+        'uint64':       ICTokenNode_SCALAR_TYPE,
+        'unnamed':      ICTokenNode_UNNAMED,
+        'until':        ICTokenNode_UNTIL,
+        'volatile':     ICTokenNode_VOLATILE,
+        'while':        ICTokenNode_WHILE,
+        'with':         ICTokenNode_WITH
     }
     
     _LANGUAGE_KWDS = (
