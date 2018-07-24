@@ -23,7 +23,8 @@ SOFTWARE.
 """
 
 #=============================================================================
-from os import rename as os_rename, remove as os_remove
+from os  import  rename as os_rename,  remove as os_remove
+
 from PyYadc.src.html_generator import HtmlGenerator
 
 
