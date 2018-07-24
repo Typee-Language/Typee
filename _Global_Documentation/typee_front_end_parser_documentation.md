@@ -76,7 +76,7 @@ appends a related token data structure at the end of the list of previously
 generated tokens.
 
 A description of all __Typee__ valid tokens identifiers is available in file
-```src/FrontEnd/IntermediateCode/fe_icode_tokens.py``` where a class is
+[```src/FrontEnd/IntermediateCode/fe_icode_tokens.py```](../src/FrontEnd/IntermediateCode/fe_icode_tokens.py) where a class is
 defined to be used as a namespace: ```class FEICodeTokens```.
 
 Take a look to the Front-End __Scanner__ description document to see how 
@@ -107,7 +107,7 @@ as well as are properties to qualify the token (for instance, property
 scanned __Typee__ module.
 
 If you take a look to source file 
-```src/FrontEnd/IntermediateCode/fe_icode_token_node.py```, you will see the
+[```src/FrontEnd/IntermediateCode/fe_icode_token_node.py```](../src/FrontEnd/IntermediateCode/fe_icode_token_node.py), you will see the
 definition of a sub-class: ```class FEICodeTokenNodeProtection``` which is
 dedicated to access protection tokens (i.e. ```public```, ```protected``` and
 ```hidden``` - the last one standing in __Typee__ for _private_ in many other
@@ -119,10 +119,10 @@ tokens. Trust us, there is a really good reason for this attribute to be added
 there.
 
 Finally, in source file
-```src/FrontEnd/IntermediateCode/fe_icode_token_node.py```, one dedicated
-class is specified for each token type. They inherit either from class 
-```FEICodeTokenNode``` or from class ```FEICodeTokenNodeProtection```. For 
-instance:
+[```src/FrontEnd/IntermediateCode/fe_icode_token_node.py```](../src/FrontEnd/IntermediateCode/fe_icode_token_node.py),
+one dedicated class is specified for each token type. They inherit either from 
+class ```FEICodeTokenNode``` or from class ```FEICodeTokenNodeProtection```. 
+For instance:
 - ```class ICTokenNode_ABSTRACT``` is the class for all token nodes associated
 with token "abstract";
 - ```ICTokenNode_ALL``` is the class for all tokens nodes associated with
@@ -132,13 +132,13 @@ token "all";
 token... "with".
 
 Please notice, as stated elsewhere, that file
-```src/FrontEnd/IntermediateCode/fe_icode_token_node.py``` is generated with 
-the help of a dedicated tool and that, as such, it should not be modified by 
-hand since modifications would be lost on the next run of this dedicated tool. 
-Any modification to be implemented in this _Python_ module __has to be done__ 
-right in the code of the dedicated tool. For more information, have a look to
-document 
-```src/_Global_Documentation/typee_front_end_scanner_documentation.md```.
+[```src/FrontEnd/IntermediateCode/fe_icode_token_node.py```](../src/FrontEnd/IntermediateCode/fe_icode_token_node.py) 
+is generated with the help of a dedicated tool and that, as such, it should 
+not be modified by hand since modifications would be lost on the next run of 
+this dedicated tool. Any modification to be implemented in this _Python_ 
+module __has to be done__ right in the code of the dedicated tool. For more 
+information, have a look to document 
+[```src/_Global_Documentation/typee_front_end_scanner_sw_documentation.md```](typee_front_end_scanner_sw_documentation.md).
 
 
 
