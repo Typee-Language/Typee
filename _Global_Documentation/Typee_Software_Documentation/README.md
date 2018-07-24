@@ -29,7 +29,7 @@ To generate it, just run the next _Python_ script
 
 ## 2. Automated script `typee_automated_documentation_script.py`
 
-You may either run this script at command line in any kind of console
+You may either run this script at command line in any kind of console:
 
     $ python typee_automated_documentation_script.py
 
