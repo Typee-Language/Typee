@@ -36,10 +36,11 @@ dedicated to developers.
 
 | Name  | Topic(s)  | Place  | Comments  |
 |---|---|---|---|
-| README.md  | General Doc  | reporitory root  | General description of __Typee__ project and language  |
-| scanner\_tokenization_\tests.md  | Tests  | src/Tests/Documentation-README/  | Explanations on how to test the Front-End Scanner and how to modify related tests files  |
-| typee\_front\_end\_parser\_documentation.md | S/W architecture | src/_Global_Documentation/ | Complete description of the role and the architecture of the Front-End __Parser__ of __Typee__ translator |
-| typee\_front\_end\_scanner\_sw\_documentation.md | S/W architecture | src/_Global_Documentation/ | Complete description of the software architecture and data structures of the Front-End __Scanner__ of __Typee__ translator |
+| README.md  | General Doc  | reporitory root  | General description of __Typee__ project and language |
+| README.md | S/W documentation | \_Global\_Documentation/ Typee_Software\_ Documentation/ | Usage of automated script to generate the whole __Typee__ S/W documentation |
+| scanner_tokenization_tests.md  | Tests  | src/ Tests/ Documentation-README/  | Explanations on how to test the Front-End Scanner and how to modify related tests files  |
+| typee_front_end_parser_ documentation.md | S/W architecture | src/ \_Global\_Documentation/ | Complete description of the role and the architecture of the Front-End __Parser__ of __Typee__ translator |
+| typee_front_end_scanner_ sw_documentation.md | S/W architecture | src/ \_Global\_Documentation/ | Complete description of the software architecture and data structures of the Front-End __Scanner__ of __Typee__ translator |
 |  |  |  |
 
 
@@ -59,4 +60,5 @@ same document could be appearing in multiple topics_)
 | 2018-07-15 | 0.0.2 | Schmouk | Minor typo correction; modified ordering of documents; added column __Topic__ |
 | 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and index to the Front-End Parser documentation |
 | 2018-07-23 | 0.0.4 | Schmouk | Added reference to the Front-End Scanner S/W architecture documentation |
+| 2018-07-24 | 0.0.5 | Schmouk | Added ref to the usage of the script that automates the generation of __Typee__ S/W documentation |
 |  |  |  |  |
