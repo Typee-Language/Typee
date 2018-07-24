@@ -34,13 +34,13 @@ dedicated to developers.
 
 ## List of documents
 
-| Name  | Topic(s)  | Place & direct link  | Comments  |
+| Name & direct link  | Topic(s)  | Place  | Comments  |
 |---|---|---|---|
-| README.md | General Documentation | [reporitory root](../README.md)  | General description of __Typee__ project and language |
-| README.md | S/W documentation | [\_Global\_Documentation/ Typee_Software\_ Documentation/](Typee_Software_Documentation/README.md) | Usage of automated script to generate the whole __Typee__ S/W documentation |
-| scanner_tokenization_tests.md  | Tests  | [src/ Tests/ Documentation-README/](../src/Tests/Documentaion-README/scanner_tokenization_tests.md)  | Explanations on how to test the Front-End Scanner and how to modify related tests files  |
-| typee_front_end_parser_ documentation.md | S/W architecture | [\_Global\_Documentation/](typee_front_end_parser_documentation.md) | Complete description of the role and the architecture of the Front-End __Parser__ of __Typee__ translator |
-| typee_front_end_scanner_ sw_documentation.md | S/W architecture | [\_Global\_Documentation/](typee_front_end_scanner_sw_documentation.md) | Complete description of the software architecture and data structures of the Front-End __Scanner__ of __Typee__ translator |
+| [README.md](../README.md) | General Documentation | reporitory root  | General description of __Typee__ project and language |
+| [README.md](Typee_Software_Documentation/README.md) | S/W documentation | \_Global\_Documentation/ Typee_Software\_ Documentation/ | Usage of automated script to generate the whole __Typee__ S/W documentation |
+| [scanner_tokenization_tests.md](../src/Tests/Documentaion-README/scanner_tokenization_tests.md) | Tests  | src/ Tests/ Documentation-README/  | Explanations on how to test the Front-End Scanner and how to modify related tests files  |
+| [typee_front_end_parser_ documentation.md](typee_front_end_parser_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the role and the architecture of the Front-End __Parser__ of __Typee__ translator |
+| [typee_front_end_scanner_ sw_documentation.md](typee_front_end_scanner_sw_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the software architecture and data structures of the Front-End __Scanner__ of __Typee__ translator |
 |  |  |  |
 
 
@@ -61,4 +61,5 @@ same document could be appearing in multiple topics_)
 | 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and index to the Front-End Parser documentation |
 | 2018-07-23 | 0.0.4 | Schmouk | Added reference to the Front-End Scanner S/W architecture documentation |
 | 2018-07-24 | 0.0.5 | Schmouk | Added ref to the usage of the script that automates the generation of __Typee__ S/W documentation |
+| 2018-07-24 | 0.0.6 | Schmouk | Added links to the reference table |
 |  |  |  |  |
