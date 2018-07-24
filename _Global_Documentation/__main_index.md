@@ -61,5 +61,5 @@ same document could be appearing in multiple topics_)
 | 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and index to the Front-End Parser documentation |
 | 2018-07-23 | 0.0.4 | Schmouk | Added reference to the Front-End Scanner S/W architecture documentation |
 | 2018-07-24 | 0.0.5 | Schmouk | Added ref to the usage of the script that automates the generation of __Typee__ S/W documentation |
-| 2018-07-24 | 0.0.6 | Schmouk | Added links to the reference table |
+| 2018-07-24 | 0.0.6 | Schmouk | Added links to the reference table, then corrected the few erroneous ones |
 |  |  |  |  |
