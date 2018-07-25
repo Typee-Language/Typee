@@ -222,7 +222,7 @@ by the related private method, as being called by the _tokenizer_.
 #### 2.1.3 Tokens processing
 
 In the _Python_ module 
-[`FrontEnd/Scanner/fe_scanner.py`](../src/FrontEnd/Scanner/fe_scanner.py), 
+[`src/FrontEnd/Scanner/fe_scanner.py`](../src/FrontEnd/Scanner/fe_scanner.py), 
 next to method `tokenize()` is a list of private methods that are internally 
 called and which are not part of the __Scanner__ interface. These are listed 
 in alphabetical order from `_binary_number()` to `_string_quote()`. Each of 
@@ -258,16 +258,16 @@ the scanned __Typee__ source code;
 
 #### 2.1.5 Finally
 
-The _Python_ module [`FrontEnd/Scanner/fe_scanner.py`](../src/FrontEnd/Scanner/fe_scanner.py) 
+The _Python_ module [`src/FrontEnd/Scanner/fe_scanner.py`](../src/FrontEnd/Scanner/fe_scanner.py) 
 imports two other _Python_ modules.
 
 The first one, 
-[`FrontEnd/IntermediateCode/fe_icode_token_node.py`](src/FrontEnd/IntermediateCode/fe_icode_token_node.py),
+[`src/FrontEnd/IntermediateCode/fe_icode_token_node.py`](src/FrontEnd/IntermediateCode/fe_icode_token_node.py),
 describes the data structure and the manipulation of token nodes, i.e. those
 nodes that are appended to the list of the tokenized internmediate code.
 
 The second one, 
-[`FrontEnd/IntermediateCode/fe_intermediate_code.py`](../src/FrontEnd/IntermediateCode/fe_intermediate_code.py),
+[`src/FrontEnd/IntermediateCode/fe_intermediate_code.py`](../src/FrontEnd/IntermediateCode/fe_intermediate_code.py),
 describes the data structure of the intermediate code that is used interrnally 
 in the __Typee__ Front-End operations.
 
@@ -280,7 +280,7 @@ __Typee__ tokens are specified according to __Typee__ grammar specification.
 The successive versions of __Typee__ language (or grammar) specification can 
 be found in dedicated directory 
 [`Language-specifications/`](../Language-specifications) right at the root of
-__Typee__ repository - i.e. at the same level than directory [`src`](../).
+__Typee__ repository - i.e. at the same level than directory [`src`](..).
 
 
 #### 2.2.2 Typee language tokens
@@ -388,7 +388,7 @@ will have taken place.
 
 In directory [`src/local_tools`](../src/local_tools), few tools and templates 
 are defined. Every time module 
-[`rc/FrontEnd/IntermediateCode/fe_icode_tokens.py`](../src/FrontEnd/IntermediateCode/fe_icode_tokens.py) 
+[`src/FrontEnd/IntermediateCode/fe_icode_tokens.py`](../src/FrontEnd/IntermediateCode/fe_icode_tokens.py) 
 is modified, the local tool script
 [`src/local_tools/tool_generate_feicode_token_node_module.py`](../src/local_tools/tool_generate_feicode_token_node_module.py) 
 __has to be run__ - either in console window with command line or from within 
@@ -550,3 +550,5 @@ module.
 | 2018-07-23 | 0.0.3 | Kerm | Completed section 3. Errors Processing |
 | 2018-07-23 | 1.0 | Kerm | This document is now considered as being validated |
 | 2018-07-25 | 1.0.1 | Schmouk | Added links to documents (and this was a long journey over this document text), some complementary explanations; enhanced code specification (added Python spec to code); moved sub-section about __Typee__ grammar specification upward from tokens-related section to introduction section. |
+| 2018-07-25 | 1.0.2 | Schmouk | Corrected a few mispelled links. |
+|  |  |  |  |
