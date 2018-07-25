@@ -121,7 +121,7 @@ it can be for this last feature).
 This __Scanner__ module implements the _tokenization_ of __Typee__ source 
 code. It defines (as extracted from the _Python_ source code) this class:
 
-````python
+```python
     class FEScanner:
         """
         This is the class of the Typhon Front-End Scanner.
