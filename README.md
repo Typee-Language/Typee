@@ -34,7 +34,8 @@ _Python_ code.
 PyType is a static type inferencer and type checker for _Python_ code. It is 
 capable of analyzing existing _Python_ code to determine what possible types 
 could be used on APIs throughout the program.
-```(source: _Google_ project _PyType_)
+```
+(source: _Google_ project _PyType_)
 
 Well. This is not exactly full type checking - while it is perfectly adapted to 
 _Python_ programming for which no type declaration is needed before manipulating 
