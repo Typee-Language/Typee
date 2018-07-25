@@ -23,33 +23,33 @@ from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.6_.
 ### Rationale
 
 At first, this was a personnal project. It aimed at developping an upper layer 
-to Python with a true type verification. This had already been partially 
+to _Python_ with a true type verification. This had already been partially 
 addressed by Google with their project 
-[PyType](https://opensource.google.com/projects/pytype). The kind of 
+[__PyType__](https://opensource.google.com/projects/pytype). The kind of 
 annotations this project proposes is now widely accepted and inserted in new 
-_Python_ code. PyType is a static analyzer that infers and checks types for 
+_Python_ code. _PyType_ is a static analyzer that infers and checks types for 
 _Python_ code.
 
 ```
-Pytype is a static type inferencer and type checker for Python code. It is 
-capable of analyzing existing Python code to determine what possible types 
+_PyType_ is a static type inferencer and type checker for _Python_ code. It is 
+capable of analyzing existing _Python_ code to determine what possible types 
 could be used on APIs throughout the program.
 ```
-(source: Google project PyType)
+(source: _Google_ project _PyType_)
 
 Well. This is not exactly full type checking - while it is perfectly adapted to 
-Python programming for which no type declaration is needed before manipulating 
+_Python_ programming for which no type declaration is needed before manipulating 
 objects.
 
 But we wanted to get a typed language to further translate it in _Python_ code, 
 full static type checking having been done before automatically generating 
-_Python_ modules then running the Python interpreter on them.
+_Python_ modules then running the _Python_ interpreter on them.
 
 
 ### Typee: neither compiled nor interpreted but translated
 
 Traditionnal OOP languages are either compiled (e.g. C++) or interpreted (e.g. 
-_Python_). They even may be first compiled into an intermediate code which is 
+_Python_ ). They even may be first compiled into an intermediate code which is 
 then interpreted (e.g. Java and its Bytecode interpreted by a 
 _Java Virtual Machine_ that has to be implemented on each of the different 
 targetted devices).
