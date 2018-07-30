@@ -38,10 +38,38 @@ translator has been thought and designed with programming language _Python_,
 and help anyone who would like to contribute to understand what enhancements 
 could be proposed and how they could be designed and implemented.
 
+Most of the text of this document has been copied from or has been duplicated 
+in other documents elsewhere in this __Typee-Language/Typee__ repository.
+
 
 
 ## 1. Typee Design Concepts
 
+__Typee__ is an Object Oriented Programming language. Its syntax is derived 
+from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.6_.
+
+Traditionnal OOP languages are either compiled (e.g. C++) or interpreted (e.g. 
+_Python_ ). They even may be first compiled into an intermediate code which is 
+then interpreted (e.g. Java and its Bytecode interpreted by a 
+_Java Virtual Machine_ that has to be implemented on each of the different 
+targetted devices).
+
+Meanwhile, __Typee__ language is neither compiled nor interpreted. It is 
+rather translated into other OOP languages, such as _Python_ (which 
+chronologically is the first addressed OOP language from: _Python_, _C++_ and 
+_Java_). During the translation, type infering and checking is done not only 
+for APIs but also on all the other parts of the code.
+
+So, we got greatly inspired by modern compilers design to design the __Typee__ 
+translator. Our bedside book for a long has been "Engineering a Compiler, 2nd 
+Edition, Keith D.Cooper & Linda Torczon, Elsevier, 2012" and we encourage the 
+reader to read this book.
+
+We have choosen this book because it was newer than the famous Dragoon book 
+"Compilers, principles, techniques, & tools, 2nd ed." from Alfred V. Aho, 
+Monica S. Lam, Ravi Ethi and Jeffrey D. Ullman, Pearson-Addison Wesley, 2007, 
+while this Dragoon book had been used to specify the _Python_ interpretor 
+_CPython_.
 
 
 
@@ -65,4 +93,6 @@ could be proposed and how they could be designed and implemented.
 | Date  | Rev.  | Author(s)  | Comments  |
 |---|---|---|---|
 | 2018-07-30 | 0.0.1 | PhHays | Very first creation. Introduction written and empty sections added. |
+| 2018-07-30 | 0.0.2 | PhHays | Completed section 1. |
 |  |  |  |  |
+
