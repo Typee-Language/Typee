@@ -1,0 +1,10 @@
+.metadata
+.project
+.pydevproject
+.settings
+_config.yml
+*.pyc
+__pycache__
+*/__pycache__
+*/*/__pycache__
+*/*/*/__pycache__
