@@ -24,32 +24,32 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icode_node import *
+from FrontEnd.IntermediateCode.fe_icode_token_node import *
 
 
 #=============================================================================
 soluce = [
     
-    ICNode_COMMENT( None, " Simple tokens -- tokenization test source" ),
-    ICNode_NL(),
-    ICNode_BRACKETOP(),
-    ICNode_BRACKETCL(),
-    ICNode_NL(),
-    ICNode_PAROP(),
-    ICNode_PARCL(),
-    ICNode_NL(),
-    ICNode_COMMA(),
-    ICNode_SEMICOLON(),
-    ICNode_NL(),
-    ICNode_HASH(),
-    ICNode_NL(),
-    ICNode_DOT(),
-    ICNode_NL(),
-    ICNode_TILD(),
-    ICNode_NL(),
-    ICNode_ANY_TYPE( None, '?' ),
-    ICNode_NL(),
-    ICNode_EOF()
+    ICTokenNode_COMMENT( None, " Simple tokens -- tokenization test source" ),
+    ICTokenNode_NL(),
+    ICTokenNode_BRACKETOP(),
+    ICTokenNode_BRACKETCL(),
+    ICTokenNode_NL(),
+    ICTokenNode_PAROP(),
+    ICTokenNode_PARCL(),
+    ICTokenNode_NL(),
+    ICTokenNode_COMMA(),
+    ICTokenNode_SEMICOLON(),
+    ICTokenNode_NL(),
+    ICTokenNode_HASH(),
+    ICTokenNode_NL(),
+    ICTokenNode_DOT(),
+    ICTokenNode_NL(),
+    ICTokenNode_TILD(),
+    ICTokenNode_NL(),
+    ICTokenNode_ANY_TYPE( None, '?' ),
+    ICTokenNode_NL(),
+    ICTokenNode_EOF()
 ]
 
 #=====   end of   Tests.Data.tokenization_simple_solution   =====#

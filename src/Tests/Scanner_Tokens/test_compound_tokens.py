@@ -24,7 +24,13 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.Tokens.tokens_test_base import TokensTestBase
+from Tests.Scanner_Tokens.tokens_test_base import TokensTestBase
+
+#=============================================================================
+def test_compound_tokens():
+    TokensTestBase( 'Compound Tokens TEST',
+                    'Data/tokenization_compound_tokens.ty',
+                    'Data/tokenization_compound_solution.py' )    
 
 #=============================================================================
 if __name__ == '__main__':
@@ -32,9 +38,7 @@ if __name__ == '__main__':
     Simple test for the tokenization of compound tokens.
     """
     #-------------------------------------------------------------------------
-    TokensTestBase( 'Compound Tokens TEST',
-                    'Data/tokenization_compound_tokens.ty',
-                    'Data/tokenization_compound_solution.py' )
+    test_compound_tokens()
 
-#=====   end of   Tests.test_compund_tokens   =====#
+#=====   end of   Tests.Scanner_Tokens.test_compound_tokens   =====#
         

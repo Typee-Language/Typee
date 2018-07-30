@@ -24,7 +24,13 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.Tokens.tokens_test_base import TokensTestBase
+from Tests.Scanner_Tokens.tokens_test_base import TokensTestBase
+
+#=============================================================================
+def test_simple_tokens():
+    TokensTestBase( 'Simple Tokens TEST',
+                    'Data/tokenization_simple_tokens.ty',
+                    'Data/tokenization_simple_solution.py' )
 
 #=============================================================================
 if __name__ == '__main__':
@@ -32,9 +38,7 @@ if __name__ == '__main__':
     Simple test for the tokenization of simple tokens.
     """
     #-------------------------------------------------------------------------
-    TokensTestBase( 'Simple Tokens TEST',
-                    'Data/tokenization_simple_tokens.ty',
-                    'Data/tokenization_simple_solution.py' )
+    test_simple_tokens()
 
 #=====   end of   Tests.test_simple_tokens   =====#
         
