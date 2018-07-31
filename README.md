@@ -106,7 +106,7 @@ plus `array`;
 _Java_ for instance;
 - and few other goodies you will enjoy to use.
 
-While navigating in [Typee GitHub repository](https://github.com/schmouk/Typee) 
+While navigating in [Typee GitHub repository](https://github.com/Typee-Language/Typee) 
 you will find numerous documentation on __Typee__ grammar specification, the 
 __Typee__ translator software architecture (see short description below) or the 
 whole software documentation - as generated in HTML by an open source 
@@ -118,9 +118,11 @@ their contents are highly subject to change, actually on a daily or at least
 on a weekly basis.
 
 _Reminder_: if you wish to contribute, just contact main administrator 
-[Schmouk](mailto:ph.schmouker@yahoo.fr) by e-mail and be patient. You will 
-eventually get a response and will enthousiastically be added to the 
-contributors list.
+[Schmouk](mailto:ph.schmouker@yahoo.fr) or directly 
+[Typee](mailto:postmaster@typee.ovh) by e-mail and be patient. You will 
+eventually get a response back and will enthousiastically be added to the 
+contributors list. You will then be able to join some teams according to 
+your aims and skills.
 
 
 
