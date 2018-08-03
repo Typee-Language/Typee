@@ -19,69 +19,6 @@ for these developments. So, if you get Linux expertise you're welcome!
 __Typee__ is an Object Oriented Programming language. Its syntax is derived 
 from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.6_.
 
-
-### Rationale
-
-At first, this was a personnal project. It aimed at developping an upper layer 
-to _Python_ with a true type verification. This had already been partially 
-addressed by Google with their project 
-[__PyType__](https://opensource.google.com/projects/pytype). The kind of 
-annotations this project proposes is now widely accepted and inserted in new 
-_Python_ code. _PyType_ is a static analyzer that infers and checks types for 
-_Python_ code.
-
-```
-PyType is a static type inferencer and type checker for _Python_ code. It is 
-capable of analyzing existing _Python_ code to determine what possible types 
-could be used on APIs throughout the program.
-```
-(source: _Google_ project _PyType_)
-
-Well. This is not exactly full type checking - while it is perfectly adapted to 
-_Python_ programming for which no type declaration is needed before manipulating 
-objects.
-
-But we wanted to get a typed language to further translate it in _Python_ code, 
-full static type checking having been done before automatically generating 
-_Python_ modules then running the _Python_ interpreter on them.
-
-
-### Typee: neither compiled nor interpreted but translated
-
-Traditionnal OOP languages are either compiled (e.g. C++) or interpreted (e.g. 
-_Python_ ). They even may be first compiled into an intermediate code which is 
-then interpreted (e.g. Java and its Bytecode interpreted by a 
-_Java Virtual Machine_ that has to be implemented on each of the different 
-targetted devices).
-
-__Typee__ is neither compiled nor interpreted. It is rather translated into 
-other OOP languages, such as _Python_ which chronologically is the first 
-addressed OOP language from: _Python_, _C++_ and _Java_. During the 
-translation, type infering and checking is done not only for APIs as does 
-_PyType_ but also on all the other parts of the code.
-
-While this may seem to be valuable for untyped languages such as _Python_, it 
-should appear to be not useful for other typed languages, of course.
-Yes, but wait...
-
-
-### Typee: one code for many implementations
-
-Here is the core usefulness of __Typee__: once a program has been written in 
-__Typee__, it can then easily be translated in any other available OOP 
-language. At first, this will be a translator to _Python_. But as soon as other 
-translators will be available, e.g. for _C++_ or _Java_, the same code will be 
-available for translation in these languages also.
-
-As long as related libraries are added to the package (for instance graphical 
-ones or GPU parallel programming ones) and are programmed in __Typee__ with 
-dedicated code (i.e. native embedded code) for the targetted OOP language, it 
-should be easy to program applications for Windows, Linux, iOS or Android with 
-a single code programmed in __Typee__.
-
-Here we are!
-
-
 ## Typee language characteristics
 
 We list here only the main characteristics of __Typee__.
@@ -123,6 +60,69 @@ _Reminder_: if you wish to contribute, just contact main administrator
 eventually get a response back and will enthousiastically be added to the 
 contributors list. You will then be able to join some teams according to 
 your aims and skills.
+
+
+### Rationale
+
+At first, this was a personnal project. It aimed at developping an upper layer 
+to _Python_ with a true type verification. This had already been partially 
+addressed by Google with their project 
+[__PyType__](https://opensource.google.com/projects/pytype). The kind of 
+annotations this project proposes is now widely accepted and inserted in new 
+_Python_ code. _PyType_ is a static analyzer that infers and checks types for 
+_Python_ code.
+
+```
+PyType is a static type inferencer and type checker for _Python_ code. It is 
+capable of analyzing existing _Python_ code to determine what possible types 
+could be used on APIs throughout the program.
+```
+(source: _Google_ project _PyType_)
+
+Well. This is not exactly full type checking - while it is perfectly adapted to 
+_Python_ programming for which no type declaration is needed before manipulating 
+objects.
+
+But we wanted to get a typed language to further translate it in _Python_ code, 
+full static type checking having been done before automatically generating 
+_Python_ modules then running the _Python_ interpreter on them.
+
+
+
+### Typee: neither compiled nor interpreted but translated
+
+Traditionnal OOP languages are either compiled (e.g. C++) or interpreted (e.g. 
+_Python_ ). They even may be first compiled into an intermediate code which is 
+then interpreted (e.g. Java and its Bytecode interpreted by a 
+_Java Virtual Machine_ that has to be implemented on each of the different 
+targetted devices).
+
+__Typee__ is neither compiled nor interpreted. It is rather translated into 
+other OOP languages, such as _Python_ which chronologically is the first 
+addressed OOP language from: _Python_, _C++_ and _Java_. During the 
+translation, type infering and checking is done not only for APIs as does 
+_PyType_ but also on all the other parts of the code.
+
+While this may seem to be valuable for untyped languages such as _Python_, it 
+should appear to be not useful for other typed languages, of course.
+Yes, but wait...
+
+
+### Typee: one code for many implementations
+
+Here is the core usefulness of __Typee__: once a program has been written in 
+__Typee__, it can then easily be translated in any other available OOP 
+language. At first, this will be a translator to _Python_. But as soon as other 
+translators will be available, e.g. for _C++_ or _Java_, the same code will be 
+available for translation in these languages also.
+
+As long as related libraries are added to the package (for instance graphical 
+ones or GPU parallel programming ones) and are programmed in __Typee__ with 
+dedicated code (i.e. native embedded code) for the targetted OOP language, it 
+should be easy to program applications for Windows, Linux, iOS or Android with 
+a single code programmed in __Typee__.
+
+Here we are!
 
 
 
