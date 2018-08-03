@@ -222,7 +222,9 @@ and __Typee__ project aims at providing such scripts to ease the whole process.
 
 ## Visit us
 
-at http://www.typee.ovh and  https://typee-language.github.io/Typee/
+at http://www.typee.ovh and https://typee-language.github.io/Typee/
+
+or follow us at https://twitter.com/TypeeProgrammi1
 
 
 ## That's it
