@@ -84,7 +84,7 @@ drawing will be simpler to understand.
 First, the source code to be compiled is processed by the compiler 
 _Front-End_. During this phase, the source code is _scanned_ to detect key 
 words, numbers, identifiers and the like and _parsed_ to check its syntax 
-correctness. The _Front-End_ transfers to the compiler _Optimier_ an internal 
+correctness. The _Front-End_ transfers to the compiler _Optimizer_ an internal 
 representation of the source code, which is noted __I.C.__ (Intermediate Code) 
 in the above picture.
 
@@ -98,7 +98,7 @@ the compiler _Back-End_.
 Third, the optimized version of the I.C. is processed by the _Back-End_.
 There, the final binary code to be ran on the target processor is generated. 
 Final static optimizations may be generated during this phase also, according 
-to the specificies of the target process unit.
+to the specificities of the target process unit.
 
 Well, this is for the design of three-phase compilers, but two-phase compilers 
 exist also, with no _Optimizer_ phase. See coresponding schema below.
