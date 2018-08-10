@@ -342,15 +342,97 @@ a two-phase compiler.
 
 ### 2.3 The _Back-End_
 
+The final phase of a compiler is the _Back-End_. It deals with the generation 
+of the final binary code according to the target processor and the target 
+Operating System. It is mainly a three-phase mmodule.
 
+![Back-End compiler design figure](Picts/back-end.png)
+
+The _Back-End_ gets as its input the _elaborated intermediate code_, as long 
+as this I.C. has been generated. Should the previous phases of the compiler 
+have detected errors, the _Back-End_ would not be ran.
+
+
+#### 2.3.1 Instruction Selection
+
+The _elaborated I.C._ is first evaluated for the __selection__ of 
+corresponding processor __instructions__. For instance, the assignment of a 
+scalar value to some variable will involve at least an assembly instruction 
+for the storage of the value into a memory place. But it could be also an 
+assembly instruction dealing with register assignment which is far more 
+efficient on time consuming. Another example would be the selection of a 
+branching assembly instruction according to some test done while implementing 
+an ___if___ instruction. Of course, this step of the _Back-End_ generates an 
+_intermediate assembly code_, maybe associated with additionnal informatin 
+data to help next step processing.
+
+
+#### 2.3.2 Instruction Scheduling
+
+Then, this _intermediate assembly code_ is processed by a next step of the 
+_Back-End_ : the __instruction scheduling__. This is some kind of optimization 
+that the _Back-End_ may be able to envisage if some assembly instructions are 
+available that do time-shorter procesing. For instance, this could be an 
+addition of a register with itself rather than a multiplication by 2 or a 
+left-shift by 1 bit. It may also invert the position of instructions in the 
+flow of the processing to take benefit of some characteristics of the target 
+processor (this may be the case when branching for some RISC processors). the 
+instruction scheduling generates a modified _intermediate assembly code_ which 
+is the input of the final step of the compiler _Back-End_.
+
+
+#### 2.3.3 Registers Allocation
+
+This is the final step of the _Back-End_ processing. Processors have a limited 
+set of registers. This step aims at using all of them in the best way. The 
+input _intermediate assembly code_ is analyzed here to finally generate a 
+binary code with the best use of the target processor registers. This means 
+that direct access to memory may be imposed, should the registers be too few.
+
+
+#### 2.3.4 _Back-End_ output
+
+The _Back-End_, when called, eventually generates binary assembly code 
+dedicated to the target processor. This code can be either formatted code 
+with linking information for further linkage with other binary code modules or 
+binary code immediately executable on the processor, associated with the 
+mandatory embedded glue for it to run n a target environment (e.g. Windows, 
+Linux, MacOS, etc.)
+
+
+
+### 2.4 Modern Compilers Design - Conclusion
+
+Being either three-phase or two-phase designed, a compiler is composed of:
+- a _Front-End_ which mainly parses the source code of a program;
+- a _Back-End_ which mainly generates the target binary code to be ran;
+- and automated optimizations to generate the best fainl code.
+
+The work done here is mainly smart translation of a source program easily 
+understandable by humans to a binary optimized representation easily 
+executable by a target processor in a target environment.
+
+This is one of the reasons why the __Typee__ translator may be designed as a 
+compiler is, since it translates a Typee source program into some other 
+programming language source code, for instance _Python_, _C++_ or _Java_.
+
+The main point here is that some of a compiler modules are not needed for the
+__Typee__ translator. For instance, the implementation of optimizations is not 
+necessary if we consider that this step will be deferred to the final C++ or 
+Java compiler or to the final Python interpretor.
+
+Furthermore, many of the tasks devoted to the _Back-End_ may be either 
+simplified or even ignored by Typee translator since it does not generate 
+binary code but source code in some other programming language. 
 
 
 
 
 ## 3. Typee Translator Design -- from Compiler design
 
-The __Typee__ design is simpler than a compiler one, since __Typee__ is a 
-__translator__, not a compiler.
+As stated in the above section conclusion (see 2.4) the __Typee__ design is 
+simpler than a compiler one, since __Typee__ is a __translator__, not a 
+compiler.
 
 Why is it simpler? Because, as a translator, Typee neither compiles nor 
 optimizes code. Its two main acitivities are _static type checking_ and 
@@ -381,6 +463,6 @@ the design of a modern compiler.
 | 2018-07-30 | 0.0.1 | PhHays | Very first creation. Introduction written and empty sections added. |
 | 2018-07-30 | 0.0.2 | PhHays | Completed section 1. |
 | 2018-08-09 | 0.0.3 | PhHays | Augmented sections 2. and 3. |
-| 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 and 2.2 |
+| 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 to 2.4 |
 |  |  |  |  |
 
