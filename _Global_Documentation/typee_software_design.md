@@ -181,7 +181,7 @@ phase of the __Front-End__, the _Elaborator_.
 
 #### 2.1.3 the _Elaborator_
 
-![Front-end elaborator picture](Picts/front-end-elaboratorr.png)
+![Front-end elaborator picture](Picts/front-end-elaborator.png)
 
 The _parsed intermediate code_ gets statically elaborated in the last phase of 
 the __Front-End__, the _Elaborator_. This module finalizes the Front-End 
