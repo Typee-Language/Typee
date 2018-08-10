@@ -583,7 +583,7 @@ __Typee__ grammar is specified according to the _Backus-Naur Form_ (_BNF_).
 Tis is a very common and easy way to fully specify the _context-free_ grammar 
 of a language. Here is an excellent article about BNF and its extensions: 
 [http://matt.might.net/articles/grammars-bnf-ebnf/](http://matt.might.net/articles/grammars-bnf-ebnf/).
-The curious reader (and all readers should be curious) are strongly encouraged 
+The curious reader (and all readers should be curious) is strongly encouraged 
 to click on this link and to read this article which "_explains grammars and 
 common notations for grammars, such as Backus-Naur Form (BNF), Extended 
 Backus-Naur Form (EBNF) and regular extensions to BNF. After reading this 
@@ -640,7 +640,7 @@ Now, should there is any syntax error in previous code, for instance because
 of a missing parenthesis, a badly formed range definition or a missing `;` by 
 the end of the single statement, the _Front-End Scanner_ will detect it while 
 parsing the source code and checking it against the related grammar rule. 
-Moreover, the _Scanner_ is able to get what is syntaxically wrong, either 
+Moreover, the _Parser_ is able to get what is syntaxically wrong, either 
 missing or badly formed, and is able to report the related error with the line 
 number in the source code and the column index in this line of the erroneous 
 syntaxic item.
@@ -657,12 +657,12 @@ found before the `}`.
 
 __Typee__ programming language is specified according to an LL(1) grammar. 
 As such, it is an LL(1) language. This class of grammars have many advantages 
-while developing a _Proof of Concept_. They are __context-free__ grammars, 
-which means that nothing has to be remembered about has been previously done 
-when parsing source code. They are __fully deterministic__, which means that 
-they definitvely are _unambiguous_ grammars. The code they define is parsed 
-from Left to right and the _Parser_ of LL(1) grammars constructs Leftmost 
-derivations while parsing the source code.
+while developing a _Proof of Concept_ (PoC). They are __context-free__ 
+grammars, which means that nothing has to be remembered about what has been 
+previously done when parsing source code. They are __fully deterministic__, 
+which means that they definitvely are _unambiguous_ grammars. The code they 
+define is parsed from Left to right and the _Parser_ of LL(1) grammars 
+constructs Leftmost derivations while parsing the source code.
 
 LL(1) parsers can be implemented with tables as well as with recursive descent 
 functions. They are deterministic, context-free, and intuitive to understand, 
@@ -678,8 +678,8 @@ Each method of class `FEParser` gets the leading name of one of the grammar
 rules. It calls other methods according to the rule definition. Atomic methods 
 finally check for expected tokens.
 
-The _Parser_ runs through the _tokenized intermediate code_, gets one token 
-node at a time and checks it against the __Typee__ grammar rules. Every time 
+The _Parser_ runs through the _tokenized intermediate code_, gets one _token 
+node_ at a time and checks it against the __Typee__ grammar rules. Every time 
 an error is detected, which happens every time an __unexpected token node__ is 
 read from the _tokenized intermediate code_ or when some token node is read 
 while not expected or is missing while expected, the _Parser_ generates an 
