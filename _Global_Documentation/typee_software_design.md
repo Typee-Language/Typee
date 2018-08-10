@@ -405,21 +405,21 @@ Linux, MacOS, etc.)
 
 Being either three-phase or two-phase designed, a compiler is composed of:
 - a _Front-End_ which mainly parses the source code of a program;
-- a _Back-End_ which mainly generates the target binary code to be ran;
-- and automated optimizations to generate the best fainl code.
+- a _Back-End_ which mainly generates the binary code to be ran on the target processor;
+- and automated optimizations to generate the best final code.
 
-The work done here is mainly smart translation of a source program easily 
+The work done here is a smart translation of a source program easily 
 understandable by humans to a binary optimized representation easily 
 executable by a target processor in a target environment.
 
 This is one of the reasons why the __Typee__ translator may be designed as a 
-compiler is, since it translates a Typee source program into some other 
+compiler, since it translates a Typee source program into some other 
 programming language source code, for instance _Python_, _C++_ or _Java_.
 
 The main point here is that some of a compiler modules are not needed for the
 __Typee__ translator. For instance, the implementation of optimizations is not 
-necessary if we consider that this step will be deferred to the final C++ or 
-Java compiler or to the final Python interpretor.
+necessary if we consider that this step will be deferred to the final _C++_ or 
+_Java_ compiler or to the final _Python_ interpretor.
 
 Furthermore, many of the tasks devoted to the _Back-End_ may be either 
 simplified or even ignored by Typee translator since it does not generate 
