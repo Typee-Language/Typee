@@ -43,7 +43,7 @@ in other documents elsewhere in this __Typee-Language/Typee__ repository.
 
 
 
-## 1. Typee Design Concepts
+# 1. Typee Design Concepts
 
 __Typee__ is an Object Oriented Programming language. Its syntax is derived 
 from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.6_.
@@ -73,7 +73,7 @@ _CPython_.
 
 
 
-## 2. Modern Compilers Design
+# 2. Modern Compilers Design
 
 By 2018, modern compilers are designed with three distinct communicating 
 software modules: the _Front-End_, the _Back-End_ and the _Optimizer_. A 
@@ -113,7 +113,7 @@ have used for the design of Typee translator is "_Engineering a Compiler_",
 978-0-12-088478-0.
 
 
-### 2.1 The _Front-End_
+## 2.1 The _Front-End_
 
 The __Front-End__ of a compiler is a three-phase module. See figure below.
 
@@ -122,7 +122,7 @@ The __Front-End__ of a compiler is a three-phase module. See figure below.
 Explanations are provided in the next three subsections.
 
 
-#### 2.1.1 the _Scanner_
+### 2.1.1 the _Scanner_
 
 ![Front-end scanner picture](Picts/front-end-scanner.png)
 
@@ -142,12 +142,12 @@ as, for instance, the line number and the column index of the corresponding
 text, and this text itself (e.g. for an identiifer or for a scalar constant).
 
 So, the _Scanner_ takes as input the source code to be scanned and puts as its 
-output some _intermdiate code_ (I.C.) which is mainly an ordered list of 
+output some _intermediate code_ (I.C.) which is mainly an ordered list of 
 detected tokens. This ordered list is then the input of the next phase of the 
 __Front-End__, the _Parser_. Let's call it the _tokenized I.C._
 
 
-#### 2.1.2 the _Parser_
+### 2.1.2 the _Parser_
 
 ![Front-end parser picture](Picts/front-end-parser.png)
 
@@ -179,7 +179,7 @@ source code. This _parsed intermediate code_ is then the input of the last
 phase of the __Front-End__, the _Elaborator_. 
 
 
-#### 2.1.3 the _Elaborator_
+### 2.1.3 the _Elaborator_
 
 ![Front-end elaborator picture](Picts/front-end-elaborator.png)
 
@@ -190,7 +190,7 @@ operations to check for the semantic correctness of the source code.
 Among the many elaborations that can take place, we list only two of them just 
 for illustrating the kind of processing the _Elaborator_ runs.
 
-##### Identifiers Checking
+#### Identifiers Checking
 
 The use of identifiers is checked. Is an identifier associated with a constant 
 value? Or is it the name of a function, of a class, of a method or of a 
@@ -200,7 +200,7 @@ value associated with the identifier of a constant value, as long as the
 programming language allows declarations of constants. Meanwhile, by no way 
 the identifier of a scalar variable should be used as a called function.
 
-##### Types inferring and checking
+#### Types inferring and checking
 
 Another kind of elaboration of a source code is the inferring of types (for 
 variables and for expressions) and the checking of the correctness of those 
@@ -213,7 +213,7 @@ done at compile time, i.e. in a static manner, it allows the static detection
 of possible errors at run time __before__ running the final binary code. This 
 way, no type checking, which is costly, has to be implemented at run time.
 
-##### _Elaborator_ output
+#### _Elaborator_ output
 
 The _Elaborator_ provides either a list of detected errors or a new form of 
 _Intermediate Code_ that we will call the _elaborated I.C._
@@ -231,7 +231,7 @@ compilers.
 
 
 
-### 2.2 The _Optimizer_
+## 2.2 The _Optimizer_
 
 Three-phase compilers implement their second phase as a _code Optimizer_. We 
 shall not say much about this. The reader is strongly encouraged to see theory 
@@ -251,7 +251,7 @@ optimization (see figure above). We list here  four of them: __local__ ,
 __regional__, __global__ and __interprocedural__ optimizations.
 
 
-#### 2.2.1 Local optimizations
+### 2.2.1 Local optimizations
 
 These are the simplest optimizations. They are operated on local blocks of 
 instructions and are considered to be very efficient.
@@ -269,7 +269,7 @@ the _Back-End_ phase of the compiler can later implement more efficient binary
 code if possible.
 
 
-#### 2.2.2 Regional optimizations
+### 2.2.2 Regional optimizations
 
 Well, code in a block of instructions may also provide or prepare context for 
 usefully  improving the code in another block of instructions. Regional 
@@ -286,7 +286,7 @@ optimization, it is a time consuming one since the loop control is processed
 less times than with no unrolling.
 
 
-#### 2.2.3 Global optimizations (and analysis)
+### 2.2.3 Global optimizations (and analysis)
 
 These optimizations deal with code at an entire function level. , for 
 instance, they may help:
@@ -306,7 +306,7 @@ cost can be statically evaluated, the _Optimizer_ may exchange the places of
 blocks of instructions just to diminish the time processing of a program.
 
 
-#### 2.2.4 Interprocedural optimizations
+### 2.2.4 Interprocedural optimizations
 
 This is somewhat the _higher_ level of otpimizations that can be envisaged. 
 Those optimizations deal with groups of functions or methods, trying to 
@@ -327,7 +327,7 @@ _Optimizer_ may decide to inline the whole code of a function, in place of its
 call, into the code of the calling function.
 
 
-#### 2.2.5 _Optimizer_ - conclusion
+### 2.2.5 _Optimizer_ - conclusion
 
 Optimizations are an important part of a compiler. Thye may take time to be 
 processed but they provide optimization either on memory space allocation or 
@@ -340,7 +340,7 @@ a two-phase compiler.
 
 
 
-### 2.3 The _Back-End_
+## 2.3 The _Back-End_
 
 The final phase of a compiler is the _Back-End_. It deals with the generation 
 of the final binary code according to the target processor and the target 
@@ -353,7 +353,7 @@ as this I.C. has been generated. Should the previous phases of the compiler
 have detected errors, the _Back-End_ would not be ran.
 
 
-#### 2.3.1 Instruction Selection
+### 2.3.1 Instruction Selection
 
 The _elaborated I.C._ is first evaluated for the __selection__ of 
 corresponding processor __instructions__. For instance, the assignment of a 
@@ -367,7 +367,7 @@ _intermediate assembly code_, maybe associated with additionnal informatin
 data to help next step processing.
 
 
-#### 2.3.2 Instruction Scheduling
+### 2.3.2 Instruction Scheduling
 
 Then, this _intermediate assembly code_ is processed by a next step of the 
 _Back-End_ : the __instruction scheduling__. This is some kind of optimization 
@@ -381,7 +381,7 @@ instruction scheduling generates a modified _intermediate assembly code_ which
 is the input of the final step of the compiler _Back-End_.
 
 
-#### 2.3.3 Registers Allocation
+### 2.3.3 Registers Allocation
 
 This is the final step of the _Back-End_ processing. Processors have a limited 
 set of registers. This step aims at using all of them in the best way. The 
@@ -390,7 +390,7 @@ binary code with the best use of the target processor registers. This means
 that direct access to memory may be imposed, should the registers be too few.
 
 
-#### 2.3.4 _Back-End_ output
+### 2.3.4 _Back-End_ output
 
 The _Back-End_, when called, eventually generates binary assembly code 
 dedicated to the target processor. This code can be either formatted code 
@@ -401,7 +401,7 @@ Linux, MacOS, etc.)
 
 
 
-### 2.4 Modern Compilers Design - Conclusion
+## 2.4 Modern Compilers Design - Conclusion
 
 Being either three-phase or two-phase designed, a compiler is composed of:
 - a _Front-End_ which mainly parses the source code of a program;
@@ -428,30 +428,138 @@ binary code but source code in some other programming language.
 
 
 
-## 3. Typee Translator Design -- from Compiler design
+# 3. Typee Translator Design -- from Compiler design
 
-As stated in the above section conclusion (see 2.4) the __Typee__ design is 
-simpler than a compiler one, since __Typee__ is a __translator__, not a 
-compiler.
+As stated in the above conclusion (see subsection 2.4) the __Typee__ design is 
+simpler than the one of a compiler, since __Typee__ is a programming languages 
+__translator__ and not a true compiler.
 
-Why is it simpler? Because, as a translator, Typee neither compiles nor 
-optimizes code. Its two main acitivities are _static type checking_ and 
-_translation_ from programming language Typee to another programming language 
-such as _Python_, _C++_ or _Java_.
+Why is it simpler? Because, as a translator, Typee neither generates binary
+code nor optimizes source or intermediate code. Its two main acitivities are 
+_static type checking_ and _translation_ from programming language Typee to 
+another programming language such as _Python_, _C++_ or _Java_.
 
-Nevertheless, it is easy to envisage the design of Typee transator as would be 
-the design of a modern compiler.
+Nevertheless, to envisage the design of Typee translator as would be the 
+design of a modern compiler is staightforward:
+
+![Typee translator design figure](Picts/typee-design.png)
+
+__Typee__ source code is first processed by Typee _Front-End_. At this phase 
+of the translation, Typee source code is scanned, parsed and elaborated. An
+_elaborated intermediate code_ is generetad by the _Front-End_ and transferred 
+to Typee _Back-End_.
+
+The _elaborated intermediate code_ is then processed by Typee _Back End_. 
+There, all the translation work to another programming language is done, as 
+would have been the translating of this intermediate code to some binary 
+target code within a compiler.
+
+Meanwhile, many of the tasks done in a compiler are simpler in Typee 
+translator implementation.
+
+Furthermore, the _elaborated intermediate code_ is totally independent of the 
+target programming language. It only depends on the specifications of Typee 
+language. So, the exactly same interface between Typee _Front-End_ and Typee 
+_Back-End_ will serve the same purpose for any kind of target programming 
+language (i.e. _C++_, _Java_ or _Python_).
+
+A consequence of this is that a same _interface_ will have to be implemented 
+for each target programming language: a version of the _Back-End_ will 
+translate _elaborated intermdiate code_ to _Python, another version will 
+translate _elaborated I.C._ to _C++_, a third one will translate the same 
+_elaborated I.C._ to _Java_, etc.
 
 
-### 3.1 Typee Front-End
+## 3.1 Typee Front-End
+
+__Typee __ _Front-End_ is a three-phase front-end, as is the case for any 
+classical compiler.
+
+![Typee front-end figure](Picts/front-end.png)
+
+It takes as input the source code of a Typee program or file and generates as 
+its output an _elaborated intermediate code_ that is further processed by the 
+Typee _Back-End_.
+
+We describe the design of each of these three __Typee__ _Front-End_ phases in 
+the next subsections.
+
+
+### 3.1.1 Typee Front-End _Scanner_
+
+The _Scanner_ of __Typee__ Front-End deals with tokens. It takes as input some 
+__Typee__ source code, scans it, and generates an ordered list of tokens as 
+the _tokenized intermediate code_ that is provided for input to the __Typee__ 
+_Front-End Parser_.
+
+![Typee front-end scanner](Picts/front-end-scanner.png)
+
+In __Typee__, a token is associated with an ID and a default text. Let's take 
+an example. __Typee__ specifies keywords. Among them are instruction keywords, 
+for instance ___if___. A specific token is associated with keyword ___if___. 
+It gets a unique ID and the associated default text is "`if`". There are many 
+other kinds of tokens, such as a single token to identify identifiers, tokens 
+for every legal punctuation sign, tokens to identify numbers, tokens to 
+identify operators, etc.
+
+Class `FEIcodeToken` defines all the tokens IDs and the associated default 
+texts when this gets meaningfull. For instance, there is no default text 
+associated with the token for identifiers since there is no default text 
+corresponding to any identifier. The related text is rather associated with 
+the _identifier-token_ each time an identifier is discovered in the scanned 
+Typee source code.
+
+Class `FEICodeTokenNode` finally defines the data structure that is linearly 
+appended to the _tokenized intermediate code_ data. Remember, this is an 
+ordered list of tokens that is generated by the _Scanner_ and that is provided 
+as input to the _Front-End Parser_. This list contains token __nodes__ which 
+are defined by class `FEICodeTokenNode`. The attributes of each node are:
+- the related token ID;
+- the associated text as scanned in the Typee source code;
+- the line number in the source code and the column index in this line of the 
+asociated text with this token.
+
+Finally, class `FETokenIntermediateCode` defines the _intermediate code_ 
+generated by the _Front-End Scanner_. While implemented in _Python_, this is 
+just a wrapper to Python built-in type __list__.
+
+The Typee _Front-End Scanner_ runs through the Typee source code, detects 
+any Typee keyword, any legal punctuation or separator sign, any valid number 
+or other scalar values (boolean ones, string ones, etc.), any indentifier as 
+separated by spaces, tabs and legal other separators, any legal operator, and 
+maybe any badly formed, unknown or not valid text (such as "`125xyz`" which is 
+neither a correct number nor a correct identifier in Typee).
+
+The _Scanner_ then appends the related token node to the list of the already 
+detected _token nodes_. Remember, this is the _tokenized intermediate code_. 
+Badly formed text is also detected by the _Scanner_ and replaced in this 
+intermediate code by a dedicated token node, the __unexpected token__ node. 
+This is a useful information to pass to the _Parser_. It allows also for the 
+delaying of errors printings after the completion of Typee _Front-End_. This 
+way, warnings and errors can be displayed on console or saved in log file in 
+the increasing numer of the Typee source code line they have been detected in.
+
+Finally, the _Scanner_ passes to the _Parser_ the 
+_tokenized intermediate code_ which is an instance of class 
+`FETokenIntermediateCode` and which contains an ordered list of 
+_token nodes_.
+
+
+### 3.1.2 Typee Front-End _Parser_
 
 
 
-### 3.2 Typee Back-End
+
+### 3.1.3 Typee Front-End _Elaborator_
 
 
 
-## 4. Packages and Modules
+
+## 3.2 Typee Back-End
+
+
+
+# 4. Typee Implementation - Packages and Modules
 
 
 
@@ -463,6 +571,6 @@ the design of a modern compiler.
 | 2018-07-30 | 0.0.1 | PhHays | Very first creation. Introduction written and empty sections added. |
 | 2018-07-30 | 0.0.2 | PhHays | Completed section 1. |
 | 2018-08-09 | 0.0.3 | PhHays | Augmented sections 2. and 3. |
-| 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 to 2.4 |
+| 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 to 2.4, augmented section 3.1 |
 |  |  |  |  |
 
