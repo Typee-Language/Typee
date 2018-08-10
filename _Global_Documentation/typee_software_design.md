@@ -297,7 +297,7 @@ detection);
 
 Using variables before their initialization should be considered as an error, 
 since this will mostly lead to some unpredictable behavior of the program. The
-detection of such errors before run time can be done by the _Optimiser_ phase 
+detection of such errors before run time can be done by the _Optimizer_ phase 
 of a compiler.
 
 The modification of the placement of global code deals with the 
@@ -325,6 +325,18 @@ A second, not very more complex, optimization at interprocedural level is the
 inlining of functions calls. Rather than generating a call to a function, the 
 _Optimizer_ may decide to inline the whole code of a function, in place of its 
 call, into the code of the calling function.
+
+
+#### 2.2.5 _Optimizer_ - conclusion
+
+Optimizations are an important part of a compiler. Thye may take time to be 
+processed but they provide optimization either on memory space allocation or 
+on time processing ar runtime. They help improving the implementation of a 
+program in an aitomated manner with no needed user's intervention.
+
+They are implemented in a dedicated phase within three-phase compilers, but 
+they may also be implemented in either the Front-End or the Back-End phase of
+a two-phase compiler.
 
 
 
