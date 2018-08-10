@@ -61,9 +61,9 @@ _Java_). During the translation, type infering and checking is done not only
 for APIs but also on all the other parts of the code.
 
 So, we got greatly inspired by modern compilers design to design the __Typee__ 
-translator. Our bedside book for a long has been "Engineering a Compiler, 2nd 
-Edition, Keith D.Cooper & Linda Torczon, Elsevier, 2012" and we encourage the 
-reader to read this book.
+translator. Our bedside book for a long has been "_Engineering a Compiler_",
+2nd edtition, Keith D.Cooper & Linda Torczon, 2012, Elsevier, ISBN 
+978-0-12-088478-0. and we encourage the reader to read this book.
 
 We have choosen this book because it was newer than the famous Dragoon book 
 "Compilers, principles, techniques, & tools, 2nd ed." from Alfred V. Aho, 
@@ -233,6 +233,99 @@ compilers.
 
 ### 2.2 The _Optimizer_
 
+Three-phase compilers implement their second phase as a _code Optimizer_. We 
+shall not say much about this. The reader is strongly encouraged to see theory 
+and explanations in Compiler Design books. Remember, our bedside book for a 
+while about this has been "_Engineering a Compiler_", 2nd edtition, Keith 
+D.Cooper & Linda Torczon, 2012, Elsevier, ISBN 978-0-12-088478-0.
+
+![Optimizer design picture](Picts/optimizer.png)
+
+The _Optimizer_ takes as input the _elaborated intermediate code_ provided by 
+the compiler __Front-End__ and generates an _optimized intermediate code_ as 
+its output. This _optimized I.C._ is then provided as input to the compiler 
+__Back-End__.
+
+The _Optimizer_ is generally designed as a succession of different levels of 
+optimization (see figure above). We list here  four of them: __local__ , 
+__regional__, __global__ and __interprocedural__ optimizations.
+
+
+#### 2.2.1 Local optimizations
+
+These are the simplest optimizations. They are operated on local blocks of 
+instructions and are considered to be very efficient.
+
+An example of such optimization is the simplification of successive 
+instructions when local values of variables are not modified or when 
+redundancy can be detected in some of these successive instructions. The 
+_Optimizer_ automatically removes or simplifies those instructions in the 
+_Intermdiate Code_.
+
+Another example of such optimization is when parallelization of instructions 
+processing can be detected in successive independent instructions. Such 
+instructions may then be reordered in the _I.C._ by the _Optimizer_ so that 
+the _Back-End_ phase of the compiler can later implement more efficient binary 
+code if possible.
+
+
+#### 2.2.2 Regional optimizations
+
+Well, code in a block of instructions may also provide or prepare context for 
+usefully  improving the code in another block of instructions. Regional 
+optimizations deal with this.
+
+This way, for instance, the _Optimizer_ can find redundancies and 
+constant-valued expressions that a strictly local optimization would fail to 
+detect. The _I.C._ can then be smartly modified to take benefit of already 
+known context.
+
+The technique of _loop unrolling_ is also a regional otpimization. Unrolling 
+loops leads to code duplication within loops. If this is not a memory space 
+optimization, it is a time consuming one since the loop control is processed 
+less times than with no unrolling.
+
+
+#### 2.2.3 Global optimizations (and analysis)
+
+These optimizations deal with code at an entire function level. , for 
+instance, they may help:
+
+- detecting uninitialized variables before their use (analysis for error 
+detection);
+- modifying the placement of global code (optimization).
+
+Using variables before their initialization should be considered as an error, 
+since this will mostly lead to some unpredictable behavior of the program. The
+detection of such errors before run time can be done by the _Optimiser_ phase 
+of a compiler.
+
+The modification of the placement of global code deals with the 
+characteristics of the target processor. For instance, as long as branching 
+cost can be statically evaluated, the _Optimizer_ may exchange the places of 
+blocks of instructions just to diminish the time processing of a program.
+
+
+#### 2.2.4 Interprocedural optimizations
+
+This is somewhat the _higher_ level of otpimizations that can be envisaged. 
+Those optimizations deal with groups of functions or methods, trying to 
+understand or evaluate their contexts to take benefit of them across functions 
+while this would not be possible with intra-procedural (i.e. global) 
+optimization.
+
+A first, simple, optimization is the modification of the placement of functions 
+code within the final binary image of the program when the _Optimizer_ can 
+detect that one function calls another one. Placing them as near as possible 
+of each other in the final code may optimize time processing, for instance 
+when the instructions set of the target processor provides short and long 
+range branching and when short branching is quicker than long branching.
+
+A second, not very more complex, optimization at interprocedural level is the 
+inlining of functions calls. Rather than generating a call to a function, the 
+_Optimizer_ may decide to inline the whole code of a function, in place of its 
+call, into the code of the calling function.
+
 
 
 ### 2.3 The _Back-End_
@@ -276,6 +369,6 @@ the design of a modern compiler.
 | 2018-07-30 | 0.0.1 | PhHays | Very first creation. Introduction written and empty sections added. |
 | 2018-07-30 | 0.0.2 | PhHays | Completed section 1. |
 | 2018-08-09 | 0.0.3 | PhHays | Augmented sections 2. and 3. |
-| 2018-08-10 | 0.0.4 | PhHays | Completed section 2.1 |
+| 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 and 2.2 |
 |  |  |  |  |
 
