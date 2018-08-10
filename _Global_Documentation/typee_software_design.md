@@ -139,6 +139,8 @@ etc.) Each token is a data structure that may contain local information, such
 as, for instance, the line number and the column index of the corresponding 
 text, and this text itself (e.g. for an identiifer or for a scalar constant).
 
+![Front-end scanner picture](Picts/front-end-scanner.png)
+
 So, the _Scanner_ takes as input the source code to be scanned and puts as its 
 output some _intermdiate code_ (I.C.) which is mainly an ordered list of 
 detected tokens. This ordered list is then the input of the next phase of the 
@@ -154,9 +156,9 @@ specified syntax of the programming language.
 Such a syntax is defined by its _grammar_. The rules defined this grammar 
 describes what are the legal successions of tokens for the defined programming 
 language. For instance, in C++, a legal ___if___ instruction is defined to be 
-something like this :
+something like this:
 
-```c++
+```java
 if ( <some test> )
     <a block of instructions or a single instruction>
 else
@@ -167,6 +169,8 @@ Should any token corresponding to the parenthesis be missing after token
 _token_IF_ in the tokenized I.C, the _Scanner_ would detect some syntax error 
 in the source code. The __Front-End__ may then inform the user of these 
 syntax errors and most often does not try to correct them.
+
+![Front-end parser picture](Picts/front-end-parser.png)
 
 The output of the _Parser_ is another form of _intermediate code_ which still 
 lists the tokens in the order of their appearing in the source code plus maybe 
@@ -179,9 +183,12 @@ phase of the __Front-End__, the _Elaborator_.
 
 The _parsed intermediate code_ gets statically elaborated in the last phase of 
 the __Front-End__, the _Elaborator_. This module finalizes the Front-End 
-operations to check for the semantic correctness of the source code. Among the 
-many elaborations that can take place, we list only two of them just for 
-illustrating the kind of processing the _Elaborator_ runs.
+operations to check for the semantic correctness of the source code.
+
+![Front-end elaborator picture](Picts/front-end-elaboratorr.png)
+
+Among the many elaborations that can take place, we list only two of them just 
+for illustrating the kind of processing the _Elaborator_ runs.
 
 ##### Identifiers Checking
 
