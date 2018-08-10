@@ -156,7 +156,7 @@ describes what are the legal successions of tokens for the defined programming
 language. For instance, in C++, a legal ___if___ instruction is defined to be 
 something like this :
 
-```
+```c++
 if ( <some test> )
     <a block of instructions or a single instruction>
 else
