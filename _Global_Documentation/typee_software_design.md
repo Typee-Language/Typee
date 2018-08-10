@@ -105,16 +105,130 @@ exist also, with no _Optimizer_ phase. See coresponding schema below.
 
 ![Two phase compiler design picture](Picts/two-phase-compiler.png)
 
+To get a little bit more information on those three phases of a modern 
+compiler, see the three next sub-sections. They are short. But to know more, 
+the reader should refer to any book on compilers design. Remember, the one we 
+have used for the design of Typee translator is "_Engineering a Compiler_",
+2nd edtition, Keith D.Cooper & Linda Torczon, 2012, Elsevier, ISBN 
+978-0-12-088478-0.
+
 
 ### 2.1 The _Front-End_
 
+The __Front-End__ of a compiler is a three-phase module. See figure below.
+
+![Front-end design picture](Picts/front-end.png)
+
+Explanations are provided in the next three subsections.
 
 
-### 2.2 The _Back-End_
+#### 2.1.1 the _Scanner_
+
+The source code to be compiled is first scanned by the _Scanner_. This module 
+transforms the source code to an ordered list of tokens. This phase of the 
+__Front-End__ is named also _tokenizer_.
+
+What is a token? It is an entity that describes a whole atomic element of the 
+programming language. For instance, there is one token for each of the 
+built-in instructions of the language (e.g. ___for___, ___if___, ___else___ 
+just to name a few, which are associated with resp. to _token_FOR_, _token_IF_ 
+and token_ELSE). Numbers are associated with one token. Identifiers are also, 
+whatever they identify: constants, variables, functions, classes or methods, 
+etc. Operators are each associated also with tokens (e.g. '=', '+', '<=', 
+etc.) Each token is a data structure that may contain local information, such 
+as, for instance, the line number and the column index of the corresponding 
+text, and this text itself (e.g. for an identiifer or for a scalar constant).
+
+So, the _Scanner_ takes as input the source code to be scanned and puts as its 
+output some _intermdiate code_ (I.C.) which is mainly an ordered list of 
+detected tokens. This ordered list is then the input of the next phase of the 
+__Front-End__, the _Parser_. Let's call it the _tokenized I.C._
+
+
+#### 2.1.2 the _Parser_
+
+The _tokenized intermediate code_ is passed as input to the _Parser_. This 
+module parses this I.C. and checks for its correctness according to the 
+specified syntax of the programming language.
+
+Such a syntax is defined by its _grammar_. The rules defined this grammar 
+describes what are the legal successions of tokens for the defined programming 
+language. For instance, in C++, a legal ___if___ instruction is defined to be 
+something like this :
+
+```
+if ( <some test> )
+    <a block of instructions or a single instruction>
+else
+    <another block of instructions or another single instruction>
+```
+
+Should any token corresponding to the parenthesis be missing after token 
+_token_IF_ in the tokenized I.C, the _Scanner_ would detect some syntax error 
+in the source code. The __Front-End__ may then inform the user of these 
+syntax errors and most often does not try to correct them.
+
+The output of the _Parser_ is another form of _intermediate code_ which still 
+lists the tokens in the order of their appearing in the source code plus maybe 
+some information about the syntax used and the maybe detected errors in the 
+source code. This _parsed intermediate code_ is then the input of the last 
+phase of the __Front-End__, the _Elaborator_. 
+
+
+#### 2.1.3 the _Elaborator_
+
+The _parsed intermediate code_ gets statically elaborated in the last phase of 
+the __Front-End__, the _Elaborator_. This module finalizes the Front-End 
+operations to check for the semantic correctness of the source code. Among the 
+many elaborations that can take place, we list only two of them just for 
+illustrating the kind of processing the _Elaborator_ runs.
+
+##### Identifiers Checking
+
+The use of identifiers is checked. Is an identifier associated with a constant 
+value? Or is it the name of a function, of a class, of a method or of a 
+variable? According to this information, is it used in a correct way. For 
+instance, by no way should an _Elaborator_ accept the modification of the 
+value associated with the identifier of a constant value, as long as the 
+programming language allows declarations of constants. Meanwhile, by no way 
+the identifier of a scalar variable should be used as a called function.
+
+##### Types inferring and checking
+
+Another kind of elaboration of a source code is the inferring of types (for 
+variables and for expressions) and the checking of the correctness of those 
+types use. For instance, assigning a long scalar in a variable with shorter 
+scalar type may be an issue, and be considered as a warning or as an error 
+according to the programming language defined policy.
+
+This type checking is of most importance for typed programming languages. When 
+done at compile time, i.e. in a static manner, it allows the static detection 
+of possible errors at run time __before__ running the final binary code. This 
+way, no type checking, which is costly, has to be implemented at run time.
+
+##### _Elaborator_ output
+
+The _Elaborator_ provides either a list of detected errors or a new form of 
+_Intermediate Code_ that we will call the _elaborated I.C._
+
+The errors delivered by the _Elaborator_ may have been detected: by the 
+_Scanner_, about badly formed or unknown detected tokens; by the _Parser_, 
+about syntax errors; and by the _Elaborator_, for instance about types usage 
+errors. Whatever the detected errors, they most often are printed on a console 
+or in a log file.
+
+The _elaborated I.C_, if source code has been detected as free of errors by 
+the __Front-End__, is then passed to the second phase of the compiler, which 
+is the _Optimizer_ for three-phase compilers, or the _Back-End_ for two-phase 
+compilers.
 
 
 
-### 2.3 The _Optimizer_
+### 2.2 The _Optimizer_
+
+
+
+### 2.3 The _Back-End_
 
 
 
@@ -155,5 +269,6 @@ the design of a modern compiler.
 | 2018-07-30 | 0.0.1 | PhHays | Very first creation. Introduction written and empty sections added. |
 | 2018-07-30 | 0.0.2 | PhHays | Completed section 1. |
 | 2018-08-09 | 0.0.3 | PhHays | Augmented sections 2. and 3. |
+| 2018-08-10 | 0.0.4 | PhHays | Completed section 2.1 |
 |  |  |  |  |
 
