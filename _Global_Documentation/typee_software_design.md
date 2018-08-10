@@ -124,6 +124,8 @@ Explanations are provided in the next three subsections.
 
 #### 2.1.1 the _Scanner_
 
+![Front-end scanner picture](Picts/front-end-scanner.png)
+
 The source code to be compiled is first scanned by the _Scanner_. This module 
 transforms the source code to an ordered list of tokens. This phase of the 
 __Front-End__ is named also _tokenizer_.
@@ -139,8 +141,6 @@ etc.) Each token is a data structure that may contain local information, such
 as, for instance, the line number and the column index of the corresponding 
 text, and this text itself (e.g. for an identiifer or for a scalar constant).
 
-![Front-end scanner picture](Picts/front-end-scanner.png)
-
 So, the _Scanner_ takes as input the source code to be scanned and puts as its 
 output some _intermdiate code_ (I.C.) which is mainly an ordered list of 
 detected tokens. This ordered list is then the input of the next phase of the 
@@ -148,6 +148,8 @@ __Front-End__, the _Parser_. Let's call it the _tokenized I.C._
 
 
 #### 2.1.2 the _Parser_
+
+![Front-end parser picture](Picts/front-end-parser.png)
 
 The _tokenized intermediate code_ is passed as input to the _Parser_. This 
 module parses this I.C. and checks for its correctness according to the 
@@ -170,8 +172,6 @@ _token_IF_ in the tokenized I.C, the _Scanner_ would detect some syntax error
 in the source code. The __Front-End__ may then inform the user of these 
 syntax errors and most often does not try to correct them.
 
-![Front-end parser picture](Picts/front-end-parser.png)
-
 The output of the _Parser_ is another form of _intermediate code_ which still 
 lists the tokens in the order of their appearing in the source code plus maybe 
 some information about the syntax used and the maybe detected errors in the 
@@ -181,11 +181,11 @@ phase of the __Front-End__, the _Elaborator_.
 
 #### 2.1.3 the _Elaborator_
 
+![Front-end elaborator picture](Picts/front-end-elaboratorr.png)
+
 The _parsed intermediate code_ gets statically elaborated in the last phase of 
 the __Front-End__, the _Elaborator_. This module finalizes the Front-End 
 operations to check for the semantic correctness of the source code.
-
-![Front-end elaborator picture](Picts/front-end-elaboratorr.png)
 
 Among the many elaborations that can take place, we list only two of them just 
 for illustrating the kind of processing the _Elaborator_ runs.
