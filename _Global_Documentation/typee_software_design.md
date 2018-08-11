@@ -831,6 +831,7 @@ is detected as an identifier that has to be categorized. Here, it will be as
 identifying a built-in function.
 ```
 class MyClass {
+ :public:
     static const int32 f() { return MyClass.val; }
     static int32 val = 0;
 }
