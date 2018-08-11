@@ -917,6 +917,43 @@ cannot deal with such cases.
 
 #### 3.1.3.3 Types Inferring
 
+__Type inferring__ is the elaboration of the type of any types entity. Here 
+again there is no grammar rule to express the type of an entity. This can only 
+be elaborated by running through the source code.
+
+The typed entities in any programming languages are:
+- the identifiers of variables, functions, classes, methods, attributes, types 
+aliases, constant values;
+- the expressions that embed identifiers.
+
+Inferring the type of an identifier is quite easy while running through the 
+_syntaxic intermediate code_, since each of its nodes unambiguously relates to 
+a Typee grammar rule. The _Elaborator_ elaborates this when it categorizes 
+identifiers (see above related sub-section 3.1.3.1).
+
+Grammar numerous complicated rules specify the valid syntax for Typee 
+expressions. Well, these are mainly the same as for any OOP language (for 
+_Object Oriented Programming_). Experienced developers should not get in 
+trouble with them. But neither the _Scanner_, evaluating tokens, nor the 
+_Parser_, checking syntax correctness of a Typee source code, can evaluate the 
+type of an expression. Only the _Elaborator_ can, after having categorized 
+all identifiers.
+
+When adding, multiplying, subtracting or dividing scalar values or variables, 
+a static inferring of the result type can be done by using simple rules, or 
+even a table. Those rules are very generic, as usual: multiplying an integer 
+by a float will result in a float; adding an 8-bits integer and a 64-bits one 
+will result in a 64-bits integer; etc.
+
+Static types inferring is possible while running throuh the _syntaxic 
+intermediate code_ just because the related grammar rules for expressions are 
+unambiguous, but as long as the types of every used entities are known at 
+static elaboration-time.
+
+You will see, learning __Typee__, that some identifiers may be of one type 
+among many and that the type they get can be known at run-time only. The 
+_Elaborator_ can know this due to Typee grammar rules and take benefit of this 
+knowledge while checking types uses.
 
 
 
