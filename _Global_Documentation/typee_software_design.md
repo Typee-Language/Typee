@@ -848,7 +848,7 @@ of classes.
 <class definition> ::= 'class' <identifier> ... <statements block>
 ```
 It is then easy to get that the `<identifier>` specified in the rule 
-definitively indetifies a class. This was the case for identifier `MyClass` in 
+definitively indentifies a class. This was the case for identifier `MyClass` in 
 the upper code.
 
 Other more complicated rules in Typee grammar specify the correct syntax for 
@@ -864,7 +864,7 @@ information to the nodes of the _syntaxic intermediate code_.
 
 Identifiers nodes in this I.C. are then augmented with information about the 
 kind of entity (class, method, attribute, function, variable, const value, 
-type, ...) they are related to.
+type, ...) they are relating to.
 
 
 #### 3.1.3.2 Identifiers use checking
@@ -910,7 +910,7 @@ provides as its output. This way, errors reporting can be delayed until the
 end of the _Front-End_ processing and errors can then be reported in the 
 increasing order of the lines numbers they appear in.
 
-Notice that these misues of variables are detected at "translation"-time in a 
+Notice that these misuses of variables are detected at "translation"-time in a 
 static way. Eventually, some complex situations cannot be statically 
 elaborated and will only be appearing at run-time. __Typee__ _Elaborator_ 
 cannot deal with such cases.
@@ -918,7 +918,7 @@ cannot deal with such cases.
 
 #### 3.1.3.3 Types Inferring
 
-__Type inferring__ is the elaboration of the type of any types entity. Here 
+__Type inferring__ is the elaboration of the type of any typed entity. Here 
 again there is no grammar rule to express the type of an entity. This can only 
 be elaborated by running through the source code.
 
@@ -952,7 +952,7 @@ unambiguous, but as long as the types of every used entities are known at
 static elaboration-time.
 
 You will see, learning __Typee__, that some identifiers may be of one type 
-among many and that the type they get can be known at run-time only. The 
+among many and that the type they get may be known at run-time only. The 
 _Elaborator_ can know this due to Typee grammar rules and take benefit of this 
 knowledge while checking types uses. See next sub-section.
 
@@ -960,15 +960,15 @@ knowledge while checking types uses. See next sub-section.
 
 #### 3.1.3.4 Types Checking
 
-Once types have been inferred for every entity and expression detected in the 
-Typee source code, __type checking__ can take place. This is the final phase 
-of the _Front-End Elaborator_.
+Once types have been inferred for every entities and expressions detected in 
+the Typee source code, __type checking__ can take place. This is the final 
+phase of the _Front-End Elaborator_.
 
 Here, the consistency of types is elaborated within expressions as well as in 
-expressions. For instance, in __Typee__ there is no `+` operator defined with 
-entities of type boolean and integer. There is no comparison operator that 
-jointly uses these types. The assignment of a boolean entity with a string 
-value is not allowed also. These are types errors.
+assignments. For instance, in __Typee__ there is no `+` operator defined 
+between entities of type boolean and integer. There is no comparison operator 
+that jointly uses these types. The assignment of a boolean entity with a 
+string value is not allowed also. These are examples of types errors.
 
 The instructions `if`, `while` or `repeat` for instance check boolean 
 expresions for evaluating the branching. No other type than boolean is 
@@ -983,12 +983,12 @@ also, to optimize checking time.
 So, types equivalence is managed through two mechanisms.
 
 
-##### Consistency between Typee built-in types
+##### a. Consistency between Typee built-in types
 
 The first mechanism is the coding of consistency between built-in types. For 
 this, we group all integer types together in a single cluster of integers 
 (`int8`, ..., `int64`, `uint8`, ..., `uint64`). We group as well all floating 
-types into one single cluser of floats (`float32` and `float64`). Char types 
+types into one single cluster of floats (`float32` and `float64`). Char types 
 and string types are also grouped into a single cluster of strings (`char`, 
 `char16`, `str` and `str16`). Other built-in types (i.e. the sole `bool`) is 
 finally grouped in the cluster of booleans.
@@ -1003,19 +1003,19 @@ int16 some_variable = K;     // warning here!
 
 There, the _Elaborator_ can easily evaluate statically that a 32-bits value is 
 assigned to an 8-bits one. Types are "consistent" according to their 
-respective clusters but assigning 8 bits with 32 bits leads to loss of 
+respective clusters but assigning 8 bits with 32 bits leads to a loss of 
 information. Most programming languages will assign `some_variable` with the 
 8 lower bits of `K`, i.e. `0xde` in this case. But this might be an error of 
 the coder. The _Elaborator_ cannot state about this. In __Typee__, this will 
 raise a warning report rather than an error one.
 
 
-##### Consistency with not-built-in types
+##### b. Consistency with not-built-in types
 
 Not built-in types are types that are declared in the source code that is 
 elaborated. For instance, an instance of a class is of the type of this class. 
 This is not a built-in type. Furthermore, in OOP classes inherits from 
-classes. This mechanisme of inheritance creates cosistency between those 
+classes. This mechanisme of inheritance creates consistency between those 
 classes that belong to a same inheritance chain.
 
 Here is an example.
@@ -1030,63 +1030,63 @@ Abase instance_of_Abase = Abase();  // instantiation of class Abase
 A1 instance_of_A1 = A1();           // instantiation of class A1
 A2 instance_of_A2 = A2();           // instantiation of class A2
 
-? in (A1, A2) some_instance;
+? in (A1, A2) some_instance;        // typical Typee instruction, see explanation below
 some_instance = instance_of_A1;     // consistent, so legal assignment (1)
 some_instance = instance_of_A2;     // consistent, so legal assignment (2)
 some_instance = instance_of_Abase;  // consistent, so legal assignment (3)
 ```
 
-In the above code, Types A1 and Abase may be used together in an expression or 
-an assignment. The same is true also for typeds A2 and Abase. So, object 
+In the above code, types A1 and Abase may be used together in an expression or 
+an assignment. The same is true also for types A2 and Abase. So, object 
 `instance_of_A1` is type-consistent with object `instance_of_Abase` as well as 
-Object `instance_of_A2` is also type-consistent with object 
+object `instance_of_A2` is also type-consistent with object 
 `instance_of_Abase`. 
 
-The special, unusual, line is typical of __Typee__ syntax:
+This special, unusual, next line is typical of __Typee__ syntax:
 ```
 ? in (A1, A2) some_instance;
 ```
 It declares a new variable, `some_instance`, which can be either of type A1 or 
 of type A2 while this is not known at declaration time. The three next 
-assignments after this line are all legal. `some_instance` may be assigned 
-type `A1` instances __(1)__ as well as `A2` instances __(2)__ and since `A1` 
-and `A2` types both inherit from class `Abase`, `some_instance` may also be 
-assigned an `Abase` instance __(3)__.
+assignments after this line in the code example are all legal. `some_instance` 
+may be assigned type `A1` instances __(1)__ as well as `A2` instances __(2)__ 
+and since `A1` and `A2` types both inherit from class `Abase`, 
+`some_instance` may also be assigned an `Abase` instance __(3)__.
 
-The _Elaborator_ is able to statically elaborate those consistencies and to 
-validate these three assignment statements.
+The _Elaborator_ is able to statically elaborate those consistencies and is 
+able to validate these three assignment statements.
 
 Finally, type aliases can also be statically checked for consistency with 
 built-in types, since they just are aliases that can be grouped into the 
 type cluster of the type they are aliasing.
 
 Should inconsistencies be detected by the _Elaborator_, corresponding _error 
-nodes_ are generated by the _Elaborator_ in the _errors report_ generated by 
-the _Elaborator_. See next sub-section.
+nodes_ are generated by the _Elaborator_ in the __errors report__ it 
+generates. See next sub-section.
 
 
 #### 3.1.3.5 Validated Intermediate Code & Errors Report
 
-At instantiation time, the _Front-End Elaborator_ initializes an empty 
+At its instantiation time, the _Front-End Elaborator_ initializes an empty 
 __Error Report__. This is a list of error nodes, ordered on the line 
 increasing number where the errors occurred (this information is inserted in 
 the _intermediate codes_ nodes by the _Scanner_ and the _Parser_).
 
 The _Elaborator_ elaborates then identifiers categorization, infers types and 
-check their consistencies as much as possible. For this, it runs through the 
-_syntaxic intermediate code_ generated by the _Parser_.
+checks for their consistencies as much as possible. For this, it runs through 
+the _syntaxic intermediate code_ generated by the _Parser_.
 
-Remember, this I.C. gets a __tree__ structure. The _Elaborator_ runs through 
-it via a left-most descent walk, I.C. node after I.C node. It eventually get 
-token nodes and maybe will traverse _error nodes_. These are either 
-_unexpected token_ errors generated by the _Scanner_ or _syntaxic_ errors 
-detected by the _Parser_. Every time an _error node_ is passed through by the 
-_Elaborator_ in the _syntaxic intermediate code_, the _Ealborator appends this 
-_error node_ o its __Error Report__ list.
+Remember, this syntaxic I.C. gets a __tree__ structure. The _Elaborator_ runs 
+through it via a left-most descent walk, I.C. node after I.C. node. It 
+eventually get token nodes and maybe will traverse _error nodes_. These are 
+either _unexpected token_ errors generated by the _Scanner_ or _syntaxic_ 
+errors detected by the _Parser_. Every time an _error node_ is passed through 
+by the _Elaborator_ in the _syntaxic intermediate code_, the _Elaborator_ 
+appends this _error node_ to its __Error Report__ list.
 
-Meanwhile, while checking types consistency, if any inconsistency is detected 
-by the _Elaborator_, an _error node_ integrating this inconsistency is appended 
-to the __Error Report__.
+Meanwhile, if any types inconsistency is detected by the _Elaborator_, an 
+_error node_ integrating this inconsistency is appended to the 
+__Error Report__.
 
 Once the _Elaborator_ completes, it provides both the _syntaxic intermediate 
 code_ and the __Error Report__. When the error report is empty, the provided 
