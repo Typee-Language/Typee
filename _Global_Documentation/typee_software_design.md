@@ -813,29 +813,30 @@ type float32 as float;
 type float64 as double;
 ```
 
-In Typee, `int32`, `float32` and `float64` are built-in types while `long`, 
-`float` and `double` are identifiers in upper code. They are identifiers of 
-types.
+In Typee, `int32`, `float32` and `float64` are built-in types, while in the 
+upper code `long`, `float` and `double` are identifiers. They are identifiers 
+of types.
 
 The _Scanner_ generates a specific token for built-in scalar types. It 
 generates also a specific token for identifiers, whatever they identify.
 
 It is the activity of the _Elaborator_ to elaborate the kind of entity an 
 identifer identifies. This is __semantic__ analysis of Typee source code. It 
-is based on the running through rules to get what kind of Typee entity the 
-identifier is associated with. For example, in next Typee code `MyClass` 
+is based on the running through grammar rules to get what kind of Typee entity 
+the identifier is associated with. For example, in next Typee code `MyClass` 
 identifies a class, `f` identifies a class method, `val` identifies a class 
 attribute and `i` identifies a variable. `class`, `static`, `const` and 
 `int32` are Typee keywords. Finally, `print` is a Typee built-in function but 
-is detected as an identifier that has to be categorized as identifying a 
-function.
+is detected as an identifier that has to be categorized. Here, it will be as 
+identifying a built-in function.
 ```
 class MyClass {
     static const int32 f() { return MyClass.val; }
     static int32 val = 0;
 }
+
 int32 i = myClass.val++;
-print( i, val ); // this prints "0 1" on console.
+print( i, val ); // this prints "0 1" on the console.
 ```
 
 Those categorizations are elaborated according to the rules of Typee grammar. 
@@ -843,9 +844,9 @@ These rules unambiguously specify what an identifier identifies. For example,
 the next Typee grammar rule specifies the correct syntax for the declaration 
 of classes.
 ```
-<class definition>  ::= 'class' <identifier> <template def> <inheritance> <statements block>
+<class definition> ::= 'class' <identifier> ... <statements block>
 ```
-It is then easy to get that the `<identifier>`specified in the rule 
+It is then easy to get that the `<identifier>` specified in the rule 
 definitively indetifies a class. This was the case for identifier `MyClass` in 
 the upper code.
 
@@ -854,11 +855,11 @@ declaring functions, methods, attributes, variables, type aliasing, etc. From
 these rules, it is easy also to unambiguously get the kind of entity an 
 identifier identifies.
 
-Maybe you can understand now that, while the _Parser_ just runs linearly 
+Maybe you can understand now that, while the _Parser_ just linearly runs 
 grammar rules to check for the correctness of the syntax of a Typee program, 
-the _Elaborator_ gets a little bit farer, running linearly the same rules but 
-running also small portions of elaborating code to add __semantic__ information 
-to the nodes of the _syntaxic intermediate code_.
+the _Elaborator_ gets a little bit farer, linearly running the same grammar 
+rules but running also small portions of elaborating code to add __semantic__ 
+information to the nodes of the _syntaxic intermediate code_.
 
 Identifiers nodes in this I.C. are then augmented with information about the 
 kind of entity (class, method, attribute, function, variable, const value, 
@@ -868,14 +869,14 @@ type, ...) they are related to.
 #### Identifiers use checking
 
 Well, it might be that some identifiers will have been detected by the 
-_Scanner_ and evaluated by the _Parser_ as correctly placed in statements and 
+_Scanner_ then evaluated by the _Parser_ as correctly placed in statements and 
 in the meantime that they are semantically not correctly used.
 
 For instance, the use a not yet declared identifier should lead to some crash 
 at run-time (built-in entities are always declared before their use) or to 
 some detected error at compile-time for targetted compiled languages.
 ```
-// example
+// error example
 const int32 i = j + 1; // unknown 'j'
 int32 j = 0;
 ```
@@ -884,7 +885,7 @@ Or the identifier of a variable may be used in some correct expression while
 its value has not yet be initialized. This is semantically not acceptable 
 since this eventually leads to unpredictable results.
 ```
-// example
+// error example
 int32 i;
 int32 j = i + 1; // unpredictable value for j
 ```
@@ -902,11 +903,16 @@ There are no rules specified in Typee grammar to detect such errors.
 Identifiers have to be elaborated before those checkings can be done. It is 
 the role of the _Elaborator_ to elaborate misuses of identifiers.
 
-Should any misue of identifiers be detected by the _Elaborator_, errors nodes 
+Should any misuse of identifiers be detected by the _Elaborator_, errors nodes 
 would be added into the _validated intermediate code_ that the _Elaborator_ 
 provides as its output. This way, errors reporting can be delayed until the 
 end of the _Front-End_ processing and errors can then be reported in the 
 increasing order of the lines numbers they appear in.
+
+Notice that these misues of variables are detected at "translation"-time in a 
+static way. Eventually, some complex situations cannot be statically 
+elaborated and will only be appearing at run-time. __Typee__ _Elaborator_ 
+cannot deal with such cases.
 
 
 #### Types Inferring
