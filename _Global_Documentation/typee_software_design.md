@@ -1225,23 +1225,11 @@ class MyClass:
     __K = 10
 ```
 
-Translation here is not a context-free processing, for instance since it 
-might be that the translation of many methods will have to be grouped in a 
-single one. For instance, have a look at the _Python_ translation of the 
-__Typee__ class constructors. So, it might be that not every source code 
-will be translatable in an automated way.
+Translation here is not a context-free processing, for instance since it might be that the translation of many methods will have to be grouped in a single one. For instance, have a look at the _Python_ translation of the __Typee__ class constructors. So, it might be that not every source code will be translatable in an automated way.
 
-It is  be the role of the translators to envisage correct translation in as 
-many different situations as possible. The unambiguous syntax of __Typee__ as 
-well as the unambiguous syntaxes of the first targeted programming languages 
-should greatly help.
+It is  be the role of the translators to envisage correct translation in as many different situations as possible. The unambiguous syntax of __Typee__ as well as the unambiguous syntaxes of the first targeted programming languages should greatly help.
 
-The experienced coder will be able to evaluate here the difficulty of the 
-task, while the original code was quite simple. The __Typee__ PoC aims at 
-prooving that source code can be translated, or not.
-
-
-## 3.3 Implementation design
+The experienced coder will be able to evaluate here the difficulty of the task, while the original code was quite simple. The __Typee__ PoC aims at prooving that source code can be translated, or not.
 
 
 
@@ -1420,6 +1408,6 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-12 | 0.0.6 | Schmouk | Augmented section 4.; completed its intro and subsection 4.6 |
 | 2018-08-12 | 0.0.7 | PhHays | Added a new section 4. on the main module of the Translator; renamed section and subsections 4. with 5. |
 | 2018-08-12 | 0.0.8 | Schmouk | Augmented section 5.1 |
-| 2018-08-12 | 0.0.9 | PhHays | A few corrections; completed section 3.2 |
+| 2018-08-12 | 0.0.9 | PhHays | A few corrections; completed section 3.2; removed not useful section 3.3 (redundant with section 4.) |
 |  |  |  |  |
 
