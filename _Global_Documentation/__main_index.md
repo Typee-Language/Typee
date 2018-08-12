@@ -41,6 +41,7 @@ dedicated to developers.
 | [scanner_tokenization_tests.md](../src/Tests/Documentation-README/scanner_tokenization_tests.md) | Tests  | src/ Tests/ Documentation-README/  | Explanations on how to test the Front-End Scanner and how to modify related tests files  |
 | [typee_front_end_parser_ documentation.md](typee_front_end_parser_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the role and the architecture of the Front-End __Parser__ of __Typee__ translator |
 | [typee_front_end_scanner_ sw_documentation.md](typee_front_end_scanner_sw_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the software architecture and data structures of the Front-End __Scanner__ of __Typee__ translator |
+| [typee_software_doesign.html](typee_software_design.html) | S/W documentation | \_Global\_Documentation/ | Design document of the __Typee__ translator |
 | [typee_software_doc.html](Typee_Software_HTML_Dcumentation/typee_software_doc.html) | S/W documentation | \_Global\_Documentation/ Typee_Software\_ HTML_Documentation | HTML documentation of __all__ packages, modules and classes of the whole __Typee__ software |
 |  |  |  |  |
 
@@ -63,4 +64,5 @@ same document could be appearing in multiple topics_)
 | 2018-07-24 | 0.0.5 | Schmouk | Added ref to the usage of the script that automates the generation of __Typee__ S/W documentation |
 | 2018-07-24 | 0.0.6 | Schmouk | Added links to the reference table, then corrected the few erroneous ones |
 | 2018-07-25 | 0.0.7 | Schmouk | Modified directory name for __Typee__ HTML automated documentation; added reference to the HTML documentation of the whole software |
+| 2018-08-12 | 0.0.8 | Schmouk | Added design document of Typee translator |
 |  |  |  |  |
