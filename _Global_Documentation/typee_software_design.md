@@ -1105,6 +1105,137 @@ transferred back from the _Front-End_ about errors.
 
 ## 3.2 Typee Back-End
 
+The __Typee__ _Back-End_ is not design exactly as would be a back-end of a 
+modern compiler. While it translates some _intermediate code_ into a final 
+representation of the initial source code, it only does a translation from a 
+programming language, __Typee__, into another programming language, _Python_, 
+_C++_ or _Java_ for instance. __Typee__ _Back-End_ does __not__ generate some 
+optimized binary code that will be run with a targetted processor. No. 
+__Typee__ _Back-End_ rather translates an initial source code into a targetted 
+source code.
+
+Many of the _traditional_ processing of a modern compiler back-end have 
+neither to be implemented nor to be designed for __Typee__ _Back-End_.
+
+Meanwhile, we aim to implement different translators from __Typee__ to other 
+programming languages. These translators will, for sure, share common 
+functionnalities. But, for sure also, they will not deliver similar source 
+codes since these will have to conform to the targeted language syntax.
+
+
+### 3.2.1 Translators design
+
+So, we design a base class `BETranslateBase` that defines as most common 
+features as possible for every specific translator. This will be used as a 
+skeleton for inheriting classes.
+
+We then design one dedicated class for each translator to programming 
+languages. Each of these classes, e.g. `BETranslatePython`, `BETranslateCpp` 
+or `BETranslateJava`, inherits from the base class `BETranslateBase` and 
+implements its specific parts (methods and attributes) dedicated to the 
+targeted language it is translating to.
+
+
+### 3.2.2 Translators callee
+
+Translators are called by the main module of the __Typee__ Translator. Notice 
+that no translator will be called if the _Front-End_ finally displayed or 
+logged an errors report. Any erroneous __Typee__ source code will __not__ be 
+translated to targeted programming language. Corrections have to take place 
+before, under the sole responsability of the coder.
+
+
+### 3.2.3 Translator processing
+
+So, at its instantiation time (i.e. at construction time), the translator 
+version related to the targeted programming language initializes an empty 
+_targeted source code_. The translator may put in it any starting comments, 
+for instance copyright and/or license notices passed to it, as well as other 
+mandatory notices (as is the case for _Python_ running under _Linux_).
+
+The translator runs then through the _validated intermediate code_ that has 
+been validated by the _Front-End_. Remember, this is a tree structure. 
+Translators run through this structure according to a most-left recursive 
+walk. Every time they encounter a new statement, they translate it to a 
+corresponding statement in the targeted programming language.
+
+
+### 3.2.4 An exemple
+
+Let's have an example. Here is below some not much useful __Typee__ code.
+```
+class MyClass
+{
+ :public:
+    MyClass(){
+        me._val = 0;
+    }
+    MYClass( const uint16 v ){
+        me._val = v;
+    }
+    
+    none print_vals(){
+        for( uint16 i in [:MyClass._K] )
+            print( me._val + i, ' ' );
+    }
+
+ :private:
+    static uint16 _K = 10;
+    uint16 _val;
+}
+```
+
+__C++__ translated code will be:
+```
+class Myclass
+{
+  public:
+    MyClass()
+      : _val( 0 )
+    {}
+    MyClass( const unsigned short v )
+      : _val( v )
+    {}
+    
+    print_vals()
+    {
+        for ( unsigned short i = 0; i < MyClass._K; ++i )
+            printf( "%d ", _val + i );
+    }
+    
+  private:
+    static unsigned short _K = 10;
+    unsigned short _val;
+}
+```
+
+while __Python__ translated code will be:
+```
+class MyClass:
+    def __init__(self, v:int=0):
+        self._val = v
+    
+    def print_vals(self):
+        for i in range(MyClass.__K):
+            print( self._val + i, end=' ' )
+    
+    __K = 10
+```
+
+Translation here is not a context-free processing, for instance since it 
+might be that the translation of many methods will have to be grouped in a 
+single one. For instance, have a look at the _Python_ translation of the 
+__Typee__ class constructors. So, it might be that not every source code 
+will be translatable in an automated way.
+
+It is  be the role of the translators to envisage correct translation in as 
+many different situations as possible. The unambiguous syntax of __Typee__ as 
+well as the unambiguous syntaxes of the first targeted programming languages 
+should greatly help.
+
+The experienced coder will be able to evaluate here the difficulty of the 
+task, while the original code was quite simple. The __Typee__ PoC aims at 
+prooving that source code can be translated, or not.
 
 
 ## 3.3 Implementation design
@@ -1286,5 +1417,6 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-12 | 0.0.6 | Schmouk | Augmented section 4.; completed its intro and subsection 4.6 |
 | 2018-08-12 | 0.0.7 | PhHays | Added a new section 4. on the main module of the Translator; renamed section and subsections 4. with 5. |
 | 2018-08-12 | 0.0.8 | Schmouk | Augmented section 5.1 |
+| 2018-08-12 | 0.0.9 | PhHays | A few corrections; completed section 3.2 |
 |  |  |  |  |
 
