@@ -811,9 +811,11 @@ unsigned integers. `float32` and `float64` exist also in the same way. Keyword
 type int32   as long;
 type float32 as float;
 type float64 as double;
-```
 
-In Typee, `int32`, `float32` and `float64` are built-in types, while in the 
+```
+
+In Typee, `
+int32`, `float32` and `float64` are built-in types, while in the 
 upper code `long`, `float` and `double` are identifiers. They are identifiers 
 of types.
 
@@ -1109,6 +1111,101 @@ programming language (that is, for instance, _C++_, _Java_ or _Python_).
 
 # 4. Typee Implementation - Packages and Modules
 
+The first implementation of __Typee__ translator aimed at proving the concept 
+of programming languages translations and at understanding the issues it 
+raises and how to solve them. This is a PoC, or _Proof of Concept_.
+
+_Python_ has been chosen for the development of this PoC, for the ease of 
+prototyping this programming language offers. In _Python_, we design 
+_packages_ and _modules_. A _Python module_ is a file containing _Python_ 
+source code. A _Python package_ is a directory that contains modules plus a 
+special module named __init__.py that may be empty but that is mandatory.
+
+It is straightforward to envisage the creation of a package for the 
+_Front-End_ code (named `FrontEnd`) and another one for the _Back-End_ code 
+(named `BackEnd`). These packages may embed sub-packages also. We will see in 
+the related sub-section below that this is the case for the _Front-End_. There 
+must be common code, developed in modules, that is used by many other modules 
+maybe in different packages. So, we design a package named `Commons`. We have 
+put in there two _Python_ module templates also, that we use to create new 
+__Python__ modules while developing __TYpee__ PoC. We may need also some S/W 
+tools that we will have to develop for the creation of the __Typee__ PoC. A 
+package named `local_tools` is dedicated to this. Finally, we will eventually 
+test the developed _Python_ code of the __Typee__ PoC. A package `Tests` 
+embeds all these tests, with sub-packages also.
+
+We specify in next subsections every _Python_ package created for the 
+development of the __Typee__ PoC. In each of these subsections, we specify the 
+different _Python_ modules they contain.
+
+Notice: while developping a _Proof of Concept_ of __Typee__ translator, we do 
+not deal with optmizations, neither on used memory space nor on processing 
+time. We accept the _Python_ developped code to be sometimes very naive as 
+long as this eases its reading, its understanding and moreover its debugging. 
+Optimizations could happen then, once the __Typee__ PoC developped.  See last 
+section 4.6 below (_further work and conclusion_) to get more on this.
+
+
+## 4.1 Package `FrontEnd`
+
+
+
+## 4.2 Package `BackEnd`
+
+
+
+## 4.3 Package `Commons`
+
+
+
+## 4.4 Package `local_tools`
+
+
+
+## 4.5 Package `Tests`
+
+
+
+## 4.6 Further Work and Conclusion
+
+Ok, so we are developping a __Typee__ Proof of Concept, using _Python_ as the 
+programming language for this development project. This code might not be much 
+optimized as long as this helps the developped code to be easy to read, easy 
+to understand, easy to maintain and more over, easy to debug.
+
+
+### 4.6.1 Further Work
+
+Once the __Typee__ PoC developped, we will be able to translate __Typee__ 
+source code in _Python_ first, then in _Java_ and/or in _C++_ (once the 
+related _Back-Ends_ will have been developped also).
+
+So, further work should be the development of __Typee__ Translator in... 
+__Typee__! And of course, we should develop it with optimizations.We will 
+then be able to translate the deveopped Typee code in _Java_ or in _C++_ once 
+the related _Back-Ends_ will have been developped. This means that we will get 
+__Typee__ translators that will be far faster, running on many different 
+platforms and under many different environments (well, which is already the 
+case with the first PoC developped in _Python_).
+
+
+### 4.6.2 Conclusion
+
+Meanwhile, we can't conclude yet since the __Typee__ PoC is not already 
+available. We are totally confident in the result we will obtain: the 
+__Typee__ Proof of Concept will be working, first translating __Typee__ 
+source code into _Python_ source code, then translating it to _C++_ and 
+_Java_ source codes.
+
+But we have not yet proved this and still have to develop the PoC. This 
+document currently explains the design of the PoC with programming language 
+_Python_. As soon as this PoC will have been developed (or failed to), we will 
+be able to propose some conclusion here.
+
+Should the conclusion finally be positive (and we trust it will), we will 
+provide new releases of this document. They will explain the design of further 
+developments, in __Typee__ language. Won't this be amazing?
+
 
 
 
@@ -1121,5 +1218,6 @@ programming language (that is, for instance, _C++_, _Java_ or _Python_).
 | 2018-08-09 | 0.0.3 | PhHays | Augmented sections 2. and 3. |
 | 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 to 2.4, augmented section 3.1 |
 | 2018-08-11 | 0.0.5 | PhHays | Completed section 3.1 |
+| 2018-08-12 | 0.0.6 | Schomuk | Augmented section 4.; completed its intro and subsection 4.6 |
 |  |  |  |  |
 
