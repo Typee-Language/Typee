@@ -443,7 +443,7 @@ SOFTWARE.
                      |  <raise statement> <simple statement end>
                      |  <require statement> <simple statement end>
 
-<simple statement end> = ';'
+<simple statement end> ::= ';'
 
 <statements block>  ::= '{' <statements list> '}'
                      |  <nop statement> <simple statement end>
