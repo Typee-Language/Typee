@@ -135,7 +135,8 @@ Linda Torczon, Elsevier, 2012" and we encourage the reader to read this book.
 We have choosen this book because it was newer than the famous Dragoon book 
 "Compilers, principles, techniques, & tools, 2nd ed." from Alfred V. Aho, 
 Monica S. Lam, Ravi Ethi and Jeffrey D. Ullman, Pearson-Addison Wesley, 2007, 
-while this Dragoon book had been used to specify the _Python_ interpretor.
+while this Dragoon book had been used to specify the _Python_ interpretor 
+_CPython_.
 
 
 ### Global architecture of a compiler
