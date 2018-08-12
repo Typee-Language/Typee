@@ -1223,22 +1223,22 @@ class MyClass:
             print( self._val + i, end=' ' )
     
     __K = 10
-```
+```
 
 Translation here is not a context-free processing, for instance since it 
-might be that the translation of many methods will have to be grouped in a 
-single one. For instance, have a look at the _Python_ translation of the 
-__Typee__ class constructors. So, it might be that not every source code 
-will be translatable in an automated way.
+might be that thetranslation of many methods will have to be grouped in a 
+single one. For instance, have a look at the _Python_ translation of the 
+__Typee__ class constructors. So, it might be that not every source code 
+will be translatable in an automated way.
 
-It is  be the role of the translators to envisage correct translation in as 
-many different situations as possible. The unambiguous syntax of __Typee__ as 
-well as the unambiguous syntaxes of the first targeted programming languages 
-should greatly help.
-
-The experienced coder will be able to evaluate here the difficulty of the 
-task, while the original code was quite simple. The __Typee__ PoC aims at 
-prooving that source code can be translated, or not.
+It is the role of the translators to envisage correct translation in as many 
+different situations as possible. The unambiguous syntax of __Typee__ as 
+well as the unambiguous syntaxes of the first targeted programming languages 
+should greatly help.
+
+The experienced coder will be able to evaluate here the difficulty of the 
+task, while the original code was quite simple. The __Typee__ PoC aims at 
+prooving that source code can be translated, or not.
 
 
 
