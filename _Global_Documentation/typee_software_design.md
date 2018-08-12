@@ -1225,7 +1225,6 @@ class MyClass:
     __K = 10
 ```
 
-Translation here is not a context-free processing, for instance since it might be that the translation of many methods will have to be grouped in a single one. For instance, have a look at the _Python_ translation of the __Typee__ class constructors. So, it might be that not every source code will be translatable in an automated way.
 
 It is  be the role of the translators to envisage correct translation in as many different situations as possible. The unambiguous syntax of __Typee__ as well as the unambiguous syntaxes of the first targeted programming languages should greatly help.
 
