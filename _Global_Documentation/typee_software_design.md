@@ -1163,6 +1163,7 @@ corresponding statement in the targeted programming language.
 ### 3.2.4 An exemple
 
 Let's have an example. Here is below some not much useful __Typee__ code.
+
 ```
 class MyClass
 {
@@ -1186,6 +1187,7 @@ class MyClass
 ```
 
 __C++__ translated code will be:
+
 ```
 class Myclass
 {
@@ -1210,6 +1212,7 @@ class Myclass
 ```
 
 while __Python__ translated code will be:
+
 ```
 class MyClass:
     def __init__(self, v:int=0):
@@ -1222,11 +1225,7 @@ class MyClass:
     __K = 10
 ```
 
-Translation here is not a context-free processing, for instance since it 
-might be that the translation of many methods will have to be grouped in a 
-single one. For instance, have a look at the _Python_ translation of the 
-__Typee__ class constructors. So, it might be that not every source code 
-will be translatable in an automated way.
+Translation here is not a context-free processing, for instance since it might be that the translation of many methods will have to be grouped in a single one. For instance, have a look at the _Python_ translation of the __Typee__ class constructors. So, it might be that not every source code will be translatable in an automated way.
 
 It is  be the role of the translators to envisage correct translation in as 
 many different situations as possible. The unambiguous syntax of __Typee__ as 
