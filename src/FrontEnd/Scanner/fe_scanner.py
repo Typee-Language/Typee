@@ -538,7 +538,7 @@ class FEScanner:
         return  self.code[ self.idx+1:end ]
     #-------------------------------------------------------------------------
     def _is_sep(self, offset:int) -> bool:
-        return self.code[ self.idx + offset ] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"
+        return self.code[ self.idx + offset ] not in FEScanner._NAME_CHARS
     #-------------------------------------------------------------------------
     def _next_char(self):
         self.idx += 1
