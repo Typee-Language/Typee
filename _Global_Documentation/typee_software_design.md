@@ -1111,15 +1111,15 @@ programming language (that is, for instance, _C++_, _Java_ or _Python_).
 
 # 4. Typee Implementation - Packages and Modules
 
-The first implementation of __Typee__ translator aimed at proving the concept 
-of programming languages translations and at understanding the issues it 
+The first implementation of __Typee__ translator aims at proving the concept 
+of programming languages translations and at understanding the issues this 
 raises and how to solve them. This is a PoC, or _Proof of Concept_.
 
 _Python_ has been chosen for the development of this PoC, for the ease of 
 prototyping this programming language offers. In _Python_, we design 
 _packages_ and _modules_. A _Python module_ is a file containing _Python_ 
 source code. A _Python package_ is a directory that contains modules plus a 
-special module named __init__.py that may be empty but that is mandatory.
+special module named `__init__.py` that may be empty but which is mandatory.
 
 It is straightforward to envisage the creation of a package for the 
 _Front-End_ code (named `FrontEnd`) and another one for the _Back-End_ code 
@@ -1128,7 +1128,7 @@ the related sub-section below that this is the case for the _Front-End_. There
 must be common code, developed in modules, that is used by many other modules 
 maybe in different packages. So, we design a package named `Commons`. We have 
 put in there two _Python_ module templates also, that we use to create new 
-__Python__ modules while developing __TYpee__ PoC. We may need also some S/W 
+_Python_ modules while developing __Typee__ PoC. We may need also some S/W 
 tools that we will have to develop for the creation of the __Typee__ PoC. A 
 package named `local_tools` is dedicated to this. Finally, we will eventually 
 test the developed _Python_ code of the __Typee__ PoC. A package `Tests` 
@@ -1136,7 +1136,7 @@ embeds all these tests, with sub-packages also.
 
 We specify in next subsections every _Python_ package created for the 
 development of the __Typee__ PoC. In each of these subsections, we specify the 
-different _Python_ modules they contain.
+different _Python_ modules those packages contain.
 
 Notice: while developping a _Proof of Concept_ of __Typee__ translator, we do 
 not deal with optmizations, neither on used memory space nor on processing 
@@ -1181,7 +1181,7 @@ source code in _Python_ first, then in _Java_ and/or in _C++_ (once the
 related _Back-Ends_ will have been developped also).
 
 So, further work should be the development of __Typee__ Translator in... 
-__Typee__! And of course, we should develop it with optimizations.We will 
+__Typee__! And of course, we should develop it with optimizations. We will 
 then be able to translate the deveopped Typee code in _Java_ or in _C++_ once 
 the related _Back-Ends_ will have been developped. This means that we will get 
 __Typee__ translators that will be far faster, running on many different 
