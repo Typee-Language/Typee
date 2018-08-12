@@ -1154,6 +1154,65 @@ section 5.6 below (_further work and conclusion_) to get more on this.
 
 ## 5.1 Package `FrontEnd`
 
+As specified in above sections, the __Typee__ _Front-End_ is composed of 
+three connected componenets: the _Scanner_, the _Parser_ and the _Elaborator_. 
+
+Package `FrontEnd` in Typee translator contains then three sub-packages: 
+`Scanner`, `Parser`, and `Elaborator`. We describ their designs in the next 
+three subsections.
+
+
+### 5.1.1 Subpackage `FrontEnd.Scanner`
+
+Contained modules:
+- `fe_scanner.py`.
+
+So, there is only one contained _Python_ module in this package. In there, 
+class `FEScanner` is defined. This is the implementation of the _Front-End 
+Scanner_ of __Typee__ PoC (_Proof of Concept_).
+
+At construction (or instantiation) time, class `FEScanner` instantiates an 
+empty _tokenized intermediate code_ object and initializes line number and 
+column index in line, prior to scanning.
+
+Class `FEScanner` defines two public methods, `scan_file()` and 
+`scan_memory()` that can be called by an external callee (this is, for the 
+__Typee__ PoC, the main module of the __Typee Translator__).
+
+Method `scan_file()` opens the file containing __Typee__ sopurce code to be 
+translated, loads its whole content in memory and calls then method 
+`scan_memory()`.
+
+Method `scan_memory()` scans the __Typee__ source code in memory, _tokenizes_ 
+it until the end of the source code and gives back a reference to its internal 
+_tokenized intermediate code_. The _tokenization_ of the source code is 
+processed by private method `_tokenize()`. 
+
+Private method `_tokenize()` checks for types of read tokens and internally 
+calls private methods related to the corresponding token types.
+
+Tokens types are defined in class private dictionaries. Characterization of 
+chars are defined in private class strings.
+
+Few private methods are defined also to factorized often ran Python code.
+
+
+### 5.1.2 Subpackage `FrontEnd.Parser`
+
+Contained modules:
+- `fe_parser.py`.
+
+Here again, there is only one _Python_ module in this package. In there, class 
+`FEParser` is defined. This is the implementation of the _Front-End Parser_ of 
+__Typee__ PoC.
+
+At construction (or instantiation) time, class `FEParser` instantiates an 
+empty _syntaxic intermediate code_ object. This will be its returned data 
+structure after having parsed the input _tokenized intermediate code_.
+
+
+
+### 5.1.3 Subpackage `FrontEnd.Elaborator`
 
 
 ## 5.2 Package `BackEnd`
@@ -1226,5 +1285,6 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-11 | 0.0.5 | PhHays | Completed section 3.1 |
 | 2018-08-12 | 0.0.6 | Schmouk | Augmented section 4.; completed its intro and subsection 4.6 |
 | 2018-08-12 | 0.0.7 | PhHays | Added a new section 4. on the main module of the Translator; renamed section and subsections 4. with 5. |
+| 2018-08-12 | 0.0.8 | Schmouk | Augmented section 5.1 |
 |  |  |  |  |
 
