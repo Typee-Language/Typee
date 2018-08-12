@@ -1218,6 +1218,6 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-09 | 0.0.3 | PhHays | Augmented sections 2. and 3. |
 | 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 to 2.4, augmented section 3.1 |
 | 2018-08-11 | 0.0.5 | PhHays | Completed section 3.1 |
-| 2018-08-12 | 0.0.6 | Schomuk | Augmented section 4.; completed its intro and subsection 4.6 |
+| 2018-08-12 | 0.0.6 | Schmouk | Augmented section 4.; completed its intro and subsection 4.6 |
 |  |  |  |  |
 
