@@ -1265,7 +1265,7 @@ translators_ as specified in the command line options.
 ## 4.1 The Typee Translator Main Application
 
 This main application is named `typee.py` and can be found at the sources root 
-directory of the project: `src/`. SInce the first implementation of __Typee__ 
+directory of the project: `src/`. Since the first implementation of __Typee__ 
 translator is a Proof of Concept developed in _Python_, it has to be run with 
 command:
 
@@ -1303,7 +1303,7 @@ evaluated. For this, as seen before, types of identifiers and types of
 expressions are elaborated and the correctness of types uses is evaluated. 
 
 The _Elaborator_ may print an __errors report__, should any error having 
-been detected in the previous phases of the _Front-End_. In such case, the 
+been detected in the previous phases of the _Front-End_. In such a case, the 
 _Translator_ script is considered as being completed and it stops with an 
 error notice on console (at least, total number of detected errors plus a 
 reminder of the path to get access to the log file if the errors report was 
@@ -1325,18 +1325,18 @@ is highly subject to change.
 ## 4.3 Main Application - Conclusion
 
 Once either the translation main script has stopped due the detection of any 
-kind of error or this scripts completes with final trnslation of __Typee__ 
+kind of error or this script completes with final trnslation of __Typee__ 
 source code into the targeted programming languages, the user gets
 - either a full __errors report__ with errors printed or logged in the 
-increasing order of the line numebrs they have been detected;
+increasing order of the line numbers that have been detected;
 - or a full set of translated files into dedicated sub-directories for each 
 __Typee__ source file that will have been translated.
 
 It might be that, among many source files to be translated, some of them will 
 have been translated while the others will have failed their translation due 
 to some coding error (syntaxic or semantic detected errors). When asking again 
-for the translation of the source files, the __Typee__ Translator scripts 
-compares the last dates of modification for every __Typee__ source file and 
+for the translation of the source files, the __Typee__ Translator script 
+compares the last dates of modification for every __Typee__ source files and 
 their respective translated source files. If the resulting files of the 
 translation are _younger_ than the __Typee__ source files, then the 
 translation process is __not__ run again.
@@ -1438,25 +1438,32 @@ At construction (or instantiation) time, class `FEParser` instantiates an
 empty _syntaxic intermediate code_ object. This will be its returned data 
 structure after having parsed the input _tokenized intermediate code_.
 
+<_to be completed_ in revision v0.1.1 of this document>
 
 
 ### 5.1.3 Subpackage `FrontEnd.Elaborator`
 
+<_to be completed_ in revision v0.1.1 of this document>
+
 
 ## 5.2 Package `BackEnd`
 
+<_to be completed_ in revision v0.1.1 of this document>
 
 
 ## 5.3 Package `Commons`
 
+<_to be completed_ in revision v0.1.1 of this document>
 
 
 ## 5.4 Package `local_tools`
 
+<_to be completed_>
 
 
 ## 5.5 Package `Tests`
 
+<_to be completed_ in revision v0.1.1 of this document>
 
 
 ## 5.6 Further Work and Conclusion
