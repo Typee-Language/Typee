@@ -439,7 +439,7 @@ SOFTWARE.
 					 |  <raise statement> <simple statement end>
 					 |  <require statement> <simple statement end>
 
-<simple statement end> = ';'
+<simple statement end> ::= ';'
 
 <compound statement>    ::= <assign decl def func-call statement>
 						 |	<embed statement>
