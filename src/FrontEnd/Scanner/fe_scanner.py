@@ -24,7 +24,7 @@ SOFTWARE.
 
 #=============================================================================
 from FrontEnd.IntermediateCode.fe_icode_token_node   import *  ## to get direct access to all ICTokenNode_XXX classes
-from FrontEnd.IntermediateCode.fe_intermediate_code  import FEIntermediateCode
+from FrontEnd.IntermediateCode.fe_tokenized_icode    import FETokenizedICode
 
 
 #=============================================================================
@@ -42,13 +42,13 @@ class FEScanner:
         '''
         Constructor.
         '''
-        self.intermediate_code = FEIntermediateCode()
+        self.intermediate_code = FETokenizedICode()
         self.num_line = 1
         self.num_coln = 1
         
 
     #-------------------------------------------------------------------------
-    def scan_file(self, filepath:str, **parse_args) -> FEIntermediateCode:
+    def scan_file(self, filepath:str, **parse_args) -> FETokenizedICode:
         '''
         Runs the Typee scanner on a specified file.
         
@@ -80,7 +80,7 @@ class FEScanner:
 
    
     #-------------------------------------------------------------------------
-    def scan_memory(self, src_code:str, **parse_args) -> FEIntermediateCode:
+    def scan_memory(self, src_code:str, **parse_args) -> FETokenizedICode:
         '''
         Scans the source code,  according to some parsing arguments  passed  at
         command line, and returns a reference to the corresponding intermediate
