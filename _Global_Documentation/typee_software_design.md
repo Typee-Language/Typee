@@ -1427,7 +1427,7 @@ calls private methods related to the corresponding token types.
 Tokens types are defined in class private dictionaries. Characterization of 
 chars are defined in private class strings.
 
-Few private methods are defined also to factorized often ran Python code.
+Few private methods are defined also to factorize often run Python code.
 
 
 ### 5.1.2 Subpackage `FrontEnd.Parser`
