@@ -27,13 +27,13 @@ SOFTWARE.
 
 
 #=============================================================================
-FEIntermediateCode = list
+FETokenizedICode = list
 """
-Well, intermediate code for the Typee Front-End will be 
-a simple list: a list of intermediate code Nodes.
-Nevertheless,  we still declare a dedicated type for it
-for the clearness of the developed code.
+Well,  the tokenized intermediate code for the Typee Front-End 
+will be a simple list: a list of intermediate code Nodes.
+Nevertheless, we still declare a dedicated type for it for the 
+clearness of the developed code.
 """    
 
-#=====   end of   FrontEnd.fe_intermediate_code   =====#
+#=====   end of   FrontEnd.IntermediateCode.fe_tokenized_icode   =====#
         
