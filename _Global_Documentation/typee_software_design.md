@@ -52,7 +52,7 @@ Traditionnal OOP languages are either compiled (e.g. C++) or interpreted (e.g.
 _Python_ ). They even may be first compiled into an intermediate code which is 
 then interpreted (e.g. Java and its Bytecode interpreted by a 
 _Java Virtual Machine_ that has to be implemented on each of the different 
-targetted devices).
+targeted devices).
 
 Meanwhile, __Typee__ language is neither compiled nor interpreted. It is 
 rather translated into other OOP languages, such as _Python_ (which 
@@ -670,7 +670,7 @@ functions. They are deterministic, context-free, and intuitive to understand,
 on the contrary of LR(1) parsers which might be more efficient at run-time but 
 which are far more complicated to implement, to debug and to read.
 
-The current implementation of the __Typee__ _Parser_ has been developped in 
+The current implementation of the __Typee__ _Parser_ has been developed in 
 _Python_, as a dedicated class `FEParser` with methods to implement every 
 rules of __Typee__ grammar. This was the easiest and simplest way to develop, 
 debug and maintain a PoC for the validation of __Typee__ concepts.
@@ -781,8 +781,8 @@ The _Elaborator_ semantically analyzes the _syntaxic intermediate code_ and:
 
 It either generates a _validated intermediate code_ and tranfers it to the 
 __Typee__ _Back-End_ or provides an errors report if errors have been detected 
-by the _Scanner_ or the _Parser_. This report may be display on console and/or 
-saved in log file.
+by the _Scanner_ or the _Parser_. This report may be displayed on console 
+and/or saved in log file.
 
 
 #### 3.1.3.1 Categorization of Identifiers
@@ -811,11 +811,9 @@ unsigned integers. `float32` and `float64` exist also in the same way. Keyword
 type int32   as long;
 type float32 as float;
 type float64 as double;
-
 ```
 
-In Typee, `
-int32`, `float32` and `float64` are built-in types, while in the 
+In Typee, `int32`, `float32` and `float64` are built-in types, while in the 
 upper code `long`, `float` and `double` are identifiers. They are identifiers 
 of types.
 
@@ -877,7 +875,7 @@ in the meantime that they are semantically not correctly used.
 
 For instance, the use a not yet declared identifier should lead to some crash 
 at run-time (built-in entities are always declared before their use) or to 
-some detected error at compile-time for targetted compiled languages.
+some detected error at compile-time for targeted compiled languages.
 ```
 // error example
 const int32 i = j + 1; // unknown 'j'
@@ -1090,14 +1088,19 @@ Meanwhile, if any types inconsistency is detected by the _Elaborator_, an
 _error node_ integrating this inconsistency is appended to the 
 __Error Report__.
 
-Once the _Elaborator_ completes, it provides both the _syntaxic intermediate 
-code_ and the __Error Report__. When the error report is empty, the provided 
+Once the _Elaborator_ completes, it provides the _syntaxic intermediate code_ 
+and prints the __Error Report__. When the error report is empty, the provided 
 I.C. gets the status of ___validated intermediate code___.
 
-Both structures are passed then to the __Typee__ _Back-End_ for the 
-translation (or not) of the _validated intermediate code_ into the targetted 
-programming language (that is, for instance, _C++_, _Java_ or _Python_).
+This _validated intermediate code_ is passed then to the __Typee__ _Back-End_ 
+for its translation into the targeted programming language (that is, for 
+instance, _C++_, _Java_ or _Python_). But if the __Error Report__ is __not__ 
+empty, the erroneous _syntaxic intermediate code_ is not passed to the 
+_Back-End_ which is not called by the main module of the __Typee__ Translator.
 
+__Important Note__: It is the role of the _Elaborator_ to print the __Error 
+Report__ either on the console or in a log file. This way, nothing has to be 
+transferred back from the _Front-End_ about errors.
 
 
 ## 3.2 Typee Back-End
@@ -1108,8 +1111,11 @@ programming language (that is, for instance, _C++_, _Java_ or _Python_).
 
 
 
+# 4. The Typee Translator Main Module
 
-# 4. Typee Implementation - Packages and Modules
+
+
+# 5. Typee Implementation - Packages and Modules
 
 The first implementation of __Typee__ translator aims at proving the concept 
 of programming languages translations and at understanding the issues this 
@@ -1140,56 +1146,56 @@ different _Python_ modules those packages contain.
 
 Notice: while developping a _Proof of Concept_ of __Typee__ translator, we do 
 not deal with optmizations, neither on used memory space nor on processing 
-time. We accept the _Python_ developped code to be sometimes very naive as 
+time. We accept the _Python_ developed code to be sometimes very naive as 
 long as this eases its reading, its understanding and moreover its debugging. 
-Optimizations could happen then, once the __Typee__ PoC developped.  See last 
-section 4.6 below (_further work and conclusion_) to get more on this.
+Optimizations could happen then, once the __Typee__ PoC developed.  See last 
+section 5.6 below (_further work and conclusion_) to get more on this.
 
 
-## 4.1 Package `FrontEnd`
-
-
-
-## 4.2 Package `BackEnd`
+## 5.1 Package `FrontEnd`
 
 
 
-## 4.3 Package `Commons`
+## 5.2 Package `BackEnd`
 
 
 
-## 4.4 Package `local_tools`
+## 5.3 Package `Commons`
 
 
 
-## 4.5 Package `Tests`
+## 5.4 Package `local_tools`
 
 
 
-## 4.6 Further Work and Conclusion
+## 5.5 Package `Tests`
+
+
+
+## 5.6 Further Work and Conclusion
 
 Ok, so we are developping a __Typee__ Proof of Concept, using _Python_ as the 
 programming language for this development project. This code might not be much 
-optimized as long as this helps the developped code to be easy to read, easy 
+optimized as long as this helps the developed code to be easy to read, easy 
 to understand, easy to maintain and more over, easy to debug.
 
 
-### 4.6.1 Further Work
+### 5.6.1 Further Work
 
-Once the __Typee__ PoC developped, we will be able to translate __Typee__ 
+Once the __Typee__ PoC developed, we will be able to translate __Typee__ 
 source code in _Python_ first, then in _Java_ and/or in _C++_ (once the 
-related _Back-Ends_ will have been developped also).
+related _Back-Ends_ will have been developed also).
 
 So, further work should be the development of __Typee__ Translator in... 
 __Typee__! And of course, we should develop it with optimizations. We will 
 then be able to translate the deveopped Typee code in _Java_ or in _C++_ once 
-the related _Back-Ends_ will have been developped. This means that we will get 
+the related _Back-Ends_ will have been developed. This means that we will get 
 __Typee__ translators that will be far faster, running on many different 
 platforms and under many different environments (well, which is already the 
-case with the first PoC developped in _Python_).
+case with the first PoC developed in _Python_).
 
 
-### 4.6.2 Conclusion
+### 5.6.2 Conclusion
 
 Meanwhile, we can't conclude yet since the __Typee__ PoC is not already 
 available. We are totally confident in the result we will obtain: the 
@@ -1219,5 +1225,6 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-10 | 0.0.4 | PhHays | Completed sections 2.1 to 2.4, augmented section 3.1 |
 | 2018-08-11 | 0.0.5 | PhHays | Completed section 3.1 |
 | 2018-08-12 | 0.0.6 | Schmouk | Augmented section 4.; completed its intro and subsection 4.6 |
+| 2018-08-12 | 0.0.7 | PhHays | Added a new section 4. on the main module of the Translator; renamed section and subsections 4. with 5. |
 |  |  |  |  |
 
