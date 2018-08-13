@@ -81,8 +81,7 @@ other available programming language (e.g. C++11, Java 8, Python 3.6, ...)
 The manipulated data are of two kinds:
 - as input, a __Typee__ source code;
 - as output, a _list_ of Token Nodes, appended in the order of their scanning,
-that is fully described in document
-[```src/_Global_Documentation/typee_front_end_scanner_data_structure_documentation.md```](typee_front_end_scanner_data_structure_documentation.md).
+that is fully described in subsection 2.2 and 2.3 of this document.
 
 
 
@@ -552,5 +551,6 @@ module.
 | 2018-07-23 | 1.0 | Kerm | This document is now considered as being validated |
 | 2018-07-25 | 1.0.1 | Schmouk | Added links to documents (and this was a long journey over this document text), some complementary explanations; enhanced code specification (added Python spec to code); moved sub-section about __Typee__ grammar specification upward from tokens-related section to introduction section. |
 | 2018-07-25 | 1.0.2 | Schmouk | Corrected a few mispelled links. |
-| 2018-07-25 | 1.0.3 | Schmouk | Corrected title and a link (renamed file). |
+| 2018-08-13 | 1.0.3 | Schmouk | Corrected title and a link (renamed file). |
+| 2018-08-13 | 1.0.4 | Schmouk | Corrected link to data structures description. |
 |  |  |  |  |
