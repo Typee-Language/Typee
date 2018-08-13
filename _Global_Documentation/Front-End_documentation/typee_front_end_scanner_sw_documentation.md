@@ -1,4 +1,4 @@
-# Typee Front-End Parser Documentation
+# Typee Front-End Scanner Documentation
 
 This document is part of the Open Source project __Typee__. As such, it is
 delivered under the MIT license:
@@ -267,7 +267,7 @@ describes the data structure and the manipulation of token nodes, i.e. those
 nodes that are appended to the list of the tokenized internmediate code.
 
 The second one, 
-[`src/FrontEnd/IntermediateCode/fe_intermediate_code.py`](../src/FrontEnd/IntermediateCode/fe_intermediate_code.py),
+[`src/FrontEnd/IntermediateCode/fe_tokenized_icode.py`](../src/FrontEnd/IntermediateCode/fe_tokenized_icode.py),
 describes the data structure of the intermediate code that is used interrnally 
 in the __Typee__ Front-End operations.
 
@@ -354,7 +354,8 @@ constant class identifier by the end of their list, just before this line:
 ```python
     ##--- Add new tokens JUST BEFORE this line ---##
 ```
-
+
+
 in the _Python_ module. Just verify that the token identifier has not already
 been defined and assign it with 0. Things will then get automatically and 
 correctly set without any other human operation.
@@ -551,4 +552,5 @@ module.
 | 2018-07-23 | 1.0 | Kerm | This document is now considered as being validated |
 | 2018-07-25 | 1.0.1 | Schmouk | Added links to documents (and this was a long journey over this document text), some complementary explanations; enhanced code specification (added Python spec to code); moved sub-section about __Typee__ grammar specification upward from tokens-related section to introduction section. |
 | 2018-07-25 | 1.0.2 | Schmouk | Corrected a few mispelled links. |
+| 2018-07-25 | 1.0.3 | Schmouk | Corrected title and a link (renamed file). |
 |  |  |  |  |
