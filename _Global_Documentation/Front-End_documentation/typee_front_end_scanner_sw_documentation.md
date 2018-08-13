@@ -81,7 +81,7 @@ other available programming language (e.g. C++11, Java 8, Python 3.6, ...)
 The manipulated data are of two kinds:
 - as input, a __Typee__ source code;
 - as output, a _list_ of Token Nodes, appended in the order of their scanning,
-that is fully described in subsection 2.2 and 2.3 of this document.
+that is fully described in subsections 2.2 and 2.3 of this document.
 
 
 
