@@ -36,8 +36,13 @@ class FESyntaxErrors:
     """    
     #-------------------------------------------------------------------------
     ABSTRACT_DEF                = 'missing type identifier after keyword "abstract"',
+    ACCESS_DECL_DEF             = 'missing declaration or definition after access-qualifier clause',
+    ACCESS_END                  = 'missing : at end of access-qualifier clause',
+    ACCESS_QUALIFIER            = 'missing or badly formed access qualifier after : in access-qualifier clause',
+    ARITHM_EXPR                 = 'missing or badly formed term in arithmetic expression',
     ARRAY_CONTAINED_TYPE        = 'missing contained type while defining an array',
     AS_IDENT                    = 'missing or badly formed identifier after keyword "as" in alias or import clause',
+    ASSERT_COMMA_EXPR           = 'missing or badly formed expression after "," in assert clause',
     ASSERT_EXPR                 = 'missing or badly formed conditional expression after keyword "assert"',
     ASSIGN_EXPR                 = 'missing or badly formed expression after assignment operator',
     ASSIGN_FUNC_CALL            = 'missing or badly formed assignment or function parameters',
@@ -53,6 +58,7 @@ class FESyntaxErrors:
     BODY_END                    = 'missing } at end of instructions block, leads to unpaired {',
     BRACKET_ENDING              = 'missing ] at end of bracket-form clause, leads to unpaired ]',
     BRACKET_FORM_EXPR           = 'missing expression in bracket form clause',
+    BRACKET_FORM_LIST_OR_MAP    = 'missing list of map clause after expression in bracket form clause',
     
     CALL_OP                     = 'missing ) at end of call operator definition, leads to unpaired (',
     CASE_BODY                   = 'missing instruction or instructions block after case clause',
@@ -63,6 +69,7 @@ class FESyntaxErrors:
     CASTING_PAROP               = 'missing ( in scalar type casting clause',
     CLASS_BODY                  = 'missing class definition after class clause',
     CLASS_NAME                  = 'missing class name after keyword class',
+    COMP_EXPR                   = 'missing or badly formed expression after comparison operator',
     CONST_TYPE                  = 'missing or badly formed type identifier after keyword "const"',
     CONTAINED_TYPE              = 'missing type specification after < in contained type definition',
     CONTAINER_END               = 'missing > at end of contained type definition',
@@ -144,6 +151,7 @@ class FESyntaxErrors:
     
     MAP_EXPR                    = 'missing or badly formed expression after : in map-form clause or map item specification',
     MAP_ITEM_SEP                = 'missing : after expression in map item specification',
+    MAP_LIST_COMPR              = 'missing "," or missing/badly-formed for-comprehension in map form',
     MAP_LIST_ITEM               = 'missing or badly formed map item after , within list of items in map specification',
     METHOD_OPERATOR             = 'missing or badly formed operator identifier or method name after type specification',
     
@@ -159,9 +167,6 @@ class FESyntaxErrors:
     
     PARENTH_EXPR                = 'missing or badly formed expression in parenthesis-form clause',
     POWER_EXPR                  = 'missing or badly formed expression after power operator',
-    PROTECTION_DECL_DEF         = 'missing declaration or definition after access-qualifier clause',
-    PROTECTION_END              = 'missing : at end of access-qualifier clause',
-    PROTECTION_QUALIFIER        = 'missing or badly formed access qualifier after : in access-qualifier clause',
     
     RAISE_EXPR                  = 'missing or badly formed expression after keyword "raise" in raise instruction',
     RAISE_FROM_EXPR             = 'missing or badly formed expression after keyword "from" in raise instruction',
@@ -172,19 +177,23 @@ class FESyntaxErrors:
     REQUIRE_EXPR                = 'missing or badly formed conditional expression after keyword "require"',
     
     SHIFT_EXPR                  = 'missing or badly formed arithmetic expression after bitwise shift operator',
-    SCALAR_TYPE                 = 'missing or badly formed scalar type specification',
+    SCALAR_TYPE                 = 'missing or badly formed scalar type identifier',
     SLICE_END                   = 'missing ] or ) at end of slice (i.e. interval) specification, leads to unpaired [',
     STATEMENT_END               = 'missing ; at end of instruction',
+    STATIC_DECL_DEF             = 'missing or badly formed declaration or definition after keywsord static',
     STRING_FUNC_ARGS            = 'missing or badly formed list of arguments after function name to be applied to a string',
     STRING_FUNC_IDENT           = 'missing or badly formed function name after "." to be applied to a string',
+    SUBSCR_SLICE_EXPR           = 'missing or badly formed expression in subscription or slicing specification',
     SUBCSR_SLICE_END            = 'missing ] at end of subscription or slicing specification, leads to unpaired [',
     SWITCH_BODY_BEGIN           = 'missing { after switch clause and before block of case clauses in switch instruction',
     SWITCH_BODY_END             = 'missing } at end of case clauses in switch instruction, leads to unpaired {',
+    SWITCH_ELSE_BODY            = 'missing instruction or instructions block after keyword "else" of switch statement',
     SWITCH_EXPR                 = 'missing or badly formed expression after ( in switch instruction',
     SWITCH_EXPR_BEGIN           = 'missing ( after keyword "switch" in switch instruction',
     SWITCH_EXPR_END             = 'missing ) at end of switch clause in switch instruction, leads to unpaired (',
     
     TARGET_IDENT                = 'missing or badly formed identifier',
+    TARGET_TYPE                 = 'missing or badly formed typed identifier after "," in list of types identifiers',
     TEMPLATE_COMMA_COND         = 'missing or badly formed condition or identifier after "," in template arguments specification',
 ##    TEMPLATE_CONST_ASSIGN       = 'missing = within constant value specification in template arguments definition',
     TEMPLATE_CONST_EXPR         = 'missing or badly formed scalar expression within constant value specification in template arguments definition',
@@ -198,7 +207,7 @@ class FESyntaxErrors:
     TEMPLATE_SPECIFICATION      = 'missing or badly formed expression or identifier in template arguments specification',
     TEMPLATE_TYPES_LIST         = 'missing or badly formed expression or type identifier within types-and-expressions list in template specification',
     TRY_AS_IDENT                = 'missing or badly formed identifier after keyword "as" in except clause',
-    TRY_BLOCK                   = 'missing instruction or instructions block after keyword "try"',
+    TRY_BODY                    = 'missing instruction or instructions block after keyword "try"',
     TRY_ELSE_BODY               = 'missing instruction or instructions block after keyword "else" in try-except instruction',
     TRY_EXCEPT_BODY             = 'missing instruction or instructions block after except clause in try-except instruction',
     TRY_FINALLY_BODY            = 'missing instruction or instructions block after keyword "finally" in try-except instruction',
