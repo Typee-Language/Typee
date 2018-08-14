@@ -89,11 +89,11 @@ class FEParser:
 
     #=========================================================================
     #-------------------------------------------------------------------------
-    def _abstract_or_final_qualif(self) -> bool:
+    def _abstract_or_final_qualif(self) -> bool: ###
         #=======================================================================
-        # <abstract or final qualif>    ::= <abstract qualif>
-        #                                |  <final qualif>
-        #                                |  EPS
+        # <abstract or final qualif> ::= <abstract qualifier>
+        #                             |  <final qualifier>
+        #                             |  EPS
         #=======================================================================
         if self._abstract_qualifier():
             return True
@@ -103,108 +103,101 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _abstract_qualifier(self) -> bool:
+    def _abstract_qualifier(self) -> bool: ###
         #=======================================================================
-        # <abstract qualif>    ::= 'abstract'
+        # <abstract qualif> ::= 'abstract'
         #=======================================================================
         if self._current.is_ABSTRACT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _access_protection_statement(self) -> bool:
+    def _access_protection_statement(self) -> bool: ###
         #=======================================================================
-        # <access protection statement>  ::= ':' <protection qualifier> ':'
+        # <access protection statement> ::= ':' <access qualifier> ':'
         #=======================================================================
         if self._current.is_COLON():
-            self._append_snode()
-            self._next_inode()
-            if not self._protection_qualifier():
-                self._append_error( FESyntaxErrors.PROTECTION_QUALIFIER )
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._access_qualifier():
+                self._append_error( FESyntaxErrors.ACCESS_QUALIFIER )
             if self._current.is_COLON():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
-                self._append_error( FESyntaxErrors.PROTECTION_END )
+                self._append_error( FESyntaxErrors.ACCESS_END )
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _and_expr(self) -> bool:
+    def _access_qualifier(self) -> bool: ###
         #=======================================================================
-        # <and expr>      ::= <shift expr> <and expr'>
+        # <protection qualifier>  ::= 'hidden'
+        #                          |  'local'
+        #                          |  'private'
+        #                          |  'protected'
+        #                          |  'public'
         #=======================================================================
-        if self._shift_expr():
-            self._and_expr1()
+        if self._current.is_HIDDEN() or self._current.is_PROTECTED() or self._current.is_PUBLIC(): ## (notice: previously scanned by Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _and_expr1(self) -> bool:
+    def _and_test(self) -> bool: ###
         #=======================================================================
-        # <and expr'>     ::= '&' <template args> <shift expr> <and expr'>
-        #                  |  EPS
-        #=======================================================================
-        while self._current.is_BITAND():
-            self._append_snode()
-            self._next_inode()
-            self._template_args()
-            self._shift_expr()
-        return True
-
-    #-------------------------------------------------------------------------
-    def _and_test(self) -> bool:
-        #=======================================================================
-        # <and test>      ::= <not test> <and test'>
+        # <and test> ::= <not test> <and test'>
         #=======================================================================
         return self._not_test() and self._and_test1()
 
     #-------------------------------------------------------------------------
-    def _and_test1(self) -> bool:
+    def _and_test1(self) -> bool: ###
         #=======================================================================
-        # <and test'>     ::= 'and' <not test>
-        #                  |  EPS
+        # <and test'> ::= 'and' <not test>
+        #              |  EPS
         #=======================================================================
         if self._current.is_AND():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._not_test()
         return True
 
     #-------------------------------------------------------------------------
-    def _arithmetic_expr(self) -> bool:
+    def _arithmetic_expr(self) -> bool: ###
         #=======================================================================
-        # <arithmetic expr>   ::= <term> <arithmetic expr'>
+        # <arithmetic expr> ::= <term> <arithmetic expr'>
         #=======================================================================
         return self._term() and self._arithmetic_expr1()
 
     #-------------------------------------------------------------------------
-    def _arithmetic_expr1(self) -> bool:
+    def _arithmetic_expr1(self) -> bool: ###
         #=======================================================================
         # <artihmetic expr'>  ::= '+' <template args> <term> <arithmetic expr'>
         #                      |  '-' <template args> <term> <arithmetic expr'>
         #                      |  EPS
         #=======================================================================
         while self._current.is_MINUS() or self._current.is_PLUS():
-            self._append_snode()
-            self._next_inode()
-            self._template_args()
-            self._term()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._template_args() ## (notice: always returns True)
+            if not self._term():
+                self._append_error( FESyntaxErrors.ARITHM_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _array_type(self) -> bool:
+    def _array_type(self) -> bool: ###
         #=======================================================================
-        # <array type>    ::= "array" <declared contained type>
+        # <array type> ::= "array" <declared contained type>
         #=======================================================================
         if self._current.is_ARRAY():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._declared_contained_type():
                 self._append_error( FESyntaxErrors.ARRAY_CONTAINED_TYPE )
             return True
@@ -212,13 +205,13 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assert_statement(self) -> bool:
+    def _assert_statement(self) -> bool: ###
         #===============================================================================
-        # <assert statement>  ::= 'assert' <expression> <assert statement'>
+        # <assert statement> ::= 'assert' <expression> <assert statement'>
         #===============================================================================
         if self._current.is_ASSERT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.ASSERT_EXPR )
             self._assert_statement1()
@@ -227,26 +220,30 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assert_statement1(self) -> bool:
+    def _assert_statement1(self) -> bool: ###
         #=======================================================================
         # <assert statement'> ::= ',' <expression>
         #                      |  EPS
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
-            self._expression()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.ASSERT_COMMA_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _assign_decl_def_funccall_statement(self) -> bool:
+    def _assign_decl_def_funccall_statement(self) -> bool: ###
         #=======================================================================
-        # <assign decl def func-call statement>   ::= <protection qualifier> <decl or def statement>
-        #                                          |  <dotted name> <assign or func-call statement> <simple statement end>
+        # <assign decl def func-call statement> ::= <access qualifier> <decl or def statement>
+        #                                        |  <decl or def statement>
+        #                                        |  <dotted name> <assign or func-call statement> <simple statement end>
         #=======================================================================
-        if self._protection_qualifier():
+        if self._access_qualifier():
             if not self._decl_or_def_statement():
                 self._append_error( FESyntaxErrors.PROTECTION_DECL_DEF )
+            return True
+        elif self._decl_or_def_statement():
             return True
         elif self._dotted_name():
             if not self._assign_or_funccall_statement():
@@ -258,23 +255,23 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assign_op(self) -> bool:
+    def _assign_op(self) -> bool: ###
         #=======================================================================
-        # <assign op>    ::= '='
-        #                 |    <augmented assign op>
+        # <assign op> ::= '='
+        #              |  <augmented assign op>
         #=======================================================================
         if self._current.is_ASSIGN():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return self._augmented_assign_op()
 
     #-------------------------------------------------------------------------
-    def _assign_or_funccall_statement(self) -> bool:
+    def _assign_or_funccall_statement(self) -> bool: ###
         #=======================================================================
-        # <assign or func-call statement>    ::= <target list'> <assignment statement'>
-        #                                     |  <function call>
+        # <assign or func-call statement> ::= <target list'> <assignment statement>
+        #                                  |  <function call>
         #=======================================================================
         if self._target_list1():
             if not self._assignment_statement():
@@ -286,26 +283,26 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assignment_statement(self) -> bool:
+    def _assignment_statement(self) -> bool: ###
         #=======================================================================
-        # <assignment statement>    ::= <target list> <assign op> <expr list>
+        # <assignment statement> ::= <assign op> <expr list>
         #=======================================================================
         if self._assign_op():
             if not self._expr_list():
-                self._append_error( FESyntaxErrors.ASSIGN_EXPR)
+                self._append_error( FESyntaxErrors.ASSIGN_EXPR )
             return True
         else:
             return False
             
     #-------------------------------------------------------------------------
-    def _atom(self) -> bool:
+    def _atom(self) -> bool: ###
         #=======================================================================
-        # <atom>  ::= <decr> <dotted name> <incr or decr>
-        #          |  <incr> <dotted name> <incr or decr>
-        #          |  <enclosure>
-        #          |  <reference>
-        #          |  <scalar>
-        #          |  <string>
+        # <atom> ::= <decr> <dotted name> <incr or decr>
+        #         |  <incr> <dotted name> <incr or decr>
+        #         |  <enclosure>
+        #         |  <reference>
+        #         |  <scalar>
+        #         |  <string>
         #=======================================================================
         if self._decr():
             if not self._dotted_name():
@@ -322,66 +319,91 @@ class FEParser:
                     self._string()
 
     #-------------------------------------------------------------------------
-    def _atom_element(self) -> bool:
+    def _atom_element(self) -> bool: ###
         #===============================================================================
-        # <atom element>  ::=    <atom> 
-        #                  |  <dotted name> <atom element'>                                  ##
-        #                  |  <const qualifier> <scalar type> <scalar type casting>          ##
-        #                  |  <scalar type> <scalar type casting>
+        # <atom element> ::= <atom> 
+        #                 |  <dotted name> <atom element'>
+        #                 |  <const qualifier> <atom element'''>
+        #                 |  <atom element'''>
         #===============================================================================
         if self._atom():
             return True
         elif self._dotted_name():
-            return self._atom_element_1()
+            return self._atom_element1()
         elif self._const_qualifier():
-            if not self._scalar_type():
+            if not self._atom_element3():
                 self._append_error( FESyntaxErrors.SCALAR_TYPE )
-            return self._scalar_type_casting()
-        elif self._scalar_type():
-            return self._scalar_type_casting()
+            return True
+        elif self._atom_element3():
+            return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _atom_element_1(self) -> bool:
+    def _atom_element1(self) -> bool: ###
         #===============================================================================
-        # <atom element'> ::= <dotted name'> <atom element'>
-        #                  |  <is instance of>
-        #                  |  <subscription or slicing> <atom element'>
+        # <atom element'> ::= <atom element''>
+        #                  |  <dotted name'> <atom element'>
         #                  |  <function call> <atom element'>
-        #                  |  <scalar type casting>
+        #                  |  <subscription or slicing> <atom element'>
         #                  |  EPS
         #===============================================================================
-        while self._dotted_name1() or self._subscription_or_slicing() or self._function_call():
-            continue
-        if self._scalar_type_casting():
-            pass
-        return True
+        if self._atom_element2():
+            return True
+        else:
+            while self._dotted_name1() or self._function_call() or self._subscription_or_slicing():
+                continue
+            return True
 
     #-------------------------------------------------------------------------
-    def _augmented_assign_op(self) -> bool:
+    def _atom_element2(self) -> bool: ###
+        #=======================================================================
+        # <atom element"> ::= <is instance of>
+        #                  |  <scalar type casting>
+        #=======================================================================
+        if self._is_instance_of() or self._scalar_type_casting():
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _atom_element3(self) -> bool: ###
+        #=======================================================================
+        # <atom element'''> ::= <scalar type> <scalar type casting>
+        #=======================================================================
+        if self._scalar_type():
+            if not self._scalar_type_casting():
+                self._append_error( FESyntaxErrors.CASTING_PAROP )
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _augmented_assign_op(self) -> bool: ###
         #===============================================================================
-        # <augmented assign op>    ::= '+='
-        #                          |  '-='
-        #                          |  '*='
-        #                          |  '/='
-        #                          |  '%='
-        #                          |  '&='
-        #                          |  '|='
-        #                          |  '^='
-        #                          |  '<<='
-        #                          |  '<<<='
-        #                          |  '>>='
-        #                          |  '>>>='
-        #                          |  '**='
-        #                          |  '^^='
-        #                           |  '@='
-        #                           |  '><='
-        #                           |  '!!='
-        #                           |  '::='
+        # <augmented assign op> ::= '+='
+        #                        |  '-='
+        #                        |  '*='
+        #                        |  '/='
+        #                        |  '%='
+        #                        |  '&='
+        #                        |  '|='
+        #                        |  '^='
+        #                        |  '<<='
+        #                        |  '<<<='
+        #                        |  '>>='
+        #                        |  '>>>='
+        #                        |  '**='
+        #                        |  '^^='
+        #                        |  '@='
+        #                        |  '><='
+        #                        |  '!!='
+        #                        |  '::='
+        #                        |  '??='
         #===============================================================================
         return isinstance( self._current, (ICTokenNode_AUG_2COLN,
                                            ICTokenNode_AUG_2EXCL, 
+                                           ICTokenNode_AUG_2QUEST, 
                                            ICTokenNode_AUG_AROBASE,
                                            ICTokenNode_AUG_BITAND,
                                            ICTokenNode_AUG_BITOR,
@@ -399,45 +421,45 @@ class FEParser:
                                            ICTokenNode_AUG_SHIFTR) )
 
     #-------------------------------------------------------------------------
-    def _auto_type(self) -> bool:
+    def _auto_type(self) -> bool: ###
         #=======================================================================
-        # <auto type>     ::= '?' <auto type'>
+        # <auto type> ::= '?' <auto type'>
         #=======================================================================
         if self._current.is_ANY_TYPE():
-            self._append_snode()
-            self._next_inode()
-            self._auto_type1()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._auto_type1() ## (notice: always returns True)
             return True
         else:
             return False
         
     #-------------------------------------------------------------------------
-    def _auto_type1(self) -> bool:
+    def _auto_type1(self) -> bool: ###
         #=======================================================================
-        # <auto type'>    ::= 'in' '(' <types list> ')'
-        #                  |  EPS
+        # <auto type'> ::= 'in' '(' <types list> ')'
+        #               |  EPS
         #=======================================================================
         if self._current.is_IN():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.AUTO_IN_PAROP )
             if not self._types_list():
                 self._append_error( FESyntaxErrors.AUTO_IN_TYPES_LIST )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.AUTO_IN_PARCL )
         return True
 
     #-------------------------------------------------------------------------
-    def _bitand_expr(self) -> bool:
+    def _bitand_expr(self) -> bool: ###
         #===============================================================================
-        # <bitand expr>   ::= <shift expr> <bitand expr'>
+        # <bitand expr> ::= <shift expr> <bitand expr'>
         #===============================================================================
         if self._shift_expr():
             self._bitand_expr1()
@@ -446,23 +468,23 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _bitand_expr1(self) -> bool:
+    def _bitand_expr1(self) -> bool: ###
         #=======================================================================
         # <bitand expr'>  ::= '&' <template args> <shift expr> <bitand expr'>
         #                  |  EPS
         #=======================================================================
         while self._current.is_BITAND():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._template_args()
             if not self._shift_expr():
                 self._append_error( FESyntaxErrors.BITAND_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _bitor_expr(self) -> bool:
+    def _bitor_expr(self) -> bool: ###
         #=======================================================================
-        # <bitor expr>    ::= <bitxor expr> <bitor expr'>
+        # <bitor expr> ::= <bitxor expr> <bitor expr'>
         #=======================================================================
         if self._bitxor_expr():
             self._bitor_expr1()
@@ -471,23 +493,23 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _bitor_expr1(self) -> bool:
+    def _bitor_expr1(self) -> bool: ###
         #=======================================================================
-        # <bitor expr'>   ::= '|' <template args> <bitxor expr> <bitor expr'>
-        #                  |  EPS
+        # <bitor expr'> ::= '|' <template args> <bitxor expr> <bitor expr'>
+        #                |  EPS
         #=======================================================================
         while self._current.is_BITOR():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._template_args()
             if not self._bitxor_expr():
                 self._append_error( FESyntaxErrors.BITOR_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _bitxor_expr(self) -> bool:
+    def _bitxor_expr(self) -> bool: ###
         #=======================================================================
-        # <bitxor expr>    ::= <bitand expr> <bitxor expr'>
+        # <bitxor expr> ::= <bitand expr> <bitxor expr'>
         #=======================================================================
         if self._bitand_expr():
             self._bitxor_expr1()
@@ -496,33 +518,34 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _bitxor_expr1(self) -> bool:
+    def _bitxor_expr1(self) -> bool: ###
         #=======================================================================
-        # <bitxor expr'>   ::= '^' <template args> <bitand expr> <bitxor expr'>
-        #                  |  EPS
+        # <bitxor expr'> ::= '^' <template args> <bitand expr> <bitxor expr'>
+        #                 |  EPS
         #=======================================================================
         while self._current.is_BITXOR():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._template_args()
             if not self._bitand_expr():
                 self._append_error( FESyntaxErrors.BITXOR_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _bracket_form(self) -> bool:
+    def _bracket_form(self) -> bool: ###
         #=======================================================================
-        # <bracket form>    ::= '[' <expression> <list or map form> ']'
+        # <bracket form> ::= '[' <expression> <list or map form> ']'
         #=======================================================================
         if self._current.is_BRACKETOP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.BRACKET_FORM_EXPR )
-            self._list_or_map_form()
+            if not self._list_or_map_form():
+                self._append_error( FESyntaxErrors.BRACKET_FORM_LIST_OR_MAP )
             if self._current.is_BRACKETCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.BRACKET_ENDING )
             return True
@@ -530,16 +553,16 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _call_operator(self) -> bool:
+    def _call_operator(self) -> bool: ###
         #=======================================================================
-        # <call operator>    ::= '(' ')'
+        # <call operator> ::= '(' ')'
         #=======================================================================
         if self._current.is_PAROP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.CALL_OP )
             return True
@@ -548,13 +571,13 @@ class FEParser:
                 
 
     #-------------------------------------------------------------------------
-    def _case(self) -> bool:
+    def _case(self) -> bool: ###
         #=======================================================================
-        # <case>  ::= 'case' <expr list> <statements block>
+        # <case> ::= 'case' <expr list> <statements block>
         #=======================================================================
         if self._current.is_CASE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expr_list():
                 self._append_error( FESyntaxErrors.CASE_EXPR )
             if not self._statements_block():
@@ -564,16 +587,16 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _cast_op(self) -> bool:
+    def _cast_op(self) -> bool: ###
         #=======================================================================
-        # <cast op>    ::= 'cast' <identifier>
+        # <cast op> ::= 'cast' <identifier>
         #=======================================================================
         if self._current.is_CAST():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_IDENT():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.CASTED_TYPE )
             return True
@@ -581,13 +604,13 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _class_definition(self) -> bool:
+    def _class_definition(self) -> bool: ###
         #=======================================================================
-        # <class definition>    ::= 'class' <identifier> <template def> <inheritance> <statements block>
+        # <class definition> ::= 'class' <identifier> <template def> <inheritance> <statements block>
         #=======================================================================
         if self._current.is_CLASS():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._current._identifier():
                 self._append_error( FESyntaxErrors.CLASS_NAME )
             self._template_def()
@@ -599,7 +622,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _comment(self) -> bool:
+    def _comment(self) -> bool: ###
         #=======================================================================
         # <comment>   ::= '//' <comment'>
         #              |  '/*' <multi lines comment>
@@ -607,40 +630,42 @@ class FEParser:
         #              |    <end line>
         #              |    <ENDOFFILE>
         #=======================================================================
-        if self._current.is_COMMENT() or self._current.is_COMMENT_ML():
-            self._append_snode()
-            self._next_inode()
+        if self._current.is_COMMENT() or self._current.is_COMMENT_ML(): ## (notice: previously scanned by the Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _comparison(self) -> bool:
+    def _comparison(self) -> bool: ###
         #=======================================================================
-        # <comparison>    ::= <bitor expr> <comparison'>
+        # <comparison> ::= <bitor expr> <comparison'>
         #=======================================================================
         return self._bitor_expr() and self._comparison1()
 
     #-------------------------------------------------------------------------
-    def _comparison1(self) -> bool:
+    def _comparison1(self) -> bool: ###
         #===============================================================================
-        # <comparison'>   ::= <comp operator> <template args> <bitor expr> <comparison'>
-        #                  |  <comp operator'> <spaced template args> <bitor expr> <comparison'>
-        #                  |  EPS
+        # <comparison'> ::= <comp operator> <template args> <bitor expr> <comparison'>
+        #                |  <comp operator'> <spaced template args> <bitor expr> <comparison'>
+        #                |  EPS
         #===============================================================================
         while True:
             if self._comp_operator():
                 self._template_args()
-                self._bitor_expr()
+                if not self._bitor_expr():
+                    self._append_error( FESyntaxErrors.COMP_EXPR )
             elif self._comp_operator1():
                 self._spaced_template_args()
-                self._bitor_expr()
+                if not self._bitor_expr():
+                    self._append_error( FESyntaxErrors.COMP_EXPR )
             else:
                 break
         return True
 
     #-------------------------------------------------------------------------
-    def _comp_operator(self) -> bool:
+    def _comp_operator(self) -> bool: ###
         #=======================================================================
         # <comp operator> ::= '<='  |  '=='  |  '!='  |  '>='
         #                  |  'in'
@@ -650,17 +675,17 @@ class FEParser:
         if self._current.is_LE() or \
             self._current.is_EQ() or \
             self._current.is_NE() or \
-            self._current.is_GT() or \
+            self._current.is_GE() or \
                 self._current.is_IN():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         elif self._current.is_NOT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_IN():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.NOT_IN )
             return True
@@ -668,30 +693,30 @@ class FEParser:
             return self._is_operator()
 
     #-------------------------------------------------------------------------
-    def _com_operator1(self) -> bool:
+    def _comp_operator1(self) -> bool: ###
         #=======================================================================
         # <comp operator'> ::= '<'  |  '>'
         #=======================================================================
         if self._current.is_LT() or self._current.is_GT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
         
     #-------------------------------------------------------------------------
-    def _compound_statement(self) -> bool:
+    def _compound_statement(self) -> bool: ###
         #=======================================================================
-        # <compound statement>    ::= <assign decl def func-call statement>
-        #                          |  <embed statement>
-        #                          |  <for statement>
-        #                          |  <forever statement>
-        #                          |  <if statement>
-        #                          |  <repeat statement>
-        #                          |  <switch statement>
-        #                          |  <try statement>
-        #                          |  <while statement>
-        #                          |  <with statement>
+        # <compound statement> ::= <assign decl def func-call statement>
+        #                       |  <embed statement>
+        #                       |  <for statement>
+        #                       |  <forever statement>
+        #                       |  <if statement>
+        #                       |  <repeat statement>
+        #                       |  <switch statement>
+        #                       |  <try statement>
+        #                       |  <while statement>
+        #                       |  <with statement>
         #=======================================================================
         return self._assign_decl_def_funccall_statement() or \
                 self._embed_statement() or \
@@ -705,26 +730,26 @@ class FEParser:
                 self._with_statement()
 
     #-------------------------------------------------------------------------
-    def _condition(self) -> bool:
+    def _condition(self) -> bool: ###
         #=======================================================================
-        # <condition>        ::= <or test> <condition'>
+        # <condition> ::= <or test> <condition'>
         #=======================================================================
         return self._or_test() and self._condition1()
 
     #-------------------------------------------------------------------------
-    def _condition1(self) -> bool:
+    def _condition1(self) -> bool: ###
         #=======================================================================
-        # <condition'>    ::= 'if' <or test> 'else' <expression>
-        #                  |    EPS
+        # <condition'> ::= 'if' <or test> 'else' <expression>
+        #               |  EPS
         #=======================================================================
         if self._current.is_IF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._or_test():
                 self._append_error( FESyntaxErrors.IF_COND )
             if self._current.is_ELSE():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
                 if not self._self._expression():
                     self._append_error( FESyntaxErrors.IF_ELSE_EXPR )
                 return True
@@ -735,42 +760,51 @@ class FEParser:
             return True                
 
     #-------------------------------------------------------------------------
-    def _condition_or_unnamed_func(self) -> bool:
+    def _condition_or_unnamed_func(self) -> bool: ###
         #=======================================================================
-        # <condition or unnamed func>    ::= <or test>
-        #                                 |    <unnamed function>
+        # <condition or unnamed func> ::= <or test>
+        #                              |  <unnamed function>
         #=======================================================================
         return self._or_test() or self._unnamed_function()
 
     #-------------------------------------------------------------------------
-    def _const_qualifier(self) -> bool:
+    def _const_qualifier(self) -> bool: ###
         #=======================================================================
-        # <const qualifier>    ::=    "const"
+        # <const qualifier> ::= "const"
         #=======================================================================
         if self._current.is_CONST():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _container_type(self) -> bool:
+    def _contained_type(self) -> bool: ###
         #=======================================================================
-        # <container type>    ::= <array_type>
-        #                      |    <enum type>
-        #                      |    <list type>
-        #                      |    <map type>
-        #                      |    <set type>
+        # <contained type> ::= <declared contained type>
+        #                   |  EPS
+        #=======================================================================
+        self._declared_contained_type() ## (notice: returned value doesn't matter)
+        return True
+
+    #-------------------------------------------------------------------------
+    def _container_type(self) -> bool: ###
+        #=======================================================================
+        # <container type> ::= <array_type>
+        #                   |  <enum type>
+        #                   |  <list type>
+        #                   |  <map type>
+        #                   |  <set type>
         #=======================================================================
         return self._array_type() or \
-                self.enum_type() or \
+                self.enum_type()  or \
                 self._list_type() or \
-                self._map_type() or \
+                self._map_type()  or \
                 self._set_type()
 
     #-------------------------------------------------------------------------
-    def _decl_constructor_or_decl_end(self) -> bool:
+    def _decl_constructor_or_decl_end(self) -> bool: ###
         #=======================================================================
         # <decl constructor or decl end> ::= <dotted name'> <decl or def statement'''>
         #                                 |  <function definition'>
@@ -779,32 +813,30 @@ class FEParser:
             if not self._decl_or_def_statement3():
                 self._append_error( FESyntaxErrors.DECL_DEF_IDENT_OP )
             return True
-        elif not self._function_definition1():
-            self._append_error( FESyntaxErrors.FUNCTION_ARGS_PAROP )
-            return True
         else:
-            return False
+            return self._function_definition1()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement(self) -> bool:
+    def _decl_or_def_statement(self) -> bool: ###
         #=======================================================================
-        # <decl or def statement>        ::= <static qualifier> <decl or def statement'>
-        #                                 |  <class definition>
-        #                                 |  <decl or def statement'>
+        # <decl or def statement> ::= <static qualifier> <decl or def statement'>
+        #                          |  <class definition>
+        #                          |  <decl or def statement'>
         #=======================================================================
         if self._static_qualifier():
-            return self._decl_or_def_statement1()
+            if not self._decl_or_def_statement1():
+                self._append_error( FESyntaxErrors.STATIC_DECL_DEF )
         else:
             return self._class_definition() or self._decl_or_def_statement1()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement1(self) -> bool:
+    def _decl_or_def_statement1(self) -> bool: ###
         #=======================================================================
-        # <decl or def statement'>        ::= <abstract qualifier> <method or operator definition>
-        #                                  |  <final qualifier> <method or operator definition>
-        #                                  |  <volatile qualifier> <TYPE> <identifier> <memory address> <simple statement end>
-        #                                  |  <decl or def statement''>
-        #                                  |  <type alias> <simple statement end>
+        # <decl or def statement'> ::= <abstract qualifier> <method or operator definition>
+        #                           |  <final qualifier> <method or operator definition>
+        #                           |  <volatile qualifier> <TYPE> <identifier> <memory address> <simple statement end>
+        #                           |  <type alias> <simple statement end>
+        #                           |  <decl or def statement''>
         #=======================================================================
         if self._abstract_qualifier():
             if not self._method_or_operator_definition():
@@ -833,10 +865,10 @@ class FEParser:
             return self._decl_or_def_statement2()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement2(self) -> bool:
+    def _decl_or_def_statement2(self) -> bool: ###
         #=======================================================================
-        # <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
-        #                              |  <identifier> <decl constructor or decl end>
+        # <decl or def statement''> ::= <TYPE'> <decl or def statement'''>
+        #                            |  <identifier> <decl constructor or decl end>
         #=======================================================================
         if self._TYPE1():
             if not self._decl_or_def_statement3():
@@ -851,23 +883,21 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement3(self) -> bool:
+    def _decl_or_def_statement3(self) -> bool: ###
         #=======================================================================
-        # <decl or def statement'''>        ::= <identifier> <decl or def statement''''>
-        #                                    |  <operator definition>
+        # <decl or def statement'''> ::= <identifier> <decl or def statement''''>
+        #                             |  <operator definition>
         #=======================================================================
         if self._identifier():
             return self._decl_or_def_statement4()
-        elif self._operator_definition():
-            return True
         else:
-            return False
+            return self._operator_definition()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement4(self) -> bool:
+    def _decl_or_def_statement4(self) -> bool: ###
         #=======================================================================
-        # <decl or def statement''''>    ::= <function definition>
-        #                                 |  <var declaration or assignment> <simple statement end>
+        # <decl or def statement''''> ::= <function definition>
+        #                              |  <var declaration or assignment> <simple statement end>
         #=======================================================================
         if self._function_declaration():
             return True
@@ -879,28 +909,28 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _declaration_or_definition_statement(self) -> bool:
+    def _declaration_or_definition_statement(self) -> bool: ###
         #=======================================================================
-        # <declaration or definition statement>   ::= "=" <expression> <declaration statement>
-        #                                          |  '<' <types list> '>' <function args declaration>
-        #                                          |  <declaration statement>
-        #                                          |  <function args declaration>
+        # <declaration or definition statement> ::= "=" <expression> <declaration statement>
+        #                                        |  '<' <types list> '>' <function args declaration>
+        #                                        |  <declaration statement>
+        #                                        |  <function args declaration>
         #=======================================================================
         if self._current.is_ASSIGN():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.DECL_ASSIGN_EXPR)
-            self._declaration_statement()
+            self._declaration_statement()  ## (notice: always returns True)
             return True
         elif self._current.is_LT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._types_list():
                 self._append_error( FESyntaxErrors.TYPES_LIST_TYPE )
             if self._current.is_GT():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.TEMPLATE_ENDING )
             if not self._function_args_declaration():
@@ -910,45 +940,47 @@ class FEParser:
             return self._declaration_statement() or self._function_args_declaration()
 
     #-------------------------------------------------------------------------
-    def _declaration_statement(self) -> bool:
+    def _declaration_statement(self) -> bool: ###
         #=======================================================================
-        # <declaration statement>     ::= ',' <identifier> <declaration statement'>
-        #                              |  EPS
+        # <declaration statement> ::= ',' <identifier> <declaration statement'>
+        #                          |  EPS
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.DECL_IDENT )
-            self.declaration_statement1()
+            self.declaration_statement1() ## (notice: always returns True)
         return True
 
     #-------------------------------------------------------------------------
-    def _declaration_statement1(self) -> bool:
+    def _declaration_statement1(self) -> bool: ###
         #=======================================================================
-        # <declaration statement'>    ::= '=' <expression> <declaration statement>
-        #                              |  <declaration statement>
+        # <declaration statement'> ::= '=' <expression> <declaration statement>
+        #                           |  <declaration statement>
         #=======================================================================
         if self._current.is_ASSIGN():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.DECL_ASSIGN_EXPR )
-        return self._declaration_statement()
+            return True
+        else:
+            return self._declaration_statement() ## (notice: always returns True)
         
     #-------------------------------------------------------------------------
-    def _declared_contained_type(self) -> bool:
+    def _declared_contained_type(self) -> bool: ###
         #=======================================================================
-        # <declared contained type>    ::= '<' <TYPE> '>'
+        # <declared contained type> ::= '<' <TYPE> '>'
         #=======================================================================
         if self._current.is_LT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._TYPE():
                 self._append_error( FESyntaxErrors.CONTAINED_TYPE )
             if self._current.is_GT():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.CONTAINER_END )
             return True
@@ -956,13 +988,13 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _del_statement(self) -> bool:
+    def _del_statement(self) -> bool: ###
         #=======================================================================
-        # <del statement>    ::= 'del' <identifiers list>
+        # <del statement> ::= 'del' <identifiers list>
         #=======================================================================
         if self._current.is_DEL():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifiers_list():
                 self._append_error( FESyntaxErrors.DEL_IDENT )
             return True
@@ -970,31 +1002,31 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _dimensions(self) -> bool:
+    def _dimensions(self) -> bool: ###
         #=======================================================================
-        # <dimensions>    ::= '[' <dimensions'> ']' <dimensions>
-        #                  |  EPS
+        # <dimensions> ::= '[' <dimensions'> ']' <dimensions>
+        #               |  EPS
         #=======================================================================
         while self._current.is_BRACKETOP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._dimensions1():
                 if self._float_number():
                     self._append_error( FESyntaxErrors.DIMENSION_FLOAT )
                 else:
                     self._append_error( FESyntaxErrors.DIMENSION_CONST )
             if self._current.is_BRACKETCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.DIMENSION_END )
         return True
 
     #-------------------------------------------------------------------------
-    def _dimensions1(self) -> bool:
+    def _dimensions1(self) -> bool: ###
         #=======================================================================
-        # <dimensions'>   ::= <integer number>
-        #                  |  <dotted name>
+        # <dimensions'> ::= <integer number>
+        #                |  <dotted name>
         #=======================================================================
         if self._integer_number():
             return True
@@ -1002,35 +1034,26 @@ class FEParser:
             return True
         else:
             return False
-            
 
     #-------------------------------------------------------------------------
-    def _direct_statement(self):
+    def _dotted_as_name(self) -> bool: ###
         #=======================================================================
-        # <direct statement>  ::= <comment>
-        #                      |  <NEWLINE>
-        #=======================================================================
-        return self._comment() or self._new_line()
-
-    #-------------------------------------------------------------------------
-    def _dotted_as_name(self) -> bool:
-        #=======================================================================
-        # <dotted as name>    ::= <dotted name> <dotted as name'>
+        # <dotted as name> ::= <dotted name> <dotted as name'>
         #=======================================================================
         if self._dotted_name():
-            return self.dotted_as_name1()
+            return self.dotted_as_name1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def dotted_as_name1(self) -> bool:
+    def dotted_as_name1(self) -> bool: ###
         #=======================================================================
-        # <dotted as name'>   ::= 'as' <identifier>
-        #                      |  EPS
+        # <dotted as name'> ::= 'as' <identifier>
+        #                    |  EPS
         #=======================================================================
         if self._current.is_AS():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.AS_IDENT )
             return True
@@ -1038,71 +1061,71 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _dotted_as_names(self) -> bool:
+    def _dotted_as_names(self) -> bool: ###
         #=======================================================================
-        # <dotted as names>   ::= <dotted as name> <dotted as names'>
+        # <dotted as names> ::= <dotted as name> <dotted as names'>
         #=======================================================================
         if self._dotted_as_name():
-            return self._dotted_as_names1()
+            return self._dotted_as_names1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _dotted_as_names1(self) -> bool:
+    def _dotted_as_names1(self) -> bool: ###
         #=======================================================================
-        # <dotted as names'>  ::= ',' <dotted as name> <dotted as names'>
-        #                      |  EPS
+        # <dotted as names'> ::= ',' <dotted as name> <dotted as names'>
+        #                     |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._dotted_as_name():
                 self._append_error( FESyntaxErrors.DOTTED_AS )
         return True
 
     #-------------------------------------------------------------------------
-    def _dotted_name(self) -> bool:
+    def _dotted_name(self) -> bool: ###
         #=======================================================================
-        # <dotted name>   ::= <identifier> <dotted name'>
+        # <dotted name> ::= <identifier> <dotted name'>
         #=======================================================================
         if self._identifier():
-            return self._dotted_name1()
+            return self._dotted_name1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _dotted_name1(self) -> bool:
+    def _dotted_name1(self) -> bool: ###
         #=======================================================================
-        # <dotted name'>  ::= '.' <identifier> <dotted name'>
-        #                  | EPS
+        # <dotted name'> ::= '.' <identifier> <dotted name'>
+        #                 | EPS
         #=======================================================================
         while self._current.is_DOT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self.identifier():
                 self._append_error( FESyntaxErrors.DOTTED_IDENT )
         return True
 
     #-------------------------------------------------------------------------
-    def _ellipsis(self) -> bool:
+    def _ellipsis(self) -> bool: ###
         #=======================================================================
-        # <ellipsis>    ::= '...'
+        # <ellipsis> ::= '...'
         #=======================================================================
         if self._current.is_ELLIPSIS():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _embed_statement(self) -> bool:
+    def _embed_statement(self) -> bool: ###
         #=======================================================================
-        # <embed statement>   ::= 'embed' <language> <embed statement'>
+        # <embed statement> ::= 'embed' <language> <embed statement'>
         #=======================================================================
         if self._current.is_EMBED():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._language():
                 self._append_error( FESyntaxErrors.EMBEDDED_LANGUAGE )
             if not self._embed_statement1():
@@ -1112,15 +1135,15 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _embed_statement1(self) -> bool:
+    def _embed_statement1(self) -> bool: ###
         #=======================================================================
-        # <embed statement'> ::= <dotted name> ';'
+        # <embed statement'> ::= <dotted name> <simple statement end>
         #                     |  <embedded language code>
         #=======================================================================
         if self._dotted_name():
-            if self._current.is_SEMICOLON():
-                self._append_snode()
-                self._next_inode()
+            if self._simple_statement_end():
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.STATEMENT_END )
             return True
@@ -1130,7 +1153,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _embedded_language_code(self) -> bool:
+    def _embedded_language_code(self) -> bool: ###
         #===================================================================
         # <embedded language code>    ::= '{{' <embedded language code'>
         # <embedded language code'>   ::= <any embedded code char> <embeded language code'>
@@ -1138,129 +1161,129 @@ class FEParser:
         # <embedded language code">   ::= <any embedded code char> <embeded language code'>
         #                              |  '}'
         #===================================================================
-        if self._current.is_EMBED_CODE():  ## remember: the scanner has already done all the parsing stuff
-            self._append_snode()
-            self._next_inode()
+        if self._current.is_EMBED_CODE():  ## (notice: previously scanned by the Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         elif self._current.is_UNEXPECTED():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._append_error( FESyntaxErrors.EMBEDDED_CODE_END )
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _empty_statement(self) -> bool:
+    def _empty_statement(self) -> bool: ###
         #=======================================================================
-        # <empty statement>   ::= <comment>                                    ##
-        #                      |  <NEWLINE>
+        # <empty statement> ::= <comment>
+        #                    |  <NEWLINE>
         #=======================================================================
-        if self._current.is_COMMENT() or self._current.is_COMMENT_ML() or self._current.is_NL():
-            self._append_snode()
+        if self._current.is_COMMENT() or self._current.is_COMMENT_ML() or self._current.is_NL(): ## (notice: previously scanned by Scanner)
+            self._append_syntaxic_node()
             self._new_line()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _enclosure(self) -> bool:
+    def _enclosure(self) -> bool: ###
         #=======================================================================
-        # <enclosure>    ::= <bracket form>
-        #              |    <parenthesis form>
+        # <enclosure> ::= <bracket form>
+        #              |  <parenthesis form>
         #=======================================================================
         return self._bracket_form() or self._parenthesis_form()
 
     #-------------------------------------------------------------------------
-    def _end_line(self) -> bool:
+    def _end_line(self) -> bool: ###
         #=======================================================================
-        # <end line>  ::= <NEWLINE>
-        #              |  <ENDOFFILE>
+        # <end line> ::= <NEWLINE>
+        #             |  <ENDOFFILE>
         #=======================================================================
         if self._current.is_NL() or self._current.is_EOF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _end_of_file(self) -> bool:
+    def _end_of_file(self) -> bool: ###
         #=======================================================================
         # <ENDOFFILE> ::= u0x00
         #=======================================================================
         if self._current.is_EOF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _ensure_statement(self) -> bool:
+    def _ensure_statement(self) -> bool: ###
         #=======================================================================
-        # <ensure statement>     ::= 'ensure' <expression> <ensure statement'>
+        # <ensure statement> ::= 'ensure' <expression> <ensure statement'>
         #=======================================================================
         if self._current.is_ENSURE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.ENSURE_EXPR )
-            self._ensure_statement1()
+            self._ensure_statement1() ##(notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _ensure_statement1(self) -> bool:
+    def _ensure_statement1(self) -> bool: ###
         #=======================================================================
         # <ensure statement'> ::= ',' <expression>
         #                      |  EPS
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.ENSURE_COMMA_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _enum(self) -> bool:
+    def _enum_type(self) -> bool: ###
         #=======================================================================
-        # <enum type>        ::= "enum"
+        # <enum type> ::= "enum"
         #=======================================================================
         if self._current.is_ENUM():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _expr_list(self) -> bool:
+    def _expr_list(self) -> bool: ###
         #=======================================================================
-        # <expr list>        ::= <expression> <expr list'>
+        # <expr list> ::= <expression> <expr list'>
         #=======================================================================
         return self._expression() and self._expr_list1()
 
     #-------------------------------------------------------------------------
-    def _expr_list1(self) -> bool:
+    def _expr_list1(self) -> bool: ###
         #=======================================================================
-        # <expr list'>    ::= ',' <expression> <expr list'>
-        #                  |  EPS
+        # <expr list'> ::= ',' <expression> <expr list'>
+        #               |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.LIST_COMMA_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _expression(self) -> bool:
+    def _expression(self) -> bool: ###
         #=======================================================================
-        # <expression>    ::= <condition>
-        #                  |  <unnamed func>
+        # <expression> ::= <condition>
+        #               |  <unnamed func>
         #=======================================================================
         if self._condition():
             return True
@@ -1270,9 +1293,9 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _factor(self) -> bool:
+    def _factor(self) -> bool: ###
         #=======================================================================
-        # <factor>        ::= <atom element> <factor'>
+        # <factor> ::= <atom element> <factor'>
         #=======================================================================
         if self._atom_element():
             self._factor1()
@@ -1281,89 +1304,78 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _factor1(self) -> bool:
+    def _factor1(self) -> bool: ###
         #=======================================================================
-        # <factor'>       ::= '**' <template args> <unary expr>
-        #                  |  '^^' <template args> <unary expr>
-        #                  |  EPS
+        # <factor'> ::= '**' <template args> <unary expr>
+        #            |  '^^' <template args> <unary expr>
+        #            |  EPS
         #=======================================================================
         if self._current.is_POWER():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._template_args()
             if not self._unary_expr():
                 self._append_error( FESyntaxErrors.POWER_EXPR )
         return True
         
     #-------------------------------------------------------------------------
-    def _false(self) -> bool:
+    def _false(self) -> bool: ###
         #=======================================================================
-        # <FALSE>     ::= 'False'
-        #              |  'false'
+        # <FALSE> ::= 'False'
+        #          |  'false'
         #=======================================================================
         if self._current.is_FALSE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _file(self) -> bool:
+    def _file_type(self) -> bool: ###
         #=======================================================================
-        # <file>            ::= 'file' <file'>
+        # <file type> ::= 'file' <contained type>
         #=======================================================================
         if self._current.is_FILE():
-            self._append_snode()
-            self._next_inode()
-            self._file1()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._contained_type() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _file1(self) -> bool:
+    def _final_qualifier(self) -> bool: ###
         #=======================================================================
-        # <file'>            ::= <declared contained type>
-        #                  |    EPS
-        #=======================================================================
-        if self._declared_contained_type():
-            return True
-        else:
-            return True
-
-    #-------------------------------------------------------------------------
-    def _final_qualifier(self) -> bool:
-        #=======================================================================
-        # <final qualif>    ::= 'final'
+        # <final qualifier> ::= 'final'
         #=======================================================================
         if self._current.is_FINAL():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _float_number(self) -> bool:
+    def _float_number(self) -> bool: ###
         if self._current.is_FLOAT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _flow_statement(self) -> bool:
+    def _flow_statement(self) -> bool: ###
         #=======================================================================
-        # <flow statement>    ::= 'break'
-        #                      |  'continue'
-        #                      |  <raise statement>
-        #                      |  <return statement>
+        # <flow statement> ::= 'break'
+        #                   |  'continue'
+        #                   |  <raise statement>
+        #                   |  <return statement>
         #=======================================================================
         if self._current.is_BREAK() or self._current.is_CONTINUE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         elif self._raise_statement():
             return True
@@ -1373,31 +1385,31 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _for_comprehension(self) -> bool:
+    def _for_comprehension(self) -> bool: ###
         #=======================================================================
         # <for comprehension> ::= 'for' '(' <target list> 'in' <or test> <iter comprehension> ')'
         #=======================================================================
         if self._current.is_FOR():
-            self._append_snode()
-            self._next_inode()
-            if not self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if self._current.is_PAROP():
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOR_PAROP )
             if not self._target_list():
                 self._append_error( FESyntaxErrors.FOR_COMPR_TARGETS)
             if self._current.is_IN():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOR_COMPR_IN )
             if not self._or_test():
                 self._append_error( FESyntaxErrors.FOR_COMPR_CONDITION )
             self._iter_comprehension()
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOR_PARCL )
             return True
@@ -1405,90 +1417,88 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _for_statement(self) -> bool:
+    def _for_statement(self) -> bool: ###
         #=======================================================================
-        # <for statement>     ::= 'for' '(' <target list> 'in' <expr list> ')' <statements list> <for statement'>
+        # <for statement> ::= 'for' '(' <target list> 'in' <expr list> ')' <statements block> <for statement'>
         #=======================================================================
         if self._current.is_FOR():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOR_PAROP )
             if not self._target_list():
                 self._append_error( FESyntaxErrors.FOR_TARGETS )
             if self._current.is_IN():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOR_IN )
             if not self._expr_list():
                 self._append_error( FESyntaxErrors.FOR_EXPR)
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOR_PARCL )
-            if not self._statements_list():
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.FOR_BODY )
-            self._for_statement1()
+            self._for_statement1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def for_statement1(self) -> bool:
+    def for_statement1(self) -> bool: ###
         #=======================================================================
-        # <for statement'>    ::= 'else' <statements list>
-        #                      |  EPS
+        # <for statement'> ::= 'else' <statements block>
+        #                   |  EPS
         #=======================================================================
         if self._current.is_ELSE():
-            self._append_snode()
-            self._next_inode()
-            if not self._statements_list():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.FOR_ELSE_BODY )
-            return True
-        else:
-            return True
-
+        return True
+        
     #-------------------------------------------------------------------------
-    def forever_statement(self) -> bool:
+    def forever_statement(self) -> bool: ###
         #=======================================================================
-        # <forever statement> ::= 'forever' '(' ')' <statements list>
+        # <forever statement> ::= 'forever' '(' ')' <statements block>
         #=======================================================================
         if self._current.is_FOREVER():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOREVER_PAROP )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FOREVER_PARCL )
-            if not self._statements_list():
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.FOREVER_BODY )
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _function_args_declaration(self) -> bool:
+    def _function_args_declaration(self) -> bool: ###
         #=======================================================================
-        # <function args declaration>    ::= '(' <typed args list> ')'
+        # <function args declaration> ::= '(' <typed args list> ')'
         #=======================================================================
         if self._current.is_PAROP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._typed_args_list()
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.FUNCTION_ARGS_END )
             return True
@@ -1496,18 +1506,18 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _function_call(self) -> bool:
+    def _function_call(self) -> bool: ###
         #=======================================================================
-        # <function call>    ::= <template args> '(' <function call args> ')'
+        # <function call> ::= <template args> '(' <function call args> ')'
         #=======================================================================
         if self._template_args():
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
                 self._function_call_args()
                 if self._current.is_PARCL():
-                    self._append_snode()
-                    self._next_inode()
+                    self._append_syntaxic_node()
+                    self._next_token_node()
                 else:
                     self._append_error( FESyntaxErrors.FUNCTION_CALL_END )
             else:
@@ -1517,10 +1527,10 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _function_call_args(self) -> bool:
+    def _function_call_args(self) -> bool: ###
         #=======================================================================
-        # <function call args>    ::= <expression> <function call args'>
-        #                          |    EPS
+        # <function call args> ::= <expression> <function call args'>
+        #                       |  EPS
         #=======================================================================
         if self._expression():
             return self._function_call_args1()
@@ -1528,15 +1538,15 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _function_call_args1(self) -> bool:
+    def _function_call_args1(self) -> bool: ###
         #=======================================================================
-        # <function call args'>   ::= ',' <function call args">
-        #                          |   <for comprehension>
-        #                          |   EPS
+        # <function call args'> ::= ',' <function call args">
+        #                        |  <for comprehension>
+        #                        |  EPS
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._function_call_args2():
                 self._append_error( FESyntaxErrors.FUNCTION_ARGS_LIST )
             return True
@@ -1546,10 +1556,10 @@ class FEParser:
             return True        
 
     #-------------------------------------------------------------------------
-    def _function_call_args2(self) -> bool:
+    def _function_call_args2(self) -> bool: ###
         #=======================================================================
-        # <function call args">   ::= <expression> <function call args'>
-        #                          |  <ellipsis> <identifier>
+        # <function call args"> ::= <expression> <function call args'>
+        #                        |  <ellipsis> <identifier>
         #=======================================================================
         if self._expression():
             self._function_call_args1()
@@ -1562,20 +1572,20 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _function_definition(self) -> bool:
+    def _function_definition(self) -> bool: ###
         #=======================================================================
-        # <function definition>   ::=   <template args> <function definition'>
-        #                          |    <function definition'>
+        # <function definition> ::= <template def> <function definition'>
+        #                        |  <function definition'>
         #=======================================================================
-        if self._template_args():
+        if self._template_def():
             return self._function_definition1()
         else:
             return self._function_definition1()
 
     #-------------------------------------------------------------------------
-    def _function_definition1(self) -> bool:
+    def _function_definition1(self) -> bool: ###
         #=======================================================================
-        # <function definition'>    ::= <function args declaration> <statements block>
+        # <function definition'> ::= <function args declaration> <statements block>
         #=======================================================================
         if not self._function_args_declaration():
             self._append_error( FESyntaxErrors.FUNCTION_ARGS )
@@ -1584,63 +1594,63 @@ class FEParser:
         return True 
 
     #-------------------------------------------------------------------------
-    def _identifier(self) -> bool:
+    def _identifier(self) -> bool: ###
         #=======================================================================
-        # <identifier>    ::= '_' <identifier'>
-        #                  |  <alpha char> <identifier'>
-        # <identifier'>   ::= <alpha num char> <identifier'>
-        #                  |  '_' <identifier'>
-        #                  |  EPS
+        # <identifier>  ::= '_' <identifier'>
+        #                |  <alpha char> <identifier'>
+        # <identifier'> ::= <alpha num char> <identifier'>
+        #                |  '_' <identifier'>
+        #                |  EPS
         #=======================================================================
         if self._current.is_IDENT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             self._append_error( 'missing or incorrect identifier' )
             return True
 
     #-------------------------------------------------------------------------
-    def _identifiers_list(self) -> bool:
+    def _identifiers_list(self) -> bool: ###
         #=======================================================================
-        # <identifiers list>    ::= <dotted name> <identifiers list'>
+        # <identifiers list> ::= <dotted name> <identifiers list'>
         #=======================================================================
         if self._current._dotted_name():
-            return self._identifiers_list1()
+            return self._identifiers_list1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _identifiers_list1(self) -> bool:
+    def _identifiers_list1(self) -> bool: ###
         #=======================================================================
-        # <identifiers list'>    ::= ',' <dotted name> <identifiers list'>
+        # <identifiers list'> ::= ',' <dotted name> <identifiers list'>
         #                      |    EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._dotted_name():
                 self._append_error( FESyntaxErrors.LIST_COMMA_IDENT )
         return True
 
     #-------------------------------------------------------------------------
-    def _if_comprehension(self) -> bool:
+    def _if_comprehension(self) -> bool: ###
         #=======================================================================
-        # <if comprehension>        ::= 'if' '(' <condition or unnamed func> ')' <iter comprehension>
+        # <if comprehension> ::= 'if' '(' <condition or unnamed func> ')' <iter comprehension>
         #=======================================================================
         if self._current.is_IF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.IF_CONDITION_BEGIN )
             if not self._condition_or_unnamed_func():
                 self._append_error( FESyntaxErrors.IF_COMPR_COND )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.IF_CONDITION_END )
             self._iter_comprehension()
@@ -1649,147 +1659,147 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _if_statement(self) -> bool:
+    def _if_statement(self) -> bool: ###
         #=======================================================================
-        # <if statement>      ::= 'if' '(' <expression> ')' <statements list> <if statement'>
+        # <if statement> ::= 'if' '(' <expression> ')' <statements block> <if statement'>
         #=======================================================================
         if self._current.is_IF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.IF_CONDITION_BEGIN )
             if not self._expression():
                 self._append_error( FESyntaxErrors.IF_COND )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.IF_CONDITION_END )
-            if not self._statements_list():
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.IF_BODY )
-            self._if_statement1()
+            self._if_statement1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _if_statement1(self) -> bool:
+    def _if_statement1(self) -> bool: ###
         #=======================================================================
-        # <if statement'>     ::= 'elseif' '(' <expression> ')' <statements list> <if statement'>
-        #                      |  'elif' '(' <expression> ')' <statements list> <if statement'>
-        #                      |  'elsif' '(' <expression> ')' <statements list> <if statement'>
-        #                      |  'else' <statements list>
-        #                      |  EPS
+        # <if statement'> ::= 'elseif' '(' <expression> ')' <statements block> <if statement'>
+        #                  |  'elif' '(' <expression> ')' <statements block> <if statement'>
+        #                  |  'elsif' '(' <expression> ')' <statements block> <if statement'>
+        #                  |  'else' <statements block>
+        #                  |  EPS
         #=======================================================================
         while self._current.is_ELIF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.ELIF_CONDITION_BEGIN )
             if not self._expression():
                 self._append_error( FESyntaxErrors.ELIF_COND )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.ELIF_CONDITION_END )
-            if not self._statements_list():
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.ELIF_BODY )
         if self._current.is_ELSE():
-            self._append_snode()
-            self._next_inode()
-            if not self._statements_list():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.ELSE_BODY )
         return True            
 
 
     #-------------------------------------------------------------------------
-    def _import_as_name(self) -> bool:
+    def _import_as_name(self) -> bool: ###
         #=======================================================================
-        # <import as name>    ::= <identifier> <import as name'>
+        # <import as name> ::= <identifier> <import as name'>
         #=======================================================================
         if self._identifier():
-            return self._import_as_name1()
+            return self._import_as_name1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_as_name1(self) -> bool:
+    def _import_as_name1(self) -> bool: ###
         #=======================================================================
-        # <import as name'>   ::= 'as' <identifier>
-        #                      |  EPS
+        # <import as name'> ::= 'as' <identifier>
+        #                    |  EPS
         #=======================================================================
         if self._current.is_AS():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.AS_IDENT )
         return True
 
     #-------------------------------------------------------------------------
-    def _import_as_names(self) -> bool:
+    def _import_as_names(self) -> bool: ###
         #=======================================================================
-        # <import as names>   ::= <import as name> <import as names'>
+        # <import as names> ::= <import as name> <import as names'>
         #=======================================================================
         if self._import_as_name():
-            self._import_as_names1()
+            self._import_as_names1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_as_names1(self) -> bool:
+    def _import_as_names1(self) -> bool: ###
         #=======================================================================
-        # <import as names'>  ::= ',' <import as name> <import as names'>
-        #                      |  EPS
+        # <import as names'> ::= ',' <import as name> <import as names'>
+        #                     |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._import_as_name():
                 self._append_error( FESyntaxErrors.IMPORT_IDENT )
         return True
 
     #-------------------------------------------------------------------------
-    def _import_from(self) -> bool:
+    def _import_from(self) -> bool: ###
         #=======================================================================
-        # <import from>       ::= 'from' <import from'>
+        # <import from> ::= 'from' <import from'>
         #=======================================================================
         if self._current.is_FROM():
-            self._append_snode()
-            self._next_inode()
-            self._import_from1()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._import_from1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_from1(self) -> bool:
+    def _import_from1(self) -> bool: ###
         #=======================================================================
-        # <import from'>      ::= '.' <import from'>
-        #                      |  <import from''>
+        # <import from'> ::= '.' <import from'>
+        #                 |  <import from''>
         #=======================================================================
         while self._current.is_DOT():
-            self._append_snode()
-            self._next_inode()
-        return self._import_from2()
+            self._append_syntaxic_node()
+            self._next_token_node()
+        return self._import_from2() ## (notice: always returns True)
 
     #-------------------------------------------------------------------------
-    def _import_from2(self) -> bool:
+    def _import_from2(self) -> bool: ###
         #=======================================================================
         # <import from''> ::= <dotted name> 'import' <import from'''>
         #=======================================================================
         if not self._dotted_name():
             self._append_error( FESyntaxErrors.FROM_IDENT_IMPORT )
         if self._current.is_IMPORT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
         else:
             self._append_error( FESyntaxErrors.FROM_IMPORT )
         if not self._import_from3():
@@ -1797,24 +1807,24 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _import_from3(self) -> bool:
+    def _import_from3(self) -> bool: ###
         #=======================================================================
-        # <import from'''>    ::= 'all'
-        #                      |  '(' <import as names> ')'
-        #                      |  <import as names>
+        # <import from'''> ::= 'all'
+        #                   |  '(' <import as names> ')'
+        #                   |  <import as names>
         #=======================================================================
         if self._current.is_ALL():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         elif self._current.is_PAROP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._import_as_names():
                 self._append_error( FESyntaxErrors.FROM_IMPORT_LIST )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.UNPAIRED_PAROP )
             return True
@@ -1824,13 +1834,13 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_name(self) -> bool:
+    def _import_name(self) -> bool: ###
         #=======================================================================
-        # <import name>       ::= 'import' <dotted as names>
+        # <import name> ::= 'import' <dotted as names>
         #=======================================================================
         if self._current.is_IMPORT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._dotted_as_names():
                 self._append_error( FESyntaxErrors.IMPORT_MODULE )
             return True
@@ -1838,66 +1848,65 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_statement(self) -> bool:
+    def _import_statement(self) -> bool: ###
         #=======================================================================
-        # <import statement>  ::= <import name>
-        #                      |  <import from>
+        # <import statement> ::= <import name>
+        #                     |  <import from>
         #=======================================================================
         return self._import_name() or self._import_from()
 
     #-------------------------------------------------------------------------
-    def _incr_or_decr(self) -> bool:
+    def _incr_or_decr(self) -> bool: ###
         #=======================================================================
-        # <incr or decr>    ::= '--'  |  '++'  |  EPS
+        # <incr or decr> ::= '--'  |  '++'  |  EPS
         #=======================================================================
         if self._current.is_INCR() or self._current.is_DECR():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
         return True
 
     #-------------------------------------------------------------------------
-    def _inheritance(self) -> bool:
+    def _inheritance(self) -> bool: ###
         #=======================================================================
-        # <inheritance>   ::= ':' <inheritance item> <inheritance'>
-        #                  |  EPS
+        # <inheritance> ::= ':' <inheritance item> <inheritance'>
+        #                |  EPS
         #=======================================================================
         if self._current.is_COLON():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._inheritance_item():
                 self._append_error( FESyntaxErrors.INHERITANCE_CLASS )
             self._inheritance1()
         return True
         
     #-------------------------------------------------------------------------
-    def _inheritance1(self) -> bool:
+    def _inheritance1(self) -> bool: ###
         #=======================================================================
-        # <inheritance'>  ::= ',' <inheritence item> <inheritance'>
-        #                  |  EPS
+        # <inheritance'> ::= ',' <inheritence item> <inheritance'>
+        #                 |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._inheritance_item():
                 self._append_error( FESyntaxErrors.INHERITANCE_CLASS )
         return True
 
     #-------------------------------------------------------------------------
-    def _inheritance_item(self) -> bool:
+    def _inheritance_item(self) -> bool: ###
         #=======================================================================
-        # <inheritance item>    ::= <protection qualifier> <inheritance item'>
-        #                      |    <inheritance item'>
+        # <inheritance item> ::= <access qualifier> <inheritance item'>
+        #                     |  <inheritance item'>
         #=======================================================================
-        if self._protection_qualifier():
-            ret_value = self._inheritance_item1()
+        if self._access_qualifier():
+            return self._inheritance_item1()
         else:
-            ret_value = self._inheritance_item1()
-        return ret_value
+            return self._inheritance_item1()
 
     #-------------------------------------------------------------------------
-    def _inheritance_item1(self) -> bool:
+    def _inheritance_item1(self) -> bool: ###
         #=======================================================================
-        # <inheritance item'>    ::= <dotted name> <template args>
+        # <inheritance item'> ::= <dotted name> <template args>
         #=======================================================================
         if self._dotted_name():
             self._template_args()
@@ -1906,26 +1915,26 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _integer_number(self) -> bool:
+    def _integer_number(self) -> bool: ###
         #=======================================================================
-        # <integer number>    ::= <decimal number>
-        #                      |  <octal hexa binary number>
+        # <integer number> ::= '1'...'9' <integer number'>
+        #                   |  <octal hexa binary number>
         #=======================================================================
-        if self._current.is_INTEGER():
-            self._append_snode()
-            self._next_inode()
+        if self._current.is_INTEGER(): ## (notice: previously scanned by Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
         
     #-------------------------------------------------------------------------
-    def _is_instance_of(self) -> bool:
+    def _is_instance_of(self) -> bool: ###
         #=======================================================================
-        # <is instance of>    ::= '->' <dotted name>
+        # <is instance of> ::= '->' <dotted name>
         #=======================================================================
         if self._current.is_ISOF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._dotted_name():
                 self._append_error( FESyntaxErrors.INSTANCE_OF )
             return True
@@ -1933,34 +1942,34 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _is_operator(self) -> bool:
+    def _is_operator(self) -> bool: ###
         #=======================================================================
-        # <is operator>    ::= 'is' <is operator'>
+        # <is operator> ::= 'is' <is operator'>
         #=======================================================================
         if self._current.is_IS():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return self._is_operator1()
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _is_operator1(self) -> bool:
+    def _is_operator1(self) -> bool: ###
         #=======================================================================
-        # <is operator'>    ::= 'not'
-        #                    |  EPS
+        # <is operator'> ::= 'not'
+        #                 |  EPS
         #=======================================================================
         if self._current.is_NOT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
         return True
 
     #-------------------------------------------------------------------------
-    def _iter_comprehension(self) -> bool:
+    def _iter_comprehension(self) -> bool: ###
         #=======================================================================
-        # <iter comprehension>    ::= <for comprehension>
-        #                          |  <if comprehension>
-        #                          |  EPS
+        # <iter comprehension> ::= <for comprehension>
+        #                       |  <if comprehension>
+        #                       |  EPS
         #=======================================================================
         if self._for_comprehension():
             return True
@@ -1970,31 +1979,31 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _language(self):
+    def _language(self): ###
         #=======================================================================
-        # <language>          ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'
+        # <language> ::= 'cpp' | 'java' | 'python' | 'py' | 'javascript' | 'm6809'
         #=======================================================================
-        if self._current.is_LANGUAGE():
-            self._append_snode()
-            self._next_inode()
+        if self._current.is_LANGUAGE(): ## (notice: previously scanned by the Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _list_form(self) -> bool:
+    def _list_form(self) -> bool: ###
         #=======================================================================
         # <list form>    ::= '[' <expression> <list or comprehension> ']'
         #=======================================================================
         if self._current.is_BRACKETOP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.LIST_EXPR )
             self._list_or_comprehension()
             if self._current.is_BRACKETCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.LIST_END )
             return True
@@ -2002,11 +2011,11 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _list_or_comprehension(self) -> bool:
+    def _list_or_comprehension(self) -> bool: ###
         #=======================================================================
-        # <list or comprehension>    ::= <expr list'>
-        #                             |  <for comprehension>
-        #                             |  EPS
+        # <list or comprehension> ::= <expr list'>
+        #                          |  <for comprehension>
+        #                          |  EPS
         #=======================================================================
         if self._expr_list1() or self._for_comprehension():
             return True
@@ -2014,22 +2023,22 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _list_or_map_form(self) -> bool:
+    def _list_or_map_form(self) -> bool: ###
         #=======================================================================
-        # <list or map form>    ::= <list form>
-        #                      |    <map form>
+        # <list or map form> ::= <list form>
+        #                      | <map form>
         #=======================================================================
         return self._list_form() or self._map_form()
 
     #-------------------------------------------------------------------------
-    def _list_type(self) -> bool:
+    def _list_type(self) -> bool: ###
         #=======================================================================
-        # <list type>        ::= "list" <list type'>
+        # <list type> ::= "list" <contained type>
         #=======================================================================
         if self._current.is_LIST():
-            self._append_snode()
-            self._next_inode()
-            self._list_type1()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._contained_type() ## (notice: always returns True)
             return True
         else:
             return False
@@ -2046,29 +2055,30 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _map_form(self) -> bool:
+    def _map_form(self) -> bool: ###
         #=======================================================================
-        # <map form>    ::= ':' <expression> <map list or comprehension>
+        # <map form> ::= ':' <expression> <map list or comprehension>
         #=======================================================================
         if self._current.is_COLON():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.MAP_EXPR )
-            self._map_list_or_comprehension()
+            if not self._map_list_or_comprehension():
+                self._append_error( FESyntaxErrors.MAP_LIST_COMPR )
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _map_item(self) -> bool:
+    def _map_item(self) -> bool: ###
         #=======================================================================
-        # <map item>    ::= <expression> ':' <expression>
+        # <map item> ::= <expression> ':' <expression>
         #=======================================================================
         if self._expression():
             if self._current.is_COLON():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.MAP_ITEM_SEP )
             if not self._expression():
@@ -2078,27 +2088,27 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _map_list(self) -> bool:
+    def _map_list(self) -> bool: ###
         #=======================================================================
-        # <map list>    ::= ',' <map item> <map list>
-        #                |  EPS
+        # <map list> ::= ',' <map item> <map list>
+        #             |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._map_item():
                 self._append_error( FESyntaxErrors.MAP_LIST_ITEM )
         return True
 
     #-------------------------------------------------------------------------
-    def _map_list_or_comprehension(self) -> bool:
+    def _map_list_or_comprehension(self) -> bool: ###
         #=======================================================================
-        # <map list or comprehension>    ::= ',' <map item> <map list>
-        #                                 |  <for comprehension>
+        # <map list or comprehension> ::= ',' <map item> <map list>
+        #                              |  <for comprehension>
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._map_item():
                 self._append_error( FESyntaxErrors.MAP_LIST_ITEM )
             self._map_list()
@@ -2107,77 +2117,67 @@ class FEParser:
             return self._for_comprehension()
 
     #-------------------------------------------------------------------------
-    def _map_type(self) -> bool:
+    def _map_type(self) -> bool: ###
         #=======================================================================
-        # <<map type>        ::= "map" <map type'>
+        # <<map type> ::= "map" <contained type>
         #=======================================================================
         if self._current.is_MAP():
-            self._append_snode()
-            self._next_inode()
-            self._map_type1()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._contaioned_type() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _map_type1(self) -> bool:
+    def _me(self) -> bool: ###
         #=======================================================================
-        # <map type'>     ::= <declared contained type>
-        #                  |    EPS
-        #=======================================================================
-        if self._declared_contained_type():
-            return True
-        else:
-            return True
-
-    #-------------------------------------------------------------------------
-    def _me(self) -> bool:
-        #=======================================================================
-        # <ME>        ::= 'me'
+        # <ME> ::= 'me'
         #=======================================================================
         if self._current.is_ME():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _memory_address(self) -> bool:
+    def _memory_address(self) -> bool: ###
         #=======================================================================
-        # <memory address>    ::= '@' <integer number>
-        #                      |  EPS
+        # <memory address> ::= '@' <integer number>
+        #                   |  EPS
         #=======================================================================
         if self._current.is_AROBASE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._integer_number():
                 self._append_error( FESyntaxErrors.VOLATILE_MEM_ADDR )
-        return False
+        return True
 
     #-------------------------------------------------------------------------
-    def _method_or_operator_definition(self) -> bool:
+    def _method_or_operator_definition(self) -> bool: ###
         #=======================================================================
-        # <method or operator definition>     ::= <TYPE> <method or operator definition'>
+        # <method or operator definition> ::= <returned type> <method or operator definition'>
         #=======================================================================
-        if self._TYPE():
+        if self._returned_type():
             if not self._method_or_operator_definition1():
                 self._append_error( FESyntaxErrors.METHOD_OPERATOR )
+            return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _method_or_operator_definition1(self) -> bool:
+    def _method_or_operator_definition1(self) -> bool: ###
         #=======================================================================
-        # <method or operator definition'>    ::= <operator definition>
-        #                                      |  <identifier> <function definition>
+        # <method or operator definition'> ::= <operator definition>
+        #                                   |  <identifier> <function definition>
         #=======================================================================
         if self._operator_definition():
             return True
         elif self._current.is_IDENT():
-            self._append_snode()
-            self._next_inode()
-            self._function_definition()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._function_definition() ## (notice: always returns True)
             return True
         else:
             return False
@@ -2185,79 +2185,79 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _new_line(self) -> bool:
         if self._current.is_NL():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _none(self) -> bool:
+    def _none(self) -> bool: ###
         #=======================================================================
-        # <NONE>      ::= "None"
-        #              |  "none"
+        # <NONE> ::= "None"
+        #         |  "none"
         #=======================================================================
         if self._current.is_NONE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _nop_statement(self) -> bool:
+    def _nop_statement(self) -> bool: ###
         #=======================================================================
-        # <nop statement>     ::= 'nop'
-        #                      |  'pass'
+        # <nop statement> ::= 'nop'
+        #                  |  'pass'
         #=======================================================================
         if self._current.is_NOP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _not_test(self) -> bool:
+    def _not_test(self) -> bool: ###
         #=======================================================================
-        # <not test>      ::= 'not' <not test>
-        #                  |  <comparison>
+        # <not test> ::= 'not' <not test>
+        #             |  <comparison>
         #=======================================================================
         if self._current.is_NOT():
             while self._current.is_NOT():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             if not self._comparison():
                 self._append_error( FESyntaxErrors.NOT_COND )
             return True
         else:
-            return self._condition()
+            return self._comparison()
 
     #-------------------------------------------------------------------------
-    def _operator(self) -> bool:
+    def _operator(self) -> bool: ###
         #=======================================================================
-        # <operator>      ::= '<='  |  '=='  |  '!='  |  '>='
-        #                  |  '+'  |  '-'  |  '*'  |  '/'  |  '%'  |  '**'  |  '^^'
-        #                  |  '&'  |  '|'  |  '^'
-        #                  |  '@'  |  '><'  |  '!!'  |  '::'
-        #                  |  '++'  |  '--'  |  '#'
-        #                  |  'in'
-        #                  |  <assign op>
-        #                  |  <cast op>
+        # <operator> ::= '<='  |  '=='  |  '!='  |  '>='
+        #             |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'
+        #             |  '&'   |  '|'   |  '^'
+        #             |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'
+        #             |  '++'  |  '--'  |  '#'
+        #             |  'in'
+        #             |  <assign op>
+        #             |  <cast op>
         #=======================================================================
-        if self._current.is_LE() or self._current.is_EQ() or \
-            self._current.is_NE() or self._current.is_GE() or \
-            self._current.is_PLUS() or self._current.is_MINUS() or \
-            self._current.is_MUL() or self._current.is_DIV() or \
-            self._current.is_MOD() or self._current.is_POWER() or \
-            self._current.is_BITAND() or self._current.is_BITOR() or \
-            self._current.is_BITXOR() or self._current.is_AROBASE() or \
-            self._current.is_OP_GRLE() or self._current.is_OP_2EXCL() or \
-            self._current.is_OP_2COLN() or self._current.is_INCR() or \
-            self._current.is_DECR() or self._current.is_HASH() or \
-                self._current.is_IN():
-            self._append_snode()
-            self._next_inode()
+        if self._current.is_LE()        or self._current.is_EQ()        or \
+            self._current.is_NE()       or self._current.is_GE()        or \
+            self._current.is_PLUS()     or self._current.is_MINUS()     or \
+            self._current.is_MUL()      or self._current.is_DIV()       or \
+            self._current.is_MOD()      or self._current.is_POWER()     or \
+            self._current.is_BITAND()   or self._current.is_BITOR()     or \
+            self._current.is_BITXOR()   or self._current.is_AROBASE()   or \
+            self._current.is_OP_GRLE()  or self._current.is_OP_2EXCL()  or \
+            self._current.is_OP_2COLN() or self._current.is_OP_2QUEST() or \
+            self._current.is_INCR()     or self._current.is_DECR()      or \
+                self._current.is_HASH() or self._current.is_IN():
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         elif self._assign_op():
             return True
@@ -2267,27 +2267,27 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _operator1(self) -> bool:
+    def _operator1(self) -> bool: ###
         #=======================================================================
-        # <operator'>        ::=    '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
+        # <operator'> ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
         #=======================================================================
-        if self._current.is_LT() or self._current.is_GT() or \
-            self._current.is_SHIFTL() or self._current.is_SHIFT0L() or \
+        if self._current.is_LT()          or self._current.is_GT()      or \
+            self._current.is_SHIFTL()     or self._current.is_SHIFT0L() or \
                 self._current.is_SHIFTR() or self._current.is_SHIFT0R():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _operator_definition(self) -> bool:
+    def _operator_definition(self) -> bool: ###
         #=======================================================================
-        # <operator definition>    ::= 'operator' <operator definition'>
+        # <operator definition> ::= 'operator' <operator definition'>
         #=======================================================================
         if self._current.is_OPERATOR():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._operator_definition1():
                 self._append_error( FESyntaxErrors.OPERATOR_OP )
             return True
@@ -2295,11 +2295,11 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _operator_definition1(self) -> bool:
+    def _operator_definition1(self) -> bool: ###
         #=======================================================================
-        # <operator definition'    ::= <operator> <template def> <function args declaration> <statements block>
-        #                           |  <operator'> <spaced template def> <function args declaration> <statements block>
-        #                           |  <call operator> <template def> <statements block>
+        # <operator definition'> ::= <operator> <template def> <function args declaration> <statements block>
+        #                         |  <operator'> <spaced template def> <function args declaration> <statements block>
+        #                         |  <call operator> <template def> <statements block>
         #=======================================================================
         def _my_cont(check_args:bool) -> bool:
             if check_args and not self._function_args_declaration():
@@ -2321,42 +2321,21 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _or_expr(self) -> bool:
+    def _or_test(self) -> bool: ###
         #=======================================================================
-        # <or expr>       ::= <xor expr> <or expr'>
-        #=======================================================================
-        return self._xor_expr() and self._or_expr1()
-
-    #-------------------------------------------------------------------------
-    def _or_expr1(self) -> bool:
-        #=======================================================================
-        # <or expr'>      ::= '|' <template args> <xor expr> <or expr'>
-        #                  |  EPS
-        #=======================================================================
-        while self._current.is_BITOR():
-            self._append_snode()
-            self._next_inode()
-            self._template_args()
-            if not self._xor_expr():
-                self._append_error( FESyntaxErrors.OR_EXPR )
-        return True
-
-    #-------------------------------------------------------------------------
-    def _or_test(self) -> bool:
-        #=======================================================================
-        # <or test>       ::= <and test> <or test'>
+        # <or test> ::= <and test> <or test'>
         #=======================================================================
         return self._and_test() and self._or_test1()
 
     #-------------------------------------------------------------------------
-    def _or_test1(self) -> bool:
+    def _or_test1(self) -> bool: ###
         #=======================================================================
-        # <or test'>      ::= 'or' <and test>
-        #                  |  EPS
+        # <or test'> ::= 'or' <and test>
+        #             |  EPS
         #=======================================================================
         if self._current.is_OR():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._and_test():
                 self._append_error( FESyntaxErrors.OR_TEST )
             return True
@@ -2364,18 +2343,18 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _parenthesis_form(self) -> bool:
+    def _parenthesis_form(self) -> bool: ###
         #=======================================================================
-        # <parenthesis form>    ::= '(' <expr list> ')'
+        # <parenthesis form> ::= '(' <expr list> ')'
         #=======================================================================
         if self._current.is_PAROP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expr_list():
                 self._append_error( FESyntaxErrors.PARENTH_EXPR )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.UNPAIRED_PAROP )
             return True
@@ -2383,7 +2362,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _parse_code_file(self):
+    def _parse_code_file(self): ###
         #=======================================================================
         # <code file> ::=  <statements list> <ENDOFFILE>
         #=======================================================================
@@ -2392,44 +2371,29 @@ class FEParser:
             self._append_error( FESyntaxErrors.END_OF_FILE )
 
     #-------------------------------------------------------------------------
-    def _protection_qualifier(self) -> bool:
+    def _raise_statement(self) -> bool: ###
         #=======================================================================
-        # <protection qualifier>  ::= 'hidden'
-        #                          |  'private'
-        #                          |  'protected'
-        #                          |  'public'
-        #=======================================================================
-        if self._current.is_HIDDEN() or self._current.is_PROTECTED() or self._current.is_PUBLIC():
-            self._append_snode()
-            self._next_inode()
-            return True
-        else:
-            return False
-
-    #-------------------------------------------------------------------------
-    def _raise_statement(self) -> bool:
-        #=======================================================================
-        # <raise statement>   ::= 'raise' <expression> <raise statement'>
+        # <raise statement> ::= 'raise' <expression> <raise statement'>
         #=======================================================================
         if self._current.is_RAISE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.RAISE_EXPR )
-            self._raise_statement1()
+            self._raise_statement1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _raise_statement1(self) -> bool:
+    def _raise_statement1(self) -> bool: ###
         #=======================================================================
-        # <raise statement'>   ::= 'from' <expression>
-        #                      |  EPS
+        # <raise statement'> ::= 'from' <expression>
+        #                     |  EPS
         #=======================================================================
         if self._current.is_FROM():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.RAISE_FROM_EXPR )
             return True
@@ -2437,13 +2401,13 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _reference(self) -> bool:
+    def _reference(self) -> bool: ###
         #=======================================================================
-        # <reference>         ::= '@' <dotted name>
+        # <reference> ::= '@' <dotted name>
         #=======================================================================
         if self._current.is_AROBASE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._dotted_name():
                 self._append_error( FESyntaxErrors.REF_IDENT )
             return True
@@ -2452,35 +2416,35 @@ class FEParser:
 
 
     #-------------------------------------------------------------------------
-    def _repeat_statement(self) -> bool:
+    def _repeat_statement(self) -> bool: ###
         #=======================================================================
-        # <repeat statement>    ::= 'repeat' <statements list> 'until' '(' <expression> ')' ';'
+        # <repeat statement> ::= 'repeat' <statements list> 'until' '(' <expression> ')' <simple statement end>
         #=======================================================================
         if self._current.is_REPEAT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._statements_list():
                 self._append_error( FESyntaxErrors.REPEAT_BODY )
             if self._current.is_UNTIL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.REPEAT_UNTIL )
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.UNTIL_BEGIN )
             if not self._expression():
                 self._append_error( FESyntaxErrors.UNTIL_EXPR )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.UNTIL_END )
-            if self._current.is_SEMICOLON():
-                self._append_snode()
-                self._next_inode()
+            if self._simple_statement_end():
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.UNTIL_STATEMENT_END )
             return True
@@ -2488,51 +2452,49 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _require_statement(self) -> bool:
+    def _require_statement(self) -> bool: ###
         #=======================================================================
-        # <require statement>     ::= 'require' <expression> <require statement'>
+        # <require statement> ::= 'require' <expression> <require statement'>
         #=======================================================================
         if self._current.is_REQUIRE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.REQUIRE_EXPR )
-            self._require_statement1()
+            self._require_statement1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _require_statement1(self) -> bool:
+    def _require_statement1(self) -> bool: ###
         #=======================================================================
-        # <require statement'>    ::= ',' <expression>
-        #                             |  EPS
+        # <require statement'> ::= ',' <expression>
+        #                       |  EPS
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.REQUIRE_COMMA_EXPR )
-            return True
-        else:
-            return True            
+        return True            
 
     #-------------------------------------------------------------------------
-    def _return_statement(self) -> bool:
+    def _return_statement(self) -> bool: ###
         #=======================================================================
-        # <return statement>  ::= 'ret' <return statement'>
-        #                      |  'return' <return statement'>
+        # <return statement> ::= 'ret' <return statement'>
+        #                     |  'return' <return statement'>
         #=======================================================================
         if self._current.is_RETURN():
-            self._append_snode()
-            self._next_inode()
-            self._return_statement1()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._return_statement1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _return_statement1(self) -> bool:
+    def _return_statement1(self) -> bool: ###
         #=======================================================================
         # <return statement'> ::= <expr list>
         #                      |  EPS
@@ -2541,20 +2503,31 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _scalar(self) -> bool:
+    def _returned_type(self) -> bool: ###
         #=======================================================================
-        # <scalar>    ::= <decimal number>
-        #              |  <octal hexa binary number>
+        # <returned type> ::= <TYPE>
+        #                  |  EPS
         #=======================================================================
-        if self._current.is_INTEGER() or self._current.is_FLOAT():
-            self._append_snode()
-            self._next_inode()
+        if self._TYPE():
+            return True
+        else:
+            return True
+
+    #-------------------------------------------------------------------------
+    def _scalar(self) -> bool: ###
+        #=======================================================================
+        # <scalar> ::= <decimal number>
+        #           |  <octal hexa binary number>
+        #=======================================================================
+        if self._current.is_INTEGER() or self._current.is_FLOAT(): ## (notice: previously scanned by Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _scalar_type(self) -> bool:
+    def _scalar_type(self) -> bool: ###
         #=======================================================================
         # <scalar type>   ::= "bool"
         #                  |  "char"
@@ -2572,34 +2545,34 @@ class FEParser:
         #                  |  "uint32"
         #                  |  "uint64"
         #=======================================================================
-        if self._current.is_SCALAR_TYPE():
-            self._append_snode()
-            self._next_inode()
+        if self._current.is_SCALAR_TYPE(): ## (notice: previously scanned by Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _scalar_type_casting(self) -> bool:
+    def _scalar_type_casting(self) -> bool: ###
         #=======================================================================
-        # <scalar type casting>   ::= '(' <expression> ')'
+        # <scalar type casting> ::= '(' <expression> ')'
         #=======================================================================
         if self._current.is_PAROP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.CASTING_EXPR )
+            if self._current.is_PARCL():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.CASTING_PARCL )
+            return True
         else:
-            self._append_error( FESyntaxErrors.CASTING_PAROP )
-        if not self._expression():
-            self._append_error( FESyntaxErrors.CASTING_EXPR )
-        if self._current.is_PARCL():
-            self._append_snode()
-            self._next_inode()
-        else:
-            self._append_error( FESyntaxErrors.CASTING_PARCL )
-        return True
+            return False
 
     #-------------------------------------------------------------------------
-    def _scalar_type_or_dotted_name(self) -> bool:
+    def _scalar_type_or_dotted_name(self) -> bool: ###
         #=======================================================================
         # <scalar type or dotted name> ::= <scalar type>
         #                               |  <dotted name>
@@ -2607,23 +2580,22 @@ class FEParser:
         return self._scalar_type() or self._dotted_name()
 
     #-------------------------------------------------------------------------
-    def _set_type(self) -> bool:
+    def _set_type(self) -> bool: ###
         #=======================================================================
-        # <set type>        ::= "set" <declared contained type>
+        # <set type> ::= "set" <contained type>
         #=======================================================================
         if self._current.is_SET():
-            self._append_snode()
-            self._next_inode()
-            if not self._declared_contained_type():
-                self._append_error( FESyntaxErrors.CONTAINED_TYPE )
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._contained_type() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _shift_expr(self) -> bool:
+    def _shift_expr(self) -> bool: ###
         #=======================================================================
-        # <shift expr>    ::= <arithmetic expr> <shift expr'>
+        # <shift expr> ::= <arithmetic expr> <shift expr'>
         #=======================================================================
         if self._arithmetic_expr():
             return self._shift_expr1()
@@ -2631,7 +2603,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _shift_expr1(self) -> bool:
+    def _shift_expr1(self) -> bool: ###
         #=======================================================================
         # <shift expr'>   ::= '<<'  <spaced template args> <arithmetic expr> <shift expr'>
         #                  |  '>>'  <template args> <arithmetic expr> <shift expr'>
@@ -2641,12 +2613,12 @@ class FEParser:
         #=======================================================================
         while True:
             if self._current.is_SHIFTL() or self._current.is_SHIFT0L():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
                 self._spaced_template_args()
             elif self._current.is_SHIFTR() or self._current.is_SHIFT0R():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
                 self._template_args()
             else:
                 break
@@ -2656,7 +2628,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _simple_statement(self) -> bool:
+    def _simple_statement(self) -> bool: ###
         #=======================================================================
         # <simple statement> ::= <assert statement> <simple statement end>
         #                     |  <del statement> <simple statement end>
@@ -2684,38 +2656,38 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _simple_statement_end(self):
+    def _simple_statement_end(self): ###
         #=======================================================================
-        # <simple statement end> = ';'
+        # <simple statement end> ::= ';'
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False   
 
     #-------------------------------------------------------------------------
-    def _slice_end(self) -> bool:
+    def _slice_end(self) -> bool: ###
         #=======================================================================
         # <slice end> ::= ']'
         #              |  ')'
         #=======================================================================
         if self._current.is_BRACKETCL() or self._current.is_PARCL():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
         else:
             self._append_error( FESyntaxErrors.SLICE_END )
         return True 
 
     #-------------------------------------------------------------------------
-    def _slice_form(self) -> bool:
+    def _slice_form(self) -> bool: ###
         #=======================================================================
-        # <slice form>    ::= ':' <slice upper> <slice step>
+        # <slice form> ::= ':' <slice upper> <slice step>
         #=======================================================================
         if self._current.is_COLON():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._slice_upper()
             self._slice_step()
             return True
@@ -2723,67 +2695,72 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _slice_step(self) -> bool:
+    def _slice_step(self) -> bool: ###
         #=======================================================================
-        # <slice step>    ::= ':' <slice step'>
-        #                  |    EPS
+        # <slice step> ::= ':' <slice step'>
+        #               |  EPS
         #=======================================================================
         if self._current.is_COLON():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             self._slice_step1()
             return True
 
     #-------------------------------------------------------------------------
-    def _slice_step1(self) -> bool:
+    def _slice_step1(self) -> bool: ###
         #=======================================================================
-        # <slice step'>   ::= <expression>
-        #                  |    EPS 
-        #=======================================================================
-        self._expression()
-        return True
-
-    #-------------------------------------------------------------------------
-    def _slice_upper(self) -> bool:
-        #=======================================================================
-        # <slice upper>   ::= <expression>
-        #                  |    EPS
+        # <slice step'> ::= <expression>
+        #                |    EPS 
         #=======================================================================
         self._expression()
         return True
 
     #-------------------------------------------------------------------------
-    def _spaced_template_args(self) -> bool:
+    def _slice_upper(self) -> bool: ###
         #=======================================================================
-        # <spaced template args>  ::= ' <' <template args'> '>'
-        #                          |    EPS
+        # <slice upper> ::= <expression>
+        #                |    EPS
         #=======================================================================
-        return self._template_args()
+        self._expression()
+        return True
 
     #-------------------------------------------------------------------------
-    def _spaced_template_def(self) -> bool:
+    def _spaced_template_args(self) -> bool: ###
+        #=======================================================================
+        # <spaced template args> ::= ' <' <template args'> '>'
+        #                         |    EPS
+        #=======================================================================
+        return self._template_args() ## (notice: space before < is mandatory and has already be skipped by Scanner)
+
+    #-------------------------------------------------------------------------
+    def _spaced_template_def(self) -> bool: ###
         #=======================================================================
         # <spaced template def>  ::= ' <' <template def'> '>'
         #                         |    EPS
         #=======================================================================
-        return self._template_def()
+        return self._template_def() ## (notice: space before < is mandatory and has already be skipped by Scanner)
 
     #-------------------------------------------------------------------------
-    def _statements_block(self) -> bool:
+    def _statements_block(self) -> bool: ###
         #=======================================================================
         # <statements block> ::= '{' <statements list> '}'
+        #                     |  <nop statement> <simple statement end>
         #                     |  <simple statement end>
         #=======================================================================
         if self._current.is_BRACEOP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._statements_list():
-                self._next_inode()
+                self._next_token_node()
                 if self._current.is_BRACECL():
-                    self._append_snode()
-                    self._next_inode()
+                    self._append_syntaxic_node()
+                    self._next_token_node()
                 else:
                     self._append_error( FESyntaxErrors.BODY_END )
+            return True
+        elif self._nop_statement():
+            if not self._simple_statement_end():
+                self._append_error( FESyntaxErrors.STATEMENT_END )
             return True
         elif self._simple_statement_end():
             return True
@@ -2791,13 +2768,13 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _statements_list(self) -> bool:
+    def _statements_list(self) -> bool: ###
         #===============================================================================
-        # <statements list>   ::= <empty statement> <statements list>
-        #                      |  <compound statement> <statements list>
-        #                      |  <simple statement> <statements list>
-        #                      |  <statements block> <statements list>
-        #                      |  EPS
+        # <statements list> ::= <empty statement> <statements list>
+        #                    |  <compound statement> <statements list>
+        #                    |  <simple statement> <statements list>
+        #                    |  <statements block> <statements list>
+        #                    |  EPS
         #===============================================================================
         self._append_new_statement_snode()
         while self._empty_statement() or \
@@ -2808,68 +2785,67 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _static_qualifier(self) -> bool:
+    def _static_qualifier(self) -> bool: ###
         #=======================================================================
-        # <static qualifier>     ::= "static"
+        # <static qualifier> ::= "static"
         #=======================================================================
         if self._current.is_STATIC():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False            
 
     #-------------------------------------------------------------------------
-    def _string(self) -> bool:
+    def _string(self) -> bool: ###
         #=======================================================================
-        # <string>    ::= <single string> <string'> <string methods>
+        # <string> ::= <single string> <string'> <string methods>
         #=======================================================================
-        if self._current.is_STRING():
-            self._append_snode()
-            self._next_inode()
-            self._string1()
-            self._string_methods()
+        if self._current.is_STRING(): ## (notice: previously scanned by Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._string1() ## (notice: always returns True)
+            self._string_methods() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _string1(self) -> bool:
+    def _string1(self) -> bool: ###
         #=======================================================================
-        # <string'>    ::= <single string> <string'>
-        #              |  EPS
+        # <string'> ::= <single string> <string'>
+        #            |  EPS
         #=======================================================================
-        while self._current.is_STRING():
-            self._append_snode()
-            self._next_inode()
+        while self._current.is_STRING(): ## (notice: previously scanned by Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
         return True
 
     #-------------------------------------------------------------------------
-    def _string_methods(self) -> bool:
+    def _string_methods(self) -> bool: ###
         #=======================================================================
-        # <string methods>    ::= '.' <identifier> <function call> <string methods'>
-        #                      |  EPS
+        # <string methods> ::= '.' <identifier> <function call> <string methods'>
+        #                   |  EPS
         #=======================================================================
         if self._current.is_DOT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.STRING_FUNC_IDENT )
             if not self._function_call():
                 self._append_error( FESyntaxErrors.STRING_FUNC_ARGS )
-            return self._string_methods1()
+            return self._string_methods1() ## (notice: always returns True)
         else:
             return True
 
     #-------------------------------------------------------------------------
-    def _string_methods1(self) -> bool:
+    def _string_methods1(self) -> bool: ###
         #=======================================================================
-        # <string methods'>   ::= '.' <identifier> <function call> <string methods'>
-        #                      |  EPS
+        # <string methods'> ::= '.' <identifier> <function call> <string methods'>
+        #                    |  EPS
         #=======================================================================
         while self._current.is_DOT():
-            self._append_snode()
-            self._next_inode()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.STRING_FUNC_IDENT )
             if not self._function_call():
@@ -2877,30 +2853,31 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _subscription_or_slicing(self) -> bool:
+    def _subscription_or_slicing(self) -> bool: ###
         #=======================================================================
-        # <subscription or slicing>    ::= '[' <expression> <subscription or slicing'>
+        # <subscription or slicing> ::= '[' <expression> <subscription or slicing'>
         #=======================================================================
         if self._current.is_BRACKETOP():
-            self._append_snode()
-            self._next_inode()
-            self._expression()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.SUBSCR_SLICE_EXPR )
             self._subscription_or_slicing1()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _subscription_or_slicing1(self) -> bool:
+    def _subscription_or_slicing1(self) -> bool: ###
         #=======================================================================
-        # <subscription or slicing'>  ::= <expr list'> ']'
-        #                              |    <if comprehension>
-        #                              |    <slice form> <slice end>
+        # <subscription or slicing'> ::= <expr list'> ']'
+        #                             |  <if comprehension>
+        #                             |  <slice form> <slice end>
         #=======================================================================
         if self._expr_list1():
             if self._current.is_BRACKETCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.SUBCSR_SLICE_END )
             return True
@@ -2911,186 +2888,187 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _switch_block(self) -> bool:
+    def _switch_block(self) -> bool: ###
         #=======================================================================
-        # <switch block>      ::= <case> <switch block>
-        #                      |  EPS
+        # <switch block> ::= <case> <switch block>
+        #                 |  EPS
         #=======================================================================
         while self._case():
             continue
         return True
 
     #-------------------------------------------------------------------------
-    def _switch_statement(self) -> bool:
+    def _switch_statement(self) -> bool: ###
         #=======================================================================
-        # <switch statement>  ::= 'switch' '(' <expression> ')' '{' <switch block> '}' <switch statement'>
+        # <switch statement> ::= 'switch' '(' <expression> ')' '{' <switch block> '}' <switch statement'>
         #=======================================================================
         if self._current.is_SWITCH():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.SWITCH_EXPR_BEGIN )
             if not self._expression():
                 self._append_error( FESyntaxErrors.SWITCH_EXPR )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.SWITCH_EXPR_END )
             if self._current.is_BRACEOP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.SWITCH_BODY_BEGIN )
-            self._switch_block()
+            self._switch_block() ## (notice: always returns True)
             if self._current.is_BRACECL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.SWITCH_BODY_END )
-            self._switch_statement1()
+            self._switch_statement1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _switch_statement1(self) -> bool:
+    def _switch_statement1(self) -> bool: ###
         #=======================================================================
-        # <switch statement'> ::= 'else' <statements list>
+        # <switch statement'> ::= 'else' <statements block>
         #                      |  EPS
         #=======================================================================
         if self._current.is_ELSE():
-            self._append_snode()
-            self._next_inode()
-            self._statements_list()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.SWITCH_ELSE_BODY )
         return True
 
     #-------------------------------------------------------------------------
-    def _target(self) -> bool:
+    def _target(self) -> bool: ###
         #=======================================================================
-        # <target>            ::= <dotted name> <target'>
+        # <target> ::= <dotted name> <target'>
         #=======================================================================
         if not self._dotted_name():
             self._append_error( FESyntaxErrors.TARGET_IDENT )
-        return self._target1()
+        return self._target1() ## (notice: always returns True)
 
     #-------------------------------------------------------------------------
-    def _target1(self) -> bool:
+    def _target1(self) -> bool: ###
         #=======================================================================
-        # <target'>           ::= <subscription or slicing> <target'>
-        #                      |   EPS
+        # <target'> ::= <subscription or slicing> <target'>
+        #            |   EPS
         #=======================================================================
         while self._subscription_or_slicing():
-            pass  ##continue
+            continue
         return True
 
     #-------------------------------------------------------------------------
-    def _target_list(self) -> bool:
+    def _target_list(self) -> bool: ###
         #=======================================================================
-        # <target list>        ::= <typed target> <target list'>
+        # <target list> ::= <typed target> <target list'>
         #=======================================================================
         if self._typed_target():
-            self._target_list1()
+            self._target_list1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _target_list1(self) -> bool:
+    def _target_list1(self) -> bool: ###
         #=======================================================================
-        # <target list'>        ::= ',' <typed target> <target list'>
-        #                      |    EPS
+        # <target list'> ::= ',' <typed target> <target list'>
+        #                 |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
-            self._typed_target()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._typed_target():
+                self._append_error( FESyntaxErrors.TARGET_TYPE )
         return True
 
     #-------------------------------------------------------------------------
-    def _template_args(self) -> bool:
+    def _template_args(self) -> bool: ###
         #=======================================================================
-        # <template args>     ::= '<' template args'>
-        #                      |  EPS
+        # <template args> ::= '<' template args'>
+        #                  |  EPS
         #=======================================================================
         if self._current.is_LT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._template_args1():
                 self._append_error( FESyntaxErrors.TEMPLATE_ENDING )
         return True
         
     #-------------------------------------------------------------------------
-    def _template_args1(self) -> bool:
+    def _template_args1(self) -> bool: ###
         #=======================================================================
-        # <template args'>    ::= <condition> <template args">
-        #                      |  '>'
+        # <template args'> ::= <condition> <template args">
+        #                   |  '>'
         #=======================================================================
-        if not self.condition():
-            self._append_error( FESyntaxErrors.TEMPLATE_COND )
+        if self.condition():
             return self._template_args2()
         elif self._current.is_GT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_args2(self) -> bool:
+    def _template_args2(self) -> bool: ###
         #=======================================================================
-        # <template args">    ::= ',' <condition> <template args">
-        #                      |  '>'
+        # <template args"> ::= ',' <condition> <template args">
+        #                   |  '>'
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._condition():
                 self._append_error( FESyntaxErrors.TEMPLATE_COMMA_COND )
         if self._current.is_GT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
     #-------------------------------------------------------------------------
-    def _template_def(self) -> bool:
+    def _template_def(self) -> bool: ###
         #=======================================================================
-        # <template args>     ::= '<' template def'>
-        #                      |  EPS
+        # <template def> ::= '<' template def'>
+        #                  |  EPS
         #=======================================================================
         if self._current.is_LT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._template_def1():
                 self._append_error( FESyntaxErrors.TEMPLATE_ENDING )
         return True
         
     #-------------------------------------------------------------------------
-    def _template_def1(self) -> bool:
+    def _template_def1(self) -> bool: ###
         #=======================================================================
-        # <template def'>  ::= <template def''> <template def'''>
-        #                   |  '>'
+        # <template def'> ::= <template def''> <template def'''>
+        #                  |  '>'
         #=======================================================================
         if self._template_def2():
             if not self._template_def3():
                 self._append_error( FESyntaxErrors.TEMPLATE_DEF_IDENT_CONST )
             return True
         elif self._current.is_GT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_def2(self) -> bool:
+    def _template_def2(self) -> bool: ###
         #=======================================================================
-        # <template def''>  ::= <identifier>
-        #                    |  <const qualifier> <template def const name>
+        # <template def''> ::= <identifier>
+        #                   |  <const qualifier> <template def const name>
         #=======================================================================
         if self._identifier():
             return True
@@ -3100,116 +3078,101 @@ class FEParser:
             return True
         else:
             return False
-            #===================================================================
-            #     self._append_error( FESyntaxErrors.TEMPLATE_CONST_KW )
-            # if not self._scalar_type():
-            #     self._append_error( FESyntaxErrors.TEMPLATE_CONST_TYPE )
-            # if not self._identifier():
-            #     self._append_error( FESyntaxErrors.TEMPLATE_CONST_IDENT )
-            # if self._current.is_ASSIGN():
-            #     self._append_snode()
-            #     self._next_inode()
-            # else:
-            #     self._append_error( FESyntaxErrors.TEMPLATE_CONST_ASSIGN )
-            # if not self._expression():
-            #     self._append_error( FESyntaxErrors.TEMPLATE_CONST_EXPR )
-            # return self._template_def2()
-            #===================================================================
 
     #-------------------------------------------------------------------------
-    def _template_def3(self) -> bool:
+    def _template_def3(self) -> bool: ###
         #=======================================================================
         # <template def'''> ::= ',' <template def''> <template def'''>
         #                    |  '>'
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._template_def2():
                 self._append_error( FESyntaxErrors.TEMPLATE_DEF_IDENT_CONST )
         if self._current.is_GT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_def_const_name(self) -> bool:
+    def _template_def_const_name(self) -> bool: ###
         #=======================================================================
-        # <template def const name>   ::= <scalar type or dotted name> <identifier> <template def const name'>
+        # <template def const name> ::= <scalar type or dotted name> <identifier> <template def const name'>
         #=======================================================================
         if self._scalar_type_or_dotted_name():
             if not self._identifier():
                 self._append_error( FESyntaxErrors.TEMPLATE_CONST_IDENT )
-            self._template_def_const_name1()
+            self._template_def_const_name1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_def_const_name1(self) -> bool:
+    def _template_def_const_name1(self) -> bool: ###
         #=======================================================================
-        # <template def const name'>  ::= '=' <expression>    ## to be kept ?
-        #                              |  EPS
+        # <template def const name'> ::= '=' <expression>
+        #                             |  EPS
         #=======================================================================
         if self._current.is_ASSIGN():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.TEMPLATE_CONST_EXPR )
         return True
 
     #-------------------------------------------------------------------------
-    def _templated_type(self) -> bool:
+    def _templated_type(self) -> bool: ###
         #=======================================================================
-        # <templated type>    ::=  <dotted name> <templated type'>   ## contextual parser - dotted-name is the identifier of a known type
+        # <templated type> ::=  <dotted name> <templated type'>
         #=======================================================================
         if self._dotted_name():
-            self._templated_type1()
+            self._templated_type1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _templated_type1(self):
+    def _templated_type1(self): ###
         #=======================================================================
-        # <templated type'>    ::= '<' <types and exprs list> '>'
-        #                      |    EPS
+        # <templated type'> ::= '<' <types and exprs list> '>'
+        #                    |  EPS
         #=======================================================================
         if self._current.is_LT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._types_and_exprs_list():
                 self._append_error( FESyntaxErrors.TEMPLATE_SPECIFICATION )
             if self._current.is_GT():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.TEMPLATE_ENDING )
         return True
 
     #-------------------------------------------------------------------------
-    def _term(self) -> bool:
+    def _term(self) -> bool: ###
         #=======================================================================
-        # <term>          ::= <factor> <term'>
+        # <term> ::= <factor> <term'>
         #=======================================================================
         if self._factor():
-            return self._term1()
+            return self._term1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _term1(self) -> bool:
+    def _term1(self) -> bool: ###
         #=======================================================================
-        # <term'>         ::= '*' <template args> <factor> <term'>
-        #                  |  '/' <template args> <factor> <term'>
-        #                  |  '%' <template args> <factor> <term'>
-        #                  |  '@' <template args> <factor> <term'>
-        #                  |  '><' <spaced template args> <factor> <term'>
-        #                  |  '!!' <template args> <factor> <term'>
-        #                  |  '::' <template args> <factor> <term'>
-        #                  |  EPS
+        # <term'> ::= '*' <template args> <factor> <term'>
+        #          |  '/' <template args> <factor> <term'>
+        #          |  '%' <template args> <factor> <term'>
+        #          |  '@' <template args> <factor> <term'>
+        #          |  '><' <spaced template args> <factor> <term'>
+        #          |  '!!' <template args> <factor> <term'>
+        #          |  '::' <template args> <factor> <term'>
+        #          |  EPS
         #=======================================================================
         while True:
             if self._current.is_MUL() or \
@@ -3218,12 +3181,12 @@ class FEParser:
                 self._current.is_AROBASE() or \
                 self._current.is_OP_2EXCL() or \
                     self._current.is_OP_2COLN():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
                 self._template_args()
             elif self._current.is_OP_GRLE():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
                 self._spaced_template_args()
             else:
                 break
@@ -3231,59 +3194,47 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _true(self) -> bool:
+    def _true(self) -> bool: ###
         #=======================================================================
-        # <TRUE>      ::= 'True'
-        #              |  'true'
+        # <TRUE> ::= 'True'
+        #         |  'true'
         #=======================================================================
         if self._current.is_TRUE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_else(self) -> bool:
+    def _try_else(self) -> bool: ###
         #=======================================================================
-        # <try else>          ::= 'else'
+        # <try else> ::= 'else'
         #=======================================================================
         if self._current.is_ELSE():
-            self._append_snode()
-            self._next_inode()
-            return True
-        else:
-            return False
-            
-    #-------------------------------------------------------------------------
-    def _try_finally(self) -> bool:
-        #=======================================================================
-        # <try else>          ::= 'finally'
-        #=======================================================================
-        if self._current.is_FINALLY():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_except(self) -> bool:
+    def _try_except(self) -> bool: ###
         #=======================================================================
-        # <try except>        ::= 'except' '(' <try except'> ')'
+        # <try except> ::= 'except' '(' <try except'> ')'
         #=======================================================================
         if self._current.is_EXCEPT():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.EXCEPT_EXPR_BEGIN )
-            self._try_except1()
+            self._try_except1() ## (notice: always returns True)
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.EXCEPT_EXPR_END )
             return True
@@ -3291,79 +3242,91 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _try_except1(self) -> bool:
+    def _try_except1(self) -> bool: ###
         #=======================================================================
-        # <try except'>       ::= <expression> <try except">
-        #                      |  'all'
-        #                      |  EPS
+        # <try except'> ::= <expression> <try except">
+        #                |  'all'
+        #                |  EPS
         #=======================================================================
         if self._expression():
-            self._try_except2()
+            self._try_except2() ## (notice: always returns True)
         elif self._current.is_ALL():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
         return True
 
     #-------------------------------------------------------------------------
-    def _try_except2(self) -> bool:
+    def _try_except2(self) -> bool: ###
         #=======================================================================
-        # <try except">       ::= 'as' <identifier>
-        #                      |  EPS
+        # <try except"> ::= 'as' <identifier>
+        #                |  EPS
         #=======================================================================
         if self._current.is_AS():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.TRY_AS_IDENT )
         return True
-
+            
     #-------------------------------------------------------------------------
-    def _try_statement(self) -> bool:
+    def _try_finally(self) -> bool: ###
         #=======================================================================
-        # <try statement>     ::= 'try' <statements list> <try statement'>
+        # <try finally> ::= 'finally'
         #=======================================================================
-        if self._current.is_TRY():
-            self._append_snode()
-            self._next_inode()
-            if not self._statements_list():
-                self._append_error( FESyntaxErrors.TRY_BLOCK )
-            self._try_statement1()
+        if self._current.is_FINALLY():
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_statement1(self) -> bool:
+    def _try_statement(self) -> bool: ###
         #=======================================================================
-        # <try statement'>    ::= <try else> <statements list> <try statement">
-        #                      |  <try except> <statements list> <try statement'>
-        #                      |  EPS
+        # <try statement> ::= 'try' <statements block> <try statement'>
+        #=======================================================================
+        if self._current.is_TRY():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.TRY_BODY )
+            self._try_statement1() ## (notice: always returns True)
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _try_statement1(self) -> bool: ###
+        #=======================================================================
+        # <try statement'> ::= <try else> <statements block> <try statement">
+        #                   |  <try except> <statements block> <try statement'>
+        #                   |  EPS
         #=======================================================================
         while self._try_except():
-            if not self._statements_list():
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.TRY_EXCEPT_BODY )
-        if self._try_else:
-            if not self.statements_list():
+        if self._try_else():
+            if not self.statements_block():
                 self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
-            self._try_statement2()
+            self._try_statement2() ## (notice: always returns True)
         return True
 
     #-------------------------------------------------------------------------
-    def _try_statement2(self) -> bool:
+    def _try_statement2(self) -> bool: ###
         #=======================================================================
-        # <try statement">    ::= <try finally> <statements list>
-        #                      |  EPS
+        # <try statement"> ::= <try finally> <statements block>
+        #                   |  EPS
         #=======================================================================
         if self._try_finally():
-            if not self.statements_list():
+            if not self.statements_block():
                 self._append_error( FESyntaxErrors.TRY_FINALLY_BODY )
         return True
 
     #-------------------------------------------------------------------------
-    def _TYPE(self) -> bool:
+    def _TYPE(self) -> bool: ###
         #=======================================================================
-        # <TYPE>  ::= <const qualifier> <type>
-        #          |  <type>
+        # <TYPE> ::= <const qualifier> <type>
+        #         |  <type>
         #=======================================================================
         if self._const_qualifier():
             if not self._type():
@@ -3373,7 +3336,7 @@ class FEParser:
             return self._type()
 
     #-------------------------------------------------------------------------
-    def _TYPE1(self) -> bool:
+    def _TYPE1(self) -> bool: ###
         #=======================================================================
         # <TYPE'> ::= <const qualifier> <type>
         #          |  <type'>
@@ -3386,167 +3349,162 @@ class FEParser:
             return self._type1()
 
     #-------------------------------------------------------------------------
-    def _type(self) -> bool:
+    def _type(self) -> bool: ###
         #=======================================================================
-        # <type>  ::= <type'>
-        #          |  <templated type> <dimensions>
+        # <type> ::= <type'>
+        #         |  <templated type> <dimensions>
         #=======================================================================
         if self._type1():
             return True
         elif self._templated_type():
-            self._dimensions()
+            self._dimensions() ## (notice: always returns True)
             return True
         else:
             return False            
 
     #-------------------------------------------------------------------------
-    def _type1(self) -> bool:
+    def _type1(self) -> bool: ###
         #=======================================================================
-        # <type>  ::= <auto type>
-        #          |  (' <types list> ')'
-        #          |  <container type>
-        #          |  <file>
-        #          |  <NONE>
-        #          |  <scalar type> <dimensions>
+        # <type> ::= <auto type>
+        #         |  (' <types list> ')'
+        #         |  <container type>
+        #         |  <file type>
+        #         |  <NONE>
+        #         |  <scalar type> <dimensions>
         #=======================================================================
         if self._current.is_PAROP():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._types_list():
                 self._append_error( FESyntaxErrors.TYPES_LIST )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.TYPES_LIST_END )
             return True
         elif self._current.is_SCALAR_TYPE():
-            self._append_snode()
-            self._next_inode()
-            self._dimensions()
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._dimensions() ## (notice: always returns True)
             return True
-        elif self._file() or self._none():
+        elif self._file_type() or self._none():
             return True
         elif self._auto_type():
             return True
-        #=======================================================================
-        # elif self._current.is_ANY_TYPE():
-        #     self._append_snode()
-        #     self._next_inode()
-        #     return True
-        #=======================================================================
         elif self._container_type():
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _type_alias(self) -> bool:
+    def _type_alias(self) -> bool: ###
         #=======================================================================
-        # <type alias>    ::= 'type' <TYPE> 'as' <identifier> <type alias'>
+        # <type alias> ::= 'type' <type alias"> <type alias'>
         #=======================================================================
         if self._current.is_TYPE_ALIAS():
-            self._append_snode()
-            self._next_inode()
-            if not self._TYPE():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._type_alias2():
                 self._append_error( FESyntaxErrors.TYPE_ALIAS )
-            if self._current.is_AS():
-                self._append_snode()
-                self._next_inode()
-            else:
-                self._append_error( FESyntaxErrors.TYPE_AS )
-            if not self._identifier():
-                self._append_error( FESyntaxErrors.TYPE_AS_IDENT )
-            return self._type_alias1()
+            return self._type_alias1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _type_alias1(self) -> bool:
+    def _type_alias1(self) -> bool: ###
         #=======================================================================
-        # <type alias'>   ::= ',' <TYPE> 'as' <identifier> <type alias'>
-        #                  |  EPS
+        # <type alias'> ::= ',' <type alias"> <type alias'>
+        #                |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
-            if not self._TYPE():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._type_alias2():
                 self._append_error( FESyntaxErrors.TYPE_ALIAS )
+        return True
+
+    #-------------------------------------------------------------------------
+    def _type_alias2(self) -> bool: ###
+        #=======================================================================
+        # <type alias"> ::= <TYPE> 'as' <identifier>
+        #=======================================================================
+        if  self._TYPE():
             if self._current.is_AS():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.TYPE_AS )
             if not self._identifier():
                 self._append_error( FESyntaxErrors.TYPE_AS_IDENT )
-        return True
+            return True
+        else:
+            return False
 
     #-------------------------------------------------------------------------
-    def _typed_target(self) -> bool:
+    def _typed_target(self) -> bool: ###
         #=======================================================================
-        # <typed target>  ::= <type'> <target>
-        #                  |  <dotted name> <typed target'>
+        # <typed target> ::= <type'> <target>
+        #                 |  <dotted name> <typed target'>
         #=======================================================================
         if self._type1():
             if not self._target():
                 self._append_error( FESyntaxErrors.TYPED_TARGET_IDENT )
             return True
         elif self._dotted_name():
-            return self._typed_target1()
+            return self._typed_target1() ## (notice: always returns True)
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _typed_target1(self) -> bool:
+    def _typed_target1(self) -> bool: ###
         #=======================================================================
-        # <typed target'> ::= <dotted name> <target'> ### ?? <identifier> rather than <dotted name> ??
+        # <typed target'> ::= <dotted name> <target'>
         #                  |  <target'>
         #                  |  <templated type'> <target'>
         #=======================================================================
-        if self._dotted_name():
+        if self._dotted_name() or self._templated_type1():
             pass
-        elif self._templated_type1():
-            pass
-        return self._target1()
+        return self._target1() ## (notice: always returns True)
 
     #-------------------------------------------------------------------------
-    def _types_and_exprs_list(self) -> bool:
+    def _types_and_exprs_list(self) -> bool: ###
         #=======================================================================
-        # <types and exprs list>    ::= <expression> <types and exprs list'>
-        #                            |  <templated type> <types and exprs list'>
+        # <types and exprs list> ::= <expression> <types and exprs list'>
+        #                         |  <templated type> <types and exprs list'>
         #=======================================================================
         if self._expression() or self._templated_type():
-            self._types_and_exprs_list1()
+            self._types_and_exprs_list1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _types_and_exprs_list1(self) -> bool:
+    def _types_and_exprs_list1(self) -> bool: ###
         #=======================================================================
-        # <types and exprs list'>    ::= ',' <types and exprs list"> <types and exprs list'>
-        #                             |  EPS
+        # <types and exprs list'> ::= ',' <types and exprs list"> <types and exprs list'>
+        #                          |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._types_and_exprs_list2():
                 self._append_error( FESyntaxErrors.TEMPLATE_TYPES_LIST )
         return True
 
     #-------------------------------------------------------------------------
-    def _types_and_exprs_list2(self) -> bool:
+    def _types_and_exprs_list2(self) -> bool: ###
         #=======================================================================
-        # <types and exprs list">    ::= <expression>
-        #                             | <templated type>
+        # <types and exprs list"> ::= <expression>
+        #                          | <templated type>
         #=======================================================================
         return self._expression() or self._templated_type()
 
     #-------------------------------------------------------------------------
-    def _typed_args_list(self) -> bool:
+    def _typed_args_list(self) -> bool: ###
         #=======================================================================
-        # <typed args list>    ::= <TYPE> <identifier> <typed args list'>
-        #                      |    EPS
+        # <typed args list> ::= <TYPE> <identifier> <typed args list'>
+        #                    |  EPS
         #=======================================================================
         if self._TYPE():
             if not self._identifier():
@@ -3557,14 +3515,14 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _typed_args_list1(self) -> bool:
+    def _typed_args_list1(self) -> bool: ###
         #=======================================================================
-        # <typed args list'>    ::= ',' <TYPE> <identifier> <typed args list'>
-        #                        |    EPS
+        # <typed args list'> ::= ',' <TYPE> <identifier> <typed args list'>
+        #                     |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._TYPE():
                 self._append_error( FESyntaxErrors.TYPES_LIST_TYPE )
             if not self._identifier():
@@ -3572,67 +3530,67 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _types_list(self) -> bool:
+    def _types_list(self) -> bool: ###
         #=======================================================================
-        # <types list>    ::= <TYPE> <types list'>
+        # <types list> ::= <TYPE> <types list'>
         #=======================================================================
         if self._TYPE():
-            self._types_list1()
+            self._types_list1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _types_list1(self) -> bool:
+    def _types_list1(self) -> bool: ###
         #=======================================================================
-        # <types list'>    ::= ',' <TYPE> <types list'>
-        #                  |  EPS
+        # <types list'> ::= ',' <TYPE> <types list'>
+        #                |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._TYPE():
                 self._append_error( FESyntaxErrors.TYPES_LIST_TYPE )
         return True
 
     #-------------------------------------------------------------------------
-    def _unary_expr(self) -> bool:
+    def _unary_expr(self) -> bool: ###
         #=======================================================================
-        # <unary expr>    ::= <factor>
-        #                  |  '+' <factor>
-        #                  |  '-' <factor>
-        #                  |  '~' <factor>
-        #                  |  '#' <factor>
+        # <unary expr> ::= <factor>
+        #               |  '+' <factor>
+        #               |  '-' <factor>
+        #               |  '~' <factor>
+        #               |  '#' <factor>
         #=======================================================================
         if self._current.is_PLUS() or \
                 self._current.is_MINUS() or \
                 self._current.is_TILD() or \
                 self._current.is_HASH():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
         return self._factor()
 
     #-------------------------------------------------------------------------
-    def _unnamed(self) -> bool:
+    def _unnamed(self) -> bool: ###
         #=======================================================================
-        # <unnamed>    ::= 'unnamed'
-        #               |  'lambda'
+        # <unnamed> ::= 'unnamed'
+        #            |  'lambda'
         #=======================================================================
         if self._current.is_UNNAMED():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _unnamed_func(self) -> bool:
+    def _unnamed_func(self) -> bool: ###
         #=======================================================================
-        # <unnamed func>    ::= <unnamed> <TYPE> <function args declaration> <statements block>
+        # <unnamed func> ::= <unnamed> <returned type> <function args declaration> <statements block>
         #=======================================================================
         if self._unnamed():
-            if not self.TYPE():
-                self._append_error( FESyntaxErrors.UNNAMED_TYPE )
+            if not self._returned_type():                         ## (notice: always returns True)
+                self._append_error( FESyntaxErrors.UNNAMED_TYPE ) ## (notice: never reached statement)
             if not self._function_args_declaration():
                 self._append_error( FESyntaxErrors.UNNAMED_ARGS )
             if not self._statements_block():
@@ -3642,173 +3600,152 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _var_declaration_or_assignment(self) -> bool:
+    def _var_declaration_or_assignment(self) -> bool: ###
         #=======================================================================
-        # <var declaration or assignment>     ::= '=' <expression> <var declaration or assignment'>
-        #                                      |  ',' <identifier> <var declaration or assignment>
-        #                                      |  EPS
+        # <var declaration or assignment> ::= '=' <expression> <var declaration or assignment'>
+        #                                  |  ',' <identifier> <var declaration or assignment>
+        #                                  |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.DECL_COMMA_IDENT )
         if self._current.is_ASSIGN():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._expression():
                 self._append_error( FESyntaxErrors.ASSIGN_EXPR )
-            self._var_declaration_or_assignment1()
+            self._var_declaration_or_assignment1() ## (notice: always returns True)
         return True
 
     #-------------------------------------------------------------------------
-    def _var_declaration_or_assignment1(self) -> bool:
+    def _var_declaration_or_assignment1(self) -> bool: ###
         #=======================================================================
-        # <var declaration or assignment'>    ::= ',' <identifier> <var declaration or assignment>
-        #                                      |    EPS
+        # <var declaration or assignment'> ::= ',' <identifier> <var declaration or assignment>
+        #                                   |    EPS
         #=======================================================================
         if self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.DECL_COMMA_IDENT )
             self._var_declaration_or_assignment()
         return True
 
     #-------------------------------------------------------------------------
-    def _volatile_qualifier(self) -> bool:
+    def _volatile_qualifier(self) -> bool: ###
         #=======================================================================
         # <volatile qualifier> ::= 'volatile'
         #=======================================================================
         if self._current.is_VOLATILE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _while_statement(self) -> bool:
+    def _while_statement(self) -> bool: ###
         #=======================================================================
-        # <while statement>   ::= 'while' '(' <expression> ')' <statements list> <while statement'>
+        # <while statement> ::= 'while' '(' <expression> ')' <statements block> <while statement'>
         #=======================================================================
         if self._current.is_WHILE():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if self._current.is_PAROP():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.WHILE_COND_BEGIN )
             if not self._expression():
                 self._append_error( FESyntaxErrors.WHILE_COND )
             if self._current.is_PARCL():
-                self._append_snode()
-                self._next_inode()
+                self._append_syntaxic_node()
+                self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.WHILE_COND_END )
-            if not self._statements_list():
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.WHILE_BODY )
-            self._while_statement1()
+            self._while_statement1() ## (notice: always returns True)
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _while_statement1(self) -> bool:
+    def _while_statement1(self) -> bool: ###
         #=======================================================================
-        # <while statement'>  ::= 'else' <statements list>
-        #                      |  EPS
+        # <while statement'> ::= 'else' <statements block>
+        #                     |  EPS
         #=======================================================================
         if self._current.is_ELSE():
-            self._append_snode()
-            self._next_inode()
-            if not self._statements_list():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.WHILE_ELSE_BODY )
         return True
 
     #-------------------------------------------------------------------------
-    def _with_item(self) -> bool:
+    def _with_item(self) -> bool: ###
         #=======================================================================
-        # <with item>         ::= <expression> <with item'>
+        # <with item> ::= <expression> <with item'>
         #=======================================================================
-        if not self._expression():
-            self._append_error( FESyntaxErrors.WITH_EXPR )
-        self._with_item1()
-        return True
+        if self._expression():
+            self._with_item1() ## (notice: always returns True)
+            return True
+        else:
+            return False
 
     #-------------------------------------------------------------------------
-    def _with_item1(self) -> bool:
+    def _with_item1(self) -> bool: ###
         #=======================================================================
-        # <with item'>        ::= 'as' <target>
-        #                      |  EPS
+        # <with item'> ::= 'as' <target>
+        #               |  EPS
         #=======================================================================
         if self._current.is_AS():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._target():
                 self._append_error( FESyntaxErrors.WITH_AS_IDENT )
         return True
 
     #-------------------------------------------------------------------------
-    def _with_items_list(self) -> bool:
+    def _with_items_list(self) -> bool: ###
         #=======================================================================
-        # <with items list>   ::= <with item> <with items list'>
+        # <with items list> ::= <with item> <with items list'>
         #=======================================================================
-        self._with_item()
-        self._with_items_list()
+        if not self._with_item():
+            self._append_error( FESyntaxErrors.WITH_EXPR )
+        self._with_items_list1() ## (notice: always returns True)
         return True
 
     #-------------------------------------------------------------------------
-    def _with_items_list1(self) -> bool:
+    def _with_items_list1(self) -> bool: ###
         #=======================================================================
-        # <with items list'>  ::= ',' <with item> <with items list'>
-        #                      |  EPS
+        # <with items list'> ::= ',' <with item> <with items list'>
+        #                     |  EPS
         #=======================================================================
         while self._current.is_COMMA():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             if not self._with_item():
                 self._append_error( FESyntaxErrors.WITH_LIST_COMMA )
         return True
 
     #-------------------------------------------------------------------------
-    def _with_statement(self) -> bool:
+    def _with_statement(self) -> bool: ###
         #=======================================================================
-        # <with statement>    ::= 'with' <with items list> <statements list>
+        # <with statement> ::= 'with' <with items list> <statements block>
         #=======================================================================
         if self._current.is_WITH():
-            self._append_snode()
-            self._next_inode()
-            self._with_items_list()
-            if not self._statements_list():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._with_items_list() ## (notice: always returns True)
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.WITH_BODY )
             return True
         else:
             return False
-
-    #-------------------------------------------------------------------------
-    def _xor_expr(self) -> bool:
-        #=======================================================================
-        # <xor expr>      ::= <and expr> <xor expr'>
-        #=======================================================================
-        if self._and_expr():
-            return self._xor_expr1()
-        else:
-            return False
-
-    #-------------------------------------------------------------------------
-    def _xor_expr1(self) -> bool:
-        #=======================================================================
-        # <xor expr'>     ::= '^' <template args> <and expr> <xor expr'>
-        #                  |  EPS
-        #=======================================================================
-        while self._current.is_BITXOR():
-            self._append_snode()
-            self._next_inode()
-            self._template_args()
-            self._and_expr()
-        return True
     
 
     #=========================================================================
@@ -3817,10 +3754,10 @@ class FEParser:
         self._errors_count += 1
         err_node = ICTokenNode_UNEXPECTED( data=err_data or self._current.tk_data )
         err_node.set_num_line( self._current )
-        self._append_snode( err_node )
+        self._append_syntaxic_node( err_node )
     #-------------------------------------------------------------------------
-    def _append_snode(self) -> bool:
-        self._scode.append( FESCodeNode(self._current) )
+    def _append_syntaxic_node(self) -> bool:
+        self._scode.append( FESyntaxICodeNode(self._current) )
         return True
     #-------------------------------------------------------------------------
     def _append_new_statement_snode(self) -> bool:
@@ -3829,8 +3766,8 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _eof(self) -> bool:
         if self._current.is_EOF():
-            self._append_snode()
-            self._next_inode()
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False
@@ -3839,11 +3776,11 @@ class FEParser:
         self._scode = FESyntaxicICode()
         self._errors_count = 0
     #-------------------------------------------------------------------------
-    def _next_inode(self) -> FEICodeTokenNode:
+    def _next_token_node(self) -> FEICodeTokenNode:
         try:
             self._current = next( self._icode )
             while self._current.is_UNEXPECTED():
-                self._append_snode()
+                self._append_syntaxic_node()
                 self._current = next( self._icode )
         except:
             self._current = ICTokenNode_EOF()
