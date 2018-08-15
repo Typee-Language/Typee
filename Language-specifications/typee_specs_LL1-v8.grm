@@ -30,16 +30,18 @@ SOFTWARE.
 
 /*****   ATOMS   ****************************************************/
 
-<atom element>  ::= <atom> 
-                 |  <dotted name> <atom element'>
-                 |  <const qualifier> <scalar type> <scalar type casting>
-                 |  <scalar type> <scalar type casting>
-<atom element'> ::= <dotted name'> <atom element'>
-                 |  <is instance of>
-                 |  <subscription or slicing> <atom element'>
-                 |  <function call> <atom element'>
-                 |  <scalar type casting>
-                 |  EPS
+<atom element>      ::= <atom> 
+                     |  <dotted name> <atom element'>
+                     |  <const qualifier> <atom element'''>         ## --
+                     |  <atom element'''>                           ## --
+<atom element'>     ::= <atom element''>                            ## --
+                     |  <dotted name'> <atom element'>
+                     |  <function call> <atom element'>
+                     |  <subscription or slicing> <atom element'>
+                     |  EPS
+<atom element''>    ::= <is instance of>                            ## --
+                     |  <scalar type casting>                       ## --
+<atom element'''>   ::= <scalar type> <scalar type casting>         ## --
 
 <atom>          ::= <decr> <dotted name> <incr or decr>
                  |  <incr> <dotted name> <incr or decr>
@@ -665,14 +667,14 @@ SOFTWARE.
 
 <try else>                  ::= 'else'
 
-<try finally>               ::= 'finally'
-
 <try except>                ::= 'except' '(' <try except'> ')'
 <try except'>               ::= <expression> <try except">
                              |  'all'
                              |  EPS
 <try except">               ::= 'as' <identifier>
                              |  EPS
+
+<try finally>               ::= 'finally'
 
 <try statement>             ::= 'try' <statements block> <try statement'>                                           ## --
 <try statement'>            ::= <try else> <statements block> <try statement">                                      ## --
@@ -681,9 +683,10 @@ SOFTWARE.
 <try statement">            ::= <try finally> <statements block>                                                    ## --
                              |  EPS
 
-<type alias>                ::= 'type' <TYPE> 'as' <identifier> <type alias'>
-<type alias'>               ::= ',' <TYPE> 'as' <identifier> <type alias'>
+<type alias>                ::= 'type' <type alias"> <type alias'>          ## --
+<type alias'>               ::= ',' <type alias"> <type alias'>             ## --
                              |  EPS
+<type alias">               ::= <TYPE> 'as' <identifier>                    ## --
 
 <typed target>              ::= <type'> <target>
                              |  <dotted name> <typed target'>
