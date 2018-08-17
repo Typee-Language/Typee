@@ -210,7 +210,7 @@ with `<statements list>` specified as:
                    |  <statements block> <statements list>
                    |  EPS
 ```
-and `<statements block>` recursively specified  as:
+and with `<statements block>` recursively specified  as:
 ```
 <statements block> ::= '{' <statements list> '}' | ...
 ```
