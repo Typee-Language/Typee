@@ -213,37 +213,37 @@ translation_" [6]. They describe in there a system that translates ML-like
 functional programming into typed source code (C or Ada) for it to be easily 
 integrated in ANSI C or Ada83 source code.
 
-Their translator allows a parametrized specification of types and even 
+Their translator allows a parametrized specification of types and even of 
 operators. They apply code specialization for the removal of polymorphism 
 (since ML is compliant with polymorphism while ANSI C is not). They use also 
 closure analysis (1) and closure datatypes (2) to, resp., optimize first-order 
 code (1) that results from the previous removal of higher-order functions (2).
 
 We did not get access to a full description of their translator, but the 
-concept of polymorphism removal sounds similar to the concept of multiple-
-inheritance removal that we have to implement to get translation of __Typee__ 
-source code (multiple-inheritance compliant) into _Java_ source code (single-
-inheritance compliant but with multiple-implementations of interfaces 
-allowed).
+concept of polymorphism removal sounds similar to the concept of 
+multiple-inheritance removal that we have to implement to get translation 
+of __Typee__ source code (multiple-inheritance compliant) into _Java_ source 
+code (single-inheritance compliant but with multiple-implementations of 
+interfaces allowed).
 
 
 ### 3.4 Translation with Intermediate Optimizers
 
 In [11], inventor David Rechter describes a method and a system for converting 
 a software language code into another software language code. The inventor 
-claims first, the separation of the initial source code and the code dedicated 
-to the platform is runs on, second the optimization of the separated source 
-code with either a internal or an external optimizer, and third the 
+claims: first the separation of the initial source code and the code dedicated 
+to the platform is runs on; second the optimization of the separated source 
+code with either a internal or an external optimizer; and third the 
 translation of the optimized source code into the target language code and its 
 integration with the initial platform code translated into a target platform 
 code.
 
 This patent does not describe any translation process since this is not the 
-topic addressed by this patent. Quite deceptive for us. But, as long as 
-initial source code and initial platform code are not separated or no 
-optimizer is used on those codes before translation, this patent can't apply. 
-Well, this is the case for __Typee__ translator which does none of both while 
-it allows the embedding _native_ source code in __Typee__ source code.
+topic it addresses. Quite deceptive for us. But, as long as initial source 
+code and initial platform code are not separated or no optimizer is used on 
+those codes before translation, this patent can't apply. Well, this is the 
+case for the __Typee__ translator which does none of both while it allows the 
+embedding of _native_ source code in __Typee__ source code.
 
 
 ### 3.5 Translation of Program Source Code to MarkUp Languages
@@ -259,7 +259,7 @@ type definition_ (DTD) of the targeted markup language and on the parsing of
 the initial source code written in the programming language. Unique 
 asociations are done between elements of the DTD and identifiers of routines 
 in source code statements. Along the parsing of the initial source code, 
-associations are made and asociated DTD items are written in the targeted 
+associations are made and associated DTD items are written in the targeted 
 ML file.
 
 This is a convenient way to translate languages while association of rules can 
@@ -270,11 +270,11 @@ rules and the targeted language ones.
 ### 3.6 Bi-directional Translation
 
 This is a very important aspect of programming languages translation. Byron D. 
-Vargas addresses it in [13]. The inventor fully describes in this patent the 
+Vargas addresses it in [13]. In this patent, the inventor fully describes the 
 concept of back-translating a translated source code once it has been debugged 
 and profiled with the environment of the translated programming language. This 
 way, any correction or modification applied to the translated source code will 
-be back-propagated to the initial source code without human intervention - see 
+be back translated to the initial source code without human interaction - see 
 next figure (fig.3 of the patent document).
 
 ![fig.3 of patent US7346897B2](./Picts/us7346897B2-fig-3.jpg)
@@ -282,10 +282,10 @@ next figure (fig.3 of the patent document).
 The inventor uses a table defined in an emulated API library. That table 
 contains metadata related to the types of data manipulations between the two 
 programming languages (the translated initial one and the resulting target 
-one). That tables contains also references between equivalent functions in 
-both programming languages. The initial source code is then analyzed on the 
-type of data manipulation it performs and is correlated to the targeted 
-language equivalent functions. From this analysis and the evaluated equivalent 
+one). That table contains also references between equivalent functions in both 
+programming languages. The initial source code is then analyzed on the type of 
+data manipulation it performs and is correlated to the targeted language 
+equivalent functions. From this analysis and the evaluated equivalent 
 functions, a generator generates the targeted source code such that this code 
 will emulated the initial data manipulations.
 
@@ -296,7 +296,8 @@ There, the new code can be tested, modified, corrected and the like until it
 is finally validated. The definition of an emulated API library representing 
 the translation of the types of data manipulations from the targeted 
 programming language back to the initial programming language is then used to 
-finally modify the initial source code in its original programming language 
+finally modify the initial source code in its original programming language, 
+according to the modifications that have been done in the target source code, 
 without human interaction.
 
 In this patent, emulated API libraries and their descriptive and referencing 
@@ -304,8 +305,8 @@ tables are the pillar of the translation process. The patent expressely
 addresses the translation betwenn OOP (_object oriented programming_) 
 languages and is mainly based on translation of classes first, then their 
 methods. In one of the patent claims, Java is precisely cited as the initial 
-computer language to be translated, as well as in another claim, garabage 
-collector in expresselmy cited also.
+computer language to be translated, as well as in another claim, garbage 
+collector in expressely cited also.
 
 That's an interesting concept that any programming language translator should 
 implement. For __Typee__ proof of concept of a translator, we will not address 
@@ -319,18 +320,18 @@ vertues of _mixed language programming_. This is not translation of
 programming languages but this deals with the use of multiple programming 
 languages to build a single application. The author suggests keys for this, 
 notably convenient ways to express components coded in different programming 
-languages for their correct collaboration within the application. a well 
-established package by these days, `c.fortran.h`, is cited by the author as
-providing "_the desired convenient interface across the C and Fortran 
-programming languages_".
+languages for their correct collaboration within the application. A well 
+established package by those days (i.e. 1996), `c.fortran.h`, is cited by the 
+author as providing "_the desired convenient interface across the C and 
+Fortran programming languages_".
 
 Why do we cite this paper? Well, just because __Typee__ offers also practical, 
 easy and robust means to mixing programming languages. This is the role of 
 Typee statement `embed`.
 
 So, the concept of mixing programming language is not new. In __Typee__, it is 
-directly built-in the programming language as a natural concept of programming 
-with language __Typee__ and the use of its automated translator.
+directly built in the programming language as a natural concept of programming 
+in __Typee__ and of the use of its automated translator.
 
 
 
