@@ -149,9 +149,192 @@ of these works.
 
 # 3. Translating a Programming Language into another Programming Language
 
+It sounds strange that we have not found work about programming languages 
+translation between 1965 and 1994. We might have missed publications. 
+Nevertheless, we discuss in this section the papers and patents we have found 
+useful.
 
 
-# Annex A - Bibliography and Patents
+### 3.1 Generalities about Programming Languages Translation
+
+Some papers relate only to the topic of translating programming languages from 
+one to another, which is of high interest to us and our __Typee__ project.
+
+In [7], Lili Qiu addresses the automated translation from C to C++ and the 
+manually porting of Java programs to C++. The aim of this paper is to help 
+"software reuse". In it, the author inquires the encountered issues and 
+investigates solutions for the automation of the programming languages 
+translation problem. Obviously, the first identified issues are the types 
+translation and the types checking between strong- and weak- typed languages. 
+The author finally implemented a semi-automated translator from C to C++, 
+which is not much encouraging for our purpose but which may be caused by the 
+objective of the paper: investigate issues.
+
+
+### 3.2 Translation Method with _n_-Rooted Trees
+
+In patents US5768564A and US6031993A [10], Kristy A. Andrews, Paul Del Vigna, 
+and Mark E. Molloy propose a method, a program and a computer system "_for 
+translating source code from one high-level computer language to another_".
+
+They use a doubly-rooted tree data structure. The two roots are at opposite 
+sides of the tree, leaves being created in between the two roots.
+
+The first root starts the parsing of a program written in a first programming 
+language. From this parsing are derived:
+- __nodes__, describing the different grammar rules that relate to the source 
+code syntax. Those nodes are connected by _branches_.
+- and __leaves__, describing the final __tokens__ as evaluated according to the 
+grammar.
+
+While scanning the initial source code, they built from the first root a 
+fragment-tree that describes a virtual source. They finally consider that this 
+virtual source represents leaves of the doubly-rooted tree.
+
+The other root of the doubly-rooted tree corresponds to the root of the final 
+source code, the one corresponding to the targeted programming language. They 
+translate then the source syntax tree to create a target syntax tree. Once 
+the leaves of this target syntax tree are identified with leaves of the target 
+doubly-rooted tree, they associate leaves of both partial trees and order 
+them to get the final translated syntax tree of the targeted programming 
+language. A semantic analyzer helps the reconstruction of the target virtual 
+source.
+
+
+### 3.3 Translation of Functional Code to Programming Language Source
+
+ML (contraction of Meta Language) is a generic functional-programming 
+language initally developed at University of Edinbourgh in 1970. It supports 
+a formal system for elaborating proofs. It has been standardized in 1983. 
+
+In 1998, Andrew Tolmach and Dino P. Oliva published a paper on the translation 
+"_from ML to Ada: Strongly-typed language interoperability via source 
+translation_" [6]. They describe in there a system that translates ML-like 
+functional programming into typed source code (C or Ada) for it to be easily 
+integrated in ANSI C or Ada83 source code.
+
+Their translator allows a parametrized specification of types and even 
+operators. They apply code specialization for the removal of polymorphism 
+(since ML is compliant with polymorphism while ANSI C is not). They use also 
+closure analysis (1) and closure datatypes (2) to, resp., optimize first-order 
+code (1) that results from the previous removal of higher-order functions (2).
+
+We did not get access to a full description of their translator, but the 
+concept of polymorphism removal sounds similar to the concept of multiple-
+inheritance removal that we have to implement to get translation of __Typee__ 
+source code (multiple-inheritance compliant) into _Java_ source code (single-
+inheritance compliant but with multiple-implementations of interfaces 
+allowed).
+
+
+### 3.4 Translation with Intermediate Optimizers
+
+In [11], inventor David Rechter describes a method and a system for converting 
+a software language code into another software language code. The inventor 
+claims first, the separation of the initial source code and the code dedicated 
+to the platform is runs on, second the optimization of the separated source 
+code with either a internal or an external optimizer, and third the 
+translation of the optimized source code into the target language code and its 
+integration with the initial platform code translated into a target platform 
+code.
+
+This patent does not describe any translation process since this is not the 
+topic addressed by this patent. Quite deceptive for us. But, as long as 
+initial source code and initial platform code are not separated or no 
+optimizer is used on those codes before translation, this patent can't apply. 
+Well, this is the case for __Typee__ translator which does none of both while 
+it allows the embedding _native_ source code in __Typee__ source code.
+
+
+### 3.5 Translation of Program Source Code to MarkUp Languages
+
+Markup languages are of the kind of _XML_, where text is marked with pairs of 
+tags. This is the case for _HTML_ also, the ending _ML_ standing for Markup 
+Language for both of them.
+
+M. R. Cooper, R. Dutta and K. R. Lawrence present in [12] a method (and 
+apparatus) to convert programs and files from a programming language into 
+equivalent markup language files. The translation is based on the _document 
+type definition_ (DTD) of the targeted markup language and on the parsing of 
+the initial source code written in the programming language. Unique 
+asociations are done between elements of the DTD and identifiers of routines 
+in source code statements. Along the parsing of the initial source code, 
+associations are made and asociated DTD items are written in the targeted 
+ML file.
+
+This is a convenient way to translate languages while association of rules can 
+be set either statically or at translation-time between the initial language 
+rules and the targeted language ones.
+
+
+### 3.6 Bi-directional Translation
+
+This is a very important aspect of programming languages translation. Byron D. 
+Vargas addresses it in [13]. The inventor fully describes in this patent the 
+concept of back-translating a translated source code once it has been debugged 
+and profiled with the environment of the translated programming language. This 
+way, any correction or modification applied to the translated source code will 
+be back-propagated to the initial source code without human intervention - see 
+next figure (fig.3 of the patent document).
+
+![fig.3 of patent US7346897B2](./Picts/us7346897B2-fig-3.jpg)
+
+The inventor uses a table defined in an emulated API library. That table 
+contains metadata related to the types of data manipulations between the two 
+programming languages (the translated initial one and the resulting target 
+one). That tables contains also references between equivalent functions in 
+both programming languages. The initial source code is then analyzed on the 
+type of data manipulation it performs and is correlated to the targeted 
+language equivalent functions. From this analysis and the evaluated equivalent 
+functions, a generator generates the targeted source code such that this code 
+will emulated the initial data manipulations.
+
+The generated source code in the targeted programming language can then be run 
+independently from the initial source code.
+
+There, the new code can be tested, modified, corrected and the like until it 
+is finally validated. The definition of an emulated API library representing 
+the translation of the types of data manipulations from the targeted 
+programming language back to the initial programming language is then used to 
+finally modify the initial source code in its original programming language 
+without human interaction.
+
+In this patent, emulated API libraries and their descriptive and referencing 
+tables are the pillar of the translation process. The patent expressely 
+addresses the translation betwenn OOP (_object oriented programming_) 
+languages and is mainly based on translation of classes first, then their 
+methods. In one of the patent claims, Java is precisely cited as the initial 
+computer language to be translated, as well as in another claim, garabage 
+collector in expresselmy cited also.
+
+That's an interesting concept that any programming language translator should 
+implement. For __Typee__ proof of concept of a translator, we will not address 
+such functionality and will not implement such tables and emulated APIs.
+
+
+### 3.9 Mixing Programming Languages
+
+We finally cite [5], in which Brukhard D. Burrow describes and explains the 
+vertues of _mixed language programming_. This is not translation of 
+programming languages but this deals with the use of multiple programming 
+languages to build a single application. The author suggests keys for this, 
+notably convenient ways to express components coded in different programming 
+languages for their correct collaboration within the application. a well 
+established package by these days, `c.fortran.h`, is cited by the author as
+providing "_the desired convenient interface across the C and Fortran 
+programming languages_".
+
+Why do we cite this paper? Well, just because __Typee__ offers also practical, 
+easy and robust means to mixing programming languages. This is the role of 
+Typee statement `embed`.
+
+So, the concept of mixing programming language is not new. In __Typee__, it is 
+directly built-in the programming language as a natural concept of programming 
+with language __Typee__ and the use of its automated translator.
+
+
+
+## Annex A - Bibliography and Patents
 
 ### A.1 Bibliography
 
@@ -161,14 +344,19 @@ of these works.
 | [2] | _Automatic-programming-language translation through syntactical analysis_. Robert S. Ledley and James B. Wilson. 1962. Commun. ACM 5, 3 (March 1962), 145-155. DOI=http://dx.doi.org/10.1145/366862.366872 |
 | [3] | _A Parameterized Compiler Based on Mechanical Linguistics_. Howard Metcalfe. Planning Research Corporation R-311, March 1, 1963, also in Annual Review in Automatic Programming, Vol. 4 |
 | [4] | _On the translation of languages from left to right_. Donald E.Knuth. Information and Control Volume 8, Issue 6, December 1965, Pages 607-639 |
-| [5] | _Mixed Languages Programming_. Burkhard D. Burow. in Computing in High Energy Physics '95, pp. 610-614 (1996) |
+| [5] | _Mixed Languages Programming_. Burkhard D. Burow. in Computing in High Energy Physics '95, 1996, pp. 610-614. |
+| [6] | _From ML to Ada: Strongly-typed language interoperability via source translation_. Tolmach, A., Oliva, D. 1998. Journal of Functional Programming, 8(4), 367-412. |
+| [7] | _Programming Language Translation_. Qiu, Lili, [Cornell University, 1999-05](https://ecommons.cornell.edu/handle/1813/7400) |
 
 
-### A.2 Patent
+### A.2 Patents
 
 | Ref. | Patent citation |
 |:---:|---|
 | [10] | _Method and apparatus for translating source code from one high-level computer language to another_. Kristy A. Andrews, Paul Del Vigna, Mark E. Molloy. US5768564A and US6031993A. 1994-10-07. |
+| [11] | _System for automatically converting source code from one programming language to another_. David Rechter. US6698014B1. 1999-10-14. |
+| [12] | _Method and apparatus for converting programs and source code files written in a programming language to equivalent markup language files_. Michael Richard Cooper, Rabindranath Dutta, Kelvin Roderick Lawrence. US6986101B2. 1999-05-06. |
+| [13] | _System for translating programming languages_. Byron D. Vargas. US7346897B2. 2002-11-20. |
 
 
 
@@ -176,6 +364,7 @@ of these works.
 
 | Date  | Rev.  | Author(s)  | Comments  |
 |:---:|:---:|---|---|
-| 2018-08-17 | 0.0.1  | Schmouk | Created from scratch; Instered first version of bibliography (just links to) |
+| 2018-08-17 | 0.0.1 | Schmouk | Created from scratch; Instered first version of bibliography (just links to) |
 | 2018-08-18 | 0.0.2 | PhHays | Completed sections 1. and 2.; Put bibliography on correct form |
+| 2018-08-18 | 0.0.3 | PhHays | Augmented section 3. with subsections 3.1 to 3.6 and 3.9 (temporary numbering) |
 |  |  |  |  |
