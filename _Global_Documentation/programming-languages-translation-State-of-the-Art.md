@@ -156,7 +156,7 @@ of these works.
 ### A.1 Bibliography
 
 | Ref. | Paper citation |
-| =---= | --- |
+| +---+ | --- |
 | [1] | _The Syntax and Semantics of the Proposed International Algebraic Language of the Zurich ACM-GAMM Conference_. J. W. Backus. Proceedings of the International Conference on Information Processing, UNESCO, 1959, pp.125-132. [http://www.softwarepreservation.org/projects/ALGOL/paper/Backus-Syntax_and_Semantics_of_Proposed_IAL.pdf](http://www.softwarepreservation.org/projects/ALGOL/paper/Backus-Syntax_and_Semantics_of_Proposed_IAL.pdf) |
 | [2] | _Automatic-programming-language translation through syntactical analysis_. Robert S. Ledley and James B. Wilson. 1962. Commun. ACM 5, 3 (March 1962), 145-155. DOI=http://dx.doi.org/10.1145/366862.366872 |
 | [3] | _A Parameterized Compiler Based on Mechanical Linguistics_. Howard Metcalfe. Planning Research Corporation R-311, March 1, 1963, also in Annual Review in Automatic Programming, Vol. 4 |
