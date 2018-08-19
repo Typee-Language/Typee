@@ -246,7 +246,7 @@ case for the __Typee__ translator which does none of both while it allows the
 embedding of _native_ source code in __Typee__ source code.
 
 
-### 3.5 Translation of Program Source Code to MarkUp Languages
+### 3.5 Translation of Program Source Code to Markup Languages
 
 Markup languages are of the kind of _XML_, where text is marked with pairs of 
 tags. This is the case for _HTML_ also, the ending _ML_ standing for Markup 
@@ -313,6 +313,64 @@ implement. For __Typee__ proof of concept of a translator, we will not address
 such functionality and will not implement such tables and emulated APIs.
 
 
+### 3.7 Very Specialized Translators
+
+There are two patents that relate to specialized translators.
+
+A first one that we will not discuss but that we cite as an example of a very 
+specialized compiler is [15]. There, the eight authors describe a Process for 
+automatically translating a high level programming language into an Extended 
+Activity Diagram. This is not translating a programming language in another 
+programming language but it is still translation.
+
+A second one ([16]) relates to the topic of translating computer languages. It 
+is very specialized in that it translate COBOL source code in object oriented 
+programming (OOP) languages (C++ is mostly cited in the text). This is 
+translation ofprogramming languages, but very specialized. The aim of the 
+seven inventors was to help maintaining or augment former COBOL programs by 
+providing a more readable but still equivalent source code written in a more 
+modern OOP language. Their main concern was about keeping as is the variable 
+data storage area of COBOL at run-time of the translated source code. Another 
+of their concern was the maintaining of file reads and writes in COBOL while 
+running binary code compiled with the targeted computer language compiler. 
+Notice that in this patent text, the inventors cite a NACA project and the 
+compiler program tool "NacaTrans" which was translating COBOL source code in 
+Java source code. This project is unfortunately no more accessible on its 
+initial hosting server.
+
+
+### 3.8 Mixing Compilers
+
+A nice invention ([14]) proposes the use of two programming language compilers 
+for translating an initial source code (programmed in the initial programming 
+language) in a binary code corresponding to the compilation of the targeted 
+programming language.
+
+Kevin Zatloukal, the inventor, describes there a system that embeds the 
+compilers of the initial computer language and of the targeted computer 
+language and a transformation component.
+
+The first compiler scans and parses the initial source code (see section 2. of 
+document [Typee Software Design](./typee-software-design.md) to get an 
+overview of how modern compilers are designed).
+
+The parsed representation of the initial source code is provided as input to 
+the transformation component and generates a token stream corresponding to the 
+tokens and the grammar rules specified by the targeted programming language.
+
+This generated tokens stream is then passed to the second compiler for its 
+lexical parsing, its optimizing and finally its compiling into binary code.
+
+The mixing of compilers is implemented there with the help of the 
+transformation component.
+
+To be implemented, this invention needs to get a direct access to the internal 
+representation of intermediate codes and to the internal components of both 
+compilers. These are strong constraints. Meanwhile, no source code of an 
+initial computer language is translated in a source code of a targeted 
+computer language. But this invention is fine.
+
+
 ### 3.9 Mixing Programming Languages
 
 We finally cite [5], in which Brukhard D. Burrow describes and explains the 
@@ -333,6 +391,27 @@ So, the concept of mixing programming language is not new. In __Typee__, it is
 directly built in the programming language as a natural concept of programming 
 in __Typee__ and of the use of its automated translator.
 
+
+
+# 4. Conclusion
+
+Well, what should we conclude from the above articles and patents? First, the 
+translation of a programming language source code in another programming 
+language source code has alreday been addressed. It is based on former work 
+about specifying unambiguous grammars for the specificaiton of programming 
+languages. Some papers relate to preliminary work with the aim at 
+understanding where challenging issues were hidden. Some other works relate to 
+translators adapted to dedicated languages. Most of them relate to the sole 
+translation of an initial programming language source code in another 
+programming language source code with no revert translation. But one of them 
+addresses the back-translation as a convenient way to automate the maintaining 
+of source code in its both languages versions when one version is modified or 
+corrected. Finally, some other works propose the mixing of compilers 
+activities, which involves the accessibility of the internal components of the 
+whole used compilers, or propose the mixing of programming languages in 
+different communicating modules to implement modern applications.
+
+See Annex A for references to papers and patents discussed in this document.
 
 
 ## Annex A - Bibliography and Patents
@@ -357,7 +436,10 @@ in __Typee__ and of the use of its automated translator.
 | [10] | _Method and apparatus for translating source code from one high-level computer language to another_. Kristy A. Andrews, Paul Del Vigna, Mark E. Molloy. US5768564A and US6031993A. 1994-10-07. |
 | [11] | _System for automatically converting source code from one programming language to another_. David Rechter. US6698014B1. 1999-10-14. |
 | [12] | _Method and apparatus for converting programs and source code files written in a programming language to equivalent markup language files_. Michael Richard Cooper, Rabindranath Dutta, Kelvin Roderick Lawrence. US6986101B2. 1999-05-06. |
-| [13] | _System for translating programming languages_. Byron D. Vargas. US7346897B2. 2002-11-20. |
+| [13] | _System for translating programming languages_. Byron D. Vargas. US7346897B2 and US8332828B2. 2002-11-20. |
+| [14] | _Method and system for translating programming languages_. Kevin Zatloukal. US7823139B2. 2003-07-19. |
+| [15] | _Process of automatically translating a high level programming language into an extended activity diagram_. Fu-Chiung Cheng, Kuan-Yu Yan, Jian-Yi Chen, Shu-Ming Chang, Ping-Yun Wang, Li-Kai Chang, Chin-Tai Chou, Ming-Shiou Chiang. US20070169054A1. 2005-12-30 |
+| [16] | _Method for translating a cobol source program into readable and maintainable program code in an object oriented second programming language_. Todd Bradley Kneisel, Cynthia S. Guenthner, Albert Henry John Wigchert, Nicholas John Colasacco, Russell W. Guenthner, John Edward Heath, Clinton B. Eckard. US9182962B2. 2010-12-09. |
 
 
 
@@ -368,4 +450,5 @@ in __Typee__ and of the use of its automated translator.
 | 2018-08-17 | 0.0.1 | Schmouk | Created from scratch; Instered first version of bibliography (just links to) |
 | 2018-08-18 | 0.0.2 | PhHays | Completed sections 1. and 2.; Put bibliography on correct form |
 | 2018-08-18 | 0.0.3 | PhHays | Augmented section 3. with subsections 3.1 to 3.6 and 3.9 (temporary numbering) |
+| 2018-08-19 | 0.1.0 | PhHays | Completed section 3.; Added section 4.; Document needs now reviewing |
 |  |  |  |  |
