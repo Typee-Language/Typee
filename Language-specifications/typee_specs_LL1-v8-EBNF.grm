@@ -535,21 +535,8 @@ SOFTWARE.
 
 <map type>      ::= 'map' [<contained type>]
 
-<scalar type>   ::= 'bool'
-                 |  'char'
-                 |  'char16'
-                 |  'float32'
-                 |  'float64'
-                 |  'int8'
-                 |  'int16'
-                 |  'int32'
-                 |  'int64'
-                 |  'str'
-                 |  'str16'
-                 |  'uint8'
-                 |  'uint16'
-                 |  'uint32'
-                 |  'uint64'
+<scalar type>   ::= 'bool'  |  'char'  |  'char16' |  'float32' |  'float64' |  'int8'   |  'int16'  |
+                    'int32' |  'int64' |  'str'    |  'str16'   |  'uint8'   |  'uint16' |  'uint32' |  'uint64'
 
 <set type>              ::= 'set' [<contained type>]
 
