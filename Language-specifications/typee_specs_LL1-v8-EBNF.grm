@@ -338,8 +338,7 @@ SOFTWARE.
 
 <decl constructor or decl end> ::= ('.' <identifier>)* <decl or def statement'''>  |  <function definition'>
 
-<decl or def statement>     ::= [<static qualifier>] <decl or def statement'>  |
-                                <class definition>
+<decl or def statement>     ::= [<static qualifier>] <decl or def statement'>  |  <class definition>
 
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>  |
                                 <volatile qualifier> <type> <identifier> [<memory address>] <simple statement end>  |
