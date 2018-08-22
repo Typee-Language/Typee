@@ -351,9 +351,6 @@ SOFTWARE.
 
 <decl or def statement''''> ::= <function definition>  |  [<var declaration or assignment>] <simple statement end>
 
-<declaration or definition statement>   ::= ['=' <expression>] [<declaration statement>]  |
-                                            ['<' <types list> '>'] <function args declaration>
-
 <declaration statement>     ::= ',' <identifier> ['=' <expression>] (',' <identifier> ['=' <expression>])*
 
 <del statement>             ::= 'del' <identifiers list>
