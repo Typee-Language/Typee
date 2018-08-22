@@ -98,7 +98,8 @@ SOFTWARE.
 <and test>          ::= <not test>  [ 'and' <not test> ]
 
 <comparison>        ::= <bitor expr>  ( (<comp operator> [<template args>] |
-                                            <comp operator'> [<spaced template args>]) <bitor expr> )*
+                                            <comp operator'> 
+                                            [<spaced template args>]) <bitor expr> )*
 
 <comp operator>     ::= '<='  |  '=='  |  '!='  |  '>='  |  'in'  |  'is' [ 'not' ]  |  'not' 'in'
 
@@ -185,9 +186,9 @@ SOFTWARE.
 <operator'>     ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>'
 
 <operator definition>   ::= 'operator'
-                                ( ( (<operator> [<template def>] | 
-                                        <operator'> [<spaced template def>]) <function args declaration> )  |
-                                    (<call operator> [<template def>]) )
+                                ( ( (<operator> [<template def>] | <operator'> [<spaced template def>]) 
+                                    <function args declaration> )  |
+                                 (<call operator> [<template def>]) )
                                 <statements block>
 
 <typed args list>   ::= <TYPE> <identifier> [',' <TYPE> <identifier>]*
@@ -312,7 +313,8 @@ SOFTWARE.
 <assert statement>  ::= 'assert' <expression> (',' <expression>)*
 
 <assign decl def func-call statement>   ::= [<access qualifier>] <decl or def statement>  |
-                                                <dotted name> <assign or func-call statement> <simple statement end>
+                                            <dotted name> <assign or func-call statement> 
+                                                <simple statement end>
 
 <access protection statement>  ::= ':' <access qualifier> ':'
 
@@ -332,26 +334,33 @@ SOFTWARE.
 
 <cast op>   ::= 'cast' <identifier>
 
-<comment>   ::= '//' ( (<any non newline char>)* | <end line> | <ENDOFFILE> )  |  '/*' <multi lines comment>
+<comment>   ::= '//' ( (<any non newline char>)* | <end line> | <ENDOFFILE> )  |
+                '/*' <multi lines comment>
 
-<multi lines comment>       ::= (<any non star char> | <NEWLINE>)*  |  '*' ('/' | <multi lines comment>)
+<multi lines comment>       ::= (<any non star char> | <NEWLINE>)*  |
+                                '*' ('/' | <multi lines comment>)
 
-<decl constructor or decl end> ::= ('.' <identifier>)* <decl or def statement'''>  |  <function definition'>
+<decl constructor or decl end>  ::= ('.' <identifier>)* <decl or def statement'''>  |
+                                    <function definition'>
 
 <decl or def statement>     ::= [<static qualifier>] <decl or def statement'>  |  <class definition>
 
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>  |
-                                <volatile qualifier> <type> <identifier> [<memory address>] <simple statement end>  |
+                                <volatile qualifier> <type> <identifier> 
+                                    [<memory address>] <simple statement end>  |
                                 <type alias> <simple statement end>  |
                                 <decl or def statement''>
 
-<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  |  <identifier> <decl constructor or decl end>
+<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  |  
+                                <identifier> <decl constructor or decl end>
 
 <decl or def statement'''>  ::= <identifier> <decl or def statement''''>  |  <operator definition>
 
-<decl or def statement''''> ::= <function definition>  |  [<var declaration or assignment>] <simple statement end>
+<decl or def statement''''> ::= <function definition>  |  
+                                [<var declaration or assignment>] <simple statement end>
 
-<declaration statement>     ::= ',' <identifier> ['=' <expression>] (',' <identifier> ['=' <expression>])*
+<declaration statement>     ::= ',' <identifier> ['=' <expression>] 
+                                    (',' <identifier> ['=' <expression>])*
 
 <del statement>             ::= 'del' <identifiers list>
                       
@@ -392,7 +401,8 @@ SOFTWARE.
 <import as names>           ::= <import as name> (',' <import as name>)*
 
 <import from>               ::= 'from' ('.')* <dotted name> 'import' 
-                                    ('all' | <parenth open> <import as names> <parenth close> | <import as names>)
+                                    ('all' | <parenth open> <import as names> <parenth close> |
+                                        <import as names>)
 
 <import name>               ::= 'import' <dotted as names>
 
@@ -402,13 +412,15 @@ SOFTWARE.
 
 <memory address>            ::= '@' <integer number>
 
-<method or operator definition>     ::= [<TYPE>] (<operator definition> | <identifier> <function definition>)                                 
+<method or operator definition>     ::= [<TYPE>] (<operator definition> |
+                                        <identifier> <function definition>)                                 
 
 <nop statement>             ::= 'nop'  |  'pass'
 
 <raise statement>           ::= 'raise' <expression> ['from' <expression>]
 
-<repeat statement>          ::= 'repeat' <statements block> 'until' <parenthesised expr> <simple statement end>
+<repeat statement>          ::= 'repeat' <statements block> 'until' 
+                                    <parenthesised expr> <simple statement end>
 
 <require statement>         ::= 'require' <expression> [',' <expression>]
 
@@ -416,7 +428,8 @@ SOFTWARE.
 
 <switch block>              ::= (<case> [<switch block>])*
 
-<switch statement>          ::= 'switch' <parenthesised expr> '{' [<switch block>] '}' ['else' <statements block>]
+<switch statement>          ::= 'switch' <parenthesised expr> '{' [<switch block>] '}' 
+                                    ['else' <statements block>]
 
 <target>                    ::= <dotted name> (<subscription or slicing>)*
 
@@ -438,9 +451,11 @@ SOFTWARE.
 <typed target>              ::= <type'> <target>  |  <dotted name> [<dotted name> |
                                 <templated type spec>] (<subscription or slicing>)*
 
-<var declaration or assignment> ::= ['=' <expression>] ',' <identifier> (['=' <expression>] ',' <identifier>)*
+<var declaration or assignment> ::= ['=' <expression>] ',' <identifier> 
+                                        (['=' <expression>] ',' <identifier>)*
 
-<while statement>           ::= 'while' <parenthesised expr> <statements block> ['else' <statements block>]
+<while statement>           ::= 'while' <parenthesised expr> <statements block> 
+                                    ['else' <statements block>]
 
 <with item>                 ::= <expression> ['as' <target>]
 
@@ -472,7 +487,8 @@ SOFTWARE.
 <template args>         ::= '<' [<condition> (',' <condition>)*] '>'
 
 <template def>          ::= '<' (<identifier> | <const qualifier> <template def const name>) 
-                                    (',' (<identifier> | <const qualifier> <template def const name>))* '>'
+                                    (',' (<identifier> | 
+                                        <const qualifier> <template def const name>))* '>'
 
 <template def const name>   ::= <scalar type or dotted name> <identifier> ['=' <expression>]
 
