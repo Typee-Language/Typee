@@ -240,21 +240,24 @@ SOFTWARE.
 
 /*****   FUNCTIONS   ************************************************/
 
-<function definition>   ::= <template def> <function definition'>
-                         |  <function definition'>
+<function declaration>      ::= <template def> <function declaration'>              ##
+                             |  <function declaration'>                             ##
+<function declaration'>     ::= <function args declaration>                         ##
 
-<function definition'>    ::= <function args declaration> <statements block>
+<function definition>       ::= <template def> <function definition'>
+                             |  <function definition'>
+<function definition'>      ::= <function args declaration> <statements block>
 
 
-<abstract or final qualif>  ::= 'abstract'  |  'final'          ##
+<abstract or final qualif>  ::= 'abstract'  |  'final'                              ##
 ##                             |  <final qualifier>
                              |  EPS
 
-## <abstract qualifier>        ::= 'abstract'                   ##
+## <abstract qualifier>        ::= 'abstract'                                       ##
 
 <call operator>             ::= '(' ')'
 
-## <final qualifier>           ::= 'final'                      ##
+## <final qualifier>           ::= 'final'                                          ##
 
 <function args declaration> ::= '(' <typed args list> ')'
 
@@ -277,6 +280,11 @@ SOFTWARE.
                  |  <assign op>
                  |  <cast op>
 <operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
+
+<operator declaration>  ::= 'operator' <operator declaration'>
+<operator declaration'> ::= <operator> <template def> <function args declaration>
+                         |  <operator'> <spaced template def> <function args declaration>
+                         |  <call operator> <template def>
 
 <operator definition>   ::= 'operator' <operator definition'>
 <operator definition'>  ::= <operator> <template def> <function args declaration> <statements block>
@@ -522,6 +530,7 @@ SOFTWARE.
 <decl or def statement>     ::= <static qualifier> <decl or def statement'>
                              |  <class definition>
                              |  <decl or def statement'>
+                             |  <forward decl>                                                                      ##
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>                          ##
                              |  <volatile qualifier> <type> <identifier> <memory address> <simple statement end>
                              |  <type alias> <simple statement end>
@@ -538,9 +547,9 @@ SOFTWARE.
                                          |  <declaration statement>
                                          |  <function args declaration>
 
-<declaration statement>     ::= ',' <identifier> <declaration statement'>
+<declaration statement>     ::= ',' <identifier> <declaration statement'>                                           ## !!!
                              |  EPS
-<declaration statement'>    ::= '=' <expression> <declaration statement>
+<declaration statement'>    ::= '=' <expression> <declaration statement>                                            ## !!!
                              |  <declaration statement>
 
 <del statement>             ::= 'del' <identifiers list>
@@ -582,6 +591,33 @@ SOFTWARE.
 
 <forever statement>         ::= 'forever' '(' ')' <statements block>
 
+<forward>                   ::= 'forward'                                                   ##
+                             |  'fwd'                                                       ##
+
+<forward decl>              ::= <forward> <forward decl'>                                   ##
+<forward decl'>             ::= <static qualifier> <forward decl''>                         ##
+                             |  <forward decl''>                                            ##
+                             |  <fwd class decl>                                            ##
+<forward decl''>            ::= <volatile qualifier> <type> <identifier>                    ##
+                             |  <fwd type decl>                                             ##
+                             |  <forward decl'''>                                           ##
+<forward decl'''>           ::= <TYPE'> <forward decl''''>                                  ##
+                             |  <identifier> <fwd decl constructor>                         ##
+<forward decl''''>          ::= <identifier> <forward decl'''''>                            ##
+                             |  <operator declaration>                                      ##
+<forward decl'''''>         ::= <function declaration>                                      ##
+                             |  <fwd var decl>                                              ##
+
+<fwd class decl>            ::= 'class' <identifier> <template def> <fwd class decl'>       ##
+<fwd class decl'>           ::= <inheritance>                                               ##
+                             |  EPS                                                         ##
+
+<fwd decl constructor>      ::= <dotted name'> <forward decl''''>                           ##
+                             |  <function declaration'>                                     ##
+
+<fwd var decl>              ::= ',' <identifier> <fwd var decl>                             ##
+                             |  EPS                                                         ##                             
+                             
 <identifiers list>          ::= <dotted name> <identifiers list'>
 <identifiers list'>         ::= ',' <dotted name> <identifiers list'>
                              |    EPS
