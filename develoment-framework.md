@@ -168,7 +168,7 @@ developments.
 - For downloading `Miniconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://conda.io/miniconda.html](https://conda.io/miniconda.html) and
-ask for the installation of Python 3.6. This is mandatory to use our Typee
+ask for the installation of Python 3.7. This is mandatory to use our Typee
 project since this is the version of Python we are currently using for our
 developments.
 
@@ -176,7 +176,7 @@ You will then be able to easily install Anaconda 3 on your machine either by
 running the installer or by processing the explained installation steps.
 
 Once done, each time you will create new Python projects with Eclipse, you
-will be able to specify the Python 3.6 interpreter that you have installed to
+will be able to specify the Python 3.7 interpreter that you have installed to
 be the Python interpreter to be used. PyDev can find this version of the
 Python interpreter at the correct place by itself, just asking you to confirm
 that this is the correct interpreter you want to use.
@@ -184,13 +184,18 @@ This way, you will also be able to state other versions of Python interpreter
 you would have formerly or lately installed.
 
 
-## Why Python 3.6 rather than 3.7?
+## Why Python 3.7 rather than 3.6?
 
 Well, by July 2018 Python 3.7 has been very newly released (Release Date: 
 2018-06-27) and many external libraries do not yet support this new version
-of the interpreter. So, Anaconda 3 does not support yet Python 3.6. We
-recommend then to use Python 3.6 until all external libraries will have been
-upgraded.
+of the interpreter. So, Anaconda 3 does not support yet Python 3.6. We were
+then recommending to use Python 3.6 until all external libraries would have 
+been upgraded. By 2018-10-20, this has been the case. So, we recommend now 
+to use Python 3.7 as we are doing for the development of Typee translator. 
+Please be aware that Anaconda knows about a bug in library NumPy with 
+Python 3.7. First, we do not use NumPy for the coding ofthe Typee 
+translator. Second, Anaconda ensures that they will provide a new release 
+with the corrected version of NumPy as soon as a patch will be available.
 
 
 ## That's it
