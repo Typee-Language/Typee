@@ -52,7 +52,7 @@ Installation is really straightforward. You should not encounter any kind of
 issue to install it.
 
 
-## Java 8 (8.171)
+## Java 8 (8.192)
 
 Mind this gap. Eclipse framework is developed in Java. You definitively need
 to install a Java Run Time (JRT) on your machine to be able to run Eclipse. If 
@@ -66,7 +66,7 @@ your favorite Web browser this site:
 automatically you to the localized version of this page (as 
 https://java.com/__en__/download/ or https://java.com/__fr__/download/ for
 instance).
-By July 2018, last version of Java is Java 8 Update 171 (April 17, 2018).
+By October 2018, last version of Java is Java 8 Update 192 (October 16, 2018).
 
 Just download it and let it install itself. You should not encounter any
 kind of issue during this process. Java has been installed billions of times
