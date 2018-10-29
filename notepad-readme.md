@@ -1,11 +1,13 @@
 #  Notepad++ recommendations
 
-The directory `XML-configs` contains three `.xml` files:
+The directory `Typee/Notepad++XML-configs` contains three `.xml` files:
+- desktop.ini
 - grammars.xml
-- langs.model.xml
 - typhon.xml
 
-These files contain descriptions of language and syntax coloring specification 
+The first file contains configuration for the display of this repository.
+
+The two last files contain descriptions of language and syntax coloring specification 
 for:
 - `.grm` files, i.e. files contining grammars specification of programming 
 languages, and
