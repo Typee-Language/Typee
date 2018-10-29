@@ -45,6 +45,7 @@ SOFTWARE.
 
 <atom>          ::= <decr> <dotted name> <incr or decr>
                  |  <incr> <dotted name> <incr or decr>
+                 |  <dotted name> <incr or decr>                        ##
                  |  <enclosure>
                  |  <reference>
                  |  <scalar>
@@ -542,15 +543,15 @@ SOFTWARE.
 <decl or def statement''''> ::= <function definition>
                              |  <var declaration or assignment> <simple statement end>
 
-<declaration or definition statement>   ::= '=' <expression> <declaration statement>                                ## !!!
-                                         |  '<' <types list> '>' <function args declaration>
-                                         |  <declaration statement>
-                                         |  <function args declaration>
+### <declaration or definition statement>   ::= '=' <expression> <declaration statement>                                ## !!!
+###                                          |  '<' <types list> '>' <function args declaration>
+###                                          |  <declaration statement>
+###                                          |  <function args declaration>
 
-<declaration statement>     ::= ',' <identifier> <declaration statement'>                                           ## !!!
-                             |  EPS
-<declaration statement'>    ::= '=' <expression> <declaration statement>                                            ## !!!
-                             |  <declaration statement>
+### <declaration statement>     ::= ',' <identifier> <declaration statement'>                                           ## !!!
+###                              |  EPS
+### <declaration statement'>    ::= '=' <expression> <declaration statement>                                            ## !!!
+###                              |  <declaration statement>
 
 <del statement>             ::= 'del' <identifiers list>
                       
@@ -616,7 +617,7 @@ SOFTWARE.
                              |  <function declaration'>                                     ##
 
 <fwd var decl>              ::= ',' <identifier> <fwd var decl>                             ##
-                             |  EPS                                                         ##                             
+                             |  EPS                                                         ##
                              
 <identifiers list>          ::= <dotted name> <identifiers list'>
 <identifiers list'>         ::= ',' <dotted name> <identifiers list'>
