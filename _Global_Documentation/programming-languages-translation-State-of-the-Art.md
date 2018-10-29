@@ -7,7 +7,7 @@ Languages Translation_.
 # 1. Introduction
 
 If one try to get the history of research work on programming languages 
-tanslation, she will eventually go back to the early 60's. About sixty years 
+translation, she will eventually go back to the early 60's. About sixty years 
 ago... By those days, researchers were working on programming languages and 
 their related compilers, about some formal way to define these languages then 
 to implement their compilers.
@@ -451,4 +451,5 @@ See Annex A for references to papers and patents discussed in this document.
 | 2018-08-18 | 0.0.2 | PhHays | Completed sections 1. and 2.; Put bibliography on correct form |
 | 2018-08-18 | 0.0.3 | PhHays | Augmented section 3. with subsections 3.1 to 3.6 and 3.9 (temporary numbering) |
 | 2018-08-19 | 0.1.0 | PhHays | Completed section 3.; Added section 4.; Document needs now reviewing |
+| 2018-10-29 | 1.0.0 | Schmouk | Final reviewing. One typo correction. First Release validation. |
 |  |  |  |  |
