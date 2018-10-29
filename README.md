@@ -33,7 +33,7 @@ in _Python_;
 - 'for' and 'if' comprehensions - as in _Python_;
 - built-in containers for objects - as in _Python_: `list`, `set`, `dict`, 
 plus `array`;
-- classical instructions plus bonuses - e.g. `else` associated with `for` and 
+- classical instructions plus bonuses - e.g. `otherwise` associated with `for` and 
 `while` as in _Python_ or with `switch`;
 - classical exception handling;
 - classical operators plus a few bonuses - e.g. 0-shifting as built in _Java_;
