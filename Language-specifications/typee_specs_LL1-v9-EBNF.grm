@@ -211,15 +211,16 @@ SOFTWARE.
 
 <alpha num char>                ::= <alpha char>   |  <num char>
 
-<any string quote char>         ::= u0x0000...u0xFFFF - ["'", "\\", "\n", "\r", "\f", u0x00]
-<any string doublequote char>   ::= u0x0000...u0xFFFF - ['"', '\\', '\n', '\r', '\f', u0x00]
+<any embedded code char>        ::= u0x0000...u0xFFFF - ['}']
+
 <any escaped char>              ::= '\\' u0x0000...u0xFFFF - ['\n', '\r', '\f', u0x00]
 
 <any non newline char>          ::= u0x0000...u0xFFFF - ['\n', '\r', '\f']
 
 <any non star char>             ::= u0x0000...u0xFFFF - ['*']
 
-<any embedded code char>        ::= u0x0000...u0xFFFF - ['}']
+<any string quote char>         ::= u0x0000...u0xFFFF - ["'", "\\", "\n", "\r", "\f", u0x00]
+<any string doublequote char>   ::= u0x0000...u0xFFFF - ['"', '\\', '\n', '\r', '\f', u0x00]
 
 <binary char>                   ::= '0'  |  '1'
 
@@ -250,6 +251,9 @@ SOFTWARE.
 <parenth open>                  ::= '('
 
 <octal char>                    ::= '0'...'7'
+
+<single char>                   ::= "'" (<any escaped char> | <any string quote char>) "'"  |
+                                    '"' (<any escaped char> | <any string doublequote char>) '"'
 
 <TRUE>                          ::= 'True'  |  'true'
 
