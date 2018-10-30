@@ -50,6 +50,10 @@ SOFTWARE.
                  |  <reference>
                  |  <scalar>
                  |  <string>
+                 |  <boolean>                                           ###
+
+<boolean>       ::= <TRUE>                                              ###
+                 |  <FALSE>                                             ###
 
 <bracket form>  ::= '[' <expression> <list or map form> ']'
 
@@ -311,11 +315,11 @@ SOFTWARE.
 
 /*****   MISC   *****************************************************/
 
-<alpha char>        ::= 'A'...'Z'
-                     |  'a'...'z'
+<alpha char>                    ::= 'A'...'Z'
+                                 |  'a'...'z'
 
-<alpha num char>    ::= <alpha char>
-                     |  <num char>
+<alpha num char>                ::= <alpha char>
+                                 |  <num char>
 
 <any string quote char>         ::= u0x0000...u0xFFFF - ["'", "\\", "\n", "\r", "\f", u0x00]
 <any string doublequote char>   ::= u0x0000...u0xFFFF - ['"', '\\', '\n', '\r', '\f', u0x00]
@@ -327,43 +331,45 @@ SOFTWARE.
 
 <any embedded code char>        ::= u0x0000...u0xFFFF - ['}']
 
-<binary char>   ::= '0'
-                 |  '1'
+<binary char>                   ::= '0'
+                                 |  '1'
 
-<ellipsis>      ::= '...'
+<ellipsis>                      ::= '...'
 
-<end line>      ::= <NEWLINE>
-                 |  <ENDOFFILE>
+<end line>                      ::= <NEWLINE>
+                                 |  <ENDOFFILE>
 
-<ENDOFFILE>     ::= u0x00
+<ENDOFFILE>                     ::= u0x00
 
-<escaped char>  ::= '\\' <escaped char'>
-<escaped char'> ::= <alpha char>
-                 |  '0' <escaped char">
-<escaped char"> ::= 'x' <hexa char> <hexa char> <hexa char> <hexa char>
-                 |  'X' <hexa char> <hexa char> <hexa char> <hexa char>
-                 |  <octal char> <octal char> <octal char>                          ##
+<escaped char>                  ::= '\\' <escaped char'>
+<escaped char'>                 ::= <alpha char>
+                                 |  '0' <escaped char''>
+<escaped char''>                ::= 'x' <hexa char> <hexa char> <escaped char'''>   ###
+                                 |  'X' <hexa char> <hexa char> <escaped char'''>   ###
+                                 |  <octal char> <octal char> <octal char>          ##
+<escaped char'''>               ::= <hexa char> <hexa char>                         ###
+                                 |  EPS                                             ###
 
-<FALSE>         ::= 'False'
-                 |  'false'
+<FALSE>                         ::= 'False'
+                                 |  'false'
 
-<hexa char>     ::= <num char>
-                 |  'A'...'F'
-                 |  'a'...'f'
+<hexa char>                     ::= <num char>
+                                 |  'A'...'F'
+                                 |  'a'...'f'
 
-<ME>            ::= 'me'
+<ME>                            ::= 'me'
 
-<NEWLINE>       ::= '\n'  |  '\r'  |  '\f'
+<NEWLINE>                       ::= '\n'  |  '\r'  |  '\f'
 
-<NONE>          ::= 'None'
-                 |  'none'    
+<NONE>                          ::= 'None'
+                                 |  'none'    
 
-<num char>      ::= '0'...'9'
+<num char>                      ::= '0'...'9'
 
-<octal char>    ::= '0'...'7'
+<octal char>                    ::= '0'...'7'
 
-<TRUE>          ::= 'True'
-                 |  'true'
+<TRUE>                          ::= 'True'
+                                 |  'true'
 
 
 
