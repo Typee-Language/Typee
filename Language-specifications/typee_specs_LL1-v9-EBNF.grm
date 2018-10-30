@@ -39,7 +39,9 @@ SOFTWARE.
                             ( <dotted name'> | <function call> | <subscription or slicing> )*
 
 <atom>                  ::= [<decr> | <incr>]  <dotted name>  [<decr> | <incr>]  |
-                            <enclosure>  |  <reference>  |  <scalar>  |  <string>
+                            <enclosure>  |  <reference>  |  <scalar>  |  <string>  |  <boolean>
+
+<boolean>               ::= <TRUE>  |  <FALSE>
 
 <bracket form>          ::= '[' <expression> <list or map form> ']'
 
@@ -229,8 +231,8 @@ SOFTWARE.
 
 <escaped char>                  ::= '\\' ( <alpha char> | ('0' <octal or hexa char> )
 
-<octal or hexa char>            ::= 'o' <octal char> <octal char> <octal char> | 
-                                    ('x'|'X') <hexa char> <hexa char> <hexa char> <hexa char>
+<octal or hexa char>            ::= <octal char> <octal char> <octal char> | 
+                                    ('x'|'X') <hexa char> <hexa char> [<hexa char> <hexa char>]
 
 <FALSE>                         ::= 'False'  |  'false'
 
