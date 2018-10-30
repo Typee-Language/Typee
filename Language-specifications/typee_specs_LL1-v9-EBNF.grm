@@ -231,8 +231,8 @@ SOFTWARE.
 
 <escaped char>                  ::= '\\' ( <alpha char> | ('0' <octal or hexa char> )
 
-<octal or hexa char>            ::= 'o' <octal char> <octal char> <octal char> | 
-                                    ('x'|'X') <hexa char> <hexa char> <hexa char> <hexa char>
+<octal or hexa char>            ::= <octal char> <octal char> <octal char> | 
+                                    ('x'|'X') <hexa char> <hexa char> [<hexa char> <hexa char>]
 
 <FALSE>                         ::= 'False'  |  'false'
 
