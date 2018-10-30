@@ -39,7 +39,9 @@ SOFTWARE.
                             ( <dotted name'> | <function call> | <subscription or slicing> )*
 
 <atom>                  ::= [<decr> | <incr>]  <dotted name>  [<decr> | <incr>]  |
-                            <enclosure>  |  <reference>  |  <scalar>  |  <string>
+                            <enclosure>  |  <reference>  |  <scalar>  |  <string>  |  <boolean>
+
+<boolean>               ::= <TRUE>  |  <FALSE>
 
 <bracket form>          ::= '[' <expression> <list or map form> ']'
 
