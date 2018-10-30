@@ -50,6 +50,10 @@ SOFTWARE.
                  |  <reference>
                  |  <scalar>
                  |  <string>
+                 |  <boolean>                                           ###
+
+<boolean>       ::= <TRUE>                                              ###
+                 |  <FALSE>                                             ###
 
 <bracket form>  ::= '[' <expression> <list or map form> ']'
 
