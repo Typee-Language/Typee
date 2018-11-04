@@ -36,7 +36,7 @@ SOFTWARE.
                             
 <atom element'>         ::= <is instance of>  |
                             <scalar type casting>  |
-                            ( <dotted name'> | <function call> | <subscription or slicing> )*
+                            ( <function call> | <subscription or slicing> )*
 
 <atom>                  ::= [<decr> | <incr>]  <dotted name>  [<decr> | <incr>]  |
                             <enclosure>  |  <reference>  |  <scalar>  |  <string>  |  <boolean>
@@ -169,9 +169,10 @@ SOFTWARE.
 
 <function call>             ::= [<template args>] '(' <function call args> ')'
 
-<function call args>        ::= <expression> <function call args'>  |  EPS
-<function call args'>       ::= ',' <function call args">  |  <for comprehension>  |  EPS
-<function call args">       ::= <expression> <function call args'>  |  <ellipsis> <identifier>
+<function call args>        ::= [ <expression> (<function call>)*
+                                    [',' (<expression> (<function call>)*  |
+                                             <ellipsis> <identifier>)  |
+                                     <for comprehension>] ]
 
 <op_add>                    ::= '+'   |  '-'
 <op_mul>                    ::= '*'   |  '/'  |  '%'
@@ -377,7 +378,7 @@ SOFTWARE.
 
 <dotted as names>           ::= <dotted as name> (',' <dotted as name>)*
 
-<dotted name>               ::= <identifier> ('.' <identifier>)*
+<dotted name>               ::= <identifier> <dotted name'> ('.' <identifier>)*
 
 <embed statement>           ::= 'embed' <language> (<dotted name> <simple statement end>  |
                                 <embedded language code>)
