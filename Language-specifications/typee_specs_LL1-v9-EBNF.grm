@@ -53,7 +53,7 @@ SOFTWARE.
 
 <is instance of>        ::= '->' <dotted name>
 
-<list or comprehension> ::= [ <expr list'>  |  <for comprehension> ]
+<list or comprehension> ::= [ ( ',' <expression> )*  |  <for comprehension> ]
                  
 <list or map form>      ::= <list form>  |  <map form>
 
@@ -69,9 +69,9 @@ SOFTWARE.
 
 <slice form>            ::= ':' [<expression>]  [ ':' [<expression>] ]
 
-<subscription or slicing>   ::= '[' <expression>  ( <expr list'> ']'  |
-                                <if comprehension>  |
-                                <slice form> <slice end> )
+<subscription or slicing>   ::= '[' <expression>  ( (',' <expression>)* ']'  |
+                                                        <if comprehension> ']'  |
+                                                        <slice form> <slice end> )
 
 
 
@@ -89,7 +89,7 @@ SOFTWARE.
 
 <for comprehension>     ::= 'for' '(' <target list> 'in' <or test> <iter comprehension> ')'
 
-<if comprehension>      ::= 'if' '(' <condition or unnamed func> ')' <iter comprehension>
+<if comprehension>      ::= 'if' '(' (<or test> | <unnamed func>) ')' <iter comprehension>
 
 <iter comprehension>    ::= [ <for comprehension>  |  <if comprehension> ]
 
@@ -109,8 +109,6 @@ SOFTWARE.
 <comp operator>     ::= '<='  |  '=='  |  '!='  |  '>='  |  'in'  |  'is' [ 'not' ]  |  'not' 'in'
 
 <comp operator'>    ::=  '<'  |  '>'
-
-<condition or unnamed func> ::= <or test>  |  <unnamed func>
 
 <not test>          ::= 'not' <not test>  |  <comparison>
 
@@ -136,9 +134,9 @@ SOFTWARE.
 
 <map item>              ::= <expression> ':' <expression>
 
-<map list>              ::= [',' <map item>]*
+<map list>              ::= (',' <map item>)*
              
-<map list or comprehension> ::= [',' <map item>]+  |  <for comprehension>
+<map list or comprehension> ::= [',' <map item>]  |  <for comprehension>
 
 <bitand expr>           ::= <shift expr> ( '&' [<template args>] <shift expr> )*
 
@@ -477,8 +475,8 @@ SOFTWARE.
 <type alias>                ::= 'type' <TYPE> 'as' <identifier> (',' <TYPE> 'as' <identifier>)*
 
 <typed target>              ::= <type'> <target>  |
-                                <dotted name> [<dotted name> |
-                                <templated type spec>] (<subscription or slicing>)*
+                                <dotted name> [ <dotted name> | <templated type spec> ]
+                                    (<subscription or slicing>)*
 
 <var declaration or assignment> ::= ['=' <expression>] ',' <identifier> 
                                         (['=' <expression>] ',' <identifier>)*
