@@ -460,14 +460,13 @@ SOFTWARE.
 <empty statement>   ::= <comment>
                      |  <NEWLINE>
 
-<simple statement>  ::= <assert statement> <simple statement end>
+<simple statement>  ::= <access protection statement> <simple statement end>
+                     |  <assert statement> <simple statement end>
                      |  <del statement> <simple statement end>
                      |  <ensure statement> <simple statement end>
                      |  <flow statement> <simple statement end>
                      |  <import statement> <simple statement end>
                      |  <nop statement> <simple statement end>
-                     |  <access protection statement> <simple statement end>
-                     |  <raise statement> <simple statement end>
                      |  <require statement> <simple statement end>
 
 <simple statement end> ::= ';'
@@ -477,14 +476,6 @@ SOFTWARE.
                      |  <simple statement end>
 
 
-<assert statement>  ::= 'assert' <expression> <assert statement'>
-<assert statement'> ::= ',' <expression>
-                     |  EPS
-
-<assign decl def func-call statement>   ::= <access qualifier> <decl or def statement>
-                                         |  <decl or def statement>
-                                         |  <dotted name> <assign or func-call statement> <simple statement end>
-
 <access protection statement>  ::= ':' <access qualifier> ':'
 
 <access qualifier>  ::= 'hidden'
@@ -492,6 +483,14 @@ SOFTWARE.
                      |  'private'
                      |  'protected'
                      |  'public'
+
+<assert statement>  ::= 'assert' <expression> <assert statement'>
+<assert statement'> ::= ',' <expression>
+                     |  EPS
+
+<assign decl def func-call statement>   ::= <access qualifier> <decl or def statement>
+                                         |  <decl or def statement>
+                                         |  <dotted name> <assign or func-call statement> <simple statement end>
 
 <assign op> ::= '='
              |  <augmented assign op>
