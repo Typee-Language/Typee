@@ -376,7 +376,7 @@ SOFTWARE.
 
 <dotted as names>           ::= <dotted as name> (',' <dotted as name>)*
 
-<dotted name>               ::= <identifier> <dotted name'> ('.' <identifier>)*
+<dotted name>               ::= <identifier> ('.' <identifier>)*
 
 <embed statement>           ::= 'embed' <language> (<dotted name> <simple statement end>  |
                                 <embedded language code>)
@@ -408,7 +408,7 @@ SOFTWARE.
 
 <fwd class decl>            ::= 'class' <identifier> <template def> [<inheritance>]
 
-<fwd decl constructor>      ::= <dotted name'> ( <operator declaration>  |
+<fwd decl constructor>      ::= ('.' <identifier>)* ( <operator declaration>  |
                                     <identifier> (<fwd var decl> | <function declaration>) )  |
                                 <function args declaration>
 
