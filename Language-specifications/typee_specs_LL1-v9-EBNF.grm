@@ -351,14 +351,15 @@ SOFTWARE.
 <decl constructor or decl end>  ::= ('.' <identifier>)* <decl or def statement'''>  |
                                     <function definition'>
 
-<decl or def statement>     ::= [<static qualifier>] <decl or def statement'>  |  
-                                <class definition>  |
+<decl or def statement>     ::= [<static qualifier>] <decl or def statement'>   |  
+                                <class definition>                              |
                                 <forward decl>
 
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>  |
                                 <volatile qualifier> <type> <identifier> 
-                                    [<memory address>] <simple statement end>  |
-                                <type alias> <simple statement end>  |
+                                    [<memory address>] <simple statement end>               |
+                                <enum decl or def>                                          |
+                                <type alias> <simple statement end>                         |
                                 <decl or def statement''>
 
 <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  |  
@@ -391,6 +392,15 @@ SOFTWARE.
 
 <ensure statement>          ::= 'ensure' <expression> (',' <expression>)*
 
+<enum decl or def>          ::= <enum type> <identifier>
+                                    (<enum declaration> | <enum definition>)
+
+<enum declaration>          ::= <identifier> ';'
+
+<enum definition>           ::= '{' <enum item> (',' <enum item>)* '}'
+
+<enum item>                 ::= <identifier> ['=' <expression>]
+                             
 <flow statement>            ::= 'break'  |  'continue'  |  <raise statement>  |  <return statement>
 
 <for statement>             ::= 'for' '(' <targets list> 'in' <expr list> ')' <statements block>
@@ -529,29 +539,26 @@ SOFTWARE.
 
 /*****   TYPES   ****************************************************/
 
-<TYPE>                  ::= [<const qualifier>] <type>                
+<TYPE>                  ::= [<const qualifier>] <type>             
 <TYPE'>                 ::= <const qualifier> <type>  |  <type'>
 
 <type>                  ::= <type'>  |  <templated type> [<dimensions>]
-<type'>                 ::= <auto type>             |
-                            '(' <types list> ')'    |
-                            <container type>        |
-                            <file type>             |
-                            <NONE>                  |
-                            <scalar type> [<dimensions>]
+<type'>                 ::= <auto type>                  |
+                            <container type>             |
+                            <NONE>                       |
+                            <scalar type> [<dimensions>] |
+                            <types list>     
 
 
-<array type>            ::= 'array' <declared contained type>
+<array type>            ::= 'array' <contained type>
 
-<auto type>             ::= '?' ['in' <parenth open> <types list> <parenth close>]
+<auto type>             ::= '?' ['in' <types list>]
 
 <const qualifier>       ::= 'const'
 
-<contained type>        ::= <declared contained type>
+<contained type>        ::= '<' <TYPE> '>'
 
-<container type>        ::= <array_type>  |  <enum type>  |  <list type>  |  <map type>  |  <set type>
-
-<declared contained type>   ::= '<' <TYPE> '>'
+<container type>        ::= <array_type>  |  <enum type>  |  <file type>  |  <list type>  |  <map type>  |  <set type>
 
 <dimensions>            ::= ( '[' <integer number> | <dotted name> ']' )*
 
@@ -581,7 +588,7 @@ SOFTWARE.
 
 <types and exprs list>  ::= (<expression> | <templated type>) (',' (<expression> | <templated type>))*
 
-<types list>            ::= <TYPE> (',' <TYPE>)*
+<types list>            ::= '(' <TYPE> (',' <TYPE>)* ')'
 
 <volatile qualifier>    ::= 'volatile'
 
