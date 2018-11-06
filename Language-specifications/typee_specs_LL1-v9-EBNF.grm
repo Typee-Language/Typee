@@ -307,23 +307,23 @@ SOFTWARE.
 
 <simple statement>          ::= ( <assert statement> | <del statement>    | <ensure statement> |
                                     <flow statement>   | <import statement> | <nop statement>    |
-                                    <access protection statement> | <raise statement>  |
-                                    <require statement> )
+                                    <access protection statement> | <require statement> )
                                 <simple statement end>
 
 <simple statement end>      ::= ';'
 
 <statements block>          ::= '{' [<statements list>] '}'  |  [<nop statement>] <simple statement end>
 
+
+<access protection statement>  ::= ':' <access qualifier> ':'
+
+<access qualifier>          ::= 'hidden'  |  'local'  |  'private'  |  'protected'  |  'public'
+
 <assert statement>          ::= 'assert' <expression> (',' <expression>)*
 
 <assign decl def func-call statement>   ::= [<access qualifier>] <decl or def statement>  |
                                             <dotted name> <assign or func-call statement> 
                                                 <simple statement end>
-
-<access protection statement>  ::= ':' <access qualifier> ':'
-
-<access qualifier>          ::= 'hidden'  |  'local'  |  'private'  |  'protected'  |  'public'
 
 <assign op>                 ::= '='  |  <augmented assign op>
 
@@ -342,9 +342,6 @@ SOFTWARE.
 
 <comment>                   ::= '//' ( (<any non newline char>)* | <end line> | <ENDOFFILE> )  |
                                 '/*' <multi lines comment>
-
-<multi lines comment>       ::= (<any non star char> | <NEWLINE>)*  |
-                                '*' ('/' | <multi lines comment>)
 
 <decl constructor or decl end>  ::= ('.' <identifier>)* <decl or def statement'''>  |
                                     <function definition'>
@@ -440,6 +437,9 @@ SOFTWARE.
 
 <method or operator definition> ::= [<TYPE>] (<operator definition> |
                                     <identifier> <function definition>)                                 
+
+<multi lines comment>       ::= (<any non star char> | <NEWLINE>)*  |
+                                '*' ('/' | <multi lines comment>)
 
 <nop statement>             ::= 'nop'  |  'pass'
 
