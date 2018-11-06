@@ -556,7 +556,7 @@ SOFTWARE.
 
 <const qualifier>       ::= 'const'
 
-<contained type>        ::= '<' <TYPE> '>'
+<contained type>        ::= '<' <TYPE> (',' <TYPE>)* '>'
 
 <container type>        ::= <array_type>  |  <enum type>  |  <file type>  |  <list type>  |  <map type>  |  <set type>
 
