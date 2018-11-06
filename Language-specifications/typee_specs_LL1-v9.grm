@@ -875,7 +875,9 @@ SOFTWARE.
                      |  <map type>
                      |  <set type>
 
-<declared contained type>    ::= '<' <TYPE> '>'
+<declared contained type>   ::= '<' <TYPE> <declared contained type'> '>'           ###
+<declared contained type'>  ::= ',' <TYPE> <declared contained type'>               ###
+                             |  EPS                                                 ###
 
 <dimensions>    ::= '[' <dimensions'> ']' <dimensions> 
                  |  EPS
