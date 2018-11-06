@@ -130,7 +130,8 @@ SOFTWARE.
 
 <identifier>            ::= (<alpha char> | '_') (<alpha num char> | '_')*
 
-<indexed expr list>     ::= ['indexed'] <expr list>
+<indexed expr list>     ::= 'indexed' '(' <expr list> ')'  |
+                            <expr list>
 
 <map form>              ::= ':' <expression> <map list or comprehension>
 
