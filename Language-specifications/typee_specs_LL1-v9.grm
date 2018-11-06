@@ -546,6 +546,7 @@ SOFTWARE.
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>                          ##
                              |  <volatile qualifier> <type> <identifier> <memory address> <simple statement end>
                              |  <type alias> <simple statement end>
+                             |  <enum decl or def>                                                                  ###
                              |  <decl or def statement''>
 <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
                              |  <identifier> <decl constructor or decl end>
@@ -591,6 +592,23 @@ SOFTWARE.
 <ensure statement>          ::= 'ensure' <expression> <ensure statement'>
 <ensure statement'>         ::= ',' <expression>
                              |  EPS
+
+<enum decl or def>          ::= <enum type> <identifier> <enum decl or def'>                ###
+<enum decl or def'>         ::= <enum declaration>                                          ###
+                             |  <enum definition>                                           ###
+
+<enum declaration>          ::= <identifier> <simple statement end>                         ###
+
+<enum definition>           ::= '{' <enum list> '}'                                         ###
+
+<enum item>                 ::= <identifier> <enum item'>                                   ###
+<enum item'>                ::= '=' <expression>                                            ###
+                             |  EPS                                                         ###
+
+<enum list>                 ::= <enum item> <enum list'>                                    ###
+                             |  EPS                                                         ###
+<enum list'>                ::= ',' <enum item> <enum list'>                                ###
+                             |  EPS                                                         ###
 
 <flow statement>            ::= 'break'
                              |  'continue'
@@ -864,9 +882,6 @@ SOFTWARE.
 <dimensions'>   ::= <integer number>
                  |  <dotted name>
 
-<scalar type or dotted name>    ::= <scalar type>
-                                 |  <dotted name>
-
 <enum type>     ::= 'enum'
 
 <file type>     ::= 'file' <contained type>
@@ -890,6 +905,9 @@ SOFTWARE.
                  |  'uint16'
                  |  'uint32'
                  |  'uint64'
+
+<scalar type or dotted name>    ::= <scalar type>
+                                 |  <dotted name>
 
 <set type>              ::= 'set' <contained type>
 
