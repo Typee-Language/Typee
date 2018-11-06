@@ -195,6 +195,10 @@ SOFTWARE.
                  |  '_' <identifier'>
                  |  EPS
 
+<indexed expr list> ::= 'indexed' <expr list>           ###
+                     |  <expr list>                     ###
+
+
 <map form>    ::= ':' <expression> <map list or comprehension>
 
 <map item>    ::= <expression> ':' <expression>
@@ -472,7 +476,10 @@ SOFTWARE.
 <simple statement end> ::= ';'
 
 <statements block>  ::= '{' <statements list> '}'
+                     |  <compound statement>                    ###
+                     |  <empty statement>                       ###
                      |  <nop statement> <simple statement end>
+                     |  <simple statement>                      ###
                      |  <simple statement end>
 
 
@@ -591,7 +598,7 @@ SOFTWARE.
                              |  <raise statement>
                              |  <return statement>
 
-<for statement>             ::= 'for' '(' <target list> 'in' <expr list> ')' <statements block> <for statement'>
+<for statement>             ::= 'for' '(' <target list> 'in' <indexed expr list> ')' <statements block> <for statement'>  ###
 <for statement'>            ::= 'otherwise' <statements block>                                                      ##
                              |  EPS
 

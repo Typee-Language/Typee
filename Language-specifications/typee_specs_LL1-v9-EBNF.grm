@@ -130,6 +130,8 @@ SOFTWARE.
 
 <identifier>            ::= (<alpha char> | '_') (<alpha num char> | '_')*
 
+<indexed expr list>     ::= ['indexed'] <expr list>
+
 <map form>              ::= ':' <expression> <map list or comprehension>
 
 <map item>              ::= <expression> ':' <expression>
@@ -312,7 +314,9 @@ SOFTWARE.
 
 <simple statement end>      ::= ';'
 
-<statements block>          ::= '{' [<statements list>] '}'  |  [<nop statement>] <simple statement end>
+<statements block>          ::= '{' [<statements list>] '}'  |  <compound statement>  |
+                                [<nop statement>] <simple statement end>  |
+                                <simple statement>
 
 
 <access protection statement>  ::= ':' <access qualifier> ':'
@@ -388,7 +392,7 @@ SOFTWARE.
 
 <flow statement>            ::= 'break'  |  'continue'  |  <raise statement>  |  <return statement>
 
-<for statement>             ::= 'for' '(' <target list> 'in' <expr list> ')' <statements block>
+<for statement>             ::= 'for' '(' <targets list> 'in' <expr list> ')' <statements block>
                                     ['otherwise' <statements block>]
 
 <forever statement>         ::= 'forever' '(' ')' <statements block>
@@ -459,7 +463,7 @@ SOFTWARE.
 
 <target>                    ::= <dotted name> (<subscription or slicing>)*
 
-<target list>               ::= <typed target> (',' <typed target>)*
+<targets list>              ::= <typed target> (',' <typed target>)*
 
 <try else>                  ::= 'otherwise'
 
@@ -477,7 +481,7 @@ SOFTWARE.
 <typed target>              ::= <type'> <target>  |
                                 <dotted name> [ <dotted name> | <templated type spec> ]
                                     (<subscription or slicing>)*
-
+                             
 <var declaration or assignment> ::= ['=' <expression>] ',' <identifier> 
                                         (['=' <expression>] ',' <identifier>)*
 
