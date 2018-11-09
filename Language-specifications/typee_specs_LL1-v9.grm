@@ -121,7 +121,7 @@ SOFTWARE.
 
 /*****   COMPREHENSION   ********************************************/
 
-<for comprehension>     ::= 'for' '(' <target list> 'in' <or test> <iter comprehension> ')'
+<for comprehension>     ::= 'for' '(' <typed targets list> 'in' <or test> <iter comprehension> ')'      ###
 
 <if comprehension>      ::= 'if' '(' <condition or unnamed func> ')' <iter comprehension>
 
@@ -565,7 +565,8 @@ SOFTWARE.
 ### <declaration statement'>    ::= '=' <expression> <declaration statement>                                            ## !!!
 ###                              |  <declaration statement>
 
-<del statement>             ::= 'del' <identifiers list>
+<del statement>             ::= <delete> <targets list>                     ###
+<delete>                    ::= 'del'  |  'delete'                          ###
                       
 <dotted as name>            ::= <dotted name> <dotted as name'>
 <dotted as name'>           ::= 'as' <identifier>
@@ -615,8 +616,8 @@ SOFTWARE.
                              |  <raise statement>
                              |  <return statement>
 
-<for statement>             ::= 'for' '(' <target list> 'in' <indexed expr list> ')' <statements block> <for statement'>  ###
-<for statement'>            ::= 'otherwise' <statements block>                                                      ##
+<for statement>             ::= 'for' '(' <typed targets list> 'in' <indexed expr list> ')' <statements block> <for statement'>     ###
+<for statement'>            ::= 'otherwise' <statements block>                                                                      ##
                              |  EPS
 
 <forever statement>         ::= 'forever' '(' ')' <statements block>
@@ -726,8 +727,8 @@ SOFTWARE.
 <target'>                   ::= <subscription or slicing> <target'>
                              |  EPS
 
-<target list>               ::= <typed target> <target list'>
-<target list'>              ::= ',' <typed target> <target list'>
+<targets list>              ::= <target> <targets list'>                    ###
+<targets list'>             ::= ',' <target> <targets list'>                ###
                              |  EPS
 
 <try else>                  ::= 'otherwise'                                                                                     ##
@@ -763,6 +764,10 @@ SOFTWARE.
 <typed target'>             ::= <dotted name> <target'>
                              |  <target'>
                              |  <templated type'> <target'>
+
+<typed targets list>        ::= <typed target> <targets list'>                  ###
+<typed targets list'>       ::= ',' <typed target> <targets list'>              ###
+                             |  EPS
 
 <var declaration or assignment>     ::= '=' <expression> <var declaration or assignment'>    
                                      |  ',' <identifier> <var declaration or assignment>    
