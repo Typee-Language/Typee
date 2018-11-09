@@ -478,7 +478,8 @@ SOFTWARE.
 
 <try else>                  ::= 'otherwise'
 
-<try except>                ::= 'except' '(' [ (<expression> ['as' <identifier>]  |  'all' ) ] ')'
+<try except>                ::= 'except' '(' [ (<try except expr>  |  'all' ) ] ')'
+<try except expr>           ::= <expression> ['as' <identifier>] (',' <expression> ['as' <identifier>])*
 
 <try finally>               ::= 'finally'
 
@@ -545,24 +546,25 @@ SOFTWARE.
 <type>                  ::= <type'>  |  <templated type> [<dimensions>]
 <type'>                 ::= <auto type>                  |
                             <container type>             |
+                            <enum type>                  |
                             <NONE>                       |
                             <scalar type> [<dimensions>] |
-                            <types list>     
+                            <enclosed types list>     
 
 
 <array type>            ::= 'array' <contained type>
 
-<auto type>             ::= '?' ['in' <types list>]
+<auto type>             ::= '?' ['in' <enclosed types list>]
 
 <const qualifier>       ::= 'const'
 
-<contained type>        ::= '<' <TYPE> (',' <TYPE>)* '>'
+<contained type>        ::= '<' <types list> '>'
 
-<container type>        ::= <array_type>  |  <enum type>  |  <file type>  |  <list type>  |  <map type>  |  <set type>
+<container type>        ::= <array_type>  |  <file type>  |  <list type>  |  <map type>  |  <set type>
 
 <dimensions>            ::= ( '[' <integer number> | <dotted name> ']' )*
 
-
+<enclosed types list>   ::= '(' <types list> ')'
 
 <scalar type or dotted name>    ::= <scalar type>  |  <dotted name>
 
@@ -588,7 +590,7 @@ SOFTWARE.
 
 <types and exprs list>  ::= (<expression> | <templated type>) (',' (<expression> | <templated type>))*
 
-<types list>            ::= '(' <TYPE> (',' <TYPE>)* ')'
+<types list>            ::= <TYPE> (',' <TYPE>)*
 
 <volatile qualifier>    ::= 'volatile'
 

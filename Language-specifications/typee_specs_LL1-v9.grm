@@ -733,11 +733,13 @@ SOFTWARE.
 <try else>                  ::= 'otherwise'                                                                                     ##
 
 <try except>                ::= 'except' '(' <try except'> ')'
-<try except'>               ::= <expression> <try except">
+<try except'>               ::= <expression> <try except''> <try except'''>                                                     ###
                              |  'all'
                              |  EPS
-<try except">               ::= 'as' <identifier>
+<try except''>              ::= 'as' <identifier>
                              |  EPS
+<try except'''>             ::= ',' <expression> <try except''> <try except'''>                                                 ###
+                             |  EPS                                                                                             ###
 
 <try finally>               ::= 'finally'
 
@@ -851,62 +853,62 @@ SOFTWARE.
 <type>  ::= <type'>
          |  <templated type> <dimensions>
 <type'> ::= <auto type>
-         |  '(' <types list> ')'
          |  <container type>
+         |  <enclosed types list>                                   ###
+         |  <enum type>
          |  <file type>
          |  <NONE>
          |  <scalar type> <dimensions>
 
 
-<array type>    ::= 'array' <declared contained type>
+<array type>            ::= 'array' <declared contained type>
 
-<auto type>     ::= '?' <auto type'>
-<auto type'>    ::= 'in' '(' <types list> ')'
-                 |  EPS
+<auto type>             ::= '?' <auto type'>
+<auto type'>            ::= 'in' <enclosed types list>              ###
+                         |  EPS
 
-<const qualifier>   ::= 'const'
+<const qualifier>       ::= 'const'
 
-<contained type>    ::= <declared contained type>
-                     |  EPS
+<contained type>        ::= <declared contained type>
+                         |  EPS
 
-<container type>    ::= <array_type>
-                     |  <enum type>
-                     |  <list type>
-                     |  <map type>
-                     |  <set type>
+<container type>        ::= <array_type>
+                         |  <list type>
+                         |  <map type>
+                         |  <set type>
 
-<declared contained type>   ::= '<' <TYPE> <declared contained type'> '>'           ###
-<declared contained type'>  ::= ',' <TYPE> <declared contained type'>               ###
-                             |  EPS                                                 ###
+<declared contained type>   ::= '<' <types list> '>'                ###
 
-<dimensions>    ::= '[' <dimensions'> ']' <dimensions> 
-                 |  EPS
-<dimensions'>   ::= <integer number>
-                 |  <dotted name>
+<dimensions>            ::= '[' <dimensions'> ']' <dimensions> 
+                         |  EPS
+<dimensions'>           ::= <integer number>
+                         |  <dotted name>
 
-<enum type>     ::= 'enum'
+<enclosed types list>   ::= '(' <types list> ')'
 
-<file type>     ::= 'file' <contained type>
+<enum type>             ::= 'enum'
 
-<list type>     ::= 'list' <contained type>
+<file type>             ::= 'file' <contained type>
 
-<map type>      ::= 'map' <contained type>
+<list type>             ::= 'list' <contained type>
 
-<scalar type>   ::= 'bool'
-                 |  'char'
-                 |  'char16'
-                 |  'float32'
-                 |  'float64'
-                 |  'int8'
-                 |  'int16'
-                 |  'int32'
-                 |  'int64'
-                 |  'str'
-                 |  'str16'
-                 |  'uint8'
-                 |  'uint16'
-                 |  'uint32'
-                 |  'uint64'
+<map type>              ::= 'map' <contained type>
+
+<scalar type>           ::= 'bool'
+                         |  'char'
+                         |  'char16'
+                         |  'float32'
+                         |  'float64'
+                         |  'int8'
+                         |  'int16'
+                         |  'int32'
+                         |  'int64'
+                         |  'str'
+                         |  'str16'
+                         |  'uint8'
+                         |  'uint16'
+                         |  'uint32'
+                         |  'uint64'
 
 <scalar type or dotted name>    ::= <scalar type>
                                  |  <dotted name>
