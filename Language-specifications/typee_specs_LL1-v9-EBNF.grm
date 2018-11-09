@@ -373,7 +373,7 @@ SOFTWARE.
 <declaration statement>     ::= ',' <identifier> ['=' <expression>] 
                                     (',' <identifier> ['=' <expression>])*
 
-<del statement>             ::= 'del' <identifiers list>
+<del statement>             ::= ('del' | 'delete') <identifiers list>
                       
 <dotted as name>            ::= <dotted name> ['as' <identifier>]
 
@@ -403,7 +403,7 @@ SOFTWARE.
                              
 <flow statement>            ::= 'break'  |  'continue'  |  <raise statement>  |  <return statement>
 
-<for statement>             ::= 'for' '(' <targets list> 'in' <expr list> ')' <statements block>
+<for statement>             ::= 'for' '(' <typed targets list> 'in' <expr list> ')' <statements block>
                                     ['otherwise' <statements block>]
 
 <forever statement>         ::= 'forever' '(' ')' <statements block>
@@ -474,7 +474,7 @@ SOFTWARE.
 
 <target>                    ::= <dotted name> (<subscription or slicing>)*
 
-<targets list>              ::= <typed target> (',' <typed target>)*
+<targets list>              ::= <target> (',' <target>)*
 
 <try else>                  ::= 'otherwise'
 
@@ -493,7 +493,9 @@ SOFTWARE.
 <typed target>              ::= <type'> <target>  |
                                 <dotted name> [ <dotted name> | <templated type spec> ]
                                     (<subscription or slicing>)*
-                             
+
+<typed targets list>        ::= <typed target> (',' <typed target>)*
+
 <var declaration or assignment> ::= ['=' <expression>] ',' <identifier> 
                                         (['=' <expression>] ',' <identifier>)*
 
