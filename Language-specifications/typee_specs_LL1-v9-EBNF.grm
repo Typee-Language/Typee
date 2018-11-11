@@ -442,7 +442,7 @@ SOFTWARE.
                                     ( 'all' | <parenth open> <import as names> <parenth close> |
                                         <import as names> )
 
-<import name>               ::= 'import' <dotted as names>
+<import name>               ::= 'import' ('.')* <dotted as names>
 
 <import statement>          ::= <import name>  |  <import from>
 
