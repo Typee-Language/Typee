@@ -670,13 +670,14 @@ SOFTWARE.
 
 <import from>               ::= 'from' <import from'>
 <import from'>              ::= '.' <import from'>
-                             |  <import from''>
-<import from''              ::= <dotted name> 'import' <import from'''>
-<import from'''>            ::= 'all'
-                             |  '(' <import as names> ')'
-                             |  <import as names>
+                             |  <dotted name> 'import' <import from''>                                  ###
+<import from''>             ::= 'all'                                                                   ###
+                             |  '(' <import as names> ')'                                               ###
+                             |  <import as names>                                                       ###
                      
-<import name>               ::= 'import' <dotted as names>
+<import name>               ::= 'import' <import name'>                                                 ###
+<import name'>              ::= '.' <import name'>                                                      ###
+                             |  <dotted as names>                                                       ###
 
 <import statement>          ::= <import name>
                              |  <import from>
