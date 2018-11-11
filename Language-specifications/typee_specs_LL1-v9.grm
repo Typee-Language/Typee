@@ -565,16 +565,18 @@ SOFTWARE.
 ### <declaration statement'>    ::= '=' <expression> <declaration statement>                                            ## !!!
 ###                              |  <declaration statement>
 
-<del statement>             ::= <delete> <targets list>                     ###
-<delete>                    ::= 'del'  |  'delete'                          ###
+<del statement>             ::= <delete> <targets list>                         ###
+<delete>                    ::= 'del'  |  'delete'                              ###
                       
 <dotted as name>            ::= <dotted name> <dotted as name'>
 <dotted as name'>           ::= 'as' <identifier>
                              |  EPS
 
-<dotted as names>           ::= <dotted as name> <dotted as names'>
-<dotted as names'>          ::= ',' <dotted as name> <dotted as names'>
-                             |  EPS
+<dotted as names>           ::= <dotted as names''> <dotted as names'>          ###
+<dotted as names'>          ::= ',' <dotted as names''> <dotted as names'>      ###
+                             |  EPS                                             ###
+<dotted as names''>         ::= '.' <dotted as names''>                         ###
+                             |  <dotted as name>                                ###
 
 <dotted name>               ::= <identifier> <dotted name'>
 <dotted name'>              ::= '.' <identifier> <dotted name'>
