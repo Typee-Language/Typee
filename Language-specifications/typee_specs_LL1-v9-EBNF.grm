@@ -377,7 +377,7 @@ SOFTWARE.
                       
 <dotted as name>            ::= <dotted name> ['as' <identifier>]
 
-<dotted as names>           ::= <dotted as name> (',' <dotted as name>)*
+<dotted as names>           ::= ('.')* <dotted as name> (',' ('.')* <dotted as name>)*
 
 <dotted name>               ::= <identifier> ('.' <identifier>)*
 
@@ -442,7 +442,7 @@ SOFTWARE.
                                     ( 'all' | <parenth open> <import as names> <parenth close> |
                                         <import as names> )
 
-<import name>               ::= 'import' ('.')* <dotted as names>
+<import name>               ::= 'import' <dotted as names>
 
 <import statement>          ::= <import name>  |  <import from>
 
