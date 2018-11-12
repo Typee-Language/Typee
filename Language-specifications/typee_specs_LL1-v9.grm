@@ -337,10 +337,11 @@ SOFTWARE.
 <binary char>                   ::= '0'
                                  |  '1'
 
-<ellipsis>                      ::= '...'
 
-<end line>                      ::= <NEWLINE>
-                                 |  <ENDOFFILE>
+##<line end>                      ::= <NEWLINE>                                     ###
+##                                 |  <ENDOFFILE>                                   ###
+
+<ellipsis>                      ::= '...'
 
 <ENDOFFILE>                     ::= u0x00
 
@@ -359,6 +360,9 @@ SOFTWARE.
 <hexa char>                     ::= <num char>
                                  |  'A'...'F'
                                  |  'a'...'f'
+
+<line end>                      ::= <NEWLINE>                                       ###
+                                 |  <ENDOFFILE>                                     ###
 
 <ME>                            ::= 'me'
 
@@ -533,8 +537,7 @@ SOFTWARE.
 <comment>   ::= '//' <comment'>
              |  '/*' <multi lines comment>
 <comment'>  ::= <any non newline char> <comment'>
-             |  <end line>
-             |  <ENDOFFILE>
+             |  <line end>                                                                                          ###
                             
 <decl constructor or decl end> ::= <dotted name'> <decl or def statement'''>
                                 |  <function definition'>
