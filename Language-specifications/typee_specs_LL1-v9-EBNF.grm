@@ -402,11 +402,8 @@ SOFTWARE.
                                 <operator definition>
 
 <decl or def statement''''> ::= <function definition>  |  
-                                [<var declaration or assignment>]
+                                [<var declarations or assignments>]
                                     <simple statement end>
-
-<declaration statement>     ::= ',' <identifier> ['=' <expression>] 
-                                    ( ',' <identifier> ['=' <expression>] *
 
 <del statement>             ::= ( 'del' | 'delete' ) <identifiers list>
                       
@@ -556,8 +553,9 @@ SOFTWARE.
 
 <typed targets list>        ::= <typed target> ( ',' <typed target> )*
 
-<var declaration or assignment> ::= [ '=' <expression> ] ',' <identifier> 
-                                        ([ '=' <expression> ] ',' <identifier>)*
+<var declarations or assignments> ::= [ '=' <expression> ]
+                                          [ ( ',' <identifier>
+                                                [ '=' <expression> ] )* ]
 
 <while statement>           ::= 'while' <parenthesised expr> <statements block> 
                                     [ 'otherwise' <statements block> ]
