@@ -360,7 +360,7 @@ SOFTWARE.
 
 <assign op>                 ::= '='  |  <augmented assign op>
 
-<assign or func-call statement> ::= <target list'> <assignment statement>  |
+<assign or func-call statement> ::= <targets list> <assignment statement>  |
                                     <function call>
 
 <assignment statement>      ::= <assign op> <expr list>
