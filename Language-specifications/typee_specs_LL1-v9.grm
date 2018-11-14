@@ -547,9 +547,9 @@ SOFTWARE.
                              |  <decl or def statement'>
                              |  <forward decl>                                                                      ##
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>                          ##
-                             |  <volatile qualifier> <type> <identifier> <memory address> <simple statement end>
+                             |  <enum definition>                                                                   ###
                              |  <type alias> <simple statement end>
-                             |  <enum decl or def>                                                                  ###
+                             |  <volatile qualifier> <type> <identifier> <memory address> <simple statement end>
                              |  <decl or def statement''>
 <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
                              |  <identifier> <decl constructor or decl end>
@@ -599,13 +599,7 @@ SOFTWARE.
 <ensure statement'>         ::= ',' <expression>
                              |  EPS
 
-<enum decl or def>          ::= <enum type> <identifier> <enum decl or def'>                ###
-<enum decl or def'>         ::= <enum declaration>                                          ###
-                             |  <enum definition>                                           ###
-
-<enum declaration>          ::= <identifier> <simple statement end>                         ###
-
-<enum definition>           ::= '{' <enum list> '}'                                         ###
+<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}'                ###
 
 <enum item>                 ::= <identifier> <enum item'>                                   ###
 <enum item'>                ::= '=' <expression>                                            ###
@@ -647,6 +641,8 @@ SOFTWARE.
 <fwd class decl>            ::= 'class' <identifier> <template def> <fwd class decl'>       ##
 <fwd class decl'>           ::= <inheritance>                                               ##
                              |  EPS                                                         ##
+
+<fwd type decl>             ::= 
 
 <fwd decl constructor>      ::= <dotted name'> <forward decl''''>                           ##
                              |  <function declaration'>                                     ##
