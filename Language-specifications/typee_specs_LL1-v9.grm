@@ -286,7 +286,7 @@ SOFTWARE.
                  |  '++'  |  '--'  |  '#'
                  |  'in'
                  |  <assign op>
-                 |  <cast op>
+##                 |  <cast op>                                                     ###
 <operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
 
 <operator declaration>  ::= 'operator' <operator declaration'>
@@ -532,7 +532,7 @@ SOFTWARE.
 
 <case>      ::= 'case' <expr list> <statements block>
 
-<cast op>   ::= 'cast' <identifier>
+##<cast op>   ::= 'cast' <identifier>                                                                               ###
 
 <comment>   ::= '//' <comment'>
              |  '/*' <multi lines comment>
@@ -642,7 +642,7 @@ SOFTWARE.
 <fwd class decl'>           ::= <inheritance>                                               ##
                              |  EPS                                                         ##
 
-<fwd type decl>             ::= 
+<fwd type decl>             ::= 'type' <identifier>                                         ###
 
 <fwd decl constructor>      ::= <dotted name'> <forward decl''''>                           ##
                              |  <function declaration'>                                     ##

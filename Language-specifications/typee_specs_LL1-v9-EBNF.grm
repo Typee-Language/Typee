@@ -203,6 +203,11 @@ SOFTWARE.
                             <cast op>
 <operator'>                 ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>' 
 
+<operator declaration>  ::= 'operator' 
+                                ( (<operator> [<template def>] <function args declaration>)         |
+                                  (<operator'> [<spaced template def>] <function args declaration>) |
+                                  (<call operator> <template def>) )
+
 <operator definition>       ::= 'operator' 
                                     ( ( (<operator> [<template def>] |
                                          <operator'> [<spaced template def>]) 
@@ -451,14 +456,13 @@ SOFTWARE.
 <forward decl>              ::= <forward> ( ([<static qualifier>] 
                                                 <forward decl'>) | 
                                              <fwd class decl> )
-<forward decl'>             ::= <volatile qualifier> <type> <identifier>  |
-                                <fwd type decl>  |
-                                <identifier> <fwd decl constructor>  |
-                                <TYPE'> <forward decl''> 
-                                    ( <operator declaration>  |
-                                      <identifier>
-                                          (<fwd var decl> |
-                                           <function declaration>) )
+<forward decl'>             ::= <volatile qualifier> <type> <identifier> |
+                                <fwd type decl>                          |
+                                <identifier> <fwd decl constructor>      |
+                                <TYPE'> ( <operator declaration>  |
+                                          (<identifier>
+                                               (<fwd var decl> |
+                                                    <function declaration>)) )
 
 <fwd class decl>            ::= 'class' <identifier>
                                     <template def> [<inheritance>]
@@ -469,6 +473,8 @@ SOFTWARE.
                                          (<fwd var decl> | 
                                           <function declaration>)) |
                                 <function args declaration>
+
+<fwd type decl>             ::= 'type' <identifier>
 
 <fwd var decl>              ::= ( ',' <identifier> )*
 
@@ -581,20 +587,21 @@ SOFTWARE.
 
 
 
-
 /*****   TEMPLATES   *****************************************/
 
 <spaced template args>      ::= ' <' <template args'> '>' 
 
 <spaced template def>       ::= ' <' <template def'> '>' 
 
-<template args>             ::= '<' [<condition> ( ',' <condition> )*] '>' 
+<template args>             ::= '<' <template args'> '>' 
+<template args'>            ::= [<condition> ( ',' <condition> )*]
 
-<template def>              ::= '<' (<identifier> |
+<template def>              ::= '<' <template def'> '>' 
+<template def'>             ::= (<identifier> |
                                      <const qualifier> <template def const name>) 
                                         ( ',' (<identifier> | 
                                           <const qualifier>
-                                               <template def const name>) )* '>' 
+                                               <template def const name>) )*
 
 <template def const name>   ::= <scalar type or dotted name> <identifier>
                                     [ '=' <expression> ]
