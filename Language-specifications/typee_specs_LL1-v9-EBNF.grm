@@ -175,8 +175,6 @@ SOFTWARE.
 <function definition>       ::= [<template def>]  <function args declaration>
                                     <statements block>
 
-<abstract or final qualif>  ::= 'abstract' | 'final' 
-
 <call operator>             ::= '(' ')' 
 
 <function args declaration> ::= '(' [<typed args list>] ')' 
@@ -199,8 +197,7 @@ SOFTWARE.
                             'in'  |
                             <op_add>  |  <op_mul>  |  <op_power>  |
                             <op_user>  |  '??'  |
-                            <assign op>  |
-                            <cast op>
+                            <assign op>
 <operator'>                 ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>' 
 
 <operator declaration>  ::= 'operator' 
@@ -350,6 +347,8 @@ SOFTWARE.
                                 <simple statement>
 
 
+<abstract or final qualif>  ::= 'abstract' | 'final' 
+
 <access protection statement>  ::= ':' <access qualifier> ':' 
 
 <access qualifier>          ::= 'hidden'  |  'local'  |  'private'  |
@@ -377,8 +376,6 @@ SOFTWARE.
                                 '><='  |  '!!='  |  '::=' |  '??=' 
 
 <case>                      ::= 'case' <expr list> <statements block>
-
-<cast op>                   ::= 'cast' <identifier>
 
 <comment>                   ::= '//' ( (<any non newline char>)* |
                                             <line end>          )  |
@@ -455,7 +452,7 @@ SOFTWARE.
 
 <forward decl>              ::= <forward> ( ([<static qualifier>] 
                                                 <forward decl'>) | 
-                                             <fwd class decl> )
+                                             <fwd class decl> ) <simple statement end>
 <forward decl'>             ::= <volatile qualifier> <type> <identifier> |
                                 <fwd type decl>                          |
                                 <identifier> <fwd decl constructor>      |
@@ -594,14 +591,14 @@ SOFTWARE.
 <spaced template def>       ::= ' <' <template def'> '>' 
 
 <template args>             ::= '<' <template args'> '>' 
-<template args'>            ::= [<condition> ( ',' <condition> )*]
+<template args'>            ::= [<expression> ( ',' <expression> )*]
 
 <template def>              ::= '<' <template def'> '>' 
 <template def'>             ::= (<identifier> |
-                                     <const qualifier> <template def const name>) 
-                                        ( ',' (<identifier> | 
-                                          <const qualifier>
-                                               <template def const name>) )*
+                                 <const qualifier> <template def const name>) 
+                                      ( ',' (<identifier> | 
+                                             <const qualifier>
+                                                 <template def const name>) )*
 
 <template def const name>   ::= <scalar type or dotted name> <identifier>
                                     [ '=' <expression> ]

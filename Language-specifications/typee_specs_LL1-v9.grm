@@ -486,6 +486,10 @@ SOFTWARE.
                      |  <simple statement end>
 
 
+<abstract or final qualif>  ::= 'abstract'  |  'final'                              ##
+##                             |  <final qualifier>
+                             |  EPS
+
 <access protection statement>  ::= ':' <access qualifier> ':'
 
 <access qualifier>  ::= 'hidden'
@@ -545,7 +549,7 @@ SOFTWARE.
 <decl or def statement>     ::= <static qualifier> <decl or def statement'>
                              |  <class definition>
                              |  <decl or def statement'>
-                             |  <forward decl>                                                                      ##
+                             |  <forward decl>  <simple statement end>                                              ###
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>                          ##
                              |  <enum definition>                                                                   ###
                              |  <type alias> <simple statement end>
@@ -829,9 +833,9 @@ SOFTWARE.
 
 <template args>         ::= '<' <template args'>
                          |  EPS
-<template args'>        ::= <condition> <template args">
+<template args'>        ::= <expression> <template args">
                          |  '>'
-<template args">        ::= ',' <condition> <template args">
+<template args">        ::= ',' <expression> <template args">
                          |  '>'
 
 <template def>          ::= '<' <template def'>
