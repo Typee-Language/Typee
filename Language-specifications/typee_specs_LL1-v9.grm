@@ -220,6 +220,11 @@ SOFTWARE.
 <bitxor expr'>  ::= '^' <template args> <bitand expr> <bitxor expr'>
                  |  EPS
 
+<none coalescing>   ::= <dotted name> <none coalescing'>                ###
+                     |  <NONE> <none coalescing'>                       ###
+<none coalescing'>  ::= '?' <expression>                                ###
+                     |  EPS                                             ###
+
 <shift expr>    ::= <arithmetic expr> <shift expr'>
 <shift expr'>   ::= '<<'  <spaced template args> <arithmetic expr> <shift expr'>
                  |  '>>'  <template args> <arithmetic expr> <shift expr'>
