@@ -33,10 +33,12 @@ SOFTWARE.
 <atom element>              ::= <atom> 
                              |  <dotted name> <atom element'>
                              |  <const qualifier> <atom element'''>
+                             |  <NONE> <none coalescing>                            ###
                              |  <atom element'''>
 <atom element'>             ::= <atom element''>
-                             |  <dotted name'> <atom element'>
+##                             |  <dotted name'> <atom element'>                    ###
                              |  <function call> <atom element'>
+                             |  <none coalescing>                                   ###
                              |  <subscription or slicing> <atom element'>
                              |  EPS
 <atom element''>            ::= <is instance of>
@@ -76,6 +78,9 @@ SOFTWARE.
                              |  <map form>
 
 <list form>                 ::= '[' <expression> <list or comprehension> ']'
+
+<none coalescing>           ::= '?' <expression>                                    ###
+                             |  EPS                                                 ###
 
 <parenthesis form>          ::= '(' <expr list> ')'
 
@@ -219,11 +224,6 @@ SOFTWARE.
 <bitxor expr>   ::= <bitand expr> <bitxor expr'>
 <bitxor expr'>  ::= '^' <template args> <bitand expr> <bitxor expr'>
                  |  EPS
-
-<none coalescing>   ::= <dotted name> <none coalescing'>                ###
-                     |  <NONE> <none coalescing'>                       ###
-<none coalescing'>  ::= '?' <expression>                                ###
-                     |  EPS                                             ###
 
 <shift expr>    ::= <arithmetic expr> <shift expr'>
 <shift expr'>   ::= '<<'  <spaced template args> <arithmetic expr> <shift expr'>
