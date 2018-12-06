@@ -175,8 +175,6 @@ SOFTWARE.
 <function definition>       ::= [<template def>]  <function args declaration>
                                     <statements block>
 
-<call operator>             ::= '(' ')' 
-
 <function args declaration> ::= '(' [<typed args list>] ')' 
 
 <function call>             ::= [<template args>] '(' <function call args> ')' 
@@ -186,40 +184,12 @@ SOFTWARE.
                                             <ellipsis> <identifier> )  |
                                       <for comprehension>] ]
 
-<op_add>                    ::= '+'   |  '-' 
-<op_mul>                    ::= '*'   |  '/'  |  '%' 
-<op_power>                  ::= '**'  |  '^^' 
-<op_user>                   ::= '@'   |  '><'  |  '!!'  |  '::' 
-
-<operator>                  ::= '<='  |  '=='  |  '!='  |  '>='  |
-                            '&'   |  '|'   |  '^'  |
-                            '++'  |  '--'  |  '#'  |
-                            'in'  |
-                            <op_add>  |  <op_mul>  |  <op_power>  |
-                            <op_user>  |  '??'  |
-                            <assign op>
-<operator'>                 ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>' 
-
-<operator declaration>  ::= 'operator' 
-                                ( (<operator> [<template def>] <function args declaration>)         |
-                                  (<operator'> [<spaced template def>] <function args declaration>) |
-                                  (<call operator> <template def>) )
-
-<operator definition>       ::= 'operator' 
-                                    ( ( (<operator> [<template def>] |
-                                         <operator'> [<spaced template def>]) 
-                                      <function args declaration> )  |
-                                      ( <call operator> [<template def>] ) )
-                                    <statements block>
-
 <typed args list>           ::= <TYPE> <identifier> ( ',' <TYPE> <identifier> )*
 
 <unnamed>                   ::= 'unnamed'  |  'lambda' 
 
 <unnamed func>              ::= <unnamed> [<TYPE>] <function args declaration>
                                     <statements block>
-
-
 
 
 
@@ -281,6 +251,48 @@ SOFTWARE.
                                          <any string doublequote char>) '"' 
 
 <TRUE>                          ::= 'True'  |  'true' 
+
+
+
+
+/*****   OPERATORS   ************************************************/
+
+<operator>              ::= '<='  |  '=='  |  '!='  |  '>='  |
+                            '&'   |  '|'   |  '^'  |
+                            '++'  |  '--'  |  '#'  |
+                            'in'  |
+                            <op_add>  |  <op_mul>  |  <op_power>  |
+                            <op_user>  |  '??'  |
+                            <assign op>
+<operator'>             ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>' 
+
+
+<assign op>             ::= '='  |  <augmented assign op>
+
+<call operator>         ::= '(' ')' 
+
+<comp operator>         ::= '<='  |  '=='  |  '!='  |  '>='  |
+                            'in'  |  'is' [ 'not' ]  |  'not' 'in' 
+
+<comp operator'>        ::=  '<'  |  '>' 
+
+<op_add>                ::= '+'   |  '-' 
+<op_mul>                ::= '*'   |  '/'  |  '%' 
+<op_power>              ::= '**'  |  '^^' 
+<op_user>               ::= '@'   |  '><'  |  '!!'  |  '::' 
+
+<operator declaration>  ::= 'operator' 
+                                ( (<operator> [<template def>] <function args declaration>)         |
+                                  (<operator'> [<spaced template def>] <function args declaration>) |
+                                  (<call operator> <template def>) )
+
+<operator definition>   ::= 'operator' 
+                                ( ( (<operator> [<template def>] |
+                                     <operator'> [<spaced template def>]) 
+                                  <function args declaration> )  |
+                                  ( <call operator> [<template def>] ) )
+                                <statements block>
+
 
 
 
@@ -361,8 +373,6 @@ SOFTWARE.
                                             <dotted name>
                                                 <assign or func-call statement> 
                                                 <simple statement end>
-
-<assign op>                 ::= '='  |  <augmented assign op>
 
 <assign or func-call statement> ::= <targets list> <assignment statement>  |
                                     <function call>
