@@ -79,12 +79,21 @@ SOFTWARE.
 
 /*****   CLASSES   *******************************************/
 
-<class definition>  ::= 'class' <identifier> [<template def>] <inheritance>
-                            <statements block>
+<class declaration>         ::= <forward> <class decl def> ';'
 
-<inheritance>       ::= [ ':' <inheritance item> (',' <inheritence item>)* ]
+<class definition>          ::= <class decl def> <class statements block>
 
-<inheritance item>  ::= [<access qualifier>] <dotted name> [<template args>]
+<class decl def>            ::= 'class' <identifier> [<template def>] [<inheritance> ]
+
+<class statements block>    ::= '{' [<class statements list>] '}'
+
+<class statements list>     ::= ( <access protection statement>                |
+                                  [<access qualifier>] <decl or def statement> |
+                                  <empty statement>                              )*
+
+<inheritance>               ::= ':' <inheritance item> (',' <inheritence item>)*
+
+<inheritance item>          ::= [<access qualifier>] <dotted name> [<template args>]
 
 
 
