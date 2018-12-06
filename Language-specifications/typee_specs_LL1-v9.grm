@@ -30,71 +30,76 @@ SOFTWARE.
 
 /*****   ATOMS   ****************************************************/
 
-<atom element>      ::= <atom> 
-                     |  <dotted name> <atom element'>
-                     |  <const qualifier> <atom element'''>
-                     |  <atom element'''>
-<atom element'>     ::= <atom element''>
-                     |  <dotted name'> <atom element'>
-                     |  <function call> <atom element'>
-                     |  <subscription or slicing> <atom element'>
-                     |  EPS
-<atom element''>    ::= <is instance of>
-                     |  <scalar type casting>
-<atom element'''>   ::= <scalar type> <scalar type casting>
+<atom element>              ::= <atom> 
+                             |  <dotted name> <atom element'>
+                             |  <const qualifier> <atom element'''>
+                             |  <NONE> <none coalescing>                            ###
+                             |  <atom element'''>
+<atom element'>             ::= <atom element''>
+##                             |  <dotted name'> <atom element'>                    ###
+                             |  <function call> <atom element'>
+                             |  <none coalescing>                                   ###
+                             |  <subscription or slicing> <atom element'>
+                             |  EPS
+<atom element''>            ::= <is instance of>
+                             |  <scalar type casting>
+<atom element'''>           ::= <scalar type> <scalar type casting>
 
-<atom>          ::= <decr> <dotted name> <incr or decr>
-                 |  <incr> <dotted name> <incr or decr>
-                 |  <dotted name> <incr or decr>                        ##
-                 |  <enclosure>
-                 |  <reference>
-                 |  <scalar>
-                 |  <string>
-                 |  <boolean>                                           ###
+<atom>                      ::= <boolean>                                           ###
+                             |  <decr> <dotted name> <incr or decr>
+                             |  <dotted name> <incr or decr>                        ##
+                             |  <enclosure>
+                             |  <incr> <dotted name> <incr or decr>
+                             |  <reference>
+                             |  <scalar>
+                             |  <string>
 
-<boolean>       ::= <TRUE>                                              ###
-                 |  <FALSE>                                             ###
+<boolean>                   ::= <TRUE>                                              ###
+                             |  <FALSE>                                             ###
 
-<bracket form>  ::= '[' <expression> <list or map form> ']'
+<bracket form>              ::= '[' <expression> <list or map form> ']'
 
-<decr>          ::= '--'
+<decr>                      ::= '--'
 
-<enclosure>     ::= <bracket form>
-                 |  <parenthesis form>
+<enclosure>                 ::= <bracket form>
+                             |  <parenthesis form>
 
-<incr>          ::= '++'
+<incr>                      ::= '++'
 
-<incr or decr>  ::= <decr>  |  <incr>  |  EPS
+<incr or decr>              ::= <decr>  |  <incr>  |  EPS
 
-<is instance of>    ::= '->' <dotted name>
+<is instance of>            ::= '->' <dotted name>
 
-<list or comprehension>    ::= <expr list'>
-                            |  <for comprehension>
-                            |  EPS
+<list or comprehension>     ::= <expr list'>
+                             |  <for comprehension>
+                             |  EPS
                  
-<list or map form>  ::= <list form>
-                     |  <map form>
+<list or map form>          ::= <list form>
+                             |  <map form>
 
-<list form>         ::= '[' <expression> <list or comprehension> ']'
+<list form>                 ::= '[' <expression> <list or comprehension> ']'
 
-<parenthesis form>  ::= '(' <expr list> ')'
+<none coalescing>           ::= '?' <expression>                                    ###
+                             |  EPS                                                 ###
 
-<reference>         ::= '@' <dotted name>
+<parenthesis form>          ::= '(' <expr list> ')'
 
-<scalar type casting>   ::= '(' <expression> ')'
+<reference>                 ::= '@' <dotted name>
 
-<slice end>     ::= ']'
-                 |  ')'
+<scalar type casting>       ::= '(' <expression> ')'
 
-<slice form>    ::= ':' <slice upper> <slice step>
+<slice end>                 ::= ']'
+                             |  ')'
 
-<slice step>    ::= ':' <slice step'>
-                 |  EPS
-<slice step'>   ::= <expression>
-                 |  EPS 
+<slice form>                ::= ':' <slice upper> <slice step>
 
-<slice upper>   ::= <expression>
-                 |  EPS
+<slice step>                ::= ':' <slice step'>
+                             |  EPS
+<slice step'>               ::= <expression>
+                             |  EPS 
+
+<slice upper>               ::= <expression>
+                             |  EPS
 
 <subscription or slicing>   ::= '[' <expression> <subscription or slicing'>
 <subscription or slicing'>  ::= <expr list'> ']'
