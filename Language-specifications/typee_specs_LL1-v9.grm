@@ -356,16 +356,19 @@ SOFTWARE.
 
 /*****   OPERATORS   ************************************************/
 
-<operator>              ::= '<='  |  '=='  |  '!='  |  '>='
-                         |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'
-                         |  '&'   |  '|'   |  '^'
-                         |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'
-                         |  '++'  |  '--'  |  '#'
-                         |  'in'
+<operator>              ::= <operator">                                                     ###
                          |  <assign op>
+                         |  <incr decr op>                                                  ###
 ##                         |  <cast op>                                                     ###
-<operator'>             ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
-
+<operator'>             ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'               ###
+<operator">             ::= '<='  |  '=='  |  '!='  |  '>='                                 ###
+                         |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'        ###
+                         |  '&'   |  '|'   |  '^'                                           ###
+                         |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'                        ###
+                         |  '#'                                                             ###
+                         |  'in'                                                            ###
+                         |  <assign op>                                                     ###
+                         
 <assign op>             ::= '='
                          |  <augmented assign op>
 
@@ -397,20 +400,27 @@ SOFTWARE.
                          |  'not' 'in'
 <comp operator'>        ::=  '<'  |  '>'
 
+<incr decr op>          ::= '++'                                                                            ###
+                         |  '--'                                                                            ###
+                         
 <is operator>           ::= 'is' <is operator'>
 <is operator'>          ::= 'not'
                          |  EPS
 
 <operator declaration>  ::= 'operator' <operator declaration'>
-<operator declaration'> ::= <operator> <template def> <function args declaration>
+<operator declaration'> ::= <operator"> <template def> <function args declaration>                          ###
                          |  <operator'> <spaced template def> <function args declaration>
+                         |  <incr decr op> <template def> <pre or post> <function args declaration>         ###
                          |  <call operator> <template def>
 
-<operator definition>   ::= 'operator' <operator definition'>
-<operator definition'>  ::= <operator> <template def> <function args declaration> <statements block>
-                         |  <operator'> <spaced template def> <function args declaration> <statements block>
-                         |  <call operator> <template def> <statements block>
+<operator definition>   ::= <operator declaration> <statements block>                                       ###
+##<operator definition'>  ::= <operator"> <template def> <function args declaration>                        ###
+##                         |  <operator'> <spaced template def> <function args declaration>                 ###
+##                         |  <incr decr op> <template def> <pre or post> <function args declaration>       ###
+##                         |  <call operator> <template def>                                                ###
 
+<pre or post>           ::= 'pre'                                                                           ###
+                         |  'post'                                                                          ###
 
 
 
