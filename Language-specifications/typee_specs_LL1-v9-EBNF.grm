@@ -257,15 +257,14 @@ SOFTWARE.
 
 /*****   OPERATORS   ************************************************/
 
-<operator>              ::= '<='  |  '=='  |  '!='  |  '>='  |
-                            '&'   |  '|'   |  '^'  |
-                            '++'  |  '--'  |  '#'  |
-                            'in'  |
-                            <op_add>  |  <op_mul>  |  <op_power>  |
-                            <op_user>  |  '??'  |
-                            <assign op>
+<operator>              ::= <operator">  |  <op_incr_decr>
 <operator'>             ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>' 
-
+<operator">             ::= '<='  |  '=='  |  '!='  |  '>='  |
+                            '&'   |  '|'   |  '^'   |  '#'   |
+                            'in'  |
+                            <op_add>   |  <op_mul>  |  <op_power>  |
+                            <op_user>  |
+                            <assign op>
 
 <assign op>             ::= '='  |  <augmented assign op>
 
@@ -277,22 +276,18 @@ SOFTWARE.
 <comp operator'>        ::=  '<'  |  '>' 
 
 <op_add>                ::= '+'   |  '-' 
+<op_incr_decr>          ::= '++'  |  '--' 
 <op_mul>                ::= '*'   |  '/'  |  '%' 
 <op_power>              ::= '**'  |  '^^' 
-<op_user>               ::= '@'   |  '><'  |  '!!'  |  '::' 
+<op_user>               ::= '@'   |  '><'  |  '!!'  |  '::'  |  '??'
 
 <operator declaration>  ::= 'operator' 
-                                ( (<operator> [<template def>] <function args declaration>)         |
-                                  (<operator'> [<spaced template def>] <function args declaration>) |
+                                ( (<operator"> [<template def>] <function args declaration>)                  |
+                                  (<operator'> [<spaced template def>] <function args declaration>)           |
+                                  (<incr decr op> [<template def>] <pre or post> <function args declaration>) |
                                   (<call operator> <template def>) )
 
-<operator definition>   ::= 'operator' 
-                                ( ( (<operator> [<template def>] |
-                                     <operator'> [<spaced template def>]) 
-                                  <function args declaration> )  |
-                                  ( <call operator> [<template def>] ) )
-                                <statements block>
-
+<operator definition>   ::= <operator declaration> <statements block>
 
 
 
