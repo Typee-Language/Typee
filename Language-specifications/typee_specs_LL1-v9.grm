@@ -110,16 +110,29 @@ SOFTWARE.
 
 /*****   CLASSES   *******************************************/
 
-<class definition>  ::= 'class' <identifier> <template def> <inheritance> <statements block>
+<class declaration>         ::= <forward> <class decl def> <simple statement end>                       ###
 
-<inheritance>   ::= ':' <inheritance item> <inheritance'>
-                 |  EPS
-<inheritance'>  ::= ',' <inheritence item> <inheritance'>
-                 |  EPS
+<class definition>          ::= <class decl def> <class statements block>                               ###
 
-<inheritance item>  ::= <access qualifier> <inheritance item'>    
-                     |  <inheritance item'>                            
-<inheritance item'> ::= <dotted name> <template args>                
+<class decl def>            ::= 'class' <identifier> <template def> <inheritance>                       ###
+
+<class statements block>    ::= '{' <class statements list> '}'                                         ###
+
+<class statements list>     ::= <access protection statement> <class statements list>                   ###
+                             |  <access qualifier> <decl or def statement> <class statements list>      ###
+                             |  <decl or def statement> <class statements list>                         ###
+                             |  <empty statement> <class statements list>                               ###
+                             |  EPS                                                                     ###
+
+
+<inheritance>               ::= ':' <inheritance item> <inheritance'>
+                             |  EPS
+<inheritance'>              ::= ',' <inheritence item> <inheritance'>
+                             |  EPS
+
+<inheritance item>          ::= <access qualifier> <inheritance item'>    
+                             |  <inheritance item'>                            
+<inheritance item'>         ::= <dotted name> <template args>                
 
 
 
@@ -507,9 +520,6 @@ SOFTWARE.
                          |  <while statement>
                          |  <with statement>
 
-<empty statement>   ::= <comment>
-                     |  <NEWLINE>
-
 <simple statement>  ::= <access protection statement> <simple statement end>
                      |  <assert statement> <simple statement end>
                      |  <del statement> <simple statement end>
@@ -618,6 +628,9 @@ SOFTWARE.
                              |  '}' <embedded language code">
 <embedded language code">   ::= <any embedded code char> <embeded language code'>
                              |  '}'
+
+<empty statement>           ::= <comment>
+                             |  <NEWLINE>
 
 <ensure statement>          ::= 'ensure' <expression> <ensure statement'>
 <ensure statement'>         ::= ',' <expression>
