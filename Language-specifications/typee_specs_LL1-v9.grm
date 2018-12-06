@@ -147,18 +147,8 @@ SOFTWARE.
                  |  <comp operator'> <spaced template args> <bitor expr> <comparison'>
                  |  EPS
 
-<comp operator>     ::= '<='  |  '=='  |  '!='  |  '>='
-                     |  'in'
-                     |  <is operator>
-                     |  'not' 'in'
-<comp operator'>    ::=  '<'  |  '>'
-
 <condition or unnamed func> ::= <or test>
                              |  <unnamed func>          ##
-
-<is operator>   ::= 'is' <is operator'>
-<is operator'>  ::= 'not'
-                 |  EPS
 
 <not test>      ::= 'not' <not test>
                  |  <comparison>
@@ -263,8 +253,6 @@ SOFTWARE.
 
 ## <abstract qualifier>        ::= 'abstract'                                       ##
 
-<call operator>             ::= '(' ')'
-
 ## <final qualifier>           ::= 'final'                                          ##
 
 <function args declaration> ::= '(' <typed args list> ')'
@@ -278,26 +266,6 @@ SOFTWARE.
                              |  EPS
 <function call args">       ::= <expression> <function call args'>
                              |  <ellipsis> <identifier>
-
-<operator>      ::= '<='  |  '=='  |  '!='  |  '>='
-                 |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'
-                 |  '&'   |  '|'   |  '^'
-                 |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'
-                 |  '++'  |  '--'  |  '#'
-                 |  'in'
-                 |  <assign op>
-##                 |  <cast op>                                                     ###
-<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
-
-<operator declaration>  ::= 'operator' <operator declaration'>
-<operator declaration'> ::= <operator> <template def> <function args declaration>
-                         |  <operator'> <spaced template def> <function args declaration>
-                         |  <call operator> <template def>
-
-<operator definition>   ::= 'operator' <operator definition'>
-<operator definition'>  ::= <operator> <template def> <function args declaration> <statements block>
-                         |  <operator'> <spaced template def> <function args declaration> <statements block>
-                         |  <call operator> <template def> <statements block>
 
 <returned type>     ::= <TYPE>
                      |  EPS
@@ -377,6 +345,66 @@ SOFTWARE.
 
 <TRUE>                          ::= 'True'
                                  |  'true'
+
+
+
+
+/*****   OPERATORS   ************************************************/
+
+<operator>              ::= '<='  |  '=='  |  '!='  |  '>='
+                         |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'
+                         |  '&'   |  '|'   |  '^'
+                         |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'
+                         |  '++'  |  '--'  |  '#'
+                         |  'in'
+                         |  <assign op>
+##                         |  <cast op>                                                     ###
+<operator'>             ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
+
+<assign op>             ::= '='
+                         |  <augmented assign op>
+
+<augmented assign op>   ::= '+='
+                         |  '-='
+                         |  '*='
+                         |  '/='
+                         |  '%='
+                         |  '&='
+                         |  '|='
+                         |  '^='
+                         |  '<<='
+                         |  '<<<='
+                         |  '>>='
+                         |  '>>>='
+                         |  '**='
+                         |  '^^='
+                         |  '@='
+                         |  '><='
+                         |  '!!='
+                         |  '::='
+                         |  '??='
+
+<call operator>         ::= '(' ')'
+
+<comp operator>         ::= '<='  |  '=='  |  '!='  |  '>='
+                         |  'in'
+                         |  <is operator>
+                         |  'not' 'in'
+<comp operator'>        ::=  '<'  |  '>'
+
+<is operator>           ::= 'is' <is operator'>
+<is operator'>          ::= 'not'
+                         |  EPS
+
+<operator declaration>  ::= 'operator' <operator declaration'>
+<operator declaration'> ::= <operator> <template def> <function args declaration>
+                         |  <operator'> <spaced template def> <function args declaration>
+                         |  <call operator> <template def>
+
+<operator definition>   ::= 'operator' <operator definition'>
+<operator definition'>  ::= <operator> <template def> <function args declaration> <statements block>
+                         |  <operator'> <spaced template def> <function args declaration> <statements block>
+                         |  <call operator> <template def> <statements block>
 
 
 
@@ -506,33 +534,10 @@ SOFTWARE.
                                          |  <decl or def statement>
                                          |  <dotted name> <assign or func-call statement> <simple statement end>
 
-<assign op> ::= '='
-             |  <augmented assign op>
-
 <assign or func-call statement> ::= <target list'> <assignment statement>
                                  |  <function call>
 
 <assignment statement>    ::= <assign op> <expr list>
-
-<augmented assign op>   ::= '+='
-                         |  '-='
-                         |  '*='
-                         |  '/='
-                         |  '%='
-                         |  '&='
-                         |  '|='
-                         |  '^='
-                         |  '<<='
-                         |  '<<<='
-                         |  '>>='
-                         |  '>>>='
-                         |  '**='
-                         |  '^^='
-                         |  '@='
-                         |  '><='
-                         |  '!!='
-                         |  '::='
-                         |  '??='
 
 <case>      ::= 'case' <expr list> <statements block>
 
