@@ -411,7 +411,8 @@ SOFTWARE.
                                 <type alias> <simple statement end>           |
                                 <decl or def statement''>
 
-<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  |  
+<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>        |  
+                                [<const qualifier>] <container decl> ';'  |             ## <---
                                 <identifier> <decl constructor or decl end>
 
 <decl or def statement'''>  ::= <identifier> <decl or def statement''''>  |
@@ -625,13 +626,14 @@ SOFTWARE.
 <TYPE>                  ::= [<const qualifier>] <type>             
 <TYPE'>                 ::= <const qualifier> <type>  |  <type'>
 
-<type>                  ::= <type'>  |  <templated type> [<dimensions>]
-<type'>                 ::= <auto type>                  |
-                            <container type>             |
-                            <enum type>                  |
-                            <NONE>                       |
-                            <scalar type> [<dimensions>] |
-                            <enclosed types list>     
+<type>                  ::= <type'>                         |
+                            <templated type> [<dimensions>]
+<type'>                 ::= <auto type>                     |
+##                            <container type>                |         ###
+                            <enclosed types list>           |
+                            <enum type>                     |
+                            <NONE>                          |
+                            <scalar type> [<dimensions>] 
 
 
 <array type>            ::= 'array' <contained type>
@@ -642,7 +644,7 @@ SOFTWARE.
 
 <contained type>        ::= '<' <types list> '>' 
 
-<container type>        ::= <array_type>  |  <file type>  |  <list type>  |
+<container type>        ::= <array type>  |  <file type>  |  <list type>  |
                             <map type>    |  <set type>
 
 <dimensions>            ::= ( '[' <integer number> | <dotted name> ']' )*
@@ -676,7 +678,7 @@ SOFTWARE.
                              <templated type>) 
                                  ( ',' (<expression> | <templated type>) )*
 
-<types list>            ::= <TYPE> ( ',' <TYPE> )*
+<types list>            ::= <TYPE>  |  '(' <TYPE> ( ',' <TYPE> )* ')'
 
 <volatile qualifier>    ::= 'volatile' 
 
