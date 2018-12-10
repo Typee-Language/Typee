@@ -101,11 +101,12 @@ SOFTWARE.
 <slice upper>               ::= <expression>
                              |  EPS
 
-<subscription or slicing>   ::= '[' <expression> <subscription or slicing'>
-<subscription or slicing'>  ::= <expr list'> ']'
+<subscription or slicing>   ::= '[' <expression> <subscription or slicing'> <subscription or slicing''> ###
+<subscription or slicing'>  ::= ']'                                                                     ###
                              |  <if comprehension>
                              |  <slice form> <slice end>
-
+<subscription or slicing''> ::= '[' <expression> <subscription or slicing'> <subscription or slicing''> ###
+                             |  EPS                                                                     ###
 
 
 /*****   CLASSES   *******************************************/
@@ -603,6 +604,7 @@ SOFTWARE.
                              |  <decl or def statement''>
 <decl or def statement''>   ::= ##<TYPE'> <decl or def statement'''>                                                ###
                                 <const qualifier> <decl or def statement'''>                                        ###
+                             |  <decl or def statement'''>                                                          ###
                              |  <identifier> <decl constructor or decl end>
 <decl or def statement'''>  ::= <non container type> <decl or def statement''''>                                    ###
                              |  <container declaration>                                                             ###
@@ -921,10 +923,10 @@ SOFTWARE.
          |  <enum type>
 ##         |  <file type>                                           ###
          |  <NONE>
-         |  <scalar type> <dimensions>
+         |  <scalar type> ##<dimensions>                            ###
 
 
-<array type>            ::= 'array' <declared contained type>
+<array type>            ::= 'array' <declared contained type> <dimensions>  ###
 
 <auto type>             ::= '?' <auto type'>
 <auto type'>            ::= 'in' <enclosed types list>              ###
@@ -947,6 +949,7 @@ SOFTWARE.
                          |  EPS
 <dimensions'>           ::= <integer number>
                          |  <dotted name>
+                         |  EPS                                     ###
 
 <enclosed types list>   ::= '(' <types list> ')'
 
@@ -957,6 +960,8 @@ SOFTWARE.
 <list type>             ::= 'list' <contained type>
 
 <map type>              ::= 'map' <contained type>
+
+<non container type>    ::= <type>
 
 <scalar type>           ::= 'bool'
                          |  'char'
