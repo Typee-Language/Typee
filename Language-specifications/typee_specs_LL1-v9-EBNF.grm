@@ -71,9 +71,12 @@ SOFTWARE.
 
 <slice form>            ::= ':' [<expression>]  [ ':' [<expression>] ]
 
-<subscription or slicing>   ::= '[' <expression>  (( ',' <expression> )* ']'  |
-                                                        <if comprehension> ']'  |
-                                                        <slice form> <slice end> )
+<subscription or slicing>   ::= <subscription or slicing'>
+                                    (<subscription or slicing'>)*
+<subscription or slicing'>  ::= '[' <expression>
+                                    ( ']'                     |
+                                      <if comprehension> ']'  |
+                                      <slice form> <slice end> )
 
 
 
@@ -370,6 +373,15 @@ SOFTWARE.
 <access qualifier>          ::= 'hidden'  |  'local'  |  'private'  |
                                 'protected'  |  'public' 
 
+
+<array content>         ::= '[' (<array items list> | <array content>) ']'
+
+<array declaration>     ::= <array type> <identifier> [ '=' <array content> ]
+
+<array items list>      ::= <expression> ( ',' <expression> )*
+
+
+
 <assert statement>          ::= 'assert' <expression> ( ',' <expression>) *
 
 <assign decl def func-call statement>   ::= [<access qualifier>]
@@ -411,15 +423,17 @@ SOFTWARE.
                                 <type alias> <simple statement end>           |
                                 <decl or def statement''>
 
-<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>        |  
-                                [<const qualifier>] <container decl> ';'  |             ## <---
+<decl or def statement''>   ::= [<const qualifier>] <decl or def statement'''> |
                                 <identifier> <decl constructor or decl end>
 
-<decl or def statement'''>  ::= <identifier> <decl or def statement''''>  |
+<decl or def statement'''>  ::= <type> <decl or def statement''''>  |
+                                <container declaration>
+
+<decl or def statement''''> ::= <identifier> <decl or def statement'''''>  |
                                 <operator definition>
 
-<decl or def statement''''> ::= <function definition>  |  
-                                [<var declarations or assignments>]
+<decl or def statement''''> ::= <function definition>           | 
+                                <var declaration or assignment>
                                     <simple statement end>
 
 <del statement>             ::= ( 'del' | 'delete' ) <identifiers list>
@@ -629,14 +643,13 @@ SOFTWARE.
 <type>                  ::= <type'>                         |
                             <templated type> [<dimensions>]
 <type'>                 ::= <auto type>                     |
-##                            <container type>                |         ###
                             <enclosed types list>           |
                             <enum type>                     |
                             <NONE>                          |
-                            <scalar type> [<dimensions>] 
+                            <scalar type> 
 
 
-<array type>            ::= 'array' <contained type>
+<array type>            ::= 'array' <contained type> <dimensions>
 
 <auto type>             ::= '?' [ 'in' <enclosed types list> ]
 
@@ -647,7 +660,8 @@ SOFTWARE.
 <container type>        ::= <array type>  |  <file type>  |  <list type>  |
                             <map type>    |  <set type>
 
-<dimensions>            ::= ( '[' <integer number> | <dotted name> ']' )*
+<dimensions>            ::= '[' [<integer number> | <dotted name>] ']'
+                                ( '[' [<integer number> | <dotted name>] ']' )*
 
 <enclosed types list>   ::= '(' <types list> ')' 
 
