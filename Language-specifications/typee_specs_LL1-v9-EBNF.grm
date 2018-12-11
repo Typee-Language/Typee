@@ -472,9 +472,9 @@ SOFTWARE.
                                 <raise statement>  |  <return statement>
 
 <for statement>             ::= 'for' '(' <typed targets list>
-                                    'in' <expr list> ')' <statements block>
+                                    'in' <indexed expr list> ')' <statements block>
                                     [ 'otherwise' <statements block> ]
-
+                                    
 <forever statement>         ::= 'forever' '(' ')' <statements block>
 
 <forward>                   ::= 'forward'  |  'fwd' 
