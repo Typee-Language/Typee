@@ -203,7 +203,7 @@ SOFTWARE.
 <unnamed func>              ::= <unnamed> [<TYPE>] <function args declaration>
                                     <statements block>
 
-<var or func identifier>    ::= <identifier> [<function args declaraion>]
+<var or func identifier>    ::= <identifier> [<function args declaration>]
 
 
 /*****   MISC   *****************************************************/
