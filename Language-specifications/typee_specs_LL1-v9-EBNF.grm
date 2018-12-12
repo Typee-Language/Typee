@@ -374,14 +374,9 @@ SOFTWARE.
 <access qualifier>          ::= 'hidden'  |  'local'  |  'private'  |
                                 'protected'  |  'public' 
 
-
-<array content>         ::= '[' (<array items list> | <array content>) ']'
+<array content>         ::= '[' (<items list> | <array content>) ']'
 
 <array declaration>     ::= <array type> <identifier> [ '=' <array content> ]
-
-<array items list>      ::= <expression> ( ',' <expression> )*
-
-
 
 <assert statement>          ::= 'assert' <expression> ( ',' <expression>) *
 
@@ -407,6 +402,12 @@ SOFTWARE.
 <comment>                   ::= '//' ( (<any non newline char>)* |
                                             <line end>          )  |
                                 '/*' <multi lines comment>
+
+<container declaration>     ::= <array declaration> |
+                                <file declaration>  |
+                                <list declaration>  |
+                                <map declaration>   |
+                                <set declaration>
 
 <decl constructor or decl end>  ::= ( '.' <identifier> )*
                                         <decl or def statement'''>  |
@@ -531,7 +532,13 @@ SOFTWARE.
 
 <import statement>          ::= <import name>  |  <import from>
 
+<items list>                ::= <expression> ( ',' <expression> )*
+
 <language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py' 
+
+<list content>              ::= '[' (<items list> | <list content>) ']'
+
+<list declaration>          ::= <list type> <identifier> [ '=' <list content> ]
 
 <memory address>            ::= '@' <integer number>
 
