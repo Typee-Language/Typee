@@ -555,15 +555,11 @@ SOFTWARE.
                      |  'protected'
                      |  'public'
 
-<array content>         ::= '[' (<array items list> | <array content>) ']'
+<array content>         ::= '[' (<items list> | <array content>) ']'
 
 <array declaration>     ::= <array type> <identifier> <array declaration'>          ###
 <array declaration'>    ::= '=' <array content>                                     ###
                          |  EPS                                                     ###
-
-<array items list>      ::= <expression> <array items list'>                        ###
-<array items list'>     ::= ',' <expression> <array items list'>                    ###
-                            EPS                                                     ###
 
 <assert statement>  ::= 'assert' <expression> <assert statement'>
 <assert statement'> ::= ',' <expression>
@@ -744,7 +740,17 @@ SOFTWARE.
 <import statement>          ::= <import name>
                              |  <import from>
 
-<language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'
+<list content>              ::= '[' (<items list> | <list content>) ']'
+
+<items list>                ::= <expression> <items list'>                                              ###
+<items list'>               ::= ',' <expression> <items list'>                                          ###
+                             |  EPS                                                                     ###
+
+<language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'  |  'C#'
+
+<list declaration>          ::= <list type> <identifier> <list declaration'>                            ###
+<list declaration'>         ::= '=' <list content>                                                      ###
+                             |  EPS                                                                     ###
 
 <memory address>            ::= '@' <integer number>
                              |  EPS
