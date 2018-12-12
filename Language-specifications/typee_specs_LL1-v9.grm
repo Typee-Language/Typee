@@ -289,9 +289,9 @@ SOFTWARE.
 <returned type>     ::= <TYPE>
                      |  EPS
 
-<typed args list>   ::= <TYPE> <identifier> <typed args list'>
+<typed args list>   ::= <TYPE> <var or func identifier> <typed args list'>          ###
                      |  EPS
-<typed args list'>  ::= ',' <TYPE> <identifier> <typed args list'>
+<typed args list'>  ::= ',' <TYPE> <var or func identifier> <typed args list'>      ###
                      |  EPS
 
 <unnamed>   ::= 'unnamed'
@@ -299,6 +299,9 @@ SOFTWARE.
 
 <unnamed func> ::= <unnamed> <returned type> <function args declaration> <statements block>
 
+<var or func identifier>    ::= <identifier> <var or func identifier'>              ###
+<var or func identifier'>   ::= <function args delcaration>                         ###
+                             |  EPS                                                 ###
 
 
 
