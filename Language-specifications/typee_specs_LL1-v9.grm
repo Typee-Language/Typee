@@ -300,7 +300,7 @@ SOFTWARE.
 <unnamed func> ::= <unnamed> <returned type> <function args declaration> <statements block>
 
 <var or func identifier>    ::= <identifier> <var or func identifier'>              ###
-<var or func identifier'>   ::= <function args declaration>                         ###
+<var or func identifier'>   ::= <enclosed types list>                               ###
                              |  EPS                                                 ###
 
 
