@@ -196,13 +196,14 @@ SOFTWARE.
                                             <ellipsis> <identifier> )  |
                                       <for comprehension>] ]
 
-<typed args list>           ::= <TYPE> <identifier> ( ',' <TYPE> <identifier> )*
+<typed args list>           ::= <TYPE> <var or func identifier> ( ',' <TYPE> <var or func identifier> )*
 
 <unnamed>                   ::= 'unnamed'  |  'lambda' 
 
 <unnamed func>              ::= <unnamed> [<TYPE>] <function args declaration>
                                     <statements block>
 
+<var or func identifier>    ::= <identifier> [<function args declaraion>]
 
 
 /*****   MISC   *****************************************************/
