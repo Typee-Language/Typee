@@ -153,13 +153,13 @@ SOFTWARE.
 <indexed expr list>     ::= 'indexed' '(' <expr list> ')'  |
                             <expr list>
 
-<map form>              ::= ':' <expression> <map list or comprehension>
+<map form>              ::= ':' <expression> [<map list or comprehension>]
 
 <map item>              ::= <expression> ':' <expression>
 
 <map list>              ::= ( ',' <map item> )*
              
-<map list or comprehension> ::= [ ',' <map item> ]  |  <for comprehension>
+<map list or comprehension> ::= <map list>  |  <for comprehension>
 
 <bitand expr>           ::= <shift expr> ( '&' [<template args>] <shift expr> )*
 
@@ -539,6 +539,10 @@ SOFTWARE.
 <list content>              ::= '[' (<items list> | <list content>) ']'
 
 <list declaration>          ::= <list type> <identifier> [ '=' <list content> ]
+
+<map content>               ::= '[' [<expression> <map form>] ']' 
+
+<map declaration>           ::= <map type> <identifier> [ '=' <map content> ]
 
 <memory address>            ::= '@' <integer number>
 
