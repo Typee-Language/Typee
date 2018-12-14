@@ -209,13 +209,14 @@ SOFTWARE.
 
 <map form>    ::= ':' <expression> <map list or comprehension>
 
-<map item>    ::= <expression> ':' <expression>
+<map entry>   ::= <expression> ':' <expression>
 
-<map list>    ::= ',' <map item> <map list>
+<map list>    ::= ',' <map entry> <map list>
                |  EPS
              
-<map list or comprehension> ::= ',' <map item> <map list>
+<map list or comprehension> ::= ',' <map entry> <map list>
                              |  <for comprehension>
+                             |  EPS                         ###
 
 <bitand expr>   ::= <shift expr> <bitand expr'>
 <bitand expr'>  ::= '&' <template args> <shift expr> <bitand expr'>
@@ -740,16 +741,20 @@ SOFTWARE.
 <import statement>          ::= <import name>
                              |  <import from>
 
-<list content>              ::= '[' (<items list> | <list content>) ']'
-
 <items list>                ::= <expression> <items list'>                                              ###
 <items list'>               ::= ',' <expression> <items list'>                                          ###
                              |  EPS                                                                     ###
 
 <language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'  |  'C#'
 
+<list content>              ::= '[' (<items list> | <list content>) ']'                                 ###
+
 <list declaration>          ::= <list type> <identifier> <list declaration'>                            ###
 <list declaration'>         ::= '=' <list content>                                                      ###
+                             |  EPS                                                                     ###
+
+<map declaration>           ::= <map type> <identifier> <map declaration'>                              ###
+<map declaration'>          ::= '=' '[' <expression> <map form> ']'                                     ###
                              |  EPS                                                                     ###
 
 <memory address>            ::= '@' <integer number>
