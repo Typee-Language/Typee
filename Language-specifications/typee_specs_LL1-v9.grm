@@ -742,6 +742,7 @@ SOFTWARE.
                              |  <import from>
 
 <items list>                ::= <expression> <items list'>                                              ###
+                             |  EPS                                                                     ###
 <items list'>               ::= ',' <expression> <items list'>                                          ###
                              |  EPS                                                                     ###
 
@@ -789,6 +790,14 @@ SOFTWARE.
                              |  'return' <return statement'>
 <return statement'>         ::= <expr list>
                              |  EPS
+                             
+<set content>               ::= (<expression> | <for comprehension>) <set content'>                     ###
+                             |  EPS                                                                     ###
+<set content'>              ::= ',' (<expression> | <for comprehension>) <set content'>                 ###
+                             |  EPS                                                                     ###
+<set declaration>           ::= <set type> <identifier> <set declaration'>                              ###
+<set declaration'>          ::= '=' '[' <set content> ']'                                               ###
+                             |  EPS                                                                     ###
 
 <switch block>              ::= <case> <switch block>
                              |  EPS
@@ -948,8 +957,8 @@ SOFTWARE.
 
 <const qualifier>       ::= 'const'
 
-<contained type>        ::= <declared contained type>
-                         |  EPS
+## <contained type>        ::= <declared contained type>            ###
+##                          |  EPS                                  ###
 
 <container type>        ::= <array type>
                          |  <file type>                             ###
@@ -957,7 +966,10 @@ SOFTWARE.
                          |  <map type>
                          |  <set type>
 
-<declared contained type>   ::= '<' <types list> '>'                ###
+<declared contained type>   ::= '<' <declared contained type'>                      ###
+<declared contained type'>  ::= <TYPE> <declared contained type">                   ###
+                             |  <enclosed types list> <declared contained type">    ###
+<declared contained type">  ::= '>'                                                 ###
 
 <dimensions>            ::= '[' <dimensions'> ']' <dimensions> 
                          |  EPS
@@ -965,15 +977,17 @@ SOFTWARE.
                          |  <dotted name>
                          |  EPS                                     ###
 
-<enclosed types list>   ::= '(' <types list> ')'
+<enclosed types list>   ::= '(' <TYPE> <enclosed types list'> ')'   ###
+<enclosed types list'>  ::= ',' <TYPE> <enclosed types list'>       ###
+                         |  EPS                                     ###
 
 <enum type>             ::= 'enum'
 
-<file type>             ::= 'file' <contained type>
+<file type>             ::= 'file' <declared contained type>        ###
 
-<list type>             ::= 'list' <contained type>
+<list type>             ::= 'list' <declared contained type>        ###
 
-<map type>              ::= 'map' <contained type>
+<map type>              ::= 'map' <declared contained type>         ###
 
 <non container type>    ::= <type>
 
@@ -996,7 +1010,7 @@ SOFTWARE.
 <scalar type or dotted name>    ::= <scalar type>
                                  |  <dotted name>
 
-<set type>              ::= 'set' <contained type>
+<set type>              ::= 'set' <declared contained type>         ###
 
 <static qualifier>      ::= 'static'
 
@@ -1010,9 +1024,10 @@ SOFTWARE.
 <types and exprs list"> ::= <expression>
                          |  <templated type>
 
-<types list>            ::= <TYPE> <types list'>
-<types list'>           ::= ',' <TYPE> <types list'>
-                         |  EPS
+<types list>            ::= <TYPE>                                  ###
+                         |  <enclosed types list>                   ###
+##<types list'>           ::= ',' <TYPE> <types list'>              ###
+##                         |  EPS                                   ###
 
 <volatile qualifier>    ::= 'volatile'
 

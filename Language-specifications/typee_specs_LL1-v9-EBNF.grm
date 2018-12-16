@@ -102,7 +102,7 @@ SOFTWARE.
 
 /*****   COMPREHENSION   ********************************************/
 
-<for comprehension>     ::= 'for' '(' <target list> 
+<for comprehension>     ::= 'for' '(' <targets list> 
                                 'in' <or test> <iter comprehension> ')' 
 
 <if comprehension>      ::= 'if' '(' (<or test> | <unnamed func>) ')' 
@@ -532,7 +532,7 @@ SOFTWARE.
 
 <import statement>          ::= <import name>  |  <import from>
 
-<items list>                ::= <expression> ( ',' <expression> )*
+<items list>                ::= [ <expression> ( ',' <expression> )* ]
 
 <language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py' 
 
@@ -562,6 +562,12 @@ SOFTWARE.
 <require statement>         ::= 'require' <expression> [ ',' <expression> ]
 
 <return statement>          ::= ( 'ret' | 'return' ) <expr list>
+
+<set content>               ::= '[' <set item> ( ',' <set item> )* ']'
+
+<set declaration>           ::= <set type> <identifier> [ '=' <set content> ]
+
+<set item>                  ::= <expression> [<for comprehension>]
 
 <switch block>              ::= (<case> [<switch block>])*
 
@@ -667,7 +673,7 @@ SOFTWARE.
 
 <const qualifier>       ::= 'const' 
 
-<contained type>        ::= '<' <types list> '>' 
+<contained type>        ::= '<' (<TYPE> | <enclosed types list>) '>' 
 
 <container type>        ::= <array type>  |  <file type>  |  <list type>  |
                             <map type>    |  <set type>
@@ -704,7 +710,7 @@ SOFTWARE.
                              <templated type>) 
                                  ( ',' (<expression> | <templated type>) )*
 
-<types list>            ::= <TYPE>  |  '(' <TYPE> ( ',' <TYPE> )* ')'
+<types list>            ::= <TYPE> ( ',' <TYPE> )*
 
 <volatile qualifier>    ::= 'volatile' 
 
