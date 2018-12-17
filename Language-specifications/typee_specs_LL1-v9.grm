@@ -44,6 +44,7 @@ SOFTWARE.
 <atom element''>            ::= <is instance of>
                              |  <scalar type casting>
 <atom element'''>           ::= <scalar type> <scalar type casting>
+                             |  <set litteral>                                      ###
 
 <atom>                      ::= <boolean>                                           ###
                              |  <decr> <dotted name> <incr or decr>
@@ -746,7 +747,7 @@ SOFTWARE.
 <items list'>               ::= ',' <expression> <items list'>                                          ###
                              |  EPS                                                                     ###
 
-<language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'  |  'C#'
+<language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'  |  'C#'    ###
 
 <list content>              ::= '[' (<items list> | <list content>) ']'                                 ###
 
@@ -790,14 +791,21 @@ SOFTWARE.
                              |  'return' <return statement'>
 <return statement'>         ::= <expr list>
                              |  EPS
-                             
-<set content>               ::= (<expression> | <for comprehension>) <set content'>                     ###
-                             |  EPS                                                                     ###
-<set content'>              ::= ',' (<expression> | <for comprehension>) <set content'>                 ###
-                             |  EPS                                                                     ###
+
 <set declaration>           ::= <set type> <identifier> <set declaration'>                              ###
-<set declaration'>          ::= '=' '[' <set content> ']'                                               ###
+<set declaration'>          ::= '=' <set litteral>                                                      ###
                              |  EPS                                                                     ###
+
+<set item>                  ::= <expression> <set item'>                                                ###
+<set item'>                 ::= <for comprehension>                                                     ###
+                             |  EPS                                                                     ###
+
+<set items list>            ::= <set item> <set items list'>                                            ###
+<set items list'>           ::= ',' <set item> <set items list'>                                        ###
+                             |  EPS                                                                     ###
+
+<set litteral>              ::= '[' <set items list> ']'                                                ###
+                             |  <set type> '(' <set items list> ')'                                     ###
 
 <switch block>              ::= <case> <switch block>
                              |  EPS

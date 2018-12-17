@@ -32,8 +32,9 @@ SOFTWARE.
 
 <atom element>          ::= <atom>                           |
                             <dotted name> [<atom element'>]  |
-                            [ <const qualifier> ] <scalar type> 
-                                <scalar type casting>
+                            [ <const qualifier> ]
+                                (<scalar type> <scalar type casting>) |
+                                 <set litteral>                        )
                             
 <atom element'>         ::= <is instance of>  |
                             <scalar type casting>  |
@@ -563,11 +564,14 @@ SOFTWARE.
 
 <return statement>          ::= ( 'ret' | 'return' ) <expr list>
 
-<set content>               ::= '[' <set item> ( ',' <set item> )* ']'
-
-<set declaration>           ::= <set type> <identifier> [ '=' <set content> ]
+<set declaration>           ::= <set type> <identifier> [ '=' <set litteral> ]
 
 <set item>                  ::= <expression> [<for comprehension>]
+
+<set items list>            ::= <set item> ( ',' <set item> )*
+
+<set litteral>              ::= '[' <set items list> ']'  |
+                                <set type> '(' <set items list> ')'
 
 <switch block>              ::= (<case> [<switch block>])*
 
