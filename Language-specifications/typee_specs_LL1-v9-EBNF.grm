@@ -353,11 +353,11 @@ SOFTWARE.
 
 <empty statement>           ::= <comment>  |  <NEWLINE>
 
-<simple statement>          ::= ( <assert statement> | <del statement>  |
-                                  <ensure statement> | <flow statement> |
-                                  <import statement> | <nop statement>  |
-                                  <access protection statement>         |
-                                  <require statement> )
+<simple statement>          ::= ( <access protection statement>           |
+                                  <assert statement> | <del statement>    |
+                                  <ensure statement> | <file flushing>    |
+                                  <flow statement>   | <import statement> |
+                                  <nop statement>    | <require statement>  )
                                 <simple statement end>
 
 <simple statement end>      ::= ';' 
@@ -470,7 +470,9 @@ SOFTWARE.
 <enum definition>           ::= '{' <enum item> (',' <enum item>)* '}' 
 
 <enum item>                 ::= <identifier> [ '=' <expression> ]
-                             
+
+<file flushing>             ::= '!' <dotted name>
+
 <flow statement>            ::= 'break'  |  'continue'  |
                                 <raise statement>  |  <return statement>
 

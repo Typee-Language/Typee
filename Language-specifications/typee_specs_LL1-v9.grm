@@ -530,6 +530,7 @@ SOFTWARE.
                      |  <assert statement> <simple statement end>
                      |  <del statement> <simple statement end>
                      |  <ensure statement> <simple statement end>
+                     |  <file flushing> <simple statement end>                      ###
                      |  <flow statement> <simple statement end>
                      |  <import statement> <simple statement end>
                      |  <nop statement> <simple statement end>
@@ -668,6 +669,8 @@ SOFTWARE.
                              |  EPS                                                         ###
 <enum list'>                ::= ',' <enum item> <enum list'>                                ###
                              |  EPS                                                         ###
+
+<file flushing>             ::= '!' <dotted name>                                           ###
 
 <flow statement>            ::= 'break'
                              |  'continue'
