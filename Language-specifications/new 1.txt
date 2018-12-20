@@ -1,0 +1,109 @@
+<h4>4.5.4 Files Reading</h4>
+
+Reading items from a file is operated by two functions with a few different signatures and with streaming and indexing operators. All of these raise <code>FilePosException</code> in case of out-of-bounds indexing and also <code>FileNotOpenedException</code>, <code>ClosedFileException</code>, <code>FileAccessException</code>, <code>TypeException</code> or <code>FileException</code> in case of related errors.
+
+Objects in <strong>Typee</strong> are <em>serializable</em> for reading as long as the classes they are instances of define <code>operator &lt;&lt;</code>. Should some attribute be an instance of another class, this other class should also define <code>operator &lt;&lt;</code>. If not, an error will be set at translation time. Once every attribute of an object is serializable for reading, the object itself can be read from file with any of the described next functions and operators. We provide examples of overridding <code>operator &lt;&lt;</code> in the chapter dedicated to the learning of <strong>Typee</strong>.
+
+
+<h5>4.5.4.1 Reading at current position of cursor</h5>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h6 class="f"><strong>file</strong> write( <strong>const ? in (str,str16)</strong> s)</h6>
+Writes the specified string <code>s</code> plus an ending '\n' at current position of cursor into file.
+Returns a reference to the operated file, for read and write operations to be cascadable.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+my_file.write( 'abc' ).write( 'def' );
+// <i>writes  "abc\ndef\n" at current position of file cursor</i>
+</pre>
+
+
+<h6 class="s"><strong>file operator &gt;&gt;</strong> ( <strong>file</strong> f, <strong>const ? in (str,str16)</strong> s)</h6>
+<h6 class="s"><strong>none operator &gt;&gt;=</strong> ( <strong>file</strong> f, <strong>const ? in (str,str16)</strong> s)</h6>
+Writes the specified string <code>s</code> plus an ending '\n' at current position of cursor into file <code>f</code>, the same way as function <code>append()</code> with above signature.
+Returns a reference to the operated file, for read and write operations to be cascadable.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+my_file &gt;&gt; 'abc' &gt;&gt; 'def';
+my_file &gt;&gt;= 'g'
+// <i>appends 'a', 97, 'b', 98, 'c', 99, 'd' and 100 at end of file</i>
+</pre>
+
+
+<h6 class="f"><strong>file</strong> write( <strong>?</strong> item )</h6>
+<h6 class="s"><strong>file</strong> write( <strong>?</strong> item, <strong>cont uint64</strong> n )</h6>
+Writes the specified item at end of file. Here, the type of the item is none of <code class="kw">array</code>, <code class="kw">list</code>, <code class="kw">map</code> or <code class="kw">set</code> since these have already been specified in previous signatures of this method.
+If <code>n</code> is specified, the item is appended <code>n</code> times to file.
+Returns a reference to the operated file, for read and write operations to be cascadable.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+my_file.append( 10 ).append( 11, 3 );
+// <i>appends 10, 11, 11 and 11 at end of file</i>
+</pre>
+
+
+<h6 class="s"><strong>file operator &gt;&gt;</strong> ( <strong>file</strong> f, <strong>?</strong> items )</h6>
+<h6 class="s"><strong>none operator &gt;&gt;=</strong> ( <strong>file</strong> f, <strong>?</strong> items )</h6>
+Writes the item at current position of cursor of file <code>f</code>, the same way as function <code>write()</code> with above signature.
+Returns a reference to the operated file, for read and write operations to be cascadable.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+my_file &gt;&gt; 10 &gt;&gt; 11;
+my_file &gt;&gt;= 12
+// <i>appends 10, 11 and 12 at end of file</i>
+</pre>
+
+
+<h5>4.5.3.3 Writing at indexed position</h5>
+
+This is a goodie offered by <strong>Typee</strong>. Files may be of two kinds: declared with a constant size of items, or not. When all items are of the same constant size, indexing is done on the file index position (index <code>n</code> relates to the <i><code>n</code>-th</i> item in the file). When items are not all of the same size, indexing is done on the file cursor position (i.e. on a byte basis).
+When writing a container into file, Typee does not specify the storing of any dimensions number or dimensions sizes. It is up to the programmer to elaborate some <em>protocol</em> for these informations to be retrieved at later reading time. When writing strings, an ending '\n' is written into file after the last character contained in the string.
+Caution: undere certain circumstances, indexed writing into files may break down the buffering optimizations of the underlying Operating System. This will be the case when successive indexes are too much random with values far enough from each others and this will dratically slow down your running program. Only use indexed writing into files when this is really convenient and when gaps are not too big between successive indexes.
+
+
+<h6><strong>file operator []</strong> ( <strong>file</strong> f, <strong>?</strong> item )</h6>
+The formal EBNF description of writing on an indexed file is:
+<pre class="g">
+&lt;file indexed write&gt; ::= &lt;dotted name&gt; '<strong>[</strong>' &lt;integer expression&gt; '<strong>]</strong>'
+                              '<strong>=</strong>' &lt;expression&gt; '<strong>;</strong>'
+</pre>
+
+The <code>expression</code> value is written into file at the <code>integer expression</code> index, which is either a byte position or an item position according to the constant size or not of contained items.
+The integer index has to be greater than <code>0</code> at less than or equal to the size of the file (bytes count) or the number of already written items. If this index equals the max number, the indexing addresses the end of the file: this is appending a new item at the end of the file. Exception <code>OutOfBoundsException</code> is raised if index value is negative or greater than the current size of file allows.
+Returns a reference to the operated file for this writing to be cascadable with other files operations.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+<strong>file&lt; float64 &gt;</strong> my_file;
+my_file.open( "file_path.txt", "rw" );
+// <i>let's say that this file currently contains</i>
+// <i>10 64-bits floats (i.e. 8-bytes floats)</i>
+
+// <i>modifies stored number at index 2 of file (cursor position 16)</i>
+my_file[2] = 3.14159_26535_89793_23846_26433_83; // <i>do you know Mr Archimede?</i>
+<strong>print</strong>( my_file.cursor_pos(), my_file.index() );  // <i>prints: 24 3</i>
+
+// <i>appends a new item at end of file</i>
+my_file[10] = 6.022_140_76e023;                  // <i>do you know Mr Avogadro?</i>
+<strong>print</strong>( my_file.cursor_pos(), my_file.index() );  // <i>prints: 88 11</i>
+</pre>
