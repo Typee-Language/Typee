@@ -672,7 +672,7 @@ SOFTWARE.
 
 <file flushing>             ::= '!' <dotted name> <file flushing'>                          ###
 <file flushing'>            ::= '(' <expression> <file flushing''> ')'                      ###
-                             |  '[' <expression> ']'                                        ###
+                             |  '[' <expression> ']' '=' <expression>                       ###
                              |  '>>' <expression>                                           ###
                              |  '>>>' <expression>                                          ###
                              |  EPS                                                         ###
@@ -985,6 +985,7 @@ SOFTWARE.
                          |  <set type>
 
 <declared contained type>   ::= '<' <declared contained type'>                      ###
+                             |  EPS                                                 ###
 <declared contained type'>  ::= <TYPE> <declared contained type">                   ###
                              |  <enclosed types list> <declared contained type">    ###
 <declared contained type">  ::= '>'                                                 ###
@@ -1005,7 +1006,9 @@ SOFTWARE.
 
 <list type>             ::= 'list' <declared contained type>        ###
 
-<map type>              ::= 'map' <declared contained type>         ###
+<map type>              ::= 'map' <map type'>                                                   ###
+<map type'>             ::= '<' <declared contained type'> ',' <declared contained type'> '>'   ###
+                         |  EPS
 
 <non container type>    ::= <type>
 
