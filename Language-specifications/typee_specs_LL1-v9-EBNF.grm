@@ -471,6 +471,8 @@ SOFTWARE.
 
 <enum item>                 ::= <identifier> [ '=' <expression> ]
 
+<file declaration>          ::= <file type> <identifier>
+
 <file flushing>             ::= '!' <dotted name>
 
 <flow statement>            ::= 'break'  |  'continue'  |
