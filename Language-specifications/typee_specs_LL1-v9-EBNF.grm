@@ -475,7 +475,7 @@ SOFTWARE.
 
 <file flushing>             ::= '!' <dotted name> [<file flushing'>]
 <file flushing'>            ::= '(' <expression> [ ',' <expression> ] ')' |
-                                '[' <expression> ']'                      |
+                                '[' <expression> ']' '=' <expression>     |
                                 '>>' <expression>  |  '>>>' <expression>  |
 
                              
@@ -685,7 +685,8 @@ SOFTWARE.
 
 <const qualifier>       ::= 'const' 
 
-<contained type>        ::= '<' (<TYPE> | <enclosed types list>) '>' 
+<contained type>        ::= '<' <contained type'> '>' 
+<contained type'>       ::= (<TYPE> | <enclosed types list>)
 
 <container type>        ::= <array type>  |  <file type>  |  <list type>  |
                             <map type>    |  <set type>
@@ -703,7 +704,7 @@ SOFTWARE.
 
 <list type>             ::= 'list' [<contained type>]
 
-<map type>              ::= 'map' [<contained type>]
+<map type>              ::= 'map' [ '<' <contained type'> ',' <contained type'> '>' ]
 
 <scalar type>           ::= 'bool'    | 'char'    | 'char16' |
                             'float32' | 'float64' |
