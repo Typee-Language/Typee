@@ -473,8 +473,12 @@ SOFTWARE.
 
 <file declaration>          ::= <file type> <identifier>
 
-<file flushing>             ::= '!' <dotted name>
+<file flushing>             ::= '!' <dotted name> [<file flushing'>]
+<file flushing'>            ::= '(' <expression> [ ',' <expression> ] ')' |
+                                '[' <expression> ']'                      |
+                                '>>' <expression>  |  '>>>' <expression>  |
 
+                             
 <flow statement>            ::= 'break'  |  'continue'  |
                                 <raise statement>  |  <return statement>
 

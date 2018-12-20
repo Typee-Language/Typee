@@ -670,7 +670,14 @@ SOFTWARE.
 <enum list'>                ::= ',' <enum item> <enum list'>                                ###
                              |  EPS                                                         ###
 
-<file flushing>             ::= '!' <dotted name>                                           ###
+<file flushing>             ::= '!' <dotted name> <file flushing'>                          ###
+<file flushing'>            ::= '(' <expression> <file flushing''> ')'                      ###
+                             |  '[' <expression> ']'                                        ###
+                             |  '>>' <expression>                                           ###
+                             |  '>>>' <expression>                                          ###
+                             |  EPS                                                         ###
+<file flushing''>           ::= ',' <expression>                                            ###
+                             |  EPS                                                         ###
 
 <flow statement>            ::= 'break'
                              |  'continue'
