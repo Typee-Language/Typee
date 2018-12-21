@@ -8,45 +8,85 @@ Objects in <strong>Typee</strong> are <em>serializable</em> for reading as long 
 <h5>4.5.4.1 Reading at current position of cursor</h5>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h6 class="f"><strong>file</strong> write( <strong>const ? in (str,str16)</strong> s)</h6>
-Writes the specified string <code>s</code> plus an ending '\n' at current position of cursor into file.
-Returns a reference to the operated file, for read and write operations to be cascadable.
+<h6><strong>? in (str,str16)</strong> read()</h6>
+Reads one string from operated file, starting at current position of file cursor and until character <code class="kw">'\n'</code> is found.
+Returns a reference to the string read from file.
 Raises any exception as specified in introduction of this section 4.5.4.
 Example:
 <pre>
-my_file.write( 'abc' ).write( 'def' );
-// <i>writes  "abc\ndef\n" at current position of file cursor</i>
+<span class="kw">str</span> s = my_file.read();  <span class="co">// that's all, folk's!</span>
 </pre>
 
-
-<h6 class="s"><strong>file operator &gt;&gt;</strong> ( <strong>file</strong> f, <strong>const ? in (str,str16)</strong> s)</h6>
-<h6 class="s"><strong>none operator &gt;&gt;=</strong> ( <strong>file</strong> f, <strong>const ? in (str,str16)</strong> s)</h6>
-Writes the specified string <code>s</code> plus an ending '\n' at current position of cursor into file <code>f</code>, the same way as function <code>append()</code> with above signature.
-Returns a reference to the operated file, for read and write operations to be cascadable.
+<h6><strong>list&lt;(str,str16)&gt;</strong> read( <strong>const uint64</strong> n )</h6>
+Reads the <code>n</code> next strings from operated file, starting at current position of file cursor.
+Returns a reference to a list containing the successive strings read from file.
 Raises any exception as specified in introduction of this section 4.5.4.
 Example:
 <pre>
-my_file &gt;&gt; 'abc' &gt;&gt; 'def';
-my_file &gt;&gt;= 'g'
-// <i>appends 'a', 97, 'b', 98, 'c', 99, 'd' and 100 at end of file</i>
+<span class="kw">list<str16></span> my_list = my_file.read( <span class="nu">5</span> );  <span class="co">// reads 5 next lines</span>
 </pre>
 
+<h6><strong>list&lt;(str,str16)&gt;</strong> readlines()</h6>
+Reads all strings from operated file, starting at current position of file cursor and until end of file.
+Returns a reference to a list containing the successive strings read from file.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+<span class="kw">list<str></span> my_lines = my_file.readlines();  <span class="co">// whole text file is now splitted into my_lines</span>
+</pre>
+
+
+
+-------------------------
+
+<h6 class="s"><strong><strong>file operator &gt;&gt;</strong> ( <strong>file</strong> f, <strong>? in (str,str16)</strong> s )</h6>
+<h6 class="f"><strong>none operator &gt;&gt;=</strong> ( <strong>file</strong> f, <strong>? in (str,str16)</strong> s)</h6>
+Reads one string from file <code>f</code>, starting at current position of file cursor and until a newline character <code>'\n'</code> is read. Caution: the ending newline character is not appended to the string.
+The first signature of this operator returns a reference to the operated file for this operator to be cascadable.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+<span class="co">// let's say that my_file contains strings 'abc' then 'def' and 'g'</span>
+<span class="kw">str</span> text1, text2;
+my_file <span class="op">&gt;&gt;</span> text1 <span class="op">&gt;&gt;</span> text2;
+<span class="kw">print</span>( text1, text2 );  <span class="co">// prints: abc def</span>
+
+my_file <span class="op">&gt;&gt;=</span> text1;
+<span class="kw">print</span>( text1, text2 );  <span class="co">// prints: g def</span>
+</pre>
+
+
+
+<h6 class="s"><strong><strong>file operator &gt;&gt;&gt;</strong> ( <strong>file</strong> f, <strong>list<(str,str16)></strong> s )</h6>
+<h6 class="f"><strong>none operator &gt;&gt;=</strong> ( <strong>file</strong> f, <strong>list<(str,str16)></strong> s)</h6>
+Reads all strings from operated file, starting at current position of file cursor and until end of file, and puts them in a list typed for containing strings. Caution: the ending newline characters taht separate strings are not appended to the read strings.
+The first signature of this operator returns a reference to the operated file for this operator to be cascadable.
+Raises any exception as specified in introduction of this section 4.5.4.
+Example:
+<pre>
+<span class="co">// let's say that my_file contains strings 'abc' then 'def' and 'g'</span>
+<span class="kw">list&lt;str&gt;</span> my_lines;
+my_file <span class="op">&gt;&gt;&gt;</span> my_lines;
+<span class="kw">print</span>( my_lines );  <span class="co">// prints: [abc, def, g]</span>
+
+my_file.rewind();
+my_file <span class="op">&gt;&gt;=</span> my_lines;
+<span class="kw">print</span>( my_lines );  <span class="co">// prints again: [abc, def, g]</span>
+</pre>
+
+
+------------------------
+
+
+
+
+
+
+
+
+
+
+==================================
 
 <h6 class="f"><strong>file</strong> write( <strong>?</strong> item )</h6>
 <h6 class="s"><strong>file</strong> write( <strong>?</strong> item, <strong>cont uint64</strong> n )</h6>
