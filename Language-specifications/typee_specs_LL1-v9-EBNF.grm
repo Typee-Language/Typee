@@ -355,7 +355,8 @@ SOFTWARE.
 
 <simple statement>          ::= ( <access protection statement>           |
                                   <assert statement> | <del statement>    |
-                                  <ensure statement> | <file flushing>    |
+                                  <ensure statement> | 
+                                  <file endianness>  | <file flushing>    |
                                   <flow statement>   | <import statement> |
                                   <nop statement>    | <require statement>  )
                                 <simple statement end>
@@ -472,6 +473,9 @@ SOFTWARE.
 <enum item>                 ::= <identifier> [ '=' <expression> ]
 
 <file declaration>          ::= <file type> <identifier>
+
+<file endianness>           ::= ( '<' | '>' ) <dotted name> (<file endianness'>)*
+<file endianness'>          ::= ( '<<' | '>>' | '>>>' ) <expression>
 
 <file flushing>             ::= '!' <dotted name> [<file flushing'>]
 <file flushing'>            ::= '(' <expression> [ ',' <expression> ] ')' |
