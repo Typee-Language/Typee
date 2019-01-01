@@ -7,57 +7,23 @@ Objects in <strong>Typee</strong> are <em>serializable</em> for reading as long 
 
 <h5>4.5.4.1 Reading at current position of cursor</h5>
 
+------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h6 class="f"><strong>file</strong> write( <strong>const ? in (str,str16)</strong> s)</h6>
-Writes the specified string <code>s</code> plus an ending '\n' at current position of cursor into file.
-Returns a reference to the operated file, for read and write operations to be cascadable.
-Raises any exception as specified in introduction of this section 4.5.4.
+<h6><strong>file</strong> read( <strong>?</strong> item )</h6>
+<h6 class="s"><strong>file operator &gt;&gt;</strong> ( <strong>file</strong> f, <strong>?</strong> item )</h6>
+<h6 class="s"><strong>none operator &gt;&gt;=</strong> ( <strong>file</strong> f, <strong>?</strong> item )</h6>
+Reads the specified item. Here, the type of the item is none of <code class="kw">array</code>, <code class="kw">list</code>, <code class="kw">map</code>, <code class="kw">set</code>, <code class="kw">str</code> or  <code class="kw">str16</code> since these types have already been specified in previous signatures of this method.
+Firsdt and second signatures return a reference to the operated file, for read and write operations to be cascadable.
+Raises any exception as specified in introduction of this section 4.5.5.
 Example:
 <pre>
-my_file.write( 'abc' ).write( 'def' );
-// <i>writes  "abc\ndef\n" at current position of file cursor</i>
-</pre>
-
-
-<h6 class="s"><strong>file operator &gt;&gt;</strong> ( <strong>file</strong> f, <strong>const ? in (str,str16)</strong> s)</h6>
-<h6 class="s"><strong>none operator &gt;&gt;=</strong> ( <strong>file</strong> f, <strong>const ? in (str,str16)</strong> s)</h6>
-Writes the specified string <code>s</code> plus an ending '\n' at current position of cursor into file <code>f</code>, the same way as function <code>append()</code> with above signature.
-Returns a reference to the operated file, for read and write operations to be cascadable.
-Raises any exception as specified in introduction of this section 4.5.4.
-Example:
-<pre>
-my_file &gt;&gt; 'abc' &gt;&gt; 'def';
-my_file &gt;&gt;= 'g'
-// <i>appends 'a', 97, 'b', 98, 'c', 99, 'd' and 100 at end of file</i>
-</pre>
-
-
-<h6 class="f"><strong>file</strong> write( <strong>?</strong> item )</h6>
-<h6 class="s"><strong>file</strong> write( <strong>?</strong> item, <strong>cont uint64</strong> n )</h6>
-Writes the specified item at end of file. Here, the type of the item is none of <code class="kw">array</code>, <code class="kw">list</code>, <code class="kw">map</code> or <code class="kw">set</code> since these have already been specified in previous signatures of this method.
-If <code>n</code> is specified, the item is appended <code>n</code> times to file.
-Returns a reference to the operated file, for read and write operations to be cascadable.
-Raises any exception as specified in introduction of this section 4.5.4.
-Example:
-<pre>
-my_file.append( 10 ).append( 11, 3 );
-// <i>appends 10, 11, 11 and 11 at end of file</i>
+<span class="co">// let's say that my_file contains values 1, 2, 3 and 4 with respective integer types according to next variables</span>
+<span class="kw">uint8</span> val1, val2;
+<span class="kw">int16</span> val3;
+<span class="kw">int64</span> val4;
+my_file.read( val1 ).read( val2 ) <span class="op">&gt;&gt;</span> val3;
+my_file <span class="op">&gt;&gt;=</span> val4;
+<span class="kw">print</span>( val1, val2, val3, val4 );  <span class="co">// prints: 1 2 3 4</span>
 </pre>
 
 
@@ -73,6 +39,24 @@ my_file &gt;&gt;= 12
 // <i>appends 10, 11 and 12 at end of file</i>
 </pre>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+====================================================================
 
 <h5>4.5.3.3 Writing at indexed position</h5>
 
