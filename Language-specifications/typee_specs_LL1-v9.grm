@@ -375,9 +375,9 @@ SOFTWARE.
 
 /*****   OPERATORS   ************************************************/
 
-<operator>              ::= <operator">                                                     ###
-                         |  <assign op>
-                         |  <incr decr op>                                                  ###
+##<operator>              ::= <operator">                                                   ###
+##                         |  <assign op>                                                   ###
+##                         |  <incr decr op>                                                ###
 ##                         |  <cast op>                                                     ###
 <operator'>             ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'               ###
 <operator">             ::= '<='  |  '=='  |  '!='  |  '>='                                 ###
@@ -387,6 +387,7 @@ SOFTWARE.
                          |  '#'                                                             ###
                          |  'in'                                                            ###
                          |  <assign op>                                                     ###
+                         |  <cast op>                                                       ###
                          
 <assign op>             ::= '='
                          |  <augmented assign op>
@@ -412,6 +413,8 @@ SOFTWARE.
                          |  '??='
 
 <call operator>         ::= '(' ')'
+
+<cast op>               ::= 'cast' <dotted name>
 
 <comp operator>         ::= '<='  |  '=='  |  '!='  |  '>='
                          |  'in'
@@ -579,8 +582,6 @@ SOFTWARE.
 <assignment statement>    ::= <assign op> <expr list>
 
 <case>      ::= 'case' <expr list> <statements block>
-
-##<cast op>   ::= 'cast' <identifier>                                                                               ###
 
 <comment>   ::= '//' <comment'>
              |  '/*' <multi lines comment>
