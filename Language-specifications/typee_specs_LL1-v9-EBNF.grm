@@ -188,16 +188,21 @@ SOFTWARE.
 <function definition>       ::= [<template def>]  <function args declaration>
                                     <statements block>
 
-<function args declaration> ::= '(' [<typed args list>] ')' 
+<function args declaration> ::= '(' [<func typed args list>] ')' 
 
 <function call>             ::= [<template args>] '(' <function call args> ')' 
 
 <function call args>        ::= [ <expression> (<function call>)*
-                                    [ ',' ( <expression> (<function call>)*  |
-                                            <ellipsis> <identifier> )  |
-                                      <for comprehension>] ]
+                                    ( ',' <expression> (<function call>)* )  |
+                                            <for comprehension> )*
 
-<typed args list>           ::= <TYPE> <var or func identifier> ( ',' <TYPE> <var or func identifier> )*
+<func typed arg>            ::= <TYPE> <var or func identifier>  |
+                                'const' <ellipsis> <identifier>  |
+                                <ellipsis> <identifier>
+
+<func typed args list>      ::= [ <TYPE> <var or func identifier>
+                                    ( ',' <TYPE> <var or func identifier> )*
+                                    [ ',' [ 'const' ] '...' <identifer> ]    ]
 
 <unnamed>                   ::= 'unnamed'  |  'lambda' 
 
@@ -278,7 +283,7 @@ SOFTWARE.
                             'in'  |
                             <op_add>   |  <op_mul>  |  <op_power>  |
                             <op_user>  |
-                            <assign op>
+                            <assign op>  |  <cast op>
 
 <assign op>             ::= '='  |  <augmented assign op>
 
@@ -359,7 +364,7 @@ SOFTWARE.
                                   <file endianness>  | <file flushing>    |
                                   <flow statement>   | <import statement> |
                                   <nop statement>    | <require statement>  )
-                                <simple statement end>
+                                  <simple statement end>
 
 <simple statement end>      ::= ';' 
 
@@ -560,7 +565,7 @@ SOFTWARE.
 <memory address>            ::= '@' <integer number>
 
 <method or operator definition> ::= [<TYPE>] (<operator definition> |
-                                    <identifier> <function definition>)                                 
+                                              <identifier> <function definition>)                                 
 
 <multi lines comment>       ::= (<any non star char> | <NEWLINE>)*  |
                                 '*' ( '/' | <multi lines comment> )
