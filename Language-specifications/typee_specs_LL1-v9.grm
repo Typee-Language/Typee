@@ -276,25 +276,32 @@ SOFTWARE.
 
 ## <final qualifier>           ::= 'final'                                          ##
 
-<function args declaration> ::= '(' <typed args list> ')'
+<function args declaration> ::= '(' <func typed args list> ')'                              ###
 
 <function call>             ::= <template args> '(' <function call args> ')'
 
 <function call args>        ::= <expression> <function call args'>
                              |  EPS
-<function call args'>       ::= ',' <function call args">
-                             |  <for comprehension>
+<function call args'>       ::= ',' <expression> <function call args'>                      ###
+                             |  <for comprehension> <function call args'>                   ###
                              |  EPS
-<function call args">       ::= <expression> <function call args'>
-                             |  <ellipsis> <identifier>
+##<function call args">       ::= <expression> <function call args'>                        ###
+##                             |  <ellipsis> <identifier>                                   ###
+
+<func typed args list>      ::= <TYPE> <var or func identifier> <func typed args list'>     ###
+                             |  <const qualifier> <ellipsis> <identifer>                    ###
+                             |  <ellipsis> <identifier>                                     ###
+                             |  EPS                                                         ###
+<func typed args list'>     ::= ',' <func typed args list>                                  ###
+                             |  EPS                                                         ###
 
 <returned type>     ::= <TYPE>
                      |  EPS
 
-<typed args list>   ::= <TYPE> <var or func identifier> <typed args list'>          ###
-                     |  EPS
-<typed args list'>  ::= ',' <TYPE> <var or func identifier> <typed args list'>      ###
-                     |  EPS
+## <typed args list>   ::= <TYPE> <var or func identifier> <typed args list'>          ###
+##                      |  EPS
+## <typed args list'>  ::= ',' <TYPE> <var or func identifier> <typed args list'>      ###
+##                      |  EPS
 
 <unnamed>   ::= 'unnamed'
              |  'lambda'
