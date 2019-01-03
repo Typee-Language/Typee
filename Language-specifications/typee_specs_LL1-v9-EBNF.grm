@@ -196,13 +196,9 @@ SOFTWARE.
                                     ( ',' <expression> (<function call>)* )  |
                                             <for comprehension> )*
 
-<func typed arg>            ::= <TYPE> <var or func identifier>  |
-                                'const' <ellipsis> <identifier>  |
-                                <ellipsis> <identifier>
-
-<func typed args list>      ::= [ <TYPE> <var or func identifier>
+<func typed args list>      ::= <TYPE> <var or func identifier>
                                     ( ',' <TYPE> <var or func identifier> )*
-                                    [ ',' [ 'const' ] '...' <identifer> ]    ]
+                                    [ ',' [ 'const' ] '...' <identifer> ]
 
 <unnamed>                   ::= 'unnamed'  |  'lambda' 
 
