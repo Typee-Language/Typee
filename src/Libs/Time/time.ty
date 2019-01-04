@@ -41,7 +41,8 @@ embed cpp {{
 #include <chrono>
 }}
 
-embed java {{
+embed java, android {{
+import static java.lang.System;
 }}
 
 
@@ -56,20 +57,19 @@ float32 time() {
     experience big surprises with this.
     It may be also that some systems provide time with 1 second as precision.
     */
-embed python {{
+  embed python {{
     return py_time.time()
-}}
+  }}
 
-embed cpp {{
+  embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::milliseconds> sys_time = chrono::system_clock::now().time_since_epoch();
     return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
-}}
+  }}
 
-embed java, android {{
+  embed java, android {{
     return (float)System.currentTimeMillis() * 1.0e-3;
-}}
-
+  }}
 }
 
 
@@ -81,24 +81,23 @@ float32 cpu_time() {
     to evaluated elapsed time between to measurement points (i.e. two different
     calls to this function).
     */
-embed python {{
+  embed python {{
     return py_time.perf_counter()
-}}
+  }}
 
-embed cpp {{
+  embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::milliseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
     return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
-}}
+  }}
 
-embed java {{
+  embed java {{
     return (float)System.nanoTime() * 1.0e-9;
-}}
+  }}
 
-embed android {{
+  embed android {{
     return (float)SystemClock.elapsedRealtime() * 1.0e-3;
-}}
-
+  }}
 }
 
 
@@ -110,22 +109,21 @@ float32 proc_time() {
     Should be only used to evaluated elapsed time between to measurement 
     points (i.e. two different calls to this function).
     */
-embed python {{
+  embed python {{
     return py_time.process_time()
-}}
+  }}
 
-embed cpp {{
+  embed cpp {{
     return cpu_time();
-}}
+  }}
 
-embed java {{
+  embed java {{
     return cpu_time();
-}}
+  }}
 
-embed android {{
+  embed android {{
     return (float)SystemClock.uptimeMillis() * 1.0e-3;
-}}
-
+  }}
 }
 
 
@@ -141,20 +139,19 @@ float64 time_ns() {
     experience big surprises with this.
     It may be also that some systems provide time with 1 second as precision.
     */
-embed python {{
+  embed python {{
     return py_time.time_ns()
-}}
+  }}
 
-embed cpp {{
+  embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::nanoseconds> sys_time = chrono::system_clock::now().time_since_epoch();
     return (double)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
-}}
+  }}
 
-embed java, android {{
+  embed java, android {{
     return (double)System.currentTimeMillis() * 1.0e-3;
-}}
-
+  }}
 }
 
 
@@ -166,24 +163,23 @@ float64 cpu_time_ns() {
     to evaluated elapsed time between to measurement points (i.e. two different
     calls to this function). Precision here is nanoseconds.
     */
-embed python {{
+  embed python {{
     return py_time.perf_counter_ns()
-}}
+  }}
 
-embed cpp {{
+  embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::nanoseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
     return (double)sys_ticks.count() * chrono::system_clock::period.num / schrono::ystem_clock::period.den;
-}}
+  }}
 
-embed java {{
+  embed java {{
     return (double)System.nanoTime() * 1.0e-9;
-}}
+  }}
 
-embed android {{
+  embed android {{
     return (double)SystemClock.elapsedRealtimeNanos() * 1.0e-9;
-}}
-
+  }}
 }
 
 
@@ -196,22 +192,21 @@ float64 proc_time_ns() {
     points (i.e. two different calls to this function). Precision here is 
     nanosecond.
     */
-embed python {{
+  embed python {{
     return py_time.process_time_ns()
-}}
+  }}
 
-embed cpp {{
+  embed cpp {{
     return cpu_time_ns();
-}}
+  }}
 
-embed java {{
+  embed java {{
     return cpu_time_ns();
-}}
+  }}
 
-embed android {{
+  embed android {{
     return (double)SystemClock.uptimeMillis() * 1.0e-3;
-}}
-
+  }}
 }
 
 //=====   end of module time.ty   =====//
