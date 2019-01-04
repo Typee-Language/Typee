@@ -651,7 +651,7 @@ SOFTWARE.
 <dotted name'>              ::= '.' <identifier> <dotted name'>
                              | EPS
 
-<embed statement>           ::= 'embed' <language> <embed statement'>
+<embed statement>           ::= 'embed' <languages> <embed statement'>
 <embed statement'>          ::= <dotted name> <simple statement end>
                              |  <embedded language code>
 
@@ -773,7 +773,19 @@ SOFTWARE.
 <items list'>               ::= ',' <expression> <items list'>                                          ###
                              |  EPS                                                                     ###
 
-<language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'  |  'C#'    ###
+<language>                  ::= 'android'                                                               ###
+                             |  'c-sharp'                                                               ###
+                             |  'cpp'                                                                   ###
+                             |  'cs'                                                                    ###
+                             |  'java'                                                                  ###
+                             |  'python'                                                                ###
+                             |  'py'                                                                    ###
+                             |  'javascript'                                                            ###
+                             |  'm6809'                                                                 ###
+
+<languages>                 ::= <language> <languages'>                                                 ###
+<languages'>                ::= ',' <language> <languages'>                                             ###
+                             |  EPS                                                                     ###
 
 <list content>              ::= '[' (<items list> | <list content>) ']'                                 ###
 
