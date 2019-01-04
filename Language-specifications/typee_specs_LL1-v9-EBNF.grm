@@ -450,7 +450,7 @@ SOFTWARE.
 
 <dotted name>               ::= <identifier> ( '.' <identifier> )*
 
-<embed statement>           ::= 'embed' <language> (<dotted name>
+<embed statement>           ::= 'embed' <languages> (<dotted name>
                                     <simple statement end>          |
                                 <embedded language code>)
 
@@ -548,7 +548,9 @@ SOFTWARE.
 
 <items list>                ::= [ <expression> ( ',' <expression> )* ]
 
-<language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py' 
+<language>                  ::= 'android'  |  'c-sharp'  |  'cpp'  |  'cs'  |  'java'  |  'python'  |  'py' 
+
+<languages>                 ::= <language> ( ',' <language> )*
 
 <list content>              ::= '[' (<items list> | <list content>) ']'
 
