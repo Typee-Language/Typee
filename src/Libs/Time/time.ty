@@ -63,7 +63,7 @@ embed python {{
 embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::milliseconds> sys_time = chrono::system_clock::now().time_since_epoch();
-    return (float)sys_ticks.count() * system_clock::period::num / system_clock::period::den;
+    return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
 }}
 
 embed java, android {{
@@ -88,7 +88,7 @@ embed python {{
 embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::milliseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
-    return (float)sys_ticks.count() * system_clock::period::num / system_clock::period::den;
+    return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
 }}
 
 embed java {{
@@ -148,7 +148,7 @@ embed python {{
 embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::nanoseconds> sys_time = chrono::system_clock::now().time_since_epoch();
-    return (double)sys_ticks.count() * system_clock::period::num / system_clock::period::den;
+    return (double)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
 }}
 
 embed java, android {{
@@ -173,7 +173,7 @@ embed python {{
 embed cpp {{
     using namespace std::chrono;
     chrono::duration_cast<chrono::nanoseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
-    return (double)sys_ticks.count() * system_clock::period::num / system_clock::period::den;
+    return (double)sys_ticks.count() * chrono::system_clock::period.num / schrono::ystem_clock::period.den;
 }}
 
 embed java {{
