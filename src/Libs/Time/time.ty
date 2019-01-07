@@ -170,6 +170,7 @@ float64 time_ns() {
 
   embed cs {{
     return time();
+  }}
 }
 
 
@@ -201,6 +202,7 @@ float64 cpu_time_ns() {
 
   embed cs {{
     return time();
+  }}
 }
 
 
@@ -231,6 +233,7 @@ float64 proc_time_ns() {
 
   embed cs {{
     return time();
+  }}
 }
 
 //=====   end of module time.ty   =====//
