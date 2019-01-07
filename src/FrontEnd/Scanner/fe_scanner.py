@@ -676,6 +676,8 @@ class FEScanner:
         'operator':     ICTokenNode_OPERATOR,
         'or':           ICTokenNode_OR,
         'pass':         ICTokenNode_NOP,
+        'post':         ICTokenNode_POST,
+        'pre':          ICTokenNode_PRE,
         'private':      ICTokenNode_HIDDEN,
         'protected':    ICTokenNode_PROTECTED,
         'public':       ICTokenNode_PUBLIC,
