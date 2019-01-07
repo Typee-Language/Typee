@@ -98,7 +98,7 @@ float32 cpu_time() {
     return (float)sys_ticks.count() * system_clock::period::num / system_clock::period::den;
   }}
 
-vembed java {{
+  embed java {{
     return (float)System.nanoTime() * 1.0e-9;
   }}
 
