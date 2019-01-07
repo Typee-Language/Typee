@@ -30,7 +30,6 @@ fwd float64  time_ns();       // System elapsed time , nanosecond precision
 fwd float64  cpu_time_ns();   // CPU elapsed time    , nanosecond precision
 fwd float64  proc_time_ns();  // process elapsed time, nanosecond precision
 
-
 //=============================================================================
 // Targeted languages specificities
 embed python {{
@@ -47,7 +46,6 @@ import System;
 
 embed cs {{
 }}
-
 
 //=============================================================================
 float32 time() {
@@ -78,7 +76,6 @@ float32 time() {
     return (float)( DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7 );
   }}
 }
-
 
 //=============================================================================
 float32 cpu_time() {
@@ -111,7 +108,6 @@ float32 cpu_time() {
   }}
 }
 
-
 //=============================================================================
 float32 proc_time() {
     /**
@@ -140,7 +136,6 @@ float32 proc_time() {
     return time();
   }}
 }
-
 
 //=============================================================================
 float64 time_ns() {
@@ -173,7 +168,6 @@ float64 time_ns() {
   }}
 }
 
-
 //=============================================================================
 float64 cpu_time_ns() {
     /**
@@ -204,7 +198,6 @@ float64 cpu_time_ns() {
     return time_ns();
   }}
 }
-
 
 //=============================================================================
 float64 proc_time_ns() {
