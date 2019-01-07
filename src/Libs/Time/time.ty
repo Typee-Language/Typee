@@ -75,7 +75,7 @@ float32 time() {
   }}
 
   embed cs {{
-    return DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7;
+    return (float)( DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7 );
   }}
 }
 
@@ -169,7 +169,7 @@ float64 time_ns() {
   }}
 
   embed cs {{
-    return time();
+    return (double)( DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7 );
   }}
 }
 
@@ -201,7 +201,7 @@ float64 cpu_time_ns() {
   }}
 
   embed cs {{
-    return time();
+    return time_ns();
   }}
 }
 
@@ -232,7 +232,7 @@ float64 proc_time_ns() {
   }}
 
   embed cs {{
-    return time();
+    return time_ns();
   }}
 }
 
