@@ -1,3 +1,4 @@
+.gitignore
 .metadata
 .project
 .pydevproject
@@ -8,3 +9,6 @@ __pycache__
 */__pycache__
 */*/__pycache__
 */*/*/__pycache__
+* - Copie.grm
+*-new.grm
+* - Copy.grm
