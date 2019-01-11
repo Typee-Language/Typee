@@ -21,14 +21,16 @@ SOFTWARE.
 ***/
 
 //=============================================================================
-// These are the available functions in this module:
-fwd float32  time();          // System elapsed time
-fwd float32  cpu_time();      // CPU elapsed time
-fwd float32  proc_time();     // process elapsed time
+// Built-in Library SysTime
+// Module systime.py
+// Available functions
+fwd float32  systime();      // System elapsed time
+fwd float32  cputime();      // CPU elapsed time
+fwd float32  proctime();     // process elapsed time
 
-fwd float64  time_ns();       // System elapsed time , nanosecond precision
-fwd float64  cpu_time_ns();   // CPU elapsed time    , nanosecond precision
-fwd float64  proc_time_ns();  // process elapsed time, nanosecond precision
+fwd float64  systime_ns();   // System elapsed time , nanosecond precision
+fwd float64  cputime_ns();   // CPU elapsed time    , nanosecond precision
+fwd float64  proctime_ns();  // process elapsed time, nanosecond precision
 
 //=============================================================================
 // Targeted languages specificities
@@ -48,7 +50,7 @@ embed cs {{
 }}
 
 //=============================================================================
-float32 time() {
+float32 systime() {
     /**
     Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
     as a 32-bits floating point in fractional seconds.
@@ -78,7 +80,7 @@ float32 time() {
 }
 
 //=============================================================================
-float32 cpu_time() {
+float32 cputime() {
     /**
     Returns a fractional seconds value as a 32-bits float for the  CPU  elapsed 
     time  since  a  starting  point that is not specified.  Should be only used 
@@ -109,7 +111,7 @@ float32 cpu_time() {
 }
 
 //=============================================================================
-float32 proc_time() {
+float32 proctime() {
     /**
     Returns a fractional seconds value as a 32-bits  float  for  current 
     process elapsed  time since a starting  point that is not specified.  
@@ -138,7 +140,7 @@ float32 proc_time() {
 }
 
 //=============================================================================
-float64 time_ns() {
+float64 systime_ns() {
     /**
     Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
     as  a  64-bits  floating  point  in  fractional  seconds  with nanosecond 
@@ -169,7 +171,7 @@ float64 time_ns() {
 }
 
 //=============================================================================
-float64 cpu_time_ns() {
+float64 cputime_ns() {
     /**
     Returns a fractional seconds value as a 64-bits float for the  CPU  elapsed 
     time  since  a  starting  point that is not specified.  Should be only used 
@@ -200,7 +202,7 @@ float64 cpu_time_ns() {
 }
 
 //=============================================================================
-float64 proc_time_ns() {
+float64 proctime_ns() {
     /**
     Returns a fractional seconds value as a  64-bits  float  for  current 
     process  elapsed  time  since a starting  oint that is not specified.
