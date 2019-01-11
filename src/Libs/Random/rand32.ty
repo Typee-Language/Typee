@@ -64,7 +64,7 @@ Furthermore this class is callable:
 
 Please notice that for simulating the roll of a dice you should program:
   Rand32 diceRoll = Rand32();
-  print( int(diceRoll(1, 7)) ) # prints a uniform roll within set {1, 2, 3, 4, 5, 6}
+  print(uint8(diceRoll(1, 7))); # prints a uniform roll within set {1, 2, 3, 4, 5, 6}
 
 Reminder:
 We give you here below a copy of the table of tests for the LCGs that have 
