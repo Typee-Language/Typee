@@ -1,0 +1,299 @@
+/***
+Copyright (c) 2018-2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in Library SysTime
+// Module perfmeter.py
+
+//=============================================================================
+from SysTime.systime import proctime_ns;
+
+//=============================================================================
+class PerfMeter
+/** 
+Class of performance meters.  Provides times with nanoseconds  precision  when 
+possible and with milliseconds precision otherwise.
+Notice: acutal C# implementation of systime allows only milliseconds precision.
+*/
+{
+    //---------------------------------------------------------------------
+    PerfMeter(){
+        me.frmt, me.frmt16 = none, none;
+        me.start = proctime_ns();
+    }
+    //---------------------------------------------------------------------
+    PerfMeter( const str format ){
+        me.frmt, me.frmt16 = format, none;
+        me.start = proctime_ns();
+    }
+    //---------------------------------------------------------------------
+    PerfMeter( const str16 format ){
+        me.frmt, me.frmt16 = none, format;
+        me.start = proctime_ns();
+    }
+
+    //---------------------------------------------------------------------
+    none destroy(){
+        me.end = proctime_ns();
+        print( str16(me) if me.frmt16 is not none else str(me) );
+    }
+
+    #-------------------------------------------------------------------------
+    float64 get_elapsed(){
+        return proctime_ns() - me.start;
+    }
+
+    //---------------------------------------------------------------------
+    none restart(){
+        me.start = proctime_ns();
+    }
+
+    //---------------------------------------------------------------------
+    str operator str(){
+        if( me.frmt is none )
+            return me.default_format.format( me.end - me.start );
+        else
+            return me.frmt.format( me.end - me.start );
+    }
+    //---------------------------------------------------------------------
+    str operator str16(){
+        me.end = proctime_ns();
+        if( me.frmt16 is none )
+            return me.default_format16.format( me.end - me.start );
+        else
+            return me.frmt16.format( me.end - me.start );
+    }
+   
+    //---------------------------------------------------------------------
+    def get_elapsed_hms(self, decimals=None):
+        """
+        Returns time elapsed since starting this PerfMeter.
+        Format is in HH:MM:SS form, with 'decimals' number of digits is set > 0.
+        """
+        def _frmtDecs(dec, val):
+            if dec is None or dec == 0:
+                return ''
+            elif dec == 1:
+                return ".%1d"%(int(val*10))
+            else:
+                K_MAX_DECIMALS = 3
+                dec = min(K_MAX_DECIMALS, dec)
+                frmt = ".%%0%dd"%dec
+                return frmt%(int(val*(10**dec)))
+            
+        elapsed = time.clock()-self._start
+        intElapsed = int(elapsed)
+        s = intElapsed%60
+        if intElapsed >= 3600:
+            h = intElapsed/3600
+            m = (intElapsed/60)%60
+            return "%d:%02d:%02d"%(h,m,s) + _frmtDecs(decimals, elapsed-intElapsed)
+        else:
+            m = intElapsed/60
+            return "%d:%02d"%(m,s) + _frmtDecs(decimals, elapsed-intElapsed)
+
+    //---------------------------------------------------------------------
+    private float64 _start, _end;
+    private str     _frmt;
+    private str16   _frmt16;
+    
+    static str   default_format   = "\n-- done in {:.6f} s";
+    static str16 default_format16 = "\n-- done in {:.6f} s";
+}
+
+//=============================================================================
+class PerfMeterHms : PerfMeter
+/** 
+Class of performance meters.  Provides times with nanoseconds  precision  when 
+possible and with milliseconds precision otherwise.
+Notice: acutal C# implementation of systime allows only milliseconds precision.
+Elapsed times are displayed with format HH:MM:SS.frac.
+*/
+{
+    //---------------------------------------------------------------------
+    PerfMeterMms(){
+        PerfMeter();
+    }
+    //---------------------------------------------------------------------
+    PerfMeterMms( const ? in (str,str16) format ){
+        PerfMeter( format );
+    }
+
+    //---------------------------------------------------------------------
+    static str   default_format   = "\n-- done in {:.6f} s";
+    static str16 default_format16 = "\n-- done in {:.6f} s";
+}
+
+
+//=============================================================================
+float32 cputime() {
+    /**
+    Returns a fractional seconds value as a 32-bits float for the  CPU  elapsed 
+    time  since  a  starting  point that is not specified.  Should be only used 
+    to evaluated elapsed time between to measurement points (i.e. two different
+    calls to this function).
+    */
+  embed python {{
+    return py_time.perf_counter()
+  }}
+
+  embed cpp {{
+    using namespace std::chrono;
+    chrono::duration_cast<chrono::milliseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
+    return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
+  }}
+
+  embed java {{
+    return (float)System.nanoTime() * 1.0e-9;
+  }}
+
+  embed android {{
+    return (float)SystemClock.elapsedRealtime() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return time();
+  }}
+}
+
+//=============================================================================
+float32 proctime() {
+    /**
+    Returns a fractional seconds value as a 32-bits  float  for  current 
+    process elapsed  time since a starting  point that is not specified.  
+    Should be only used to evaluated elapsed time between to measurement 
+    points (i.e. two different calls to this function).
+    */
+  embed python {{
+    return py_time.process_time()
+  }}
+
+  embed cpp {{
+    return cpu_time();
+  }}
+
+  embed java {{
+    return cpu_time();
+  }}
+
+  embed android {{
+    return (float)SystemClock.uptimeMillis() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return time();
+  }}
+}
+
+//=============================================================================
+float64 systime_ns() {
+    /**
+    Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
+    as  a  64-bits  floating  point  in  fractional  seconds  with nanosecond 
+    precision.
+    
+    Starting date as 1970-01-01 is common to most platforms and  systems  but 
+    may  differ  on  a few of them.  Windows and Linux programmers should not
+    experience big surprises with this.
+    It may be also that some systems provide time with 1 second as precision.
+    */
+  embed python {{
+    return py_time.time_ns()
+  }}
+
+  embed cpp {{
+    using namespace std::chrono;
+    chrono::duration_cast<chrono::nanoseconds> sys_time = chrono::system_clock::now().time_since_epoch();
+    return (double)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
+  }}
+
+  embed java, android {{
+    return (double)System.currentTimeMillis() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return (double)( DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7 );
+  }}
+}
+
+//=============================================================================
+float64 cputime_ns() {
+    /**
+    Returns a fractional seconds value as a 64-bits float for the  CPU  elapsed 
+    time  since  a  starting  point that is not specified.  Should be only used 
+    to evaluated elapsed time between to measurement points (i.e. two different
+    calls to this function). Precision here is nanoseconds.
+    */
+  embed python {{
+    return py_time.perf_counter_ns()
+  }}
+
+  embed cpp {{
+    using namespace std::chrono;
+    chrono::duration_cast<chrono::nanoseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
+    return (double)sys_ticks.count() * chrono::system_clock::period.num / schrono::ystem_clock::period.den;
+  }}
+
+  embed java {{
+    return (double)System.nanoTime() * 1.0e-9;
+  }}
+
+  embed android {{
+    return (double)SystemClock.elapsedRealtimeNanos() * 1.0e-9;
+  }}
+
+  embed cs {{
+    return time_ns();
+  }}
+}
+
+//=============================================================================
+float64 proctime_ns() {
+    /**
+    Returns a fractional seconds value as a  64-bits  float  for  current 
+    process  elapsed  time  since a starting  oint that is not specified.
+    Should be only used to evaluated elapsed time between to  measurement 
+    points (i.e. two different calls to this function). Precision here is 
+    nanosecond.
+    */
+  embed python {{
+    return py_time.process_time_ns()
+  }}
+
+  embed cpp {{
+    return cpu_time_ns();
+  }}
+
+  embed java {{
+    return cpu_time_ns();
+  }}
+
+  embed android {{
+    return (double)SystemClock.uptimeMillis() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return time_ns();
+  }}
+}
+
+//=====   end of module Libs.SysTime.perfmeter.ty   =====//
