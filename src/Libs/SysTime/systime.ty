@@ -51,16 +51,17 @@ embed cs {{
 }}
 
 //=============================================================================
-float32 systime() {
-    /**
-    Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
-    as a 32-bits floating point in fractional seconds.
-    
-    Starting date as 1970-01-01 is common to most platforms and  systems  but 
-    may  differ  on  a few of them.  Windows and Linux programmers should not
-    experience big surprises with this.
-    It may be also that some systems provide time with 1 second as precision.
-    */
+float32 systime()
+/**
+Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
+as a 32-bits floating point in fractional seconds.
+
+Starting date as 1970-01-01 is common to most platforms and  systems  but 
+may  differ  on  a few of them.  Windows and Linux programmers should not
+experience big surprises with this.
+It may be also that some systems provide time with 1 second as precision.
+*/
+{
   embed python {{
     return py_time.time()
   }}
@@ -81,13 +82,14 @@ float32 systime() {
 }
 
 //=============================================================================
-float32 cputime() {
-    /**
-    Returns a fractional seconds value as a 32-bits float for the  CPU  elapsed 
-    time  since  a  starting  point that is not specified.  Should be only used 
-    to evaluated elapsed time between to measurement points (i.e. two different
-    calls to this function).
-    */
+float32 cputime()
+/**
+Returns a fractional seconds value as a 32-bits float for the  CPU  elapsed 
+time  since  a  starting  point that is not specified.  Should be only used 
+to evaluated elapsed time between to measurement points (i.e. two different
+calls to this function).
+*/
+{
   embed python {{
     return py_time.perf_counter()
   }}
@@ -112,13 +114,14 @@ float32 cputime() {
 }
 
 //=============================================================================
-float32 proctime() {
-    /**
-    Returns a fractional seconds value as a 32-bits  float  for  current 
-    process elapsed  time since a starting  point that is not specified.  
-    Should be only used to evaluated elapsed time between to measurement 
-    points (i.e. two different calls to this function).
-    */
+float32 proctime()
+/**
+Returns a fractional seconds value as a 32-bits  float  for  current 
+process elapsed  time since a starting  point that is not specified.  
+Should be only used to evaluated elapsed time between to measurement 
+points (i.e. two different calls to this function).
+*/
+{
   embed python {{
     return py_time.process_time()
   }}
@@ -141,17 +144,18 @@ float32 proctime() {
 }
 
 //=============================================================================
-float64 systime_ns() {
-    /**
-    Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
-    as  a  64-bits  floating  point  in  fractional  seconds  with nanosecond 
-    precision.
-    
-    Starting date as 1970-01-01 is common to most platforms and  systems  but 
-    may  differ  on  a few of them.  Windows and Linux programmers should not
-    experience big surprises with this.
-    It may be also that some systems provide time with 1 second as precision.
-    */
+float64 systime_ns()
+/**
+Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
+as  a  64-bits  floating  point  in  fractional  seconds  with nanosecond 
+precision.
+
+Starting date as 1970-01-01 is common to most platforms and  systems  but 
+may  differ  on  a few of them.  Windows and Linux programmers should not
+experience big surprises with this.
+It may be also that some systems provide time with 1 second as precision.
+*/
+{
   embed python {{
     return py_time.time_ns()
   }}
@@ -172,13 +176,14 @@ float64 systime_ns() {
 }
 
 //=============================================================================
-float64 cputime_ns() {
-    /**
-    Returns a fractional seconds value as a 64-bits float for the  CPU  elapsed 
-    time  since  a  starting  point that is not specified.  Should be only used 
-    to evaluated elapsed time between to measurement points (i.e. two different
-    calls to this function). Precision here is nanoseconds.
-    */
+float64 cputime_ns()
+/**
+Returns a fractional seconds value as a 64-bits float for the  CPU  elapsed 
+time  since  a  starting  point that is not specified.  Should be only used 
+to evaluated elapsed time between to measurement points (i.e. two different
+calls to this function). Precision here is nanoseconds.
+*/
+{
   embed python {{
     return py_time.perf_counter_ns()
   }}
@@ -203,14 +208,15 @@ float64 cputime_ns() {
 }
 
 //=============================================================================
-float64 proctime_ns() {
-    /**
-    Returns a fractional seconds value as a  64-bits  float  for  current 
-    process  elapsed  time  since a starting  oint that is not specified.
-    Should be only used to evaluated elapsed time between to  measurement 
-    points (i.e. two different calls to this function). Precision here is 
-    nanosecond.
-    */
+float64 proctime_ns()
+/**
+Returns a fractional seconds value as a  64-bits  float  for  current 
+process  elapsed  time  since a starting  oint that is not specified.
+Should be only used to evaluated elapsed time between to  measurement 
+points (i.e. two different calls to this function). Precision here is 
+nanosecond.
+*/
+{
   embed python {{
     return py_time.process_time_ns()
   }}
@@ -232,4 +238,4 @@ float64 proctime_ns() {
   }}
 }
 
-//=====   end of module time.ty   =====//
+//=====   end of module Libs.SysTime.systime.ty   =====//
