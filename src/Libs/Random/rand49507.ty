@@ -28,7 +28,7 @@ from .Bases.basemrg import BaseMRG
 class Rand49507 : BaseMRG< 1597 > as Base49507
 /**
 Pseudo-random numbers generator  - Definition of a fast 32-bits Multiple Recursive
-Generator with long period (3.98e+438).
+Generator with long period (1.2e+14_903).
 
 Multiple Recursive Generators (MRGs)  use  recurrence  to  evaluate  pseudo-random
 numbers suites. Recurrence is of the form:
@@ -49,23 +49,26 @@ uses the recurrence
 
     x(i) = (-2^25-2^7) * (x(i-7) + x(i-1597)) mod (2^31-1)
     
-and  offers  a  period  of  about  2^49507  -  i.e. nearly 1.2e+14903  -  with low 
+and  offers  a  period  of  about  2^49507  -  i.e. nearly 1.2e+14_903  -  with low 
 computation time.
 
 See Rand287 for  a  short  period  MR-Generator (2^287,  i.e. 2.49e+86)  with  low
 computation time but 256 integers memory consumption.
-See Rand49507  for  a  far  longer  period  (2^49507,  i.e. 1.2e+14903)  with  low 
-computation  time  too  (31-bits  modulus)  but  use  of  more  memory space (1597 
-integers).
+See Rand1457 for a longer period  (2^1_457, i.e. 3.98e+438)  with  low  computation
+time too (31-bits modulus) but use  of more memory space (1_597 integers).
   
-Furthermore this class is callable:
-  Rand1457 rand = Rand1457()
+Furthermore this class is callable.
+Example:
+
+  Rand49507 rand = Rand49507()
   print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
   print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Please notice that for simulating the roll of a dice you should program:
-  Rand1457 diceRoll = Rand1457();
+Notice that for simulating the roll of a dice you should program.
+Example:
+
+  Rand49507 diceRoll = Rand49507();
   print( int(diceRoll(1, 7)) ); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
 
 Reminder:
@@ -115,18 +118,14 @@ should definitively pass.
     */
     {
         // evaluates indexes in suite for the i-1, i-24 (and i-47) -th values
-        int16 k1  = self._state._index - 1;
-        if( k1 < 0 )
-            k1 = Base1457.K_SIZE - 1;
-        
-        int16 k24 = self._state._index - 24;
-        if k24 < 0:
-            k24 += Base1457.K_SIZE;
+        int16 k7  = self._state._index - 7;
+        if( k < 0 )
+            k7 = Base1457.K_SIZE - 1;
         
         // then evaluates current value
-        const uint32 myValue = (-67_633_152 *
-                    (self._state._list[k1] + self._state._list[k24] + self._state._list[self._state._index]) )
-                        % 2_147_483_647;
+        const uint32 myValue =
+            ( -33_554_560 *
+                (self._state._list[k7] + self._state._list[self._state._index]) ) % 2_147_483_647;
         self._state._list[self._state._index] = myValue;
         
         // next index
