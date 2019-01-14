@@ -29,7 +29,9 @@ from .Bases.base_lcg import BaseLcg;
 from SysTime import systime;
 
 //=============================================================================
-class Rand32 : BaseLcg<uint64, 9_219_741_426_499_971_445, 1, 0x8000_0000_0000_0000> as Lcg63
+class Rand32 : 
+    BaseLcg<uint64, 9_219_741_426_499_971_445, 1, 0x8000_0000_0000_0000>
+        as Lcg63
 /**
 Pseudo-random numbers generator - Linear Congruential Generator dedicated  
 to  63-bits calculations with very short period (about 9.2e+18) and short
@@ -55,15 +57,19 @@ See Rand32 for a 2^32 (i.e. 4.3e+9)  period  LC-Generator  with  very  low
 computation  time  but shorter period and worse randomness characteristics
 than for Rand63.
   
-Furthermore this class is callable:
+Furthermore this class is callable.
+Example:
+
   Rand63 rand = Rand63();
   print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
   print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Please notice that for simulating the roll of a dice you should program:
+Notice that for simulating the roll of a dice you should program.
+Example:
+
   Rand63 diceRoll = Rand63();
-  print(uint8(diceRoll(1, 7))); # prints a uniform roll within set {1, 2, 3, 4, 5, 6}
+  print(uint8(diceRoll(1, 7))); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
 
 Reminder:
 We give you here below a copy of the table of tests for the LCGs that have 

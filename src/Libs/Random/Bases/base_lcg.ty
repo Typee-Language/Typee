@@ -54,7 +54,9 @@ See Rand63 for a 2^63 (i.e. about 9.2e+18) period  LC-Generator  with  low
 computation  time  also,   longer  period  and  really  better  randomness 
 characteristics than for FastRand32.
 
-Furthermore this class is callable:
+Furthermore this class is callable.
+Example:
+
   BaseLCG rand = BaseLCG();
   print( rand() );    # prints a uniform pseudo-random value within [0.0, 1.0)
   print( rand(a) );   # prints a uniform pseudo-random value within [0.0, a)

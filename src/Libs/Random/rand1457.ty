@@ -57,13 +57,16 @@ See Rand49507  for  a  far  longer  period  (2^49507,  i.e. 1.2e+14903)  with  l
 computation  time  too  (31-bits  modulus)  but  use  of  more  memory space (1597 
 integers).
   
-Furthermore this class is callable:
+Furthermore this class is callable.
+Example:
   Rand1457 rand = Rand1457();
   print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
   print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Please notice that for simulating the roll of a dice you should program:
+Notice that for simulating the roll of a dice you should program.
+Example:
+
   Rand1457 diceRoll = Rand1457();
   print( int(diceRoll(1, 7)) ); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
 
@@ -123,9 +126,10 @@ should definitively pass.
             k24 += Base1457.K_SIZE;
         
         // then evaluates current value
-        const uint32 myValue = (67_633_152 *
-                    (self._state._list[k1] + self._state._list[k24] + self._state._list[self._index]) )
-                        % 2_147_483_647;
+        const uint32 myValue =
+            ( 67_633_152 *
+                (self._state._list[k1] + self._state._list[k24] + self._state._list[self._index]) )
+                    % 2_147_483_647;
         self._state._list[self._state._index] = myValue;
         
         // next index

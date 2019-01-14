@@ -73,17 +73,22 @@ to the use of a 2^32 modulo.
 
 See Rand1457 for a longer period MR-Generator (2^1457,  i.e. 4.0e+438)  and longer 
 computation  time  (2^31-1 modulus calculations) but less memory space consumption 
-(47 integers).
-See Rand49507 for a far longer period (2^49507, i.e. 1.2e+14903  with low  comput-
-ation  time  too  (31-bits  modulus) but use of more memory space (1597 integers).
+(47 64-bits integers).
+See Rand49507 for a far longer period (2^49507, i.e. 1.2e+14_903 with low  comput-
+ation time too (31-bits modulus) but use of more memory space (1597 64-bits integ-
+ers).
   
-Furthermore this class is callable:
+Furthermore this class is callable.
+Example:
+
   Rand287 rand = Rand287();
   print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
   print( rand(a) ) ;  // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Please notice that for simulating the roll of a dice you should program:
+Please notice that for simulating the roll of a dice you should program.
+Example:
+
   Rand287 diceRoll = Rand287();
   print( int(diceRoll(1, 7)) ) // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
 
