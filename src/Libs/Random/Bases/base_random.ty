@@ -25,11 +25,12 @@ SOFTWARE.
 // Module Bases/base_random.ty
 
 //=============================================================================
-class BaseRandom {
+class BaseRandom
+/**
+This is the base class for all pseudo-random numbers generators.
+*/
+{
   :public:
-    /**
-    This is the base class for all pseudo-random numbers generators.
-    */
     //-------------------------------------------------------------------------
     abstract const float64 random();
     /**
@@ -63,7 +64,7 @@ class BaseRandom {
         return (max - min) * me.random() + min;
     }
     //-------------------------------------------------------------------------
-    const int64 operator () ( const uint64 b )
+    const int64 operator () ( const int64 b )
     /**
     Returns a pseudo-random value in interval: [0, b) if b > 0 and [b, 0) otherwise.
     */
@@ -71,7 +72,55 @@ class BaseRandom {
         return const int64( b * me.random() );
     }
     //-------------------------------------------------------------------------
-    const int64 operator () ( const float64 a, const float64 b )
+    const int32 operator() ()
+    /**
+    Returns a pseudo-random value in interval: [0, 0x7fff_ffff).
+    */
+    {
+        return const int32( me.random() * 0x7fff_ffff );
+    }
+    //-------------------------------------------------------------------------
+    const int64 operator() ()
+    /**
+    Returns a pseudo-random value in interval: [0, 0x7fff_ffff_ffff_ffff).
+    */
+    {
+        return const int64( me.random() * 0x7fff_ffff_ffff_ffff );
+    }
+    //-------------------------------------------------------------------------
+    const int64 operator () ( const int64 a, const int64 b )
+    /**
+    Returns a pseudo-random value in interval: [a, b) if a >= b and [b, a) otherwise.
+    */
+    {
+        return const int64( (max - min ) * me.random() + min );
+    }
+    //-------------------------------------------------------------------------
+    const uint32 operator() ()
+    /**
+    Returns a pseudo-random value in interval: [0, 0xffff_ffff).
+    */
+    {
+        return const uint32( me.random() * 0x7fff_ffff );
+    }
+    //-------------------------------------------------------------------------
+    const uint64 operator() ()
+    /**
+    Returns a pseudo-random value in interval: [0, 0xffff_ffff_ffff_ffff).
+    */
+    {
+        return const uint64( me.random() * 0xffff_ffff_ffff_ffff );
+    }
+    //-------------------------------------------------------------------------
+    const uint64 operator () ( const iunt64 b )
+    /**
+    Returns a pseudo-random value in interval: [0, b) if b > 0 and [b, 0) otherwise.
+    */
+    {
+        return const int64( b * me.random() );
+    }
+    //-------------------------------------------------------------------------
+    const uint64 operator () ( const uint64 a, const uint64 b )
     /**
     Returns a pseudo-random value in interval: [a, b) if a >= b and [b, a) otherwise.
     */

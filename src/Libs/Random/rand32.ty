@@ -29,7 +29,7 @@ from .Bases.base_lcg import BaseLcg;
 from SysTime import systime;
 
 //=============================================================================
-class Rand32 : BaseLcg<uint32, 0x1_0000_0000> as Lcg32 {
+class Rand32 : BaseLcg<uint32, 69069, 1, 0x1_0000_0000> as Lcg32
 /**
 Pseudo-random numbers generator - Linear Congruential Generator dedicated  
 to  32-bits  calculations with very short period (about 4.3e+09) but very 
@@ -82,7 +82,7 @@ characteristics
 * _big crush_ is the ultimate set of difficult tests  that  any  GOOD  PRG 
 should definitively pass.
 */
-    
+{
     //-------------------------------------------------------------------------
     Rand32()
     /**
@@ -93,7 +93,7 @@ should definitively pass.
         Lcg32();
     }
     //-------------------------------------------------------------------------
-    Rand32( const ? in (SeedT, float32, float64) seed_value )
+    Rand32( const ? in (uint32, float32, float64) seed_value )
     /**
     Constructor.
     */
@@ -101,17 +101,6 @@ should definitively pass.
         Lcg32( seed_value );
     }
 
-    //-------------------------------------------------------------------------
-    const float64 random(self)
-    /**
-    This is the core of the pseudo-random generator.
-    Returned values are within [0.0, 1.0).
-    */
-    {
-        me._value = 69069 * me._value + 1;
-        return me._value / 4_294_967_296.0;
-    }       
- 
     //-------------------------------------------------------------------------
     none set_state()
     /**
@@ -123,6 +112,7 @@ should definitively pass.
                       ((t & 0x00ff0000) >>  8) +
                       ((t & 0x0000ff00) <<  8) +
                       ((t & 0x000000ff) << 24)   );
+    }
 }
 
 //===== end of module   Random.rand32.ty   =====//

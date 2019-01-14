@@ -28,7 +28,7 @@ SOFTWARE.
 from .Bases.base_lfib64 import BaseLFib64
 
 //=============================================================================
-class LFib116 : BaseLFib64< 55 >
+class Rand116 : BaseLFib64< 24, 55 > as Base116
 /**
 Pseudo-random numbers generator  -  Definition of a fast 64-bits Lagged Fibonacci 
 Generator with quite short period (8.3e+34).
@@ -105,21 +105,24 @@ should definitively pass.
 */
 {
     //-------------------------------------------------------------------------
-    const float64 random(){
-        // evaluates indexes in suite for the i-5 and i-17 -th values
-        const uint16 k24 = me._state._index - 24 + (Rand116.K_LIST_SIZE if k24 < 0 else 0);
-        
-        // then evaluates current value
-        const uint64 myValue = (me._state._list[k24] + me._state._list[ me._state._index ]) & 18_446_744_073_709_551_615;  // i.e. 0xffff_ffff_ffff_ffff
-        me._list[ me._state._index ] = myValue;
-        
-        // next index
-        self._state._index = (self._state._index + 1) % Rand116.K_LIST_SIZE;
-        
-        // then returns float value within [0.0, 1.0)
-        return  myValue / float64( 18_446_744_073_709_551_616.0 );
+    Rand116()
+    /**
+    Constructor.
+    The shuffling of the local current time value is used as the initial seed.
+    */
+    {
+        Base116();
+    }
+    //-------------------------------------------------------------------------
+    Rand116( const MyInternalState seed_state )
+    /**
+    Constructor.
+    seed_state is an internal state that has been gotten back from a former
+    call to get_state().
+    */
+    {
+        Base116( seed_state );
     }
 }
 
 //=====   end of module   Random.rand116.ty   =====//
-
