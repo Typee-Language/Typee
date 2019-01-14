@@ -106,6 +106,7 @@ should definitively pass.
     {
         Base49507( seed_state );
     }
+    
     //-------------------------------------------------------------------------
     const float64 random();
     /**
@@ -123,8 +124,8 @@ should definitively pass.
             k24 += Base1457.K_SIZE;
         
         // then evaluates current value
-        const uint32 myValue = (67_633_152 *
-                    (self._state._list[k1] + self._state._list[k24] + self._state._list[self._index]) )
+        const uint32 myValue = (-67_633_152 *
+                    (self._state._list[k1] + self._state._list[k24] + self._state._list[self._state._index]) )
                         % 2_147_483_647;
         self._state._list[self._state._index] = myValue;
         
@@ -132,6 +133,6 @@ should definitively pass.
         self._state._index = (self._state._index + 1) % Base1457.K_SIZE;
         
         // then returns float value within [0.0, 1.0)
-        return  myValue / 2147483647.0;
+        return  myValue / 2_147_483_647.0;
  
 //=====   end of module   rand49507.py   =====//

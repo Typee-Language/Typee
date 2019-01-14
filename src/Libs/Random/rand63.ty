@@ -1,5 +1,5 @@
 /***
-Copyright (c) 2018-2019 Philippe Schmouker, schmouk (at) typee.ovh
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -29,7 +29,7 @@ from .Bases.base_lcg import BaseLcg;
 from SysTime import systime;
 
 //=============================================================================
-class Rand32 : BaseLcg<uint64, 9_219_741_426_499_971_445, 1, 0x8_0000_0000_0000_0000> as Lcg63
+class Rand32 : BaseLcg<uint64, 9_219_741_426_499_971_445, 1, 0x8000_0000_0000_0000> as Lcg63
 /**
 Pseudo-random numbers generator - Linear Congruential Generator dedicated  
 to  63-bits calculations with very short period (about 9.2e+18) and short
@@ -57,9 +57,9 @@ than for Rand63.
   
 Furthermore this class is callable:
   Rand63 rand = Rand63();
-  print( rand() );    # prints a uniform pseudo-random value within [0.0, 1.0)
-  print( rand(a) );   # prints a uniform pseudo-random value within [0.0, a)
-  print( rand(a,b) ); # prints a uniform pseudo-random value within [a  , b)
+  print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
+  print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
+  print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
 Please notice that for simulating the roll of a dice you should program:
   Rand63 diceRoll = Rand63();

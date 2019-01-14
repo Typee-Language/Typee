@@ -94,7 +94,7 @@ arrays that are initialized with a pseudo-rendom generator ot type RandT.
         MyInternalState(){
             RandT rnd = RandT();
             me._index = 0;
-            me._list = [ InternT( rnd() ) for _ in [:K_SIZE] ];  // :) got it? Enjoy Typee! ;)
+            me._list  = [ InternT( rnd() ) for _ in [:K_SIZE] ];  // :) got it? Enjoy Typee! ;)
         }
         //-----------------------------------------------------------------
         uint16                 _index;
@@ -105,4 +105,3 @@ arrays that are initialized with a pseudo-rendom generator ot type RandT.
 }
 
 //=====   end of module   Random.Bases.base_rand_state.ty   =====//
-

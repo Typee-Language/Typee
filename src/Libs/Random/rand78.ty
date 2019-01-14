@@ -1,5 +1,5 @@
 /***
-Copyright (c) 2018-2019 Philippe Schmouker, schmouk (at) typee.ovh
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -74,9 +74,9 @@ Please notice that this class and all its  inheriting  sub-classes  are  callabl
 Example:
 
   Rand78 rand = Rand78();
-  print( rand() );    # prints a uniform pseudo-random value within [0.0, 1.0)
-  print( rand(a) );   # prints a uniform pseudo-random value within [0.0, a)
-  print( rand(a,b) ); # prints a uniform pseudo-random value within [a  , b)
+  print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
+  print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
+  print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
 Please notice that for simulating the roll of a dice you should program:
 
@@ -125,4 +125,3 @@ should definitively pass.
 }
 
 //=====   end of module   Random.rand78.ty   =====//
-
