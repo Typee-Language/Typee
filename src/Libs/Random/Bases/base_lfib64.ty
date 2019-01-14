@@ -29,7 +29,7 @@ from .rand63 import Rand63;
 from .Bases.base_random import BaseRandom;
 
 //=============================================================================
-class BaseLFib64<const uint16 INDEX, const uint16 K_SIZE> : BaseRandState< Rand63, uint64, K_SIZE >
+class BaseLFib64<const uint16 INDEX, const uint16 K_SIZE> : BaseRandState< Rand63, uint64, K_SIZE > as BaseState
 /**
 Definition of the base class for all LFib pseudo-random generators based
 on 64-bits generated numbers.
@@ -87,6 +87,8 @@ characteristics;
 should definitively pass.
 */
 {
+  :public:
+
     //-------------------------------------------------------------------------
     BaseLFib64()
     /**
@@ -95,7 +97,7 @@ should definitively pass.
     initial seed.
     */
     {
-        me.set_state();
+        BaseState();
     }
     //-------------------------------------------------------------------------
     BaseLFib64( const MyInternalState seed_state )
@@ -105,13 +107,13 @@ should definitively pass.
     memory with get_state().
     */
     {
-        me.set_state( seed_state );
+        BaseState( seed_state );
     }
 
     //-------------------------------------------------------------------------
     const float64 random(){
         // evaluates indexes in suite for the i-5 and i-17 -th values
-        const uint16 k_index = me._state._index - INDEX + (K_SIZE if k_index < 0 else 0);
+        const int16 k_index = me._state._index - INDEX + (K_SIZE if k_index < 0 else 0);
         
         // then evaluates current value
         const uint64 my_value = (me._state._list[k_index] + me._state._list[ me._state._index ]) & 0xffff_ffff_ffff_ffff;
@@ -126,4 +128,3 @@ should definitively pass.
 }
  
 //=====   end of module   Random.Bases.base_lfib64.ty   =====//
-

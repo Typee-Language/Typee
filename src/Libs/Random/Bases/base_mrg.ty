@@ -82,6 +82,8 @@ characteristics;
 should definitively pass.
 */
 {
+  :public:
+
     //-------------------------------------------------------------------------
     BaseMRG()
     /**
@@ -105,4 +107,3 @@ should definitively pass.
 }
  
 //=====   end of module   Random.Bases.base_mrg.ty   =====//
-

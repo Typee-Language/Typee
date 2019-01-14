@@ -21,8 +21,11 @@ SOFTWARE.
 ***/
 
 //=============================================================================
-from .Bases.basemrg import BaseMRG
+// Built-in library Random
+// Module rand287.ty
 
+//=============================================================================
+from .Bases.basemrg import BaseMRG
 
 //=============================================================================
 class Rand287 : BaseMRG< 256 > as Base287
@@ -122,6 +125,7 @@ should definitively pass.
     {
         Base287( seed_state );
     }
+    
     //-------------------------------------------------------------------------
     const float64 random();
     /**
@@ -147,7 +151,7 @@ should definitively pass.
         
         // then evaluates current value
         myValue = (self._state._list[k55] + self._state._list[k119] + self._state._list[k179] + self._state._list[self._state._index]);
-        self._state._list[self._state._index] = myValue;
+        self._state._list[ self._state._index ] = myValue;
         
         // next index
         self._state._index = (self._state._index+1) % Base287.K_SIZE;

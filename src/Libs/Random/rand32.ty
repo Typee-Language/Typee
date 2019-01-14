@@ -1,5 +1,5 @@
 /***
-Copyright (c) 2018-2019 Philippe Schmouker, schmouk (at) typee.ovh
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -58,9 +58,9 @@ characteristics than with Rand32.
   
 Furthermore this class is callable:
   Rand32 rand = Rand32();
-  print( rand() );    # prints a uniform pseudo-random value within [0.0, 1.0)
-  print( rand(a) );   # prints a uniform pseudo-random value within [0.0, a)
-  print( rand(a,b) ); # prints a uniform pseudo-random value within [a  , b)
+  print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
+  print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
+  print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
 Please notice that for simulating the roll of a dice you should program:
   Rand32 diceRoll = Rand32();
@@ -104,7 +104,7 @@ should definitively pass.
     //-------------------------------------------------------------------------
     none set_state()
     /**
-    Implementation of the base abstract method. uses the system time clock.
+    Implementation of the base abstract method. Uses the system time clock.
     */
     {
         uint32 t = uint32( systime.systime() * 1000.0 );
