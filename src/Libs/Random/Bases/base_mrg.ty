@@ -96,12 +96,8 @@ should definitively pass.
     BaseMRG( const MyInternalState seed_state )
     /**
     Constructor.
-    seed_state is either a valid state, an integer,  a float or None.
-    About  valid  state:  this  is  a  tuple  containing  a  list  of  
-    me.K__SIZE integers and an index pointing  in  this  list  (index
-    value being  then  in [0:me.K_LIST_SIZE).  Should seed_state be a 
-    sole integer or float then it is used as  initial  seed  for  the 
-    random filling of the internal list of  me.K_SIZE  integers.
+    seed_state is a valid internal state that has been previously loaded in 
+    memory with get_state().
     */
     {
         me.set_state( seed_state );
