@@ -23,10 +23,11 @@ SOFTWARE.
 //=============================================================================
 // Built-in Library SysTime
 // Module systime.py
+
 // Available functions
-fwd float32  systime();      // System elapsed time
-fwd float32  cputime();      // CPU elapsed time
-fwd float32  proctime();     // process elapsed time
+fwd float32  systime();      // System elapsed time , millisecond precision
+fwd float32  cputime();      // CPU elapsed time    , millisecond precision
+fwd float32  proctime();     // process elapsed time, millisecond precision
 
 fwd float64  systime_ns();   // System elapsed time , nanosecond precision
 fwd float64  cputime_ns();   // CPU elapsed time    , nanosecond precision
