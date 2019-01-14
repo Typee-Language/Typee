@@ -1,0 +1,137 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+from .Bases.basemrg import BaseMRG
+
+//=============================================================================
+class Rand1457 : BaseMRG< 47 > as Base1457
+/**
+Pseudo-random numbers generator  - Definition of a fast 32-bits Multiple Recursive
+Generator with long period (3.98e+438).
+
+Multiple Recursive Generators (MRGs)  use  recurrence  to  evaluate  pseudo-random
+numbers suites. Recurrence is of the form:
+
+   x(i) = A * SUM[ x(i-k) ]  mod M
+
+for 2 to more k different values.
+
+MRGs offer very large periods with the best known results  in  the  evaluation  of 
+their  randomness,  as  stated  in  the  evaluation  done  by  Pierre L'Ecuyer and 
+Richard Simard (Universite de Montreal)  in "TestU01:  A C Library  for  Empirical 
+Testing of Random  Number Generators  - ACM Transactions on Mathematical Software, 
+vol.33 n.4, pp.22-40, August 2007".  It is recommended to use  such  pseudo-random
+numbers generators rather than LCG ones for serious simulation applications.
+
+The implementation of this MRG 31-bits model is  based  on  DX-47-3  pseudo-random
+generator  proposed  by  Deng  and  Lin.  The  DX-47-3 version uses the recurrence
+
+    x(i) = (2^26+2^19) * (x(i-1) + x(i-24) + x(i-47)) mod (2^31-1)
+    
+and offers a period of about 2^1457  - i.e. nearly 4.0e+438 - with low computation
+time.
+
+See Rand287 for  a  short  period  MR-Generator (2^287,  i.e. 2.49e+86)  with  low
+computation time but 256 integers memory consumption.
+See Rand49507  for  a  far  longer  period  (2^49507,  i.e. 1.2e+14903)  with  low 
+computation  time  too  (31-bits  modulus)  but  use  of  more  memory space (1597 
+integers).
+  
+Furthermore this class is callable:
+  Rand1457 rand = Rand1457();
+  print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
+  print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
+  print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
+
+Please notice that for simulating the roll of a dice you should program:
+  Rand1457 diceRoll = Rand1457();
+  print( int(diceRoll(1, 7)) ); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
+
+Reminder:
+We give you here below a copy of the table of tests for the MRGs that have 
+been implemented in Libs.Random, as provided in paper "TestU01, ..." - see
+file README.md.
+
+| PyRabndLib class | TU01 generator name | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
+| ---------------- | ------------------- | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
+|    Rand287       | Marsa-LFIB4         |   256 x 4-bytes | 2^287   |    3.40     |     0.8      |          0       |       0     |       0        |
+|    Rand1457      | DX-47-3             |    47 x 4-bytes | 2^1457  |    n.a.     |     1.4      |          0       |       0     |       0        |
+|    Rand49507     | DX-1597-2-7         | 1,597 x 4-bytes | 2^49507 |    n.a.     |     1.4      |          0       |       0     |       0        |
+
+* _small crush_ is a small set of simple tests that quickly tests some  of
+the expected characteristics for a pretty good PRG;
+* _crush_ is a bigger set of tests that test more deeply  expected  random 
+characteristics;
+* _big crush_ is the ultimate set of difficult tests  that  any  GOOD  PRG 
+should definitively pass.
+*/
+{
+    //-------------------------------------------------------------------------
+    Rand1457()
+    /**
+    Constructor.
+    The shuffling of the local current time value is used as the initial seed.
+    */
+    {
+        Base1457();
+    }
+    //-------------------------------------------------------------------------
+    Rand1457( const MyInternalState seed_state )
+    /**
+    Constructor.
+    seed_state is an internal state that has been gotten back from a former
+    call to get_state().
+    */
+    {
+        Base1457( seed_state );
+    }
+    
+    //-------------------------------------------------------------------------
+    const float64 random();
+    /**
+    This is the core of the pseudo-random generator.
+    Returned values should be uniformly distributed within [0.0, 1.0).
+    */
+    {
+        // evaluates indexes in suite for the i-1, i-24 (and i-47) -th values
+        int16 k1  = self._state._index - 1;
+        if( k1 < 0 )
+            k1 = Base1457.K_SIZE - 1;
+        
+        int16 k24 = self._state._index - 24;
+        if k24 < 0:
+            k24 += Base1457.K_SIZE;
+        
+        // then evaluates current value
+        const uint32 myValue = (67_633_152 *
+                    (self._state._list[k1] + self._state._list[k24] + self._state._list[self._index]) )
+                        % 2_147_483_647;
+        self._state._list[self._state._index] = myValue;
+        
+        // next index
+        self._state._index = (self._state._index + 1) % Base1457.K_SIZE;
+        
+        // then returns float value within [0.0, 1.0)
+        return  myValue / 2147483647.0;
+ 
+//=====   end of module   rand1457.py   =====//
