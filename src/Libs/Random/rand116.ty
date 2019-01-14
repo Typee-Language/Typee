@@ -41,7 +41,7 @@ where op is an operation that can be:
     + (addition),
     - (substraction),
     * (multiplication),
-    ^(bitwise exclusive-or).
+    ^ (bitwise exclusive-or).
 
 With the + or - operation, such generators are in fact MRGs. They offer very large
 periods  with  the  best  known  results in the evaluation of their randomness, as
@@ -60,7 +60,8 @@ and offers a period of about 2^116 - i.e. 8.3e+34 - with low computation time  d
 to  the  use  of a 2^64 modulo and little memory space consumption (55 long integ-
 ers).
 
-This 'LFib(2^64, 55, 24, +)' generator is based on a suite containing 55 integers.
+This 'LFib(2^64, 55, 24, +)' generator is based on a suite containing  55  64-bits
+integers.
 
 Please notice that the TestUO1 article states that  the  operator  should  be  '*' 
 while Mascagni & Srinivasan  in their original article stated that the operator is 
@@ -71,7 +72,7 @@ See Rand78,  Rand668 and Rand1340 for long period  LFib  generators  (resp.  2^7
 while same computation time and far higher precision (64-bits  calculations)  than  
 MRGs,  but memory consumption (resp. 55, 607 and 1279 integers).
 
-Please notice that this class and all its  inheriting  sub-classes  are  callable.
+Furthermore this class is callable.
 Example:
 
   Rand116 rand = Rand116();
@@ -79,10 +80,11 @@ Example:
   print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Please notice that for simulating the roll of a dice you should program:
+Notice that for simulating the roll of a dice you should program:
+Example:
 
   Rand116 diceRoll = Rand116();
-  print(uint8(diceRoll(1, 7))); # prints a uniform roll within set {1, 2, 3, 4, 5, 6}
+  print(uint8(diceRoll(1, 7))); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
 
 Reminder:
 We give you here below a copy of the table of tests for the LCGs that have 
