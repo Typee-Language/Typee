@@ -25,13 +25,15 @@ SOFTWARE.
 // Module Bases/base_lcg.ty
 
 //=============================================================================
-from .Bases.base_random_i import BaseRandomI;
+from .Bases.base_random import BaseRandom;
 
 //=============================================================================
-class BaseLCG<SeedT in (uint32,uint64), const SeedT KMAX> : BaseRandomI
+class BaseLCG< InternT in (uint32,int64),
+               const InternT COEFF_MULT ,
+               const InternT CONST_ADD  ,
+               const InternT MODULO       > : BaseRandom
 /**
 Definition of the base class for all LCG pseudo-random generators.
-This module is part of library PyRandLib.
 
 LCG models evaluate pseudo-random numbers suites x(i) as a simple mathem-
 atical function of 
@@ -87,7 +89,7 @@ should definitively pass.
         me.set_state();
     }
     //-------------------------------------------------------------------------
-    BaseLCG( const ? in (SeedT, float32, float64) seed_value )
+    BaseLCG( const ? in (InternT, float32, float64) seed_value )
     /**
     Constructor.
     */
@@ -96,7 +98,7 @@ should definitively pass.
     }
  
     //-------------------------------------------------------------------------
-    SeedT get_state()
+    InternT get_state()
     /**
     Returns an object capturing the current internal state of the generator.
     This object can be passed to set_state() to restore the state.
@@ -107,14 +109,25 @@ should definitively pass.
     {
         return me._value;
     }
-            
+
+    //-------------------------------------------------------------------------
+    const float64 random(self)
+    /**
+    This is the core of the pseudo-random generator.
+    Returned values are within [0.0, 1.0).
+    */
+    {
+        me._value = (COEFF_MULT * me._value + CONST_ADD) % MODULO;
+        return me._value / float64(MODULO);
+    }
+
     //-------------------------------------------------------------------------
     abstract none set_state();
     /**
     Should set internal state using local time as initial seed.
     */
     //-------------------------------------------------------------------------
-    none set_state( const SeedT state)
+    none set_state( const InternT state)
     /**
     state should have been obtained  from a previous call to getstate(),
     and  setstate() restores the internal state of the generator to what
@@ -139,7 +152,7 @@ should definitively pass.
     }
 
     //-------------------------------------------------------------------------
-    protected SeedT  _value;  // the internal state for every instances of LCGs
+    protected InternT  _value;  // the internal state for every instances of LCGs
 }
 
 //===== end of module   Random.Bases.base_lcg.ty   =====//

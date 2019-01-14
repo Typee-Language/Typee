@@ -22,14 +22,14 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Random
-// Module rand32.ty
+// Module rand63.ty
 
 //=============================================================================
 from .Bases.base_lcg import BaseLcg;
 from SysTime import systime;
 
 //=============================================================================
-class Rand32 : BaseLcg<int64, 0x8000_0000_0000_0000> as Lcg63 {
+class Rand32 : BaseLcg<uint64, 9_219_741_426_499_971_445, 1, 0x8_0000_0000_0000_0000> as Lcg63
 /**
 Pseudo-random numbers generator - Linear Congruential Generator dedicated  
 to  63-bits calculations with very short period (about 9.2e+18) and short
@@ -81,7 +81,7 @@ characteristics
 * _big crush_ is the ultimate set of difficult tests  that  any  GOOD  PRG 
 should definitively pass.
 */
-    
+{
     //-------------------------------------------------------------------------
     Rand63()
     /**
@@ -92,7 +92,7 @@ should definitively pass.
         Lcg63();
     }
     //-------------------------------------------------------------------------
-    Rand63( const ? in (SeedT, float32, float64) seed_value )
+    Rand63( const ? in (uint64, float32, float64) seed_value )
     /**
     Constructor.
     */
@@ -100,17 +100,6 @@ should definitively pass.
         Lcg63( seed_value );
     }
 
-    //-------------------------------------------------------------------------
-    const float64 random()
-    /**
-    This is the core of the pseudo-random generator.
-    Returned values are within [0.0, 1.0).
-    */
-    {
-        me._value = 9_219_741_426_499_971_445 * me._value + 1;
-        return me._value / float64( 9_223_372_036_854_775_808.0 );
-    }       
- 
     //-------------------------------------------------------------------------
     none set_state()
     /**
@@ -123,6 +112,7 @@ should definitively pass.
                       ((t & 0x00ff0000) >> 24) +
                       ((t & 0x0000ff00) << 40) +
                       ((t & 0x000000ff) << 63)   );
+    }
 }
 
 //===== end of module   Random.rand63.ty   =====//

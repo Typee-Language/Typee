@@ -28,7 +28,7 @@ SOFTWARE.
 from .Bases.base_lfib64 import BaseLFib64
 
 //=============================================================================
-class LFib78 : BaseLFib64< 1279 >
+class Rand1340 : BaseLFib64< 861, 1279 > as Base1340
 /**
 Pseudo-random numbers generator  -  Definition of a fast 64-bits Lagged  Fibonacci 
 Generator with quite short period (1.2e+201).
@@ -105,21 +105,25 @@ should definitively pass.
 */
 {
     //-------------------------------------------------------------------------
-    const float64 random(){
-        // evaluates indexes in suite for the i-5 and i-17 -th values
-        const uint16 k861 = me._state._index - 861 + (Rand668.K_LIST_SIZE if k861 < 0 else 0);
-        
-        // then evaluates current value
-        const uint64 myValue = (me._state._list[k861] + me._state._list[ me._state._index ]) & 18_446_744_073_709_551_615;  // i.e. 0xffff_ffff_ffff_ffff
-        me._list[ me._state._index ] = myValue;
-        
-        // next index
-        self._state._index = (self._state._index + 1) % Rand1340.K_LIST_SIZE;
-        
-        // then returns float value within [0.0, 1.0)
-        return  myValue / float64( 18_446_744_073_709_551_616.0 );
+    Rand1340()
+    /**
+    Constructor.
+    The shuffling of the local current time value is used as the initial seed.
+    */
+    {
+        Base1340();
+    }
+    //-------------------------------------------------------------------------
+    Rand1340( const MyInternalState seed_state )
+    /**
+    Constructor.
+    seed_state is an internal state that has been gotten back from a former
+    call to get_state().
+    */
+    {
+        Base1340( seed_state );
     }
 }
 
-//=====   end of module   Random.rand668.ty   =====//
+//=====   end of module   Random.rand1340.ty   =====//
 
