@@ -32,110 +32,73 @@ class PerfMeter
 /** 
 Class of performance meters.  Provides times with nanoseconds  precision  when 
 possible and with milliseconds precision otherwise.
-Notice: acutal C# implementation of systime allows only milliseconds precision.
+Notice: actual C# implementation of systime allows only milliseconds precision.
 */
 {
+  :public:
     //---------------------------------------------------------------------
     PerfMeter(){
-        me.frmt, me.frmt16 = none, none;
-        me.start = proctime_ns();
+        me._frmt, me._frmt16 = none, none;
+        me._mark  = none;
+        me._start = proctime_ns();
     }
     //---------------------------------------------------------------------
     PerfMeter( const str format ){
-        me.frmt, me.frmt16 = format, none;
-        me.start = proctime_ns();
+        me._frmt, me._frmt16 = format, none;
+        me._mark  = none;
+        me._start = proctime_ns();
     }
     //---------------------------------------------------------------------
     PerfMeter( const str16 format ){
-        me.frmt, me.frmt16 = none, format;
-        me.start = proctime_ns();
+        me._frmt, me._frmt16 = none, format;
+        me._mark  = none;
+        me._start = proctime_ns();
     }
 
     //---------------------------------------------------------------------
-    none destroy(){
-        me.end = proctime_ns();
-        print( str16(me) if me.frmt16 is not none else str(me) );
+    none destroy (){
+        me._mark = proctime_ns();
+        print( str16(me) if me._frmt16 is not none else str(me) );
     }
 
-    #-------------------------------------------------------------------------
-    float64 get_elapsed(){
-        return proctime_ns() - me.start;
+    //---------------------------------------------------------------------
+    none mark(){
+        me._mark = proctime_ns();
     }
 
     //---------------------------------------------------------------------
     none restart(){
-        me.start = proctime_ns();
+        me._mark  = none;
+        me._start = proctime_ns();
     }
 
     //---------------------------------------------------------------------
-    str operator str(){
-        if( me.frmt is none )
-            return me.default_format.format( me.end - me.start );
+    str operator str () {
+        if ( me._mark is none )
+            me._mark = proctime_ns();
+        if ( me._frmt is none )
+            return me.default_format.format( me._mark - me._start );
         else
-            return me.frmt.format( me.end - me.start );
+            return me.frmt.format( me._mark - me._start );
     }
     //---------------------------------------------------------------------
-    str operator str16(){
-        me.end = proctime_ns();
-        if( me.frmt16 is none )
-            return me.default_format16.format( me.end - me.start );
+    str16 operator str16 () {
+        if ( me._mark is none )
+            me._mark = proctime_ns();
+        if ( me._frmt16 is none )
+            return me.default_format16.format( me._mark - me._start );
         else
-            return me.frmt16.format( me.end - me.start );
-    }
-   
-    //---------------------------------------------------------------------
-    str get_elapsed(){
-        return me.get_elapsed( 0 );
+            return me.frmt16.format( me._mark - me._start );
     }
 
-    //---------------------------------------------------------------------
-    str get_elapsed( const uint8 decimals ){
-        
-        str _frmtDecs( const uint8 dec, const float64 val ){
-            if( dec == 0 )
-                return '';
-            elif( dec == 1 )
-                return ".{:1d}".format( uint64(val*10 + 0.5) );
-            else{
-                const uint8 K_MAX_DECIMALS = 3;
-                dec = min( K_MAX_DECIMALS, dec );
-                frmt = ".\{:=d\}".format( dec );
-                return frmt.format( uint64(val * (10**dec) + 0.5) );
-            }
-        }
-        
-        const float64 elapsed = proctime_ns() - me._start;
-        const uint64  intElapsed = uint64( elapsed );
-        const uint64  s = intElapsed % 60;
-        if( intElapsed >= 3600){
-            const uint64 h = intElapsed / 3600;
-            const uint8  m = (intElapsed / 60) % 60;
-            return "{:d}:{:=2d}:{:=2d}".format( h, m, s )
-                       + _frmtDecs(decimals, elapsed-intElapsed);
-        }
-        else{
-            const uint8 m = intElapsed / 60;
-            return "{:d}:{:=2d}".format( m, s )
-                       + _frmtDecs(decimals, elapsed-intElapsed);
-        }
-   
-    //---------------------------------------------------------------------
-    str16 get_elapsed_time(){
-        return str16( me.get_elapsed() );
-    }
-   
-    //---------------------------------------------------------------------
-    str16 get_elapsed_time( const uint8 decimals ){
-        return str16( me.get_elapsed( decimals ) );
-    }
-
-    //---------------------------------------------------------------------
-    private float64 _start, _end;
-    private str     _frmt;
-    private str16   _frmt16;
+  :protected:
+    //---------------------------------------------------------------------  
+    float64  _start, _mark;
+    str      _frmt;
+    str16    _frmt16;
     
     static str   default_format   = "\n-- done in {:.6f} s";
-    static str16 default_format16 = "\n-- done in {:.6f} s";
+    static str16 default_format16 = str16( "\n-- done in {:.6f} s" );
 }
 
 //=============================================================================
@@ -143,175 +106,79 @@ class PerfMeterHms : PerfMeter
 /** 
 Class of performance meters.  Provides times with nanoseconds  precision  when 
 possible and with milliseconds precision otherwise.
-Notice: acutal C# implementation of systime allows only milliseconds precision.
-Elapsed times are displayed with format HH:MM:SS.frac.
+Notice: actual C# implementation of systime allows only milliseconds precision.
+Elapsed times are displayed with format 'HH:MM:SS.frac'.
 */
 {
+  :public:
     //---------------------------------------------------------------------
-    PerfMeterMms(){
+    PerfMeterHms(){
+        me._decimals = me._K_DEFAULT_DECIMALS;
         PerfMeter();
     }
     //---------------------------------------------------------------------
-    PerfMeterMms( const ? in (str,str16) format ){
+    PerfMeterHms( const uint8 decimals){
+        me._decimals = decimals;
+        PerfMeter();
+    }
+    //---------------------------------------------------------------------
+    PerfMeterHms( const ? in (str,str16) format ){
+        me._decimals = me._K_DEFAULT_DECIMALS;
+        PerfMeter( format );
+    }
+    //---------------------------------------------------------------------
+    PerfMeterHms( const ? in (str,str16) format, const uint8 decimals ){
+        me._decimals = decimals;
         PerfMeter( format );
     }
 
     //---------------------------------------------------------------------
-    static str   default_format   = "\n-- done in {:.6f} s";
-    static str16 default_format16 = "\n-- done in {:.6f} s";
-}
+    str operator str () {
+        str time_text;
+        if ( me._mark is none )
+            me._mark = proctime_ns();
+        const float64 elapsed = me._mark - me._start;
+        const uint64  intElapsed = uint64( elapsed );
+        const uint8   s = intElapsed % 60;
+        if ( intElapsed >= 3600 ){
+            const uint64 h = intElapsed / 3600;
+            const uint8  m = (intElapsed / 60) % 60;
+            time_text = "{:d}:{:=2d}:{:=2d}".format( h, m, s )
+                                + me._frmt_decs(decimals, elapsed-intElapsed);
+        }
+        else{
+            const uint8 m = intElapsed / 60;
+            time_text =  "{:d}:{:=2d}".format( m, s )
+                                + me._frmt_decs(decimals, elapsed-intElapsed);
+        }
+        if ( me._frmt is none )
+            return me.default_format.format( time_text );
+        else
+            return me._frmt.format( time_text );
+    }
+    //---------------------------------------------------------------------
+    str16 operator str16 () {
+        return str16( str(me) );
+    }
 
+  :hidden:
+    //---------------------------------------------------------------------
+    const str _frmt_decs( const float64 val ){
+        if ( me._decimals == 0 )
+            return '';
+        elif ( me._decimals == 1 )
+            return ".{:1d}".format( uint64(val*10 + 0.5) );
+        else{
+            me._decimals = min( me._K_MAX_DECIMALS, me._decimals );
+            str frmt = ".\{:={:d}d\}".format( me._decimals );
+            return frmt.format( uint64(val * (10^^me._decimals) + 0.5) );
+        }
+    }
 
-//=============================================================================
-float32 cputime() {
-    /**
-    Returns a fractional seconds value as a 32-bits float for the  CPU  elapsed 
-    time  since  a  starting  point that is not specified.  Should be only used 
-    to evaluated elapsed time between to measurement points (i.e. two different
-    calls to this function).
-    */
-  embed python {{
-    return py_time.perf_counter()
-  }}
-
-  embed cpp {{
-    using namespace std::chrono;
-    chrono::duration_cast<chrono::milliseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
-    return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
-  }}
-
-  embed java {{
-    return (float)System.nanoTime() * 1.0e-9;
-  }}
-
-  embed android {{
-    return (float)SystemClock.elapsedRealtime() * 1.0e-3;
-  }}
-
-  embed cs {{
-    return time();
-  }}
-}
-
-//=============================================================================
-float32 proctime() {
-    /**
-    Returns a fractional seconds value as a 32-bits  float  for  current 
-    process elapsed  time since a starting  point that is not specified.  
-    Should be only used to evaluated elapsed time between to measurement 
-    points (i.e. two different calls to this function).
-    */
-  embed python {{
-    return py_time.process_time()
-  }}
-
-  embed cpp {{
-    return cpu_time();
-  }}
-
-  embed java {{
-    return cpu_time();
-  }}
-
-  embed android {{
-    return (float)SystemClock.uptimeMillis() * 1.0e-3;
-  }}
-
-  embed cs {{
-    return time();
-  }}
-}
-
-//=============================================================================
-float64 systime_ns() {
-    /**
-    Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
-    as  a  64-bits  floating  point  in  fractional  seconds  with nanosecond 
-    precision.
-    
-    Starting date as 1970-01-01 is common to most platforms and  systems  but 
-    may  differ  on  a few of them.  Windows and Linux programmers should not
-    experience big surprises with this.
-    It may be also that some systems provide time with 1 second as precision.
-    */
-  embed python {{
-    return py_time.time_ns()
-  }}
-
-  embed cpp {{
-    using namespace std::chrono;
-    chrono::duration_cast<chrono::nanoseconds> sys_time = chrono::system_clock::now().time_since_epoch();
-    return (double)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
-  }}
-
-  embed java, android {{
-    return (double)System.currentTimeMillis() * 1.0e-3;
-  }}
-
-  embed cs {{
-    return (double)( DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7 );
-  }}
-}
-
-//=============================================================================
-float64 cputime_ns() {
-    /**
-    Returns a fractional seconds value as a 64-bits float for the  CPU  elapsed 
-    time  since  a  starting  point that is not specified.  Should be only used 
-    to evaluated elapsed time between to measurement points (i.e. two different
-    calls to this function). Precision here is nanoseconds.
-    */
-  embed python {{
-    return py_time.perf_counter_ns()
-  }}
-
-  embed cpp {{
-    using namespace std::chrono;
-    chrono::duration_cast<chrono::nanoseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
-    return (double)sys_ticks.count() * chrono::system_clock::period.num / schrono::ystem_clock::period.den;
-  }}
-
-  embed java {{
-    return (double)System.nanoTime() * 1.0e-9;
-  }}
-
-  embed android {{
-    return (double)SystemClock.elapsedRealtimeNanos() * 1.0e-9;
-  }}
-
-  embed cs {{
-    return time_ns();
-  }}
-}
-
-//=============================================================================
-float64 proctime_ns() {
-    /**
-    Returns a fractional seconds value as a  64-bits  float  for  current 
-    process  elapsed  time  since a starting  oint that is not specified.
-    Should be only used to evaluated elapsed time between to  measurement 
-    points (i.e. two different calls to this function). Precision here is 
-    nanosecond.
-    */
-  embed python {{
-    return py_time.process_time_ns()
-  }}
-
-  embed cpp {{
-    return cpu_time_ns();
-  }}
-
-  embed java {{
-    return cpu_time_ns();
-  }}
-
-  embed android {{
-    return (double)SystemClock.uptimeMillis() * 1.0e-3;
-  }}
-
-  embed cs {{
-    return time_ns();
-  }}
+    //---------------------------------------------------------------------
+    uint8         _decimals;
+    static uint8  _K_DEFAULT_DECIMALS = 3;
+    static uint8  _K_MAX_DECIMALS     = 6;
 }
 
 //=====   end of module Libs.SysTime.perfmeter.ty   =====//
