@@ -77,7 +77,7 @@ Notice: actual C# implementation of systime allows only milliseconds precision.
         if ( me._mark is none )
             me._mark = proctime_ns();
         if ( me._frmt is none )
-            return me.default_format.format( me._mark - me._start );
+            return me._default_format.format( me._mark - me._start );
         else
             return me.frmt.format( me._mark - me._start );
     }
@@ -86,7 +86,7 @@ Notice: actual C# implementation of systime allows only milliseconds precision.
         if ( me._mark is none )
             me._mark = proctime_ns();
         if ( me._frmt16 is none )
-            return me.default_format16.format( me._mark - me._start );
+            return me._default_format16.format( me._mark - me._start );
         else
             return me.frmt16.format( me._mark - me._start );
     }
@@ -97,8 +97,8 @@ Notice: actual C# implementation of systime allows only milliseconds precision.
     str      _frmt;
     str16    _frmt16;
     
-    static str   default_format   = "\n-- done in {:.6f} s";
-    static str16 default_format16 = str16( "\n-- done in {:.6f} s" );
+    static str   _default_format   = "\n-- done in {:.6f} s";
+    static str16 _default_format16 = str16( "\n-- done in {:.6f} s" );
 }
 
 //=============================================================================
@@ -152,7 +152,7 @@ Elapsed times are displayed with format 'HH:MM:SS.frac'.
                                 + me._frmt_decs(decimals, elapsed-intElapsed);
         }
         if ( me._frmt is none )
-            return me.default_format.format( time_text );
+            return me._default_format.format( time_text );
         else
             return me._frmt.format( time_text );
     }
@@ -179,6 +179,7 @@ Elapsed times are displayed with format 'HH:MM:SS.frac'.
     uint8         _decimals;
     static uint8  _K_DEFAULT_DECIMALS = 3;
     static uint8  _K_MAX_DECIMALS     = 6;
+    static str    _default_format     = "\n-- done in {:s}";
 }
 
 //=====   end of module Libs.SysTime.perfmeter.ty   =====//
