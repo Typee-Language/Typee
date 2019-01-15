@@ -23,6 +23,8 @@ SOFTWARE.
 //=============================================================================
 // Built-in Library SysTime
 // Module perfmeter.py
+// See online documentation at https://www.typee.ovh,
+// section "5.SysTime Library" of tab "Documentation"
 
 //=============================================================================
 from SysTime.systime import proctime_ns;
