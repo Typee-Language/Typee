@@ -41,9 +41,9 @@ if __name__ == '__main__':
                                                '../Tests',
                                                '../Utils'] )
     
-    my_copyright_modifier.modify_files( ['../developmen-framework.md',
-                                         '../LICENSE',
-                                         '../notepad-readme.md',
-                                         '../README.md'] )
+    my_copyright_modifier.modify_files( ['../../development-framework.md',
+                                         '../../LICENSE',
+                                         '../../notepad-readme.md',
+                                         '../../README.md'] )
 
 #=====   end of   local_tools.script_copyright_automated_modification   =====#
