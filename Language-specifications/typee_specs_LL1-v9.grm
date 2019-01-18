@@ -527,6 +527,7 @@ SOFTWARE.
 
 <compound statement>    ::= <assign decl def func-call statement>
                          |  <embed statement>
+                         |  <exclude statement>                                     ###
                          |  <for statement>
                          |  <forever statement>
                          |  <if statement>
@@ -678,6 +679,8 @@ SOFTWARE.
                              |  EPS                                                         ###
 <enum list'>                ::= ',' <enum item> <enum list'>                                ###
                              |  EPS                                                         ###
+
+<exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}'           ###
 
 <file endianness>           ::= '<' <expression> <file endianness'>                         ###
                              |  '>' <expression> <file endianness'>                         ###
