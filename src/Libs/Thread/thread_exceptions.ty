@@ -25,16 +25,29 @@ SOFTWARE.
 // Module thread_exceptions.ty
 
 // defined exceptions:
+fwd class ThreadJoinException;
 fwd class ThreadStackSizeException;
+fwd class ThreadStartException;
+fwd class ThreadTimeoutValueException;
+fwd class UnlockedException;
 
 //=============================================================================
 from Thread.base_thread import BaseThread;
+from Thread.lockable    import Lockable;
+from Thread.semaphore   import Semaphore;
 
 //=============================================================================
 //-----------------------------------------------------------------------------
 class ThreadJoinException : Exception {
     ThreadJoinException( BaseThread thread ){
         Exception( "Thread {} cannot join itself - deadlocks avoidance".format(thread.name) );
+    }
+}
+
+//-----------------------------------------------------------------------------
+class ThreadStackSizeException : Exception {
+    ThreadStackSizeException( const uint32 erroneous_size ){
+        Exception( "Erroneous stack size for a Thread: {}".format(erroneous_size) );
     }
 }
 
@@ -46,9 +59,19 @@ class ThreadStartException : Exception {
 }
 
 //-----------------------------------------------------------------------------
-class ThreadStackSizeException : Exception {
-    ThreadStackSizeException( const uint32 erroneous_size ){
-        Exception( "Erroneous stack size for a Thread: {}".format(erroneous_size) );
+class ThreadTimeoutValueException : Exception {
+    ThreadTimeoutValueException( const float32 erroneous_duration ){
+        Exception( "Erroneous duration specification for a timed-out MutEx: {}".format(erroneous_duration) );
+    }
+}
+
+//-----------------------------------------------------------------------------
+class UnlockedException : Exception {
+    UnlockedException( Lockable lock ){
+        Exception( "Trying to release unlocked object {}".format( lock ) );
+    }
+    UnlockedException( Semaphore sem ){
+        Exception( "Trying to release unlocked semaphore {}".format( sem ) );
     }
 }
 

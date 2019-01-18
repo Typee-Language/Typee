@@ -42,7 +42,7 @@ declared as abstract, those operations have to be implem-
 ented in inheriting classes.
 */
 
-emebed py {{ : threading.Thread }}
+embed py {{ : threading.Thread }}
 
 {
  :public:
@@ -59,7 +59,7 @@ emebed py {{ : threading.Thread }}
     */
     {
       embed py {{
-        threading.Thread.__init__()
+        super().__init__()
       }}
     }
 
@@ -70,7 +70,7 @@ emebed py {{ : threading.Thread }}
     */
     {
       embed py {{
-        threading.Thread.__init__( name=name )
+        super().__init__( name=name )
       }}
     }
 
@@ -94,7 +94,7 @@ emebed py {{ : threading.Thread }}
     */
     {
       embed py {{
-      return threading.current_thread()
+        return threading.current_thread()
       }}
     }
 
