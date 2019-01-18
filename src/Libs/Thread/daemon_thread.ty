@@ -1,0 +1,94 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module daemon_thread.ty
+
+//=============================================================================
+from Thread.base_thread import BaseThread;
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+//=============================================================================
+class DaemonThread : BaseThread
+/**
+Base class for daemon threads in Typee built-in  library  Thread.
+Daemon  threads  are  neither  stoppable nor destroyable threads.
+Once run, the keep on running even after the program that created
+them has terminated.
+Meanwhile,  it is always possible to set a daemonic thread as  no 
+more being so.
+*/
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    DaemonThread()
+    /**
+    Default constructor.
+    */
+    {
+      embed py {{
+        threading.Thread.__init__( daemon=True )
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    BaseThread( const ? in (str,str16) name )
+    /**
+    Constructor with defined name for this thread.
+    */
+    {
+      embed py {{
+        threading.Thread.__init__( name=name, daemon=True )
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy ()
+    /**
+    Destructor for this base class.
+    Caution:
+    Behaviors may differ between different targeted programming languages.
+    */
+    {
+        BaseThread.destroy();
+    }
+
+    //-------------------------------------------------------------------------
+    none set_daemon( const bool is_daemon )
+    /**
+    Sets the daemonic status of this thread.
+    */
+    {
+      embed py {{
+        self.daemon = is_daemon
+      }}
+    }
+}
+
+//===== end of module   Thread.daemon_thread.ty   =====//
