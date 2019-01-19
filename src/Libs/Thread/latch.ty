@@ -1,0 +1,117 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module latch.ty
+
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+//=============================================================================
+class Latch
+/**
+Threads may wait on Latch instances and can be signaled the end of the 
+wait by a notification.
+This may be sued for applicative thread to wait for all initialization
+threads to complete their initializations.
+*/
+
+embed py {{ : threading.Condition }}
+
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    Latch( const uint32 start_count )
+    /**
+    Default constructor.
+    Start_count is the count to be decremented until notification  can  be
+    sent to every blocked threads that are waiting for this latch to open.
+    Raises AssertException if start_count iz 0.
+    */
+    {
+        assert start_count != 0;
+        
+      embed py {{
+        super().__init__()
+        self._count = start_count
+      }}
+    }
+    
+    //-------------------------------------------------------------------------
+    final none count_down()
+    /**
+    Decrements internal count for this latch.
+    Notifies all waiting threads when internal count is 0.
+    */
+    {
+      embed py {{
+        if self._count > 0:
+            self._count -= 1
+        if self._count == 0:
+            self.notify_all()
+      }}
+    }
+    
+    //-------------------------------------------------------------------------
+    final const uint32 get_count()
+    /**
+    Returns the actual internal count.
+    */
+    {
+      embed py {{
+        return self._count
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final none wait() exclude py
+    /**
+    Calling thread waits on this latch until signalled.
+    */
+    {
+      embed py {{
+        self.wait()
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool wait( const float32 timeout ) exclude py
+    /**
+    Timed-out waiting version applied to threads.
+    Returns true when returning from wait before timeout 
+    duration (unit: seconds), and False if timed-out.
+    Raises ThreadTimeoutValueException on some platforms 
+    when specified timeout has a too big value.
+    Raises AssertException if timeout is negative.
+    */
+    {
+        assert timeout >= 0.0;
+    }
+}
+
+//===== end of module   Thread.latch.ty   =====//
