@@ -35,6 +35,7 @@ fwd class UnlockedException;
 from Thread.base_thread import BaseThread;
 from Thread.lockable    import Lockable;
 from Thread.semaphore   import Semaphore;
+from Thread.timer       import Timer;
 
 //=============================================================================
 //-----------------------------------------------------------------------------
@@ -62,6 +63,13 @@ class ThreadStartException : Exception {
 class ThreadTimeoutValueException : Exception {
     ThreadTimeoutValueException( const float32 erroneous_duration ){
         Exception( "Erroneous duration specification for a timed-out MutEx: {}".format(erroneous_duration) );
+    }
+}
+
+//-----------------------------------------------------------------------------
+class TimerStartException : Exception {
+    TimerStartException( Timer timer ){
+        Exception( "Trying to start again running timer {}".format(timer) );
     }
 }
 

@@ -22,10 +22,10 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module semaphore.ty
+// Module timer.ty
 
 //=============================================================================
-from Thread.thread_exceptions import UnlockedException;
+from Thread.thread_exceptions import TimerStartException;
 
 //=============================================================================
 // targeted languages specifics
@@ -34,139 +34,129 @@ import threading
 }}
 
 //=============================================================================
-class Semaphore
+class Timer
 /**
-Typee implementation of the semaphore concept.
-Notice: methods P() and V(), initially proposed by the inventor of semaphores
-Dutch scientist Edsger W. Dijkstra,  are available as wrappers for this class 
-methods lock() and unlock(). 
+Typee implementation of the timer concept.
+Timers are inactive for specified periods and run their code between
+those periods.
 */
 
-embed py {{ : threading.Semaphore }}
+embed py {{ : threading.Timer }}
 
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Semaphore()
+    Timer( const str name )
     /**
-    Default constructor. Internal atomic counter is set to 1.
+    Default constructor.
+    */
+    {
+        me._name    = name;
+        me._name16  = none;
+        me._running = False;
+    }
+
+    //-------------------------------------------------------------------------
+    Timer( const str16 name )
+    /**
+    Default constructor.
+    */
+    {
+        me._name    = none;
+        me._name16  = name;
+        me._running = False;
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy()
+    /**
+    Destructor. Cancels/stops this timer.
     */
     {
       embed py {{
-        super().__init__( 1 )
+        super().cancel()
       }}
     }
 
     //-------------------------------------------------------------------------
-    Semaphore( const uint32 n )
+    abstract none run( ... args );
     /**
-    Default constructor. Internal atomic counter is set to n.
+    This is the definition of the code run qwith this timer.
+    Has to be implemented in inheriting classes.
+    */
+
+    //-------------------------------------------------------------------------
+    final none start( const float32 period, ... args )
+    /**
+    Starts the infinite running of this timer.  Internally  calls  
+    method 'run()' with variable argument 'args'.
+    Infinite running can be stopped by deleting the timer.
+    Raises TimerStartException if starting again a running timer.
+    Raises AssertException if period (unit: seconds) is negative.
     */
     {
-      embed py {{
-        super().__init__( n )
-      }}
+        me.start( 0, period, args );
     }
 
     //-------------------------------------------------------------------------
-    none destroy ()
+    final none start( const uint64 n_times, const float32 period, ... args )
     /**
-    Destructor.
-    Caution:
-    Behaviors may differ between different targeted programming languages.
+    Starts the running n_times of this timer.  Internally  calls  
+    method 'run()' with variable argument 'args'. n_times set to
+    0 means infinite running.
+    Running can be stopped by deleting the timer.
+    Raises TimerStartException if starting again a running timer.
+    Raises AssertException if period (unit: seconds) is negative.
     */
     {
-      embed py {{
-        super().__del__()
-      }}
-    }
+        assert period >= 0.0;
+        if ( me._running )
+            raise TimerStartException( me );
 
-    //-------------------------------------------------------------------------
-    final none lock()
-    /**
-    Infinitely blocking lock on this semaphore until awoken by unlock() (called
-    by another thread).
-    */
-    {
-      embed py {{
-        self.acquire( True )
-      }}
-    }
-
-    //-------------------------------------------------------------------------
-    final const bool lock()
-    /**
-    Non blocking lock on this semaphore.
-    Returns true if semaphore passed and false otherwise. 
-    */
-    {
-      embed py {{
-        return self.acquire( False )
-      }}
-    }
-
-    //-------------------------------------------------------------------------
-    final const bool lock( const float32 timeout )
-    /**
-    Timed-out blocking version on this semaphore.
-    Returns true when semaphore has passed and false if not after the 
-    specified timeout duration (unit: seconds).
-    Raises ThreadTimeoutValueException on some platforms when specified 
-    timeout is too big.
-    Raises AssertException if timeout is negative.
-    */
-    {
-        assert timeout >= 0.0;
+        me._count, me._nb = 0, n_times;
+        me._running = true;
         
       embed py {{
-        try:
-            return self.acquire( True, timeout )
-        except:
-            raise ThreadTimeoutValueException( timeout )
-      }}
-    }
-    
-    //-------------------------------------------------------------------------
-    final none P()
-    /**
-    Edsger W. Dijkstra form of lock.
-    */
-    {
-        me.lock();
-    }
-
-    //-------------------------------------------------------------------------
-    final const bool P( const float32 timeout )
-    /**
-    Edsger W. Dijkstra form of timed-out lock.
-    */
-    {
-        me.lock( timeout );
-    }
-
-    //-------------------------------------------------------------------------
-    final none unlock()
-    /**
-    Releases this semaphore.
-    */
-    {
-      embed py {{
-        try:
-            return self.release()
-        except:
-            raise UnlockedException( self )
+        _args = ( arg for arg in args )
+        super().__init__( period, self.run, _args )
       }}
     }
 
     //-------------------------------------------------------------------------
-    final none V()
+    str operator str ()
+    {
+        return me.name;
+    }
+    //-------------------------------------------------------------------------
+    str16 operator str16 ()
+    {
+        return me.name16;
+    }
+
+ :protected:
+    //-------------------------------------------------------------------------
+    str     _name;
+    str16   _name16;
+    bool    _running;
+    uint64  _count, _nb;
+ 
+ :hidden: 
+    //-------------------------------------------------------------------------
+    final none _run( ... args )
     /**
-    Edsger W. Dijkstra form of unlock.
+    Runs the internal code for this timer.
+    The internal code for timers is defined in method 'run()'.
     */
     {
-        me.unlock();
+        if ( me._nb == 0  or  me._count < me._nb )
+        {
+            me.run( args );
+            ++ me._count;
+        }
+        else
+            delete me;
     }
 }
 
-//===== end of module   Thread.semaphore.ty   =====//
+//===== end of module   Thread.timer.ty   =====//
