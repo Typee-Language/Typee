@@ -25,6 +25,7 @@ SOFTWARE.
 // Module thread_exceptions.ty
 
 // defined exceptions:
+fwd class ThreadBarrierException;
 fwd class ThreadJoinException;
 fwd class ThreadStackSizeException;
 fwd class ThreadStartException;
@@ -38,6 +39,13 @@ from Thread.semaphore   import Semaphore;
 from Thread.timer       import Timer;
 
 //=============================================================================
+//-----------------------------------------------------------------------------
+class ThreadBarrierException : Exception {
+    ThreadBarrierException(){
+        Exception( "Broken barrier exception." );
+    }
+}
+
 //-----------------------------------------------------------------------------
 class ThreadJoinException : Exception {
     ThreadJoinException( BaseThread thread ){
