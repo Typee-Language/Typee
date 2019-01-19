@@ -1,0 +1,174 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module barrier.ty
+
+// defined classes:
+fwd class Barrier;
+fwd class Latch;
+
+//=============================================================================
+from Thread.thread_exceptions import TimerStartException;
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+//=============================================================================
+class Barrier
+/**
+Typee implementation of the CyclicBarrier Java concept.
+A Barrier is a blocking entity on which threads are waiting. Once their 
+number equals the specified counter for the barrier, all threads are
+awakened and may pass this barrier. Any new thread waiting on this
+barrier passes it then. Barriers may be reseted.
+*/
+
+embed py {{ : threading.Barrier }}
+
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    Barrier( const uint32 n_threads )
+    /**
+    Constructor.
+    Creates a barrier to block n_threads threads.
+    */
+    {
+      embed py {{
+        super().__init__( n_threads )
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    Barrier( const uint32 n_threads, const float32 timeout )
+    /**
+    Constructor.
+    Creates a timed out barrier to block n_threads threads.
+    Timeout is the value to be used if not specified on calls to 'wait()'.
+    Raises ThreadTimeoutValueException if passed timeout is  too  big  for 
+    targeted platform.
+    */
+    {
+      embed py {{
+        try:
+            super().__init__( n_threads, timeout)
+        except:
+            raise ThreadTimeoutValueException()
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final none abort() exclude py
+    /**
+    To be called when a potential deadlock could happen for a waiting thread.
+    */
+    {
+    }
+
+    //-------------------------------------------------------------------------
+    final const uint32 get_parties()
+    /**
+    Returns the value of n_threads passed at construction time.
+    */
+    {
+      embed py {{
+        return self.parties
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final const uint32 get_n_waiting_threads()
+    /**
+    Returns the number of threads that are currently waiting on this barrier.
+    */
+    {
+      embed py {{
+        return self.n_waiting
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool is_broken()
+    /**
+    Returns true if this barrier is currently broken and false otherwise.
+    */
+    {
+      embed py {{
+        return self.broken
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final none reset()
+    /**
+    Resets this barrier to its original state.
+    Caution: may lead to a broken barrier with some platforms.
+    */
+    {
+      embed py {{
+        try:
+            super().reset()
+        finally:
+            raise ThreadTimeoutValueException()
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final const uint32 wait() exclude py
+    /**
+    Blocks threads until n_threads (see constructor) are waiting on barrier.
+    Returns a unique value in [0:n_threads). Each awaken thread may then 
+    process a unique action according to this number.
+    */
+    {
+    }
+
+    //-------------------------------------------------------------------------
+    final const uint32 wait( const float32 timeout )
+    /**
+    Blocks threads until n_threads (see constructor) are waiting 
+    on barrier.
+    Specified timeout is used in preference to the value  passed 
+    at construction time.
+    Returns a unique value in [0:n_threads).  Each awaken thread 
+    may then process a unique action according to this number.
+    Raises ThreadTimeoutValueException if passed timeout is  too 
+    big for platform.
+    If time out, the barrier is put in a broken state.
+    */
+    {
+      embed py {{
+        try:
+            super().wait( timeout )
+        except:
+            raise ThreadTimeoutValueException()
+      }}
+    }
+}
+
+//===== end of module   Thread.barrier.ty   =====//
