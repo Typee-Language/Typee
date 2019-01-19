@@ -238,17 +238,6 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none name( const ? in (str,str16) _name )
-    /**
-    Sets the name for this thread.
-    */
-    {
-      embed py {{
-        self.name = _name
-      }}
-    }
-
-    //-------------------------------------------------------------------------
     none resume()
     /**
     Resumes this thread after having been stopped.
@@ -270,6 +259,17 @@ embed py {{ : threading.Thread }}
     this thread.
     To be implemented in inheriting classes.
     */
+
+    //-------------------------------------------------------------------------
+    none set_name( const ? in (str,str16) _name )
+    /**
+    Sets the name for this thread.
+    */
+    {
+      embed py {{
+        self.name = _name
+      }}
+    }
 
     //-------------------------------------------------------------------------
     static final none set_stack_size( const uint32 size )

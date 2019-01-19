@@ -49,7 +49,7 @@ embed py {{ : threading.Timer }}
     //-------------------------------------------------------------------------
     Timer( const str name )
     /**
-    Default constructor.
+    Constructor.
     */
     {
         me._name    = name;
@@ -60,7 +60,7 @@ embed py {{ : threading.Timer }}
     //-------------------------------------------------------------------------
     Timer( const str16 name )
     /**
-    Default constructor.
+    Constructor.
     */
     {
         me._name    = none;
@@ -124,12 +124,12 @@ embed py {{ : threading.Timer }}
     }
 
     //-------------------------------------------------------------------------
-    str operator str ()
+    str operator cast str ()
     {
         return me.name;
     }
     //-------------------------------------------------------------------------
-    str16 operator str16 ()
+    str16 operator cast str16 ()
     {
         return me.name16;
     }
