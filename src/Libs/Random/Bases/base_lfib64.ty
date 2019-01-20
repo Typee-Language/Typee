@@ -1,0 +1,130 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Random
+// Module Bases/base_lfib64.ty
+
+//=============================================================================
+from .rand63 import Rand63;
+from .Bases.base_random import BaseRandom;
+
+//=============================================================================
+class BaseLFib64<const uint16 INDEX, const uint16 K_SIZE> : BaseRandState< Rand63, uint64, K_SIZE > as BaseState
+/**
+Definition of the base class for all LFib pseudo-random generators based
+on 64-bits generated numbers.
+INDEX is the value of 'r' and K_SIZE is the value of 'k' here below.
+
+Lagged Fibonacci generators LFib( m, r, k, op) use the recurrence
+
+    x(i) = (x(i-r) op (x(i-k)) mod m
+
+where op is an operation that can be:
+    + (addition),
+    - (substraction),
+    * (multiplication),
+    ^ (bitwise exclusive-or).
+
+With the + or - operation, such generators are in fact MRGs. They offer very large
+periods  with  the  best  known  results in the evaluation of their randomness, as
+stated in the evaluation done by Pierre L'Ecuyer and Richard Simard (Universite de
+Montreal)  in  "TestU01:  A  C  Library  for Empirical Testing  of  Random  Number  
+Generators - ACM Transactions  on  Mathematical  Software,  vol.33 n.4,  pp.22-40, 
+August 2007".  It  is  recommended  to  use  such pseudo-random numbers generators 
+rather than LCG ones for serious simulation applications.
+   
+See Rand78,  Rand116,  Rand668 and Rand1340 for long period LFib generators (resp. 
+2^78,  2^116,  2^668 and 2^1340 periods, i.e. resp. 3.0e+23, 8.3e+34, 1.2e+201 and 
+2.4e+403 periods) while same computation time and far  higher  precision  (64-bits  
+calculations)  then  MRGs,  but  memory  consumption  (resp. 17,  55, 607 and 1279 
+integers).
+
+Please notice that this class and all its  inheriting  sub-classes  are  callable.
+Example:
+
+  BaseLFib64 rand = BaseLFib64();
+  print( rand() );    # prints a uniform pseudo-random value within [0.0, 1.0)
+  print( rand(a) );   # prints a uniform pseudo-random value within [0.0, a)
+  print( rand(a,b); ) # prints a uniform pseudo-random value within [a  , b)
+
+Reminder:
+We give you here below a copy of the table of tests for the LCGs that have 
+been implemented in PyRandLib, as provided in paper "TestU01, ..."  -  see
+file README.md.
+
+| class name | TU01 generator name      | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
+| ---------- | ------------------------ | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
+|  Rand78    | LFib(2^64, 17, 5, +)     |    34 x 4-bytes | 2^78    |    n.a.     |     1.1      |          0       |       0     |       0        |
+|  Rand116   | LFib(2^64, 55, 24, +)    |   110 x 4-bytes | 2^116   |    n.a.     |     1.0      |          0       |       0     |       0        |
+|  Rand668   | LFib(2^64, 607, 273, +)  | 1,214 x 4-bytes | 2^668   |    n.a.     |     0.9      |          0       |       0     |       0        |
+|  Rand1340  | LFib(2^64, 1279, 861, +) | 2,558 x 4-bytes | 2^1340  |    n.a.     |     0.9      |          0       |       0     |       0        |
+
+* _small crush_ is a small set of simple tests that quickly tests some  of
+the expected characteristics for a pretty good PRG;
+* _crush_ is a bigger set of tests that test more deeply  expected  random 
+characteristics;
+* _big crush_ is the ultimate set of difficult tests  that  any  GOOD  PRG 
+should definitively pass.
+*/
+{
+  :public:
+
+    //-------------------------------------------------------------------------
+    BaseLFib64()
+    /**
+    Constructor.
+    The shuffling of the local current time value is used as the 
+    initial seed.
+    */
+    {
+        BaseState();
+    }
+    //-------------------------------------------------------------------------
+    BaseLFib64( const MyInternalState seed_state )
+    /**
+    Constructor.
+    seed_state is a valid internal state that has been previously loaded in 
+    memory with get_state().
+    */
+    {
+        BaseState( seed_state );
+    }
+
+    //-------------------------------------------------------------------------
+    const float64 random(){
+        // evaluates indexes in suite for the i-5 and i-17 -th values
+        const int16 k_index = me._state._index - INDEX + (K_SIZE if k_index < 0 else 0);
+        
+        // then evaluates current value
+        const uint64 my_value = (me._state._list[k_index] + me._state._list[ me._state._index ]) & 0xffff_ffff_ffff_ffff;
+        me._list[ me._state._index ] = my_value;
+        
+        // next index
+        self._state._index = (self._state._index + 1) % K_SIZE;
+        
+        // then returns float value within [0.0, 1.0)
+        return  my_value / float64( 18_446_744_073_709_551_616.0 );
+    }
+}
+ 
+//=====   end of module   Random.Bases.base_lfib64.ty   =====//

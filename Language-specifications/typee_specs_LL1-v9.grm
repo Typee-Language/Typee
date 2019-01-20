@@ -448,6 +448,7 @@ SOFTWARE.
 
 <compound statement>    ::= <assign decl def func-call statement>
                          |  <embed statement>
+                         |  <exclude statement>                                     ###
                          |  <for statement>
                          |  <forever statement>
                          |  <if statement>
@@ -586,6 +587,35 @@ SOFTWARE.
 <ensure statement>          ::= 'ensure' <expression> <ensure statement'>
 <ensure statement'>         ::= ',' <expression>
                              |  EPS
+
+<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}'                ###
+
+<enum item>                 ::= <identifier> <enum item'>                                   ###
+<enum item'>                ::= '=' <expression>                                            ###
+                             |  EPS                                                         ###
+
+<enum list>                 ::= <enum item> <enum list'>                                    ###
+                             |  EPS                                                         ###
+<enum list'>                ::= ',' <enum item> <enum list'>                                ###
+                             |  EPS                                                         ###
+
+<exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}'           ###
+
+<file endianness>           ::= '<' <expression> <file endianness'>                         ###
+                             |  '>' <expression> <file endianness'>                         ###
+<file endianness'>          ::= '<<' <expression> <file endianness'>                        ###
+                             |  '>>' <expression> <file endianness'>                        ###
+                             |  '>>>' <expression> <file endianness'>                       ###
+                             |  EPS                                                         ###
+                             
+<file flushing>             ::= '!' <dotted.name> <file flushing'>                          ###
+<file flushing'>            ::= '(' <expression> <file flushing''> ')'                      ###
+                             |  '[' <expression> ']' '=' <expression>                       ###
+                             |  '>>' <expression>                                           ###
+                             |  '>>>' <expression>                                          ###
+                             |  EPS                                                         ###
+<file flushing''>           ::= ',' <expression>                                            ###
+                             |  EPS                                                         ###
 
 <flow statement>            ::= 'break'
                              |  'continue'

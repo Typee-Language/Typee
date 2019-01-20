@@ -1,0 +1,109 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Files
+// Module base_file.ty
+
+// defined classes:
+fwd class RWFile;
+fwd class RWFile< ItemT >;
+
+//=============================================================================
+from Files.r_file import RFile;
+from Files.w_file import WFile;
+
+//=============================================================================
+class RWFile : RFile, WFile
+/**
+Class for Read-Only files.
+Inherits from RFile, so inherits also from BaseFile.
+*/
+{
+ :public:
+ 
+    //-------------------------------------------------------------------------
+    RWFile()
+    /**
+    Default constructor.
+    */
+    {
+        RFile();
+        WFile();
+    }
+    //-------------------------------------------------------------------------
+    RWFile( ? in (str,str16) filepath )
+    /**
+    Instantiates the file and opens it with specified filepath and  with
+    specific read-only mode.
+    Raises FileNotFoundException if file is not found or if file_path is 
+    incorrect,  and  FileAccessException if access to the file cannot be 
+    granted.
+    */
+    {
+        RFile();
+        WFile();
+        me.open( filepath );
+    }
+
+    //-------------------------------------------------------------------------
+    none open( ? in (str,str16) filepath )
+    /**
+    Opens a previously declared file according to the specified file  path  and 
+    with the specified read/write access mode.
+    By default, file paths are relative to the directory from which the program 
+    is run. This directory may be explicitely named also with “./“.
+    The directories separator in the file  path  is  exclusively  “/“.  Windows 
+    programmers should mind this.
+    To go “up a level” in a directory tree,  file paths may be prefixed with as 
+    many “../” as necessary.
+    Finaly,  absolute paths are specified with a  leading  “/“.  Unfortunately, 
+    absolute paths get different syntaxes with different Operating Systems. 
+    When translating a Typee program for both Windows and Linux,  for instance, 
+    absolute paths for a same file will be different. Up today, there is no way 
+    in Typee to distinguish between targeted  Operating Systems  in  code.  So, 
+    programmers  are  strongly  encouraged  to  use relative file paths to take 
+    benefit of maximalist portability.
+    This is an identified issue that will be fixed with high priority.
+        
+    Raises FileNotFoundException if file_path is incorrect, FileAccessException 
+    if access to the file cannot be granted.
+    */
+    {
+        BaseFile.open( filepath, "rw" );
+    }
+    
+ :protected:
+    //-------------------------------------------------------------------------
+    file  _file;
+}
+
+
+//=============================================================================
+class RWFile<ItemT> : RWFile, BaseFile<ItemT>
+/**
+Base class for all files with declared types for their contained items and 
+with Read-Only access rights in Typee built-in library Files.
+*/
+{}
+
+//===== end of module   Files.rw_file.ty   =====//
