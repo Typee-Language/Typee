@@ -1,5 +1,5 @@
 /*****
-Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -30,118 +30,98 @@ SOFTWARE.
 
 /*****   ATOMS   ****************************************************/
 
-<atom element>              ::= <atom> 
-                             |  <dotted name> <atom element'>
-                             |  <const qualifier> <atom element'''>
-                             |  <NONE> <none coalescing>                            ###
-                             |  <atom element'''>
-<atom element'>             ::= <atom element''>
-##                             |  <dotted name'> <atom element'>                    ###
-                             |  <function call> <atom element'>
-                             |  <none coalescing>                                   ###
-                             |  <subscription or slicing> <atom element'>
-                             |  EPS
-<atom element''>            ::= <is instance of>
-                             |  <scalar type casting>
-<atom element'''>           ::= <scalar type> <scalar type casting>
-                             |  <set litteral>                                      ###
+<atom element>      ::= <atom> 
+                     |  <dotted name> <atom element'>
+                     |  <const qualifier> <atom element'''>
+                     |  <atom element'''>
+<atom element'>     ::= <atom element''>
+                     |  <dotted name'> <atom element'>
+                     |  <function call> <atom element'>
+                     |  <subscription or slicing> <atom element'>
+                     |  EPS
+<atom element''>    ::= <is instance of>
+                     |  <scalar type casting>
+<atom element'''>   ::= <scalar type> <scalar type casting>
 
-<atom>                      ::= <boolean>                                           ###
-                             |  <decr> <dotted name> <incr or decr>
-                             |  <dotted name> <incr or decr>                        ##
-                             |  <enclosure>
-                             |  <incr> <dotted name> <incr or decr>
-                             |  <reference>
-                             |  <scalar>
-                             |  <string>
+<atom>          ::= <decr> <dotted name> <incr or decr>
+                 |  <incr> <dotted name> <incr or decr>
+                 |  <dotted name> <incr or decr>                        ##
+                 |  <enclosure>
+                 |  <reference>
+                 |  <scalar>
+                 |  <string>
+                 |  <boolean>                                           ###
 
-<boolean>                   ::= <TRUE>                                              ###
-                             |  <FALSE>                                             ###
+<boolean>       ::= <TRUE>                                              ###
+                 |  <FALSE>                                             ###
 
-<bracket form>              ::= '[' <expression> <list or map form> ']'
+<bracket form>  ::= '[' <expression> <list or map form> ']'
 
-<decr>                      ::= '--'
+<decr>          ::= '--'
 
-<enclosure>                 ::= <bracket form>
-                             |  <parenthesis form>
+<enclosure>     ::= <bracket form>
+                 |  <parenthesis form>
 
-<incr>                      ::= '++'
+<incr>          ::= '++'
 
-<incr or decr>              ::= <decr>  |  <incr>  |  EPS
+<incr or decr>  ::= <decr>  |  <incr>  |  EPS
 
-<is instance of>            ::= '->' <dotted name>
+<is instance of>    ::= '->' <dotted name>
 
-<list or comprehension>     ::= <expr list'>
-                             |  <for comprehension>
-                             |  EPS
+<list or comprehension>    ::= <expr list'>
+                            |  <for comprehension>
+                            |  EPS
                  
-<list or map form>          ::= <list form>
-                             |  <map form>
+<list or map form>  ::= <list form>
+                     |  <map form>
 
-<list form>                 ::= '[' <expression> <list or comprehension> ']'
+<list form>         ::= '[' <expression> <list or comprehension> ']'
 
-<none coalescing>           ::= '?' <expression>                                    ###
-                             |  EPS                                                 ###
+<parenthesis form>  ::= '(' <expr list> ')'
 
-<parenthesis form>          ::= '(' <expr list> ')'
+<reference>         ::= '@' <dotted name>
 
-<reference>                 ::= '@' <dotted name>
+<scalar type casting>   ::= '(' <expression> ')'
 
-<scalar type casting>       ::= '(' <expression> ')'
+<slice end>     ::= ']'
+                 |  ')'
 
-<slice end>                 ::= ']'
-                             |  ')'
+<slice form>    ::= ':' <slice upper> <slice step>
 
-<slice form>                ::= ':' <slice upper> <slice step>
+<slice step>    ::= ':' <slice step'>
+                 |  EPS
+<slice step'>   ::= <expression>
+                 |  EPS 
 
-<slice step>                ::= ':' <slice step'>
-                             |  EPS
-<slice step'>               ::= <expression>
-                             |  EPS 
+<slice upper>   ::= <expression>
+                 |  EPS
 
-<slice upper>               ::= <expression>
-                             |  EPS
-
-<subscription or slicing>   ::= '[' <expression> <subscription or slicing'> <subscription or slicing''> ###
-<subscription or slicing'>  ::= ']'                                                                     ###
+<subscription or slicing>   ::= '[' <expression> <subscription or slicing'>
+<subscription or slicing'>  ::= <expr list'> ']'
                              |  <if comprehension>
                              |  <slice form> <slice end>
-<subscription or slicing''> ::= '[' <expression> <subscription or slicing'> <subscription or slicing''> ###
-                             |  EPS                                                                     ###
+
 
 
 /*****   CLASSES   *******************************************/
 
-<class declaration>         ::= <forward> <class decl def> <simple statement end>                       ###
+<class definition>  ::= 'class' <identifier> <template def> <inheritance> <statements block>
 
-<class definition>          ::= <class decl def> <class statements block>                               ###
+<inheritance>   ::= ':' <inheritance item> <inheritance'>
+                 |  EPS
+<inheritance'>  ::= ',' <inheritence item> <inheritance'>
+                 |  EPS
 
-<class decl def>            ::= 'class' <identifier> <template def> <inheritance>                       ###
-
-<class statements block>    ::= '{' <class statements list> '}'                                         ###
-
-<class statements list>     ::= <access protection statement> <class statements list>                   ###
-                             |  <access qualifier> <decl or def statement> <class statements list>      ###
-                             |  <decl or def statement> <class statements list>                         ###
-                             |  <empty statement> <class statements list>                               ###
-                             |  EPS                                                                     ###
-
-
-<inheritance>               ::= ':' <inheritance item> <inheritance'>
-                             |  EPS
-<inheritance'>              ::= ',' <inheritence item> <inheritance'>
-                             |  EPS
-
-<inheritance item>          ::= <access qualifier> <inheritance item'>    
-                             |  <inheritance item'>                            
-<inheritance item'>         ::= <dotted name> <template args>                
+<inheritance item>  ::= <access qualifier> <inheritance item'>    
+                     |  <inheritance item'>                            
+<inheritance item'> ::= <dotted name> <template args>                
 
 
 
 
 /*****   COMPREHENSION   ********************************************/
 
-<for comprehension>     ::= 'for' '(' <typed targets list> 'in' <or test> <iter comprehension> ')'      ###
+<for comprehension>     ::= 'for' '(' <target list> 'in' <or test> <iter comprehension> ')'
 
 <if comprehension>      ::= 'if' '(' <condition or unnamed func> ')' <iter comprehension>
 
@@ -167,8 +147,18 @@ SOFTWARE.
                  |  <comp operator'> <spaced template args> <bitor expr> <comparison'>
                  |  EPS
 
+<comp operator>     ::= '<='  |  '=='  |  '!='  |  '>='
+                     |  'in'
+                     |  <is operator>
+                     |  'not' 'in'
+<comp operator'>    ::=  '<'  |  '>'
+
 <condition or unnamed func> ::= <or test>
                              |  <unnamed func>          ##
+
+<is operator>   ::= 'is' <is operator'>
+<is operator'>  ::= 'not'
+                 |  EPS
 
 <not test>      ::= 'not' <not test>
                  |  <comparison>
@@ -205,19 +195,15 @@ SOFTWARE.
                  |  '_' <identifier'>
                  |  EPS
 
-<indexed expr list> ::= 'indexed' '(' <expr list> ')'   ###
-                     |  <expr list>                     ###
-
 <map form>    ::= ':' <expression> <map list or comprehension>
 
-<map entry>   ::= <expression> ':' <expression>
+<map item>    ::= <expression> ':' <expression>
 
-<map list>    ::= ',' <map entry> <map list>
+<map list>    ::= ',' <map item> <map list>
                |  EPS
              
-<map list or comprehension> ::= ',' <map entry> <map list>
+<map list or comprehension> ::= ',' <map item> <map list>
                              |  <for comprehension>
-                             |  EPS                         ###
 
 <bitand expr>   ::= <shift expr> <bitand expr'>
 <bitand expr'>  ::= '&' <template args> <shift expr> <bitand expr'>
@@ -265,7 +251,9 @@ SOFTWARE.
 
 <function definition>       ::= <template def> <function definition'>
                              |  <function definition'>
-<function definition'>      ::= <function args declaration> <statements block>
+<function definition'>      ::= <function args declaration> <function definition"> <statements block>       ###
+<function definition">      ::= 'exclude' <languages>                                                       ###
+                             |  EPS                                                                         ###
 
 
 <abstract or final qualif>  ::= 'abstract'  |  'final'                              ##
@@ -274,43 +262,55 @@ SOFTWARE.
 
 ## <abstract qualifier>        ::= 'abstract'                                       ##
 
+<call operator>             ::= '(' ')'
+
 ## <final qualifier>           ::= 'final'                                          ##
 
-<function args declaration> ::= '(' <func typed args list> ')'                              ###
+<function args declaration> ::= '(' <typed args list> ')'
 
 <function call>             ::= <template args> '(' <function call args> ')'
 
 <function call args>        ::= <expression> <function call args'>
                              |  EPS
-<function call args'>       ::= ',' <expression> <function call args'>                      ###
-                             |  <for comprehension> <function call args'>                   ###
+<function call args'>       ::= ',' <function call args">
+                             |  <for comprehension>
                              |  EPS
-##<function call args">       ::= <expression> <function call args'>                        ###
-##                             |  <ellipsis> <identifier>                                   ###
+<function call args">       ::= <expression> <function call args'>
+                             |  <ellipsis> <identifier>
 
-<func typed args list>      ::= <TYPE> <var or func identifier> <func typed args list'>     ###
-                             |  <const qualifier> <ellipsis> <identifer>                    ###
-                             |  <ellipsis> <identifier>                                     ###
-                             |  EPS                                                         ###
-<func typed args list'>     ::= ',' <func typed args list>                                  ###
-                             |  EPS                                                         ###
+<operator>      ::= '<='  |  '=='  |  '!='  |  '>='
+                 |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'
+                 |  '&'   |  '|'   |  '^'
+                 |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'
+                 |  '++'  |  '--'  |  '#'
+                 |  'in'
+                 |  <assign op>
+                 |  <cast op>
+<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
+
+<operator declaration>  ::= 'operator' <operator declaration'>
+<operator declaration'> ::= <operator> <template def> <function args declaration>
+                         |  <operator'> <spaced template def> <function args declaration>
+                         |  <call operator> <template def>
+
+<operator definition>   ::= 'operator' <operator definition'>
+<operator definition'>  ::= <operator> <template def> <function args declaration> <statements block>
+                         |  <operator'> <spaced template def> <function args declaration> <statements block>
+                         |  <call operator> <template def> <statements block>
 
 <returned type>     ::= <TYPE>
                      |  EPS
 
-## <typed args list>   ::= <TYPE> <var or func identifier> <typed args list'>          ###
-##                      |  EPS
-## <typed args list'>  ::= ',' <TYPE> <var or func identifier> <typed args list'>      ###
-##                      |  EPS
+<typed args list>   ::= <TYPE> <identifier> <typed args list'>
+                     |  EPS
+<typed args list'>  ::= ',' <TYPE> <identifier> <typed args list'>
+                     |  EPS
 
 <unnamed>   ::= 'unnamed'
              |  'lambda'
 
 <unnamed func> ::= <unnamed> <returned type> <function args declaration> <statements block>
 
-<var or func identifier>    ::= <identifier> <var or func identifier'>              ###
-<var or func identifier'>   ::= <enclosed types list>                               ###
-                             |  EPS                                                 ###
 
 
 
@@ -336,11 +336,10 @@ SOFTWARE.
 <binary char>                   ::= '0'
                                  |  '1'
 
-
-##<line end>                      ::= <NEWLINE>                                     ###
-##                                 |  <ENDOFFILE>                                   ###
-
 <ellipsis>                      ::= '...'
+
+<end line>                      ::= <NEWLINE>
+                                 |  <ENDOFFILE>
 
 <ENDOFFILE>                     ::= u0x00
 
@@ -360,9 +359,6 @@ SOFTWARE.
                                  |  'A'...'F'
                                  |  'a'...'f'
 
-<line end>                      ::= <NEWLINE>                                       ###
-                                 |  <ENDOFFILE>                                     ###
-
 <ME>                            ::= 'me'
 
 <NEWLINE>                       ::= '\n'  |  '\r'  |  '\f'
@@ -377,79 +373,6 @@ SOFTWARE.
 <TRUE>                          ::= 'True'
                                  |  'true'
 
-
-
-
-/*****   OPERATORS   ************************************************/
-
-##<operator>              ::= <operator">                                                   ###
-##                         |  <assign op>                                                   ###
-##                         |  <incr decr op>                                                ###
-##                         |  <cast op>                                                     ###
-<operator'>             ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'               ###
-<operator">             ::= '<='  |  '=='  |  '!='  |  '>='                                 ###
-                         |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'        ###
-                         |  '&'   |  '|'   |  '^'                                           ###
-                         |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'                        ###
-                         |  '#'                                                             ###
-                         |  'in'                                                            ###
-                         |  <assign op>                                                     ###
-                         |  <cast op>                                                       ###
-                         
-<assign op>             ::= '='
-                         |  <augmented assign op>
-
-<augmented assign op>   ::= '+='
-                         |  '-='
-                         |  '*='
-                         |  '/='
-                         |  '%='
-                         |  '&='
-                         |  '|='
-                         |  '^='
-                         |  '<<='
-                         |  '<<<='
-                         |  '>>='
-                         |  '>>>='
-                         |  '**='
-                         |  '^^='
-                         |  '@='
-                         |  '><='
-                         |  '!!='
-                         |  '::='
-                         |  '??='
-
-<call operator>         ::= '(' ')'
-
-<cast op>               ::= 'cast' <dotted name>
-
-<comp operator>         ::= '<='  |  '=='  |  '!='  |  '>='
-                         |  'in'
-                         |  <is operator>
-                         |  'not' 'in'
-<comp operator'>        ::=  '<'  |  '>'
-
-<incr decr op>          ::= '++'                                                                            ###
-                         |  '--'                                                                            ###
-                         
-<is operator>           ::= 'is' <is operator'>
-<is operator'>          ::= 'not'
-                         |  EPS
-
-<operator declaration>  ::= 'operator' <operator declaration'>
-<operator declaration'> ::= <operator"> <template def> <function args declaration>                          ###
-                         |  <operator'> <spaced template def> <function args declaration>
-                         |  <incr decr op> <template def> <pre or post> <function args declaration>         ###
-                         |  <call operator> <template def>
-
-<operator definition>   ::= <operator declaration> <statements block>                                       ###
-##<operator definition'>  ::= <operator"> <template def> <function args declaration>                        ###
-##                         |  <operator'> <spaced template def> <function args declaration>                 ###
-##                         |  <incr decr op> <template def> <pre or post> <function args declaration>       ###
-##                         |  <call operator> <template def>                                                ###
-
-<pre or post>           ::= 'pre'                                                                           ###
-                         |  'post'                                                                          ###
 
 
 
@@ -537,44 +460,25 @@ SOFTWARE.
                          |  <while statement>
                          |  <with statement>
 
-<simple statement>  ::= <access protection statement> <simple statement end>
-                     |  <assert statement> <simple statement end>
+<empty statement>   ::= <comment>
+                     |  <NEWLINE>
+
+<simple statement>  ::= <assert statement> <simple statement end>
                      |  <del statement> <simple statement end>
                      |  <ensure statement> <simple statement end>
-                     |  <file endianness> <simple statement end>                    ###
-                     |  <file flushing> <simple statement end>                      ###
                      |  <flow statement> <simple statement end>
                      |  <import statement> <simple statement end>
                      |  <nop statement> <simple statement end>
+                     |  <access protection statement> <simple statement end>
+                     |  <raise statement> <simple statement end>
                      |  <require statement> <simple statement end>
 
 <simple statement end> ::= ';'
 
 <statements block>  ::= '{' <statements list> '}'
-                     |  <compound statement>                    ###
-                     |  <empty statement>                       ###
                      |  <nop statement> <simple statement end>
-                     |  <simple statement>                      ###
                      |  <simple statement end>
 
-
-<abstract or final qualif>  ::= 'abstract'  |  'final'                              ##
-##                             |  <final qualifier>
-                             |  EPS
-
-<access protection statement>  ::= ':' <access qualifier> ':'
-
-<access qualifier>  ::= 'hidden'
-                     |  'local'
-                     |  'private'
-                     |  'protected'
-                     |  'public'
-
-<array content>         ::= '[' (<items list> | <array content>) ']'
-
-<array declaration>     ::= <array type> <identifier> <array declaration'>          ###
-<array declaration'>    ::= '=' <array content>                                     ###
-                         |  EPS                                                     ###
 
 <assert statement>  ::= 'assert' <expression> <assert statement'>
 <assert statement'> ::= ',' <expression>
@@ -584,45 +488,68 @@ SOFTWARE.
                                          |  <decl or def statement>
                                          |  <dotted name> <assign or func-call statement> <simple statement end>
 
+<access protection statement>  ::= ':' <access qualifier> ':'
+
+<access qualifier>  ::= 'hidden'
+                     |  'local'
+                     |  'private'
+                     |  'protected'
+                     |  'public'
+
+<assign op> ::= '='
+             |  <augmented assign op>
+
 <assign or func-call statement> ::= <target list'> <assignment statement>
                                  |  <function call>
 
 <assignment statement>    ::= <assign op> <expr list>
 
+<augmented assign op>   ::= '+='
+                         |  '-='
+                         |  '*='
+                         |  '/='
+                         |  '%='
+                         |  '&='
+                         |  '|='
+                         |  '^='
+                         |  '<<='
+                         |  '<<<='
+                         |  '>>='
+                         |  '>>>='
+                         |  '**='
+                         |  '^^='
+                         |  '@='
+                         |  '><='
+                         |  '!!='
+                         |  '::='
+                         |  '??='
+
 <case>      ::= 'case' <expr list> <statements block>
+
+<cast op>   ::= 'cast' <identifier>
 
 <comment>   ::= '//' <comment'>
              |  '/*' <multi lines comment>
 <comment'>  ::= <any non newline char> <comment'>
-             |  <line end>                                                                                          ###
-
-<container declaration>     ::= <array declaration>                                                                 ###
-                             |  <file declaration>                                                                  ###
-                             |  <list declaration>                                                                  ###
-                             |  <map declaration>                                                                   ###
-                             |  <set declaration>                                                                   ###
-
-<decl constructor or decl end> ::= <dotted name'> <decl or def statement''''>
+             |  <end line>
+             |  <ENDOFFILE>
+                            
+<decl constructor or decl end> ::= <dotted name'> <decl or def statement'''>
                                 |  <function definition'>
 
 <decl or def statement>     ::= <static qualifier> <decl or def statement'>
                              |  <class definition>
                              |  <decl or def statement'>
-                             |  <forward decl> <simple statement end>                                               ###
+                             |  <forward decl>                                                                      ##
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>                          ##
-                             |  <enum definition>                                                                   ###
-                             |  <type alias> <simple statement end>
                              |  <volatile qualifier> <type> <identifier> <memory address> <simple statement end>
+                             |  <type alias> <simple statement end>
                              |  <decl or def statement''>
-<decl or def statement''>   ::= ##<TYPE'> <decl or def statement'''>                                                ###
-                                <const qualifier> <decl or def statement'''>                                        ###
-                             |  <decl or def statement'''>                                                          ###
+<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
                              |  <identifier> <decl constructor or decl end>
-<decl or def statement'''>  ::= <non container type> <decl or def statement''''>                                    ###
-                             |  <container declaration>                                                             ###
-<decl or def statement''''> ::= <identifier> <decl or def statement'''''>                                           ###
+<decl or def statement'''>  ::= <identifier> <decl or def statement''''>
                              |  <operator definition>
-<decl or def statement'''''>::= <function definition>                                                               ###
+<decl or def statement''''> ::= <function definition>
                              |  <var declaration or assignment> <simple statement end>
 
 ### <declaration or definition statement>   ::= '=' <expression> <declaration statement>                                ## !!!
@@ -635,24 +562,21 @@ SOFTWARE.
 ### <declaration statement'>    ::= '=' <expression> <declaration statement>                                            ## !!!
 ###                              |  <declaration statement>
 
-<del statement>             ::= <delete> <targets list>                         ###
-<delete>                    ::= 'del'  |  'delete'                              ###
+<del statement>             ::= 'del' <identifiers list>
                       
 <dotted as name>            ::= <dotted name> <dotted as name'>
 <dotted as name'>           ::= 'as' <identifier>
                              |  EPS
 
-<dotted as names>           ::= <dotted as names''> <dotted as names'>          ###
-<dotted as names'>          ::= ',' <dotted as names''> <dotted as names'>      ###
-                             |  EPS                                             ###
-<dotted as names''>         ::= '.' <dotted as names''>                         ###
-                             |  <dotted as name>                                ###
+<dotted as names>           ::= <dotted as name> <dotted as names'>
+<dotted as names'>          ::= ',' <dotted as name> <dotted as names'>
+                             |  EPS
 
 <dotted name>               ::= <identifier> <dotted name'>
 <dotted name'>              ::= '.' <identifier> <dotted name'>
                              | EPS
 
-<embed statement>           ::= 'embed' <languages> <embed statement'>
+<embed statement>           ::= 'embed' <language> <embed statement'>
 <embed statement'>          ::= <dotted name> <simple statement end>
                              |  <embedded language code>
 
@@ -661,9 +585,6 @@ SOFTWARE.
                              |  '}' <embedded language code">
 <embedded language code">   ::= <any embedded code char> <embeded language code'>
                              |  '}'
-
-<empty statement>           ::= <comment>
-                             |  <NEWLINE>
 
 <ensure statement>          ::= 'ensure' <expression> <ensure statement'>
 <ensure statement'>         ::= ',' <expression>
@@ -703,8 +624,8 @@ SOFTWARE.
                              |  <raise statement>
                              |  <return statement>
 
-<for statement>             ::= 'for' '(' <typed targets list> 'in' <indexed expr list> ')' <statements block> <for statement'>     ###
-<for statement'>            ::= 'otherwise' <statements block>                                                                      ##
+<for statement>             ::= 'for' '(' <target list> 'in' <expr list> ')' <statements block> <for statement'>
+<for statement'>            ::= 'otherwise' <statements block>                                                      ##
                              |  EPS
 
 <forever statement>         ::= 'forever' '(' ')' <statements block>
@@ -729,8 +650,6 @@ SOFTWARE.
 <fwd class decl>            ::= 'class' <identifier> <template def> <fwd class decl'>       ##
 <fwd class decl'>           ::= <inheritance>                                               ##
                              |  EPS                                                         ##
-
-<fwd type decl>             ::= 'type' <identifier>                                         ###
 
 <fwd decl constructor>      ::= <dotted name'> <forward decl''''>                           ##
                              |  <function declaration'>                                     ##
@@ -759,46 +678,22 @@ SOFTWARE.
 
 <import from>               ::= 'from' <import from'>
 <import from'>              ::= '.' <import from'>
-                             |  <dotted name> 'import' <import from''>                                  ###
-<import from''>             ::= 'all'                                                                   ###
-                             |  '(' <import as names> ')'                                               ###
-                             |  <import as names>                                                       ###
+                             |  <import from''>
+<import from''              ::= <dotted name> 'import' <import from'''>
+<import from'''>            ::= 'all'
+                             |  '(' <import as names> ')'
+                             |  <import as names>
                      
-<import name>               ::= 'import' <import name'>                                                 ###
-<import name'>              ::= '.' <import name'>                                                      ###
-                             |  <dotted as names>                                                       ###
+<import name>               ::= 'import' <dotted as names>
 
 <import statement>          ::= <import name>
                              |  <import from>
 
-<items list>                ::= <expression> <items list'>                                              ###
-                             |  EPS                                                                     ###
-<items list'>               ::= ',' <expression> <items list'>                                          ###
-                             |  EPS                                                                     ###
+<language>                  ::= 'cpp'  |  'cs'  |  'csharp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'
 
-<language>                  ::= 'android'                                                               ###
-                             |  'c-sharp'                                                               ###
-                             |  'cpp'                                                                   ###
-                             |  'cs'                                                                    ###
-                             |  'java'                                                                  ###
-                             |  'python'                                                                ###
-                             |  'py'                                                                    ###
-                             |  'javascript'                                                            ###
-                             |  'm6809'                                                                 ###
-
-<languages>                 ::= <language> <languages'>                                                 ###
-<languages'>                ::= ',' <language> <languages'>                                             ###
-                             |  EPS                                                                     ###
-
-<list content>              ::= '[' (<items list> | <list content>) ']'                                 ###
-
-<list declaration>          ::= <list type> <identifier> <list declaration'>                            ###
-<list declaration'>         ::= '=' <list content>                                                      ###
-                             |  EPS                                                                     ###
-
-<map declaration>           ::= <map type> <identifier> <map declaration'>                              ###
-<map declaration'>          ::= '=' '[' <expression> <map form> ']'                                     ###
-                             |  EPS                                                                     ###
+<languages>                 ::= <language> <laguages'>
+<languages'>                ::= ',' <languages'>
+                             |  EPS
 
 <memory address>            ::= '@' <integer number>
                              |  EPS
@@ -833,21 +728,6 @@ SOFTWARE.
 <return statement'>         ::= <expr list>
                              |  EPS
 
-<set declaration>           ::= <set type> <identifier> <set declaration'>                              ###
-<set declaration'>          ::= '=' <set litteral>                                                      ###
-                             |  EPS                                                                     ###
-
-<set item>                  ::= <expression> <set item'>                                                ###
-<set item'>                 ::= <for comprehension>                                                     ###
-                             |  EPS                                                                     ###
-
-<set items list>            ::= <set item> <set items list'>                                            ###
-<set items list'>           ::= ',' <set item> <set items list'>                                        ###
-                             |  EPS                                                                     ###
-
-<set litteral>              ::= '[' <set items list> ']'                                                ###
-                             |  <set type> '(' <set items list> ')'                                     ###
-
 <switch block>              ::= <case> <switch block>
                              |  EPS
 
@@ -859,20 +739,18 @@ SOFTWARE.
 <target'>                   ::= <subscription or slicing> <target'>
                              |  EPS
 
-<targets list>              ::= <target> <targets list'>                    ###
-<targets list'>             ::= ',' <target> <targets list'>                ###
+<target list>               ::= <typed target> <target list'>
+<target list'>              ::= ',' <typed target> <target list'>
                              |  EPS
 
 <try else>                  ::= 'otherwise'                                                                                     ##
 
 <try except>                ::= 'except' '(' <try except'> ')'
-<try except'>               ::= <expression> <try except''> <try except'''>                                                     ###
+<try except'>               ::= <expression> <try except">
                              |  'all'
                              |  EPS
-<try except''>              ::= 'as' <identifier>
+<try except">               ::= 'as' <identifier>
                              |  EPS
-<try except'''>             ::= ',' <expression> <try except''> <try except'''>                                                 ###
-                             |  EPS                                                                                             ###
 
 <try finally>               ::= 'finally'
 
@@ -896,10 +774,6 @@ SOFTWARE.
 <typed target'>             ::= <dotted name> <target'>
                              |  <target'>
                              |  <templated type'> <target'>
-
-<typed targets list>        ::= <typed target> <targets list'>                  ###
-<typed targets list'>       ::= ',' <typed target> <targets list'>              ###
-                             |  EPS
 
 <var declaration or assignment>     ::= '=' <expression> <var declaration or assignment'>    
                                      |  ',' <identifier> <var declaration or assignment>    
@@ -959,9 +833,9 @@ SOFTWARE.
 
 <template args>         ::= '<' <template args'>
                          |  EPS
-<template args'>        ::= <expression> <template args">
+<template args'>        ::= <condition> <template args">
                          |  '>'
-<template args">        ::= ',' <expression> <template args">
+<template args">        ::= ',' <condition> <template args">
                          |  '>'
 
 <template def>          ::= '<' <template def'>
@@ -990,79 +864,66 @@ SOFTWARE.
 <type>  ::= <type'>
          |  <templated type> <dimensions>
 <type'> ::= <auto type>
-##         |  <container type>                                      ###
-         |  <enclosed types list>                                   ###
-         |  <enum type>
-##         |  <file type>                                           ###
+         |  '(' <types list> ')'
+         |  <container type>
+         |  <file type>
          |  <NONE>
-         |  <scalar type> ##<dimensions>                            ###
+         |  <scalar type> <dimensions>
 
 
-<array type>            ::= 'array' <declared contained type> <dimensions>  ###
+<array type>    ::= 'array' <declared contained type>
 
-<auto type>             ::= '?' <auto type'>
-<auto type'>            ::= 'in' <enclosed types list>              ###
-                         |  EPS
+<auto type>     ::= '?' <auto type'>
+<auto type'>    ::= 'in' '(' <types list> ')'
+                 |  EPS
 
-<const qualifier>       ::= 'const'
+<const qualifier>   ::= 'const'
 
-## <contained type>        ::= <declared contained type>            ###
-##                          |  EPS                                  ###
+<contained type>    ::= <declared contained type>
+                     |  EPS
 
-<container type>        ::= <array type>
-                         |  <file type>                             ###
-                         |  <list type>
-                         |  <map type>
-                         |  <set type>
+<container type>    ::= <array_type>
+                     |  <enum type>
+                     |  <list type>
+                     |  <map type>
+                     |  <set type>
 
-<declared contained type>   ::= '<' <declared contained type'>                      ###
-                             |  EPS                                                 ###
-<declared contained type'>  ::= <TYPE> <declared contained type">                   ###
-                             |  <enclosed types list> <declared contained type">    ###
-<declared contained type">  ::= '>'                                                 ###
+<declared contained type>    ::= '<' <TYPE> '>'
 
-<dimensions>            ::= '[' <dimensions'> ']' <dimensions> 
-                         |  EPS
-<dimensions'>           ::= <integer number>
-                         |  <dotted name>
-                         |  EPS                                     ###
-
-<enclosed types list>   ::= '(' <TYPE> <enclosed types list'> ')'   ###
-<enclosed types list'>  ::= ',' <TYPE> <enclosed types list'>       ###
-                         |  EPS                                     ###
-
-<enum type>             ::= 'enum'
-
-<file type>             ::= 'file' <declared contained type>        ###
-
-<list type>             ::= 'list' <declared contained type>        ###
-
-<map type>              ::= 'map' <map type'>                                                   ###
-<map type'>             ::= '<' <declared contained type'> ',' <declared contained type'> '>'   ###
-                         |  EPS
-
-<non container type>    ::= <type>
-
-<scalar type>           ::= 'bool'
-                         |  'char'
-                         |  'char16'
-                         |  'float32'
-                         |  'float64'
-                         |  'int8'
-                         |  'int16'
-                         |  'int32'
-                         |  'int64'
-                         |  'str'
-                         |  'str16'
-                         |  'uint8'
-                         |  'uint16'
-                         |  'uint32'
-                         |  'uint64'
+<dimensions>    ::= '[' <dimensions'> ']' <dimensions> 
+                 |  EPS
+<dimensions'>   ::= <integer number>
+                 |  <dotted name>
 
 <scalar type or dotted name>    ::= <scalar type>
                                  |  <dotted name>
 
-<set type>              ::= 'set' <declared contained type>         ###
+<enum type>     ::= 'enum'
+
+<file type>     ::= 'file' <contained type>
+
+<list type>     ::= 'list' <contained type>
+
+<map type>      ::= 'map' <contained type>
+
+<scalar type>   ::= 'bool'
+                 |  'char'
+                 |  'char16'
+                 |  'float32'
+                 |  'float64'
+                 |  'int8'
+                 |  'int16'
+                 |  'int32'
+                 |  'int64'
+                 |  'slice'                     ###
+                 |  'str'
+                 |  'str16'
+                 |  'uint8'
+                 |  'uint16'
+                 |  'uint32'
+                 |  'uint64'
+
+<set type>              ::= 'set' <contained type>
 
 <static qualifier>      ::= 'static'
 
@@ -1076,10 +937,9 @@ SOFTWARE.
 <types and exprs list"> ::= <expression>
                          |  <templated type>
 
-<types list>            ::= <TYPE>                                  ###
-                         |  <enclosed types list>                   ###
-##<types list'>           ::= ',' <TYPE> <types list'>              ###
-##                         |  EPS                                   ###
+<types list>            ::= <TYPE> <types list'>
+<types list'>           ::= ',' <TYPE> <types list'>
+                         |  EPS
 
 <volatile qualifier>    ::= 'volatile'
 

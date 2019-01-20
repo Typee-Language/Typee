@@ -226,16 +226,12 @@ embed java {{ extends Thread }}
     }
 
     //-------------------------------------------------------------------------
-    final const bool is_alive() exclude java
+    final const bool is_alive() exclude py, java
     /**
     Returns true if this thread has been started and is not stopped.
     Returns false otherwise.
     */
-    {
-      embed py {{
-        return super().is_alive()
-      }}
-    }
+    {}
 
     //-------------------------------------------------------------------------
     const bool is_daemon() exclude java
