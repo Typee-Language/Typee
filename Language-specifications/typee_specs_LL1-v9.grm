@@ -251,7 +251,9 @@ SOFTWARE.
 
 <function definition>       ::= <template def> <function definition'>
                              |  <function definition'>
-<function definition'>      ::= <function args declaration> <statements block>
+<function definition'>      ::= <function args declaration> <function definition"> <statements block>       ###
+<function definition">      ::= 'exclude' <languages>                                                       ###
+                             |  EPS                                                                         ###
 
 
 <abstract or final qualif>  ::= 'abstract'  |  'final'                              ##
@@ -687,7 +689,11 @@ SOFTWARE.
 <import statement>          ::= <import name>
                              |  <import from>
 
-<language>                  ::= 'cpp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'
+<language>                  ::= 'cpp'  |  'cs'  |  'csharp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'
+
+<languages>                 ::= <language> <laguages'>
+<languages'>                ::= ',' <languages'>
+                             |  EPS
 
 <memory address>            ::= '@' <integer number>
                              |  EPS
