@@ -232,16 +232,12 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    final const bool is_alive() exclude java
+    final const bool is_alive() exclude py, java
     /**
     Returns true if this thread has been started and is not stopped.
     Returns false otherwise.
     */
-    {
-      embed py {{
-        return self.is_alive()
-      }}
-    }
+    {}
 
     //-------------------------------------------------------------------------
     const bool is_daemon() exclude java
@@ -443,7 +439,7 @@ embed py {{ : threading.Thread }}
     */
     {
       // deprecated in Java, not allowed in Python - deadlock prone!
-      embed py {{
+      embed py, java {{
       }}
     }
 
@@ -456,7 +452,7 @@ embed py {{ : threading.Thread }}
     */
     {
       // deprecated in Java, not allowed in Python - deadlock prone!
-      embed py {{
+      embed py, java {{
       }}
     }
 
