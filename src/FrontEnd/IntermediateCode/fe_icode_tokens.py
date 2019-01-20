@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -57,6 +57,8 @@ class FEICodeTokens:
     
     TK_INCR         = 0
     TK_DECR         = 0
+    TK_POST         = 0
+    TK_PRE          = 0
     
     TK_OP_GRLE      = 0
     TK_OP_2EXCL     = 0
@@ -246,6 +248,8 @@ class FEICodeTokensData:
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_INCR ]        : '++',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_DECR ]        : '--',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_POST ]        : 'post',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_PRE ]         : 'pre',
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_GRLE ]     : '><',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_2EXCL ]    : '!!',
