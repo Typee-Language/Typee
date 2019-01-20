@@ -87,20 +87,14 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none destroy () exclude java
+    none destroy () exclude py, java
     /**
     Destructor for this base class.
     Caution:
     Behaviors may differ between different targeted programming languages.
+    Deprecated or not allowed in Python and Java because deadlock-prone.
     */
     {
-      embed py {{
-        pass  ## in Python, threads cannot be destroyed
-      }}
-      
-      embed java {{
-        // deprecated...
-      }}
     }
 
     //-------------------------------------------------------------------------
@@ -129,7 +123,7 @@ embed py {{ : threading.Thread }}
       }}
       
       embed java {{
-        return this.currentThread.getId();
+        return this.currentThread().getId();
       }}
     }
 
@@ -209,16 +203,14 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none interrupt() exclude java
+    none interrupt() exclude py, java
     /**
     Interrupts this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
+    Deprecated or not allowed in Python and Java because deadlock-prone.
     */
     {
-      embed py {{
-        pass  ## in Python, threads cannot be interrupted
-      }}
     }
 
     //-------------------------------------------------------------------------
@@ -286,7 +278,7 @@ embed py {{ : threading.Thread }}
       }}
       
       embed java {{
-        super().join( seconds * 1000.0 );
+        super.join( seconds * 1000.0 );
       }}
     }
 
@@ -337,16 +329,14 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none resume()
+    none resume() exclude py, java
     /**
     Resumes this thread after having been stopped.
     Caution:
     Behaviors may differ between different targeted programming languages.
+    Deprecated or not allowed in Python and Java because deadlock-prone.
     */
     {
-      // deprecated in Java, not allowed in Python - deadlock prone!
-      embed py , java {{
-      }}
     }
 
     //-------------------------------------------------------------------------
@@ -356,7 +346,7 @@ embed py {{ : threading.Thread }}
     when method start() is called.
     args is a variable arguments that may be useful for the processings of
     this thread.
-    To be implemented in inheriting classes.
+    Must be implemented in inheriting classes.
     */
 
     //-------------------------------------------------------------------------
@@ -386,7 +376,8 @@ embed py {{ : threading.Thread }}
     For some platform, these sizes get strong constraints, e.g. in Python, 
     sizes must be greater than 32,767 bytes (i.e. at least 32 KB) and they
     may have to be multiple of 4.096 (i.e. 4 KB) for some Operating  Syst-
-    ems.    
+    ems.  For some other platforms (e.g. Java),  there is no way to modify 
+    the threads stacks size programmatically.
     */
     {
       embed py {{
@@ -416,7 +407,7 @@ embed py {{ : threading.Thread }}
       }}
       
       embed java {{
-        super().sleep( seconds * 1000.0 ) ;
+        super.sleep( seconds * 1000.0 ) ;
       }}
     }
 
@@ -435,29 +426,25 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none stop()
+    none stop() exclude py, java
     /**
     Stops this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
+    Deprecated or not allowed in Python and Java because deadlock-prone.
     */
     {
-      // deprecated in Java, not allowed in Python - deadlock prone!
-      embed py {{
-      }}
     }
 
     //-------------------------------------------------------------------------
-    none suspend()
+    none suspend() exclude py, java
     /**
     Suspends this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
+    Deprecated or not allowed in Python and Java because deadlock-prone.
     */
     {
-      // deprecated in Java, not allowed in Python - deadlock prone!
-      embed py {{
-      }}
     }
 
  :protected:
