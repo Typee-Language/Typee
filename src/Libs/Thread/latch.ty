@@ -31,6 +31,10 @@ embed py {{
 import threading
 }}
 
+embed java {{
+import java.util.concurrent.CountDownLatch;
+}}
+
 //=============================================================================
 class Latch
 /**
@@ -40,8 +44,8 @@ This may be sued for applicative thread to wait for all initialization
 threads to complete their initializations.
 */
 
-embed py {{ : threading.Condition }}
-
+embed py   {{ : threading.Condition }}
+embed java {{ extends CountDownLatch }}
 {
  :public:
 
@@ -60,6 +64,10 @@ embed py {{ : threading.Condition }}
         super().__init__()
         self._count = start_count
       }}
+      
+      embed java {{
+        super( start_count );
+      }}
     }
     
     //-------------------------------------------------------------------------
@@ -75,6 +83,10 @@ embed py {{ : threading.Condition }}
         if self._count == 0:
             self.notify_all()
       }}
+      
+      embed java {{
+        countDown();
+      }}
     }
     
     //-------------------------------------------------------------------------
@@ -86,6 +98,10 @@ embed py {{ : threading.Condition }}
       embed py {{
         return self._count
       }}
+      
+      embed java {{
+        return getCount();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -96,6 +112,10 @@ embed py {{ : threading.Condition }}
     {
       embed py {{
         self.wait()
+      }}
+      
+      embed java {{
+        return await();
       }}
     }
 
@@ -111,6 +131,10 @@ embed py {{ : threading.Condition }}
     */
     {
         assert timeout >= 0.0;
+      
+      embed java {{
+        return await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLSECONDS );
+      }}
     }
 }
 

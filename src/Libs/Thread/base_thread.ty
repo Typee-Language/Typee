@@ -278,7 +278,7 @@ embed py {{ : threading.Thread }}
       }}
       
       embed java {{
-        super.join( seconds * 1000.0 );
+        super.join( (long)( seconds * 1000.0 + 0.5) );
       }}
     }
 
