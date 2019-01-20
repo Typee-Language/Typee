@@ -31,15 +31,18 @@ from Thread.thread_exceptions import all ;
 // targeted languages specifics
 embed py {{
 import threading
+import time
 }}
 
 //=============================================================================
 class BaseThread
 /**
 Base class for threads in Typee built-in library  Thread.
-Defines  or  declares  every basic operations.  When only 
+Defines  or  declares  every basic operations.  When just 
 declared as abstract, those operations have to be implem-
 ented in inheriting classes.
+Notice: no priorities are managed for threads.  They  all
+get the same, medium, priority in Typee.
 */
 
 embed py {{ : threading.Thread }}
@@ -61,6 +64,10 @@ embed py {{ : threading.Thread }}
       embed py {{
         super().__init__()
       }}
+      
+      embed java {{
+        setDaemon( false );
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -72,10 +79,15 @@ embed py {{ : threading.Thread }}
       embed py {{
         super().__init__( name=name )
       }}
+      
+      embed java {{
+        super( name );
+        setDaemon( false );
+      }}
     }
 
     //-------------------------------------------------------------------------
-    none destroy ()
+    none destroy () exclude java
     /**
     Destructor for this base class.
     Caution:
@@ -84,6 +96,10 @@ embed py {{ : threading.Thread }}
     {
       embed py {{
         pass  ## in Python, threads cannot be destroyed
+      }}
+      
+      embed java {{
+        // deprecated...
       }}
     }
 
@@ -96,6 +112,10 @@ embed py {{ : threading.Thread }}
       embed py {{
         return threading.current_thread()
       }}
+      
+      embed java {{
+        return this.currentThread();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -106,6 +126,10 @@ embed py {{ : threading.Thread }}
     {
       embed py {{
         return threading.get_ident()
+      }}
+      
+      embed java {{
+        return this.currentThread.getId();
       }}
     }
 
@@ -118,6 +142,10 @@ embed py {{ : threading.Thread }}
       embed py {{
         return self.ident
       }}
+      
+      embed java {{
+        return this.getId();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -129,6 +157,10 @@ embed py {{ : threading.Thread }}
       embed py {{
         return threading.main_thread()
       }}
+      
+      embed java {{
+        return this._main_thread;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -136,11 +168,14 @@ embed py {{ : threading.Thread }}
     /**
     Returns the stack size allocated to newly created threads.
     See method set_stack_size().
+    Returns 0 if this information is not available (e.g. Java).
     */
     {
       embed py {{
         return threading.stack_size()
       }}
+      
+      return 0;
     }
 
     //-------------------------------------------------------------------------
@@ -151,6 +186,10 @@ embed py {{ : threading.Thread }}
     {
       embed py {{
         return threading.active_count()
+      }}
+      
+      embed java {{
+        return this.activeCount();
       }}
     }
 
@@ -163,10 +202,14 @@ embed py {{ : threading.Thread }}
       embed py {{
         return threading.enumerate()
       }}
+      
+      embed java {{
+        return this.enumerate();
+      }}
     }
 
     //-------------------------------------------------------------------------
-    none interrupt()
+    none interrupt() exclude java
     /**
     Interrupts this thread.
     Caution:
@@ -189,7 +232,7 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    final const bool is_alive()
+    final const bool is_alive() exclude java
     /**
     Returns true if this thread has been started and is not stopped.
     Returns false otherwise.
@@ -201,7 +244,7 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    const bool is_daemon()
+    const bool is_daemon() exclude java
     /**
     Returns true if this thread is daemonic, and false otherwise.
     */
@@ -212,7 +255,7 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none join()
+    none join() exclude java
     /**
     This is a synchronization point for external code. When joining  with  this
     thread, the external code waits (is blocked) until this threads terminates.
@@ -220,9 +263,30 @@ embed py {{ : threading.Thread }}
     {
       embed py {{
         try:
-            self.join()
+            super().join()
         except:
             raise ThreadJoinException( self )
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none join( const float32 seconds )
+    /**
+    This is a synchronization point for external code. When joining  with  this
+    thread, the external code waits (is blocked) until this threads terminates.
+    'seconds' is the timeout durtaion before this thread dies.
+    Raises AssertException if specified duration is negative.
+    Caution: Behaviors may differ between different platforms.
+    */
+    {
+        assert seconds >= 0.0;
+        
+      embed py {{
+        time.sleep( seconds )
+      }}
+      
+      embed java {{
+        super().join( seconds * 1000.0 );
       }}
     }
 
@@ -235,6 +299,41 @@ embed py {{ : threading.Thread }}
       embed py {{
         return self.name
       }}
+      
+      embed java {{
+        return this.getName();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    str operator cast str ()
+    /**
+    Returns a string representation of this thread.
+    */
+    {
+      embed py {{
+        return self.name();
+      }}
+      
+      embed java {{
+        return this.getName();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    str16 operator cast str16 ()
+    /**
+    Returns a string representation of this thread.
+    Caution: behavior may fidder from different platforms.
+    */
+    {
+      embed py {{
+        return self.name();
+      }}
+      
+      embed java {{
+        return this.getName();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -245,8 +344,8 @@ embed py {{ : threading.Thread }}
     Behaviors may differ between different targeted programming languages.
     */
     {
-      embed py {{
-        pass  ## in Python, threads cannot be resumed nor suspended
+      // deprecated in Java, not allowed in Python - deadlock prone!
+      embed py , java {{
       }}
     }
 
@@ -269,12 +368,17 @@ embed py {{ : threading.Thread }}
       embed py {{
         self.name = _name
       }}
+      
+      embed java {{
+        setName( _name );
+      }}
     }
 
     //-------------------------------------------------------------------------
-    static final none set_stack_size( const uint32 size )
+    static final bool set_stack_size( const uint32 size )
     /**
     Sets the stack size (bytes count) allocated to newly created threads.
+    Returns true if available for targeted platform and false otherwise.
     See method get_stack_size().
     Raises ThreadStackSizeException if specified size is an erroneous one
     for the targeted platform.
@@ -287,21 +391,44 @@ embed py {{ : threading.Thread }}
     {
       embed py {{
         try:
-            return threading.stack_size( size )
+            threading.stack_size( size )
+            return True
         except:
             raise ThreadStackSizeException( size )
+      }}
+      
+      embed java {{
+        return false;
       }}
     }
 
     //-------------------------------------------------------------------------
-    none start()
+    none sleep( const float32  seconds )
+    /**
+    Puts this thread to sleep for the sopecified duration (unit: seconds).
+    Raises AssertException if duration is negative.
+    */
+    {
+        assert seconds >= 0.0;
+        
+      embed py {{
+        time.sleep( seconds )
+      }}
+      
+      embed java {{
+        super().sleep( seconds * 1000.0 ) ;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none start() exclude java
     /**
     Starts this thread in a new thread context and runs its method run().
     */
     {
       embed py {{
         try:
-            self.start()
+            super().start()
         except:
             raise ThreadStartException( self )
       }}
@@ -315,8 +442,8 @@ embed py {{ : threading.Thread }}
     Behaviors may differ between different targeted programming languages.
     */
     {
+      // deprecated in Java, not allowed in Python - deadlock prone!
       embed py {{
-        pass  ## in Python, threads cannot be stopped
       }}
     }
 
@@ -328,10 +455,16 @@ embed py {{ : threading.Thread }}
     Behaviors may differ between different targeted programming languages.
     */
     {
+      // deprecated in Java, not allowed in Python - deadlock prone!
       embed py {{
-        pass  ## in Python, threads cannot be suspended nor interrupted
       }}
     }
+
+ :protected:
+    //------------------------------------------------------------------------- 
+  embed java {{    
+    static long _main_thread = Thread.currentThread();
+  }}
 }
 
 //===== end of module   Thread.base_thread.ty   =====//
