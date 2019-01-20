@@ -22,7 +22,7 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module condition.ty
+// Module thread_condition.ty
 
 //=============================================================================
 from Thread.lockable          import Lockable;
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 }}
 
 //=============================================================================
-class Condition
+class ThreadCondition
 /**
 Threads may wait on Condition instances and can be signaled the end of the 
 wait by a signal.
@@ -52,7 +52,7 @@ embed java {{ implements Condition }}
  :public:
 
     //-------------------------------------------------------------------------
-    Condition()
+    ThreadCondition()
     /**
     Default constructor.
     */
@@ -63,7 +63,7 @@ embed java {{ implements Condition }}
     }
 
     //-------------------------------------------------------------------------
-    Condition( Lockable lock )
+    ThreadCondition( Lockable lock )
     /**
     Default constructor.
     */
@@ -110,6 +110,7 @@ embed java {{ implements Condition }}
 
     //-------------------------------------------------------------------------
     final none wait()
+        embed java {{ raises ThreadInterruptedException }}
     /**
     Calling thread waits on this condition instance until signalled.
     See methods signal() and signal_all().
@@ -131,6 +132,7 @@ embed java {{ implements Condition }}
 
     //-------------------------------------------------------------------------
     final const bool wait( const float32 timeout )
+        embed java {{ raises ThreadInterruptedException }}
     /**
     Timed-out waiting version applied to threads.
     Returns true when returning from wait before timeout 
@@ -157,4 +159,4 @@ embed java {{ implements Condition }}
     }
 }
 
-//===== end of module   Thread.condition.ty   =====//
+//===== end of module   Thread.thread_condition.ty   =====//
