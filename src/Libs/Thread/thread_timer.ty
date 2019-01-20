@@ -22,7 +22,7 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module timer.ty
+// Module thread_timer.ty
 
 //=============================================================================
 from Thread.thread_exceptions import TimerStartException;
@@ -33,39 +33,53 @@ embed py {{
 import threading
 }}
 
+embed java {{
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+}}
+
 //=============================================================================
-class Timer
+class ThreadTimer
 /**
 Typee implementation of the timer concept.
 Timers are inactive for specified periods and run their code between
 those periods.
 */
 
-embed py {{ : threading.Timer }}
+embed java {{ extends TimerTask }}
 
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Timer( const str name )
+    ThreadTimer( const str name )
     /**
     Constructor.
     */
     {
-        me._name    = name;
-        me._name16  = none;
+        me._name, me._name16 = name, none;
         me._running = False;
+        
+       embed java {{
+        super( name );
+        this._timer = new Timer( name );
+       }}
     }
 
     //-------------------------------------------------------------------------
-    Timer( const str16 name )
+    ThreadTimer( const str16 name16 )
     /**
     Constructor.
     */
     {
-        me._name    = none;
-        me._name16  = name;
+        me._name, me._name16 = none, name16;
         me._running = False;
+        
+       embed java {{
+        super( name16 );
+        this._timer = new Timer( name16 );
+       }}
     }
 
     //-------------------------------------------------------------------------
@@ -75,36 +89,59 @@ embed py {{ : threading.Timer }}
     */
     {
       embed py {{
-        super().cancel()
+        self._timer.cancel()
+      }}
+      
+      embed java {{
+        this._timer.purge();
+        this._timer.cancel();
+        this.cancel();
       }}
     }
 
     //-------------------------------------------------------------------------
-    abstract none run( ... args );
+    none run()
     /**
-    This is the definition of the code run qwith this timer.
-    Has to be implemented in inheriting classes.
+    This is the definition of the code run with this  timer.
+    It internally calls protected and abstract method _run()
+    which MUST be implemented in any inheriting class.
+    */    
+    {
+        if ( me._nb == 0  or  me._count < me._nb )
+        {
+            me._run();  // <-- to be implemented in inheriting classes!
+            ++ me._count;
+        }
+        else
+            delete me;
+    }
+    
+    //-------------------------------------------------------------------------
+    protected abstract none _run();
+    /**
+    Runs the internal code for this timer.
+    MUST BE IMPLEMENTED IN INHERITING CLASSES.
     */
 
     //-------------------------------------------------------------------------
-    final none start( const float32 period, ... args )
+    final none start( const float32 period )
     /**
     Starts the infinite running of this timer.  Internally  calls  
-    method 'run()' with variable argument 'args'.
+    method 'run()' .
     Infinite running can be stopped by deleting the timer.
     Raises TimerStartException if starting again a running timer.
     Raises AssertException if period (unit: seconds) is negative.
     */
     {
-        me.start( 0, period, args );
+        me.start( 0, period );
     }
 
     //-------------------------------------------------------------------------
-    final none start( const uint64 n_times, const float32 period, ... args )
+    final none start( const uint64 n_times )
     /**
     Starts the running n_times of this timer.  Internally  calls  
-    method 'run()' with variable argument 'args'. n_times set to
-    0 means infinite running.
+    method 'run()'.
+    n_times set to 0 means infinite running.
     Running can be stopped by deleting the timer.
     Raises TimerStartException if starting again a running timer.
     Raises AssertException if period (unit: seconds) is negative.
@@ -118,8 +155,12 @@ embed py {{ : threading.Timer }}
         me._running = true;
         
       embed py {{
-        _args = ( arg for arg in args )
-        super().__init__( period, self.run, _args )
+        self._timer = Timer( period, self._run )
+      }}
+      
+      embed java {{
+        long milliseconds = (long)(period * 1000.0 + 0.5);
+        this._timer.scheduleAtFixedRate( this, milliseconds, milliseconds );
       }}
     }
 
@@ -140,23 +181,12 @@ embed py {{ : threading.Timer }}
     str16   _name16;
     bool    _running;
     uint64  _count, _nb;
- 
+
  :hidden: 
     //-------------------------------------------------------------------------
-    final none _run( ... args )
-    /**
-    Runs the internal code for this timer.
-    The internal code for timers is defined in method 'run()'.
-    */
-    {
-        if ( me._nb == 0  or  me._count < me._nb )
-        {
-            me.run( args );
-            ++ me._count;
-        }
-        else
-            delete me;
-    }
+  embed py, java {{
+    Timer _timer;
+  }}
 }
 
-//===== end of module   Thread.timer.ty   =====//
+//===== end of module   Thread.thread_timer.ty   =====//
