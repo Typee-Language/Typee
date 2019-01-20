@@ -99,7 +99,7 @@ more being so.
       }}
       
       embed java {{
-        seteDaemon( is_daemon );
+        setDaemon( is_daemon );
       }}
     }
 }

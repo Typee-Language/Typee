@@ -58,26 +58,20 @@ embed py {{ : threading.Event }}
     }
 
     //-------------------------------------------------------------------------
-    final const bool is_set()
+    final const bool is_set() exclude py
     /**
     Returns true if this event is currently in set mode, and false otherwise.
     */
     {
-      embed py {{
-        return super().is_set()
-      }}
     }
 
     //-------------------------------------------------------------------------
-    final none set()
+    final none set() exclude py
     /**
     Any blocked thread waiting on this event becomes awakened.
     Any thread waiting then on this event doesn't get blocked.
     */
     {
-      embed py {{
-        super().set()
-      }}
     }
 
     //-------------------------------------------------------------------------
@@ -92,14 +86,11 @@ embed py {{ : threading.Event }}
     }
 
     //-------------------------------------------------------------------------
-    final none wait()
+    final none wait() exclude py
     /**
     Blocks the caller thread until this event becomes set.
     */
     {
-      embed py {{
-        super().wait()
-      }}
     }
 
     //-------------------------------------------------------------------------

@@ -61,8 +61,8 @@ embed java {{ extends CountDownLatch }}
         assert start_count != 0;
         
       embed py {{
-        super().__init__()
         self._count = start_count
+        super().__init__()
       }}
       
       embed java {{
@@ -110,10 +110,6 @@ embed java {{ extends CountDownLatch }}
     Calling thread waits on this latch until signalled.
     */
     {
-      embed py {{
-        self.wait()
-      }}
-      
       embed java {{
         return await();
       }}
