@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -363,8 +363,14 @@ class FEICodeTokenNode:
     def is_PLUS(self) -> bool:
         return self.tk_ident == FEICodeTokens.TK_PLUS
     @property
+    def is_POST(self) -> bool:
+        return self.tk_ident == FEICodeTokens.TK_POST
+    @property
     def is_POWER(self) -> bool:
         return self.tk_ident == FEICodeTokens.TK_POWER
+    @property
+    def is_PRE(self) -> bool:
+        return self.tk_ident == FEICodeTokens.TK_PRE
     @property
     def is_PROTECTED(self) -> bool:
         return self.tk_ident == FEICodeTokens.TK_PROTECTED
@@ -877,9 +883,17 @@ class ICTokenNode_PLUS( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='+'):
         super().__init__( scanner, FEICodeTokens.TK_PLUS, data )
 
+class ICTokenNode_POST( FEICodeTokenNode ):
+    def __init__(self, scanner=None, data='post'):
+        super().__init__( scanner, FEICodeTokens.TK_POST, data )
+
 class ICTokenNode_POWER( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='^^'):
         super().__init__( scanner, FEICodeTokens.TK_POWER, data )
+
+class ICTokenNode_PRE( FEICodeTokenNode ):
+    def __init__(self, scanner=None, data='pre'):
+        super().__init__( scanner, FEICodeTokens.TK_PRE, data )
 
 class ICTokenNode_PROTECTED( FEICodeTokenNodeProtection ):
     def __init__(self, scanner=None, data='protected'):
