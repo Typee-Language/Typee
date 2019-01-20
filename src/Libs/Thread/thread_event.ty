@@ -22,7 +22,7 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module event.ty
+// Module thread_event.ty
 
 //=============================================================================
 from Thread.thread_exceptions import ThreadTimeoutValueException;
@@ -34,7 +34,7 @@ import threading
 }}
 
 //=============================================================================
-class Event
+class ThreadEvent  embed java {{ extends ??? }}
 /**
 Typee implementation of the event synchronization concept.
 Waiting on events is blocking (with optional timeout) while
@@ -120,4 +120,4 @@ embed py {{ : threading.Event }}
     }
 }
 
-//===== end of module   Thread.event.ty   =====//
+//===== end of module   Thread.thread_event.ty   =====//
