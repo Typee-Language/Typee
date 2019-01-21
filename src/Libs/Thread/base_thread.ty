@@ -45,7 +45,8 @@ Notice: no priorities are managed for threads.  They  all
 get the same, medium, priority in Typee.
 */
 
-embed py {{ : threading.Thread }}
+embed py   {{ : threading.Thread }}
+embed java {{ extends Thread }}
 
 {
  :public:
@@ -66,6 +67,7 @@ embed py {{ : threading.Thread }}
       }}
       
       embed java {{
+        super();
         setDaemon( false );
       }}
     }
@@ -336,13 +338,11 @@ embed py {{ : threading.Thread }}
     }
 
     //-------------------------------------------------------------------------
-    abstract none run( ... args );
+    abstract none run();
     /**
     This is the definition of this thread processings. Method run() is ran
     when method start() is called.
-    args is a variable arguments that may be useful for the processings of
-    this thread.
-    Must be implemented in inheriting classes.
+    MUST be implemented in inheriting classes.
     */
 
     //-------------------------------------------------------------------------
@@ -403,7 +403,7 @@ embed py {{ : threading.Thread }}
       }}
       
       embed java {{
-        super.sleep( seconds * 1000.0 ) ;
+        super.sleep( (long)( seconds * 1000.0 + 0.5) ) ;
       }}
     }
 

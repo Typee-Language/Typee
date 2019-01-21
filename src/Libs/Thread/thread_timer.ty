@@ -76,10 +76,10 @@ embed java {{ extends TimerTask }}
         me._name, me._name16 = none, name16;
         me._running = False;
         
-       embed java {{
+      embed java {{
         super( name16 );
         this._timer = new Timer( name16 );
-       }}
+      }}
     }
 
     //-------------------------------------------------------------------------
