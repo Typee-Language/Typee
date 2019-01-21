@@ -22,7 +22,7 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module lockable.ty
+// Module thread_lockable.ty
 
 //=============================================================================
 from Thread.thread_exceptions import ThreadInterruptedException, UnlockedException;
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 }}
 
 //=============================================================================
-class Lockable
+class ThreadLockable
 /**
 Typee implementation of the mutex concept. Mutual Exclusion is associated 
 with  objects  for  which access  from threads must be exclusive:  no two
@@ -55,7 +55,7 @@ embed java {{ extends ReentrantLock }}
  :public:
 
     //-------------------------------------------------------------------------
-    Lockable()
+    ThreadLockable()
     /**
     Default constructor.
     */
@@ -163,4 +163,4 @@ embed java {{ extends ReentrantLock }}
     }
 }
 
-//===== end of module   Thread.lockable.ty   =====//
+//===== end of module   Thread.thread_lockable.ty   =====//
