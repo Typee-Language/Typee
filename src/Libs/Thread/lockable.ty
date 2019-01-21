@@ -25,12 +25,17 @@ SOFTWARE.
 // Module lockable.ty
 
 //=============================================================================
-from Thread.thread_exceptions import UnlockedException;
+from Thread.thread_exceptions import ThreadInterruptedException, UnlockedException;
 
 //=============================================================================
 // targeted languages specifics
 embed py {{
 import threading
+}}
+
+embed java {{
+import java.util.concurrent.locks;
+import java.util.concurrent.TimeUnit;
 }}
 
 //=============================================================================
@@ -45,7 +50,7 @@ Notice: not applicable to statement 'with'.
 */
 
 embed py {{ : threading.Lock }}
-
+embed java {{ extends ReentrantLock }}
 {
  :public:
 
@@ -57,6 +62,10 @@ embed py {{ : threading.Lock }}
     {
       embed py {{
         super().__init__()
+      }}
+      
+      embed java {{
+        super();
       }}
     }
 
@@ -74,7 +83,7 @@ embed py {{ : threading.Lock }}
     }
 
     //-------------------------------------------------------------------------
-    final none lock()
+    final none lock() exclude java
     /**
     Infinitively blocking version to acquire access to the mutually exclusive 
     access to the object.
@@ -96,17 +105,22 @@ embed py {{ : threading.Lock }}
       embed py {{
         return self.acquire( False )
       }}
+      
+      embed java {{
+        return tryLock();
+      }}
     }
 
     //-------------------------------------------------------------------------
     final const bool lock( const float32 timeout )
     /**
-    Timed-out blocking version to acquire access to the mutually exclusive 
+    Timed-out blocking version to acquire access to the  mutually  exclusive 
     access to the object.
-    Returns true when object has been acquired and false if not acquired 
+    Returns true when object has been acquired and  false  if  not  acquired 
     after the specified timeout duration (unit: seconds).
-    Raises ThreadTimeoutValueException on some platforms when specified 
+    Raises ThreadTimeoutValueException  on  some  platforms  when  specified 
     timeout is too big.
+    Raises ThreadInterruptedException if waiting thread has been interrupted.
     Raises AssertException if timeout is negative.
     */
     {
@@ -118,10 +132,19 @@ embed py {{ : threading.Lock }}
         except:
             raise ThreadTimeoutValueException( timeout )
       }}
+      
+      embed java {{
+        try {
+            tryLock( (long)(timeout * 1000.0 + 0.5, TimeUnit.MILLISECONDS);
+        }
+        catch (InterruptedException e) {
+            raise ThreadInterruptedException()
+        }
+      }}
     }
     
     //-------------------------------------------------------------------------
-    final none unlock()
+    final none unlock() exclude java
     /**
     Releases this object for it to be acquirable again.
     Raises UnlockedException when unlocking  an  object 
