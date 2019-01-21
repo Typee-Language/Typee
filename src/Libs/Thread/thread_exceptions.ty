@@ -46,49 +46,42 @@ class ThreadBarrierException : Exception {
         Exception( "Broken barrier exception." );
     }
 }
-
 //-----------------------------------------------------------------------------
 class ThreadInterruptedException : Exception {
     ThreadInterruptedException(){
         Exception( "A thread has been interrupted while waiting for a resource." );
     }
 }
-
 //-----------------------------------------------------------------------------
 class ThreadJoinException : Exception {
     ThreadJoinException( BaseThread thread ){
         Exception( "Thread {} cannot join itself - deadlocks avoidance".format(thread.name) );
     }
 }
-
 //-----------------------------------------------------------------------------
 class ThreadStackSizeException : Exception {
     ThreadStackSizeException( const uint32 erroneous_size ){
         Exception( "Erroneous stack size for a Thread: {}".format(erroneous_size) );
     }
 }
-
 //-----------------------------------------------------------------------------
 class ThreadStartException : Exception {
     ThreadStartException( BaseThread thread ){
         Exception( "Trying to start thread {} more than once".format(thread.name) );
     }
 }
-
 //-----------------------------------------------------------------------------
 class ThreadTimeoutValueException : Exception {
     ThreadTimeoutValueException( const float32 erroneous_duration ){
         Exception( "Erroneous duration specification for a timed-out MutEx: {}".format(erroneous_duration) );
     }
 }
-
 //-----------------------------------------------------------------------------
 class TimerStartException : Exception {
     TimerStartException( Timer timer ){
         Exception( "Trying to start again running timer {}".format(timer) );
     }
 }
-
 //-----------------------------------------------------------------------------
 class UnlockedException : Exception {
     UnlockedException( Lockable lock ){

@@ -22,11 +22,11 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module condition.ty
+// Module thread_condition.ty
 
 //=============================================================================
 from Thread.lockable          import Lockable;
-from Thread.thread_exceptions import ThreadInterruptedException;
+from Thread.thread_exceptions import ThreadInterruptedException, ThreadTimeoutValueException;
 
 //=============================================================================
 // targeted languages specifics
@@ -35,24 +35,23 @@ import threading
 }}
 
 embed java {{
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks;
 }}
 
 //=============================================================================
-class Condition
+class ThreadCondition
 /**
 Threads may wait on Condition instances and can be signaled the end of the 
 wait by a signal.
 */
 
 embed py {{ : threading.Condition }}
-embed java {{ implements Condition }}
 
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Condition()
+    ThreadCondition()
     /**
     Default constructor.
     */
@@ -60,16 +59,26 @@ embed java {{ implements Condition }}
       embed py {{
         super().__init__()
       }}
+      
+      embed java {{
+        this._jv_lock = new ReentrantLock();
+        this._jv_cond = this._jv_lock.newCondition();
+      }}
     }
 
     //-------------------------------------------------------------------------
-    Condition( Lockable lock )
+    ThreadCondition( Lockable lock )
     /**
     Default constructor.
     */
     {
       embed py {{
         super().__init__( lock )
+      }}
+      
+      embed java {{
+        this._jv_lock = lock;
+        this._jv_cond = lock.newCondition();
       }}
     }
 
@@ -83,13 +92,17 @@ embed java {{ implements Condition }}
     {}
     
     //-------------------------------------------------------------------------
-    final none signal() exclude java
+    final none signal()
     /**
     'Awakens' one thread (from maybe many) waiting on this condition variable.
     */
     {
       embed py {{
         return self.notify( 1 )
+      }}
+      
+      embed java {{
+        this._jv_cond.signal();
       }}
     }
     
@@ -103,8 +116,8 @@ embed java {{ implements Condition }}
         return self.notify_all()
       }}
       
-      embed java{{
-        signalAll();
+      embed java {{
+        this._jv_cond.signalAll();
       }}
     }
 
@@ -112,6 +125,8 @@ embed java {{ implements Condition }}
     final none wait()
     /**
     Calling thread waits on this condition instance until signalled.
+    Raises ThreadInterruptedException if the waiting thread has been 
+    interrupted.
     See methods signal() and signal_all().
     */
     {
@@ -121,9 +136,9 @@ embed java {{ implements Condition }}
       
       embed java {{
         try {
-            await();
+            this._jv_cond.await();
         }
-        except {
+        catch (InterruptedException e) {
             raise ThreadInterruptedException();
         }
       }}
@@ -133,28 +148,40 @@ embed java {{ implements Condition }}
     final const bool wait( const float32 timeout )
     /**
     Timed-out waiting version applied to threads.
-    Returns true when returning from wait before timeout 
-    duration (unit: seconds), and False if timed-out.
-    Raises ThreadTimeoutValueException on some platforms 
-    when specified timeout has a too big value.
+    Returns true when returning from wait before timeout duration 
+    (unit: seconds), and False if timed-out.
+    Raises ThreadTimeoutValueException  on  some  platforms  when 
+    specified timeout has a too big value.
+    Raises ThreadInterruptedException if the waiting  thread  has 
+    been interrupted.
     Raises AssertException if timeout is negative.
     */
     {
         assert timeout >= 0.0;
         
       embed py {{
-        return self.wait( timeout )
+        try:
+            return self.wait( timeout )
+        except:
+            raise ThreadTimeoutValueException()
       }}
       
       embed java {{
         try {
-            return await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
+            this._jv_cond.await( (long)(timeout * 1000.0 + 0.5) );
         }
-        except {
+        catch (InterruptedException e) {
             raise ThreadInterruptedException();
-        }      
+        }
       }}
     }
+
+ :protected:
+    //-------------------------------------------------------------------------
+  embed java {{
+    ReentrantLock _jv_lock;
+    Condition     _jv_cond;
+  }}
 }
 
-//===== end of module   Thread.condition.ty   =====//
+//===== end of module   Thread.thread_condition.ty   =====//
