@@ -25,7 +25,11 @@ SOFTWARE.
 // Module thread_lockable.ty
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadInterruptedException, UnlockedException;
+from Thread.thread_exceptions import ThreadInterruptedException,
+                                     ThreadDeadlockException,
+                                     ThreadForbiddenOpException,
+                                     ThreadLockedException,
+                                     UnlockedException;
 
 //=============================================================================
 // targeted languages specifics
@@ -36,6 +40,12 @@ import threading
 embed java {{
 import java.util.concurrent.locks;
 import java.util.concurrent.TimeUnit;
+}}
+
+embed cpp {{
+#include <mutex>
+#include <chrono>
+#include <thread>
 }}
 
 //=============================================================================
@@ -49,8 +59,9 @@ an object. Classes which inherit form Lockable get this functionnality.
 Notice: not applicable to statement 'with'.
 */
 
-embed py {{ : threading.Lock }}
+embed py   {{ : threading.Lock }}
 embed java {{ extends ReentrantLock }}
+embed cpp  {{ : std::mutex }}
 {
  :public:
 
@@ -59,6 +70,7 @@ embed java {{ extends ReentrantLock }}
     /**
     Default constructor.
     */
+    embed cpp {{ : std::mutex() }}
     {
       embed py {{
         super().__init__()
@@ -92,6 +104,27 @@ embed java {{ extends ReentrantLock }}
       embed py {{
         self.acquire( True )
       }}
+      
+      embed cpp {{
+        try {
+            std::mutex::lock();
+        }
+        catch ( const std::system_error &e )
+        {
+            switch ( e.code() )
+            {
+                case std::resource_deadlock_would_occur:
+                    throw ThreadDeadlockException( e.what() );
+                    break;
+                case std::operation_not_permitted:
+                    throw ThreadForbiddenOpException( e.what() );
+                    break;
+                case std::device_or_resource_busy:
+                    throw ThreadLockedException( e.what() );
+                    break;
+            }
+        }
+      }} // end of embed cpp
     }
 
     //-------------------------------------------------------------------------
@@ -109,6 +142,10 @@ embed java {{ extends ReentrantLock }}
       embed java {{
         return tryLock();
       }}
+      
+      embed cpp {{
+        return std::mutex::try_lock();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -122,6 +159,7 @@ embed java {{ extends ReentrantLock }}
     timeout is too big.
     Raises ThreadInterruptedException if waiting thread has been interrupted.
     Raises AssertException if timeout is negative.
+    Caution: behavior may differ from different targeted platforms.
     */
     {
         assert timeout >= 0.0;
@@ -141,10 +179,15 @@ embed java {{ extends ReentrantLock }}
             raise ThreadInterruptedException()
         }
       }}
+      
+      embed cpp {{
+        std::this_thread::sleep_for( std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ) );
+        return std::mutex::try_lock();
+      }}
     }
     
     //-------------------------------------------------------------------------
-    final none unlock() exclude java
+    final none unlock() exclude java, cpp
     /**
     Releases this object for it to be acquirable again.
     Raises UnlockedException when unlocking  an  object 

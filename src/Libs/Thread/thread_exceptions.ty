@@ -26,8 +26,12 @@ SOFTWARE.
 
 // defined exceptions:
 fwd class ThreadBarrierException;
-fwd clasw ThreadInterruptedException;
+fwd class ThreadDeadlockException;
+fwd class ThreadException;
+fwd class ThreadForbiddenOpException;
+fwd class ThreadInterruptedException;
 fwd class ThreadJoinException;
+fwd class ThreadLockedException;
 fwd class ThreadStackSizeException;
 fwd class ThreadStartException;
 fwd class ThreadTimeoutValueException;
@@ -47,6 +51,30 @@ class ThreadBarrierException : Exception {
     }
 }
 //-----------------------------------------------------------------------------
+class ThreadDeadlockException : Exception {
+    ThreadDeadlockException(){
+        Exception( "A deadlock was detected (trying to lock twice a same thread on a same Lock?)" );
+    }
+    ThreadDeadlockException( str msg ){
+        Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadException : Exception {
+    ThreadException( str msg ){
+        Exception( "Thread exception: {}".format(msg) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadForbiddenOpException : Exception {
+    ThreadForbiddenOpException( BaseThread thread, const str op_name ){
+        Exception( "{} is not an allowed operation for thread {}".format(op_name, thread.name) );
+    }
+    ThreadForbiddenOpException( str msg ){
+        Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
 class ThreadInterruptedException : Exception {
     ThreadInterruptedException(){
         Exception( "A thread has been interrupted while waiting for a resource." );
@@ -56,6 +84,15 @@ class ThreadInterruptedException : Exception {
 class ThreadJoinException : Exception {
     ThreadJoinException( BaseThread thread ){
         Exception( "Thread {} cannot join itself - deadlocks avoidance".format(thread.name) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadLockedException : Exception {
+    ThreadLockedException( BaseThread thread ){
+        Exception( "Thread {} tries to lock an already locked resource".format(thread.name) );
+    }
+    ThreadLockedException( str msg ){
+        Exception( msg );
     }
 }
 //-----------------------------------------------------------------------------

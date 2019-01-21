@@ -34,6 +34,12 @@ import threading
 import time
 }}
 
+embed cpp {{
+#include <std::thread>
+#include <std::string>
+#include <std::chrono>
+}}
+
 //=============================================================================
 class BaseThread
 /**
@@ -61,6 +67,7 @@ embed java {{ extends Thread }}
     languages. The only way to make a thread runnable is by impl-
     ementing the abstract method run().
     */
+    embed cpp {{ : _c_name("unnamed-thread") }}
     {
       embed py {{
         super().__init__()
@@ -77,6 +84,7 @@ embed java {{ extends Thread }}
     /**
     Constructor with defined name for this thread.
     */
+    embed cpp {{ : _c_name(name) }}
     {
       embed py {{
         super().__init__( name=name )
@@ -87,9 +95,9 @@ embed java {{ extends Thread }}
         setDaemon( false );
       }}
     }
-
+  
     //-------------------------------------------------------------------------
-    none destroy () exclude py, java
+    none destroy ()  exclude py, java
     /**
     Destructor for this base class.
     Caution:
@@ -97,8 +105,11 @@ embed java {{ extends Thread }}
     Deprecated or not allowed in Python and Java because deadlock-prone.
     */
     {
+      embed cpp {{
+        delete this->_thread;
+      }}
     }
-
+  
     //-------------------------------------------------------------------------
     static final BaseThread get_current()
     /**
@@ -111,6 +122,10 @@ embed java {{ extends Thread }}
       
       embed java {{
         return this.currentThread();
+      }}
+      
+      embed cpp {{
+        return this->_thread; // is this correct? Certainely not most of the time...
       }}
     }
 
@@ -127,6 +142,10 @@ embed java {{ extends Thread }}
       embed java {{
         return this.currentThread().getId();
       }}
+      
+      embed cpp {{
+        return this->_thread.get_id(); // is this correct? Certainely not most of the time...
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -142,12 +161,17 @@ embed java {{ extends Thread }}
       embed java {{
         return this.getId();
       }}
+      
+      embed cpp {{
+        return this->_thread.get_id();
+      }}
     }
 
     //-------------------------------------------------------------------------
     static final BaseThread get_main_thread()
     /**
-    Returns a reference to the Main thread.
+    Returns a reference to the Main thread or 'none' if not available for
+    some platforms (e.g. C++).
     */
     {
       embed py {{
@@ -155,8 +179,10 @@ embed java {{ extends Thread }}
       }}
       
       embed java {{
-        return this._main_thread;
+        return this->_main_thread;
       }}
+      
+      return none;
     }
 
     //-------------------------------------------------------------------------
@@ -164,7 +190,7 @@ embed java {{ extends Thread }}
     /**
     Returns the stack size allocated to newly created threads.
     See method set_stack_size().
-    Returns 0 if this information is not available (e.g. Java).
+    Returns 0 if this information is not available (e.g. Java, C++).
     */
     {
       embed py {{
@@ -178,6 +204,7 @@ embed java {{ extends Thread }}
     static final const uint32 get_threads_count()
     /**
     Returns the number of currently active threads.
+    Returns 0 if this information is not available (e.g. C++).
     */
     {
       embed py {{
@@ -187,12 +214,15 @@ embed java {{ extends Thread }}
       embed java {{
         return this.activeCount();
       }}
+    
+        return 0;
     }
 
     //-------------------------------------------------------------------------
     static final list<BaseThread> get_threads_list()
     /**
-    Returns a list  of currently active threads.
+    Returns a list of currently active threads.
+    Returns 'none' if this information is not available (e.g. C++).
     */
     {
       embed py {{
@@ -202,24 +232,27 @@ embed java {{ extends Thread }}
       embed java {{
         return this.enumerate();
       }}
+      
+      return none;
     }
 
     //-------------------------------------------------------------------------
-    none interrupt() exclude py, java
+    none interrupt() exclude py, java, cpp
     /**
     Interrupts this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
     Deprecated or not allowed in Python and Java because deadlock-prone.
     */
-    {
-    }
+    {}
 
     //-------------------------------------------------------------------------
     final const bool is_active()
     /**
     Returns true if this thread is the active one.
     Returns false otherwise.
+    Caution:
+    C++ implementation may lead to some issues since it always returns true.
     */
     {
         return me.get_ID() == me.get_active_ID();
@@ -230,8 +263,11 @@ embed java {{ extends Thread }}
     /**
     Returns true if this thread has been started and is not stopped.
     Returns false otherwise.
+    Returns true if this information is not available (e.g. C++).
     */
-    {}
+    {
+      return true;
+    }
 
     //-------------------------------------------------------------------------
     const bool is_daemon() exclude java
@@ -241,6 +277,10 @@ embed java {{ extends Thread }}
     {
       embed py {{
         return self.daemon
+      }}
+      
+      embed cpp {{
+        return false;
       }}
     }
 
@@ -257,14 +297,26 @@ embed java {{ extends Thread }}
         except:
             raise ThreadJoinException( self )
       }}
+      
+      embed cpp {{
+        try {
+            this->_thread.join();
+        }
+        catch (std::system_error se) {
+            if ( se.code() == std::resource_deadlock_would_occur )
+                throw ThreadDeadlockException( se.what() );
+            else
+                throw ThreadException( se.what() );
+        }
+      }}
     }
 
     //-------------------------------------------------------------------------
-    none join( const float32 seconds )
+    none join( const float32 timeout )
     /**
     This is a synchronization point for external code. When joining  with  this
     thread, the external code waits (is blocked) until this threads terminates.
-    'seconds' is the timeout durtaion before this thread dies.
+    'timeout' is the timeout duration, in seconds, before this thread dies.
     Raises AssertException if specified duration is negative.
     Caution: Behaviors may differ between different platforms.
     */
@@ -277,6 +329,11 @@ embed java {{ extends Thread }}
       
       embed java {{
         super.join( (long)( seconds * 1000.0 + 0.5) );
+      }}
+      
+      embed cpp {{
+        sleep( seconds );
+        join();
       }}
     }
 
@@ -293,6 +350,10 @@ embed java {{ extends Thread }}
       embed java {{
         return this.getName();
       }}
+      
+      embed cpp {{
+        return this->_c_name;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -301,13 +362,7 @@ embed java {{ extends Thread }}
     Returns a string representation of this thread.
     */
     {
-      embed py {{
-        return self.name();
-      }}
-      
-      embed java {{
-        return this.getName();
-      }}
+      return str( me.name() );
     }
 
     //-------------------------------------------------------------------------
@@ -317,25 +372,18 @@ embed java {{ extends Thread }}
     Caution: behavior may fidder from different platforms.
     */
     {
-      embed py {{
-        return self.name();
-      }}
-      
-      embed java {{
-        return this.getName();
-      }}
+      return str16( me.name() );
     }
 
     //-------------------------------------------------------------------------
-    none resume() exclude py, java
+    none resume() exclude py, java, cpp
     /**
     Resumes this thread after having been stopped.
     Caution:
     Behaviors may differ between different targeted programming languages.
     Deprecated or not allowed in Python and Java because deadlock-prone.
     */
-    {
-    }
+    {}
 
     //-------------------------------------------------------------------------
     abstract none run();
@@ -357,6 +405,10 @@ embed java {{ extends Thread }}
       
       embed java {{
         setName( _name );
+      }}
+      
+      embed cpp {{
+        this->_c_name = name;
       }}
     }
 
@@ -387,23 +439,31 @@ embed java {{ extends Thread }}
       embed java {{
         return false;
       }}
+      
+      embed cpp {{
+        return  false;
+      }}
     }
 
     //-------------------------------------------------------------------------
-    none sleep( const float32  seconds )
+    none sleep( const float32  timeout )
     /**
-    Puts this thread to sleep for the sopecified duration (unit: seconds).
+    Puts this thread to sleep for the specified duration (unit: seconds).
     Raises AssertException if duration is negative.
     */
     {
-        assert seconds >= 0.0;
+        assert timeout >= 0.0;
         
       embed py {{
-        time.sleep( seconds )
+        time.sleep( timeout )
       }}
       
       embed java {{
-        super.sleep( (long)( seconds * 1000.0 + 0.5) ) ;
+        super.sleep( (long)(timeout * 1000.0 + 0.5) );
+      }}
+      
+      embed cpp {{
+        std::this_thread::sleep_for( std::chrono::milliseconds( (long)(timeout + 1000.0 + 0.5) ) );
       }}
     }
 
@@ -411,6 +471,7 @@ embed java {{ extends Thread }}
     none start() exclude java
     /**
     Starts this thread in a new thread context and runs its method run().
+    Raises ThreadException if thread cannot be created or run.
     */
     {
       embed py {{
@@ -419,34 +480,45 @@ embed java {{ extends Thread }}
         except:
             raise ThreadStartException( self )
       }}
+      
+      embed cpp {{
+        try {
+            this->_thread = new std::thread( this->run, this );
+        } catch ( ... ) {
+            raise ThreadException( "cannot create thread" );
+        }
+      }}
     }
 
     //-------------------------------------------------------------------------
-    none stop() exclude py, java
+    none stop() exclude py, java, cpp
     /**
     Stops this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
     Deprecated or not allowed in Python and Java because deadlock-prone.
     */
-    {
-    }
+    {}
 
     //-------------------------------------------------------------------------
-    none suspend() exclude py, java
+    none suspend() exclude py, java, cpp
     /**
     Suspends this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
     Deprecated or not allowed in Python and Java because deadlock-prone.
     */
-    {
-    }
+    {}
 
  :protected:
     //------------------------------------------------------------------------- 
   embed java {{    
     static long _main_thread = Thread.currentThread();
+  }}
+  
+  embed cpp {{
+    std::string  _c_name;
+    std::thread  _thread;
   }}
 }
 
