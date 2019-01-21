@@ -22,14 +22,14 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module barrier.ty
+// Module thread_barrier.ty
 
 // defined classes:
 fwd class Barrier;
 fwd class Latch;
 
 //=============================================================================
-from Thread.thread_exceptions import TimerStartException;
+from Thread.thread_exceptions import ThreadBarrierException, ThreadInterruptedException;
 
 //=============================================================================
 // targeted languages specifics
@@ -37,8 +37,12 @@ embed py {{
 import threading
 }}
 
+embed java {{
+import java.util.concurrent.CyclicBarrier;
+}}
+
 //=============================================================================
-class Barrier
+class ThreadBarrier
 /**
 Typee implementation of the CyclicBarrier Java concept.
 A Barrier is a blocking entity on which threads are waiting. Once their 
@@ -48,12 +52,13 @@ barrier passes it then. Barriers may be reseted.
 */
 
 embed py {{ : threading.Barrier }}
+embed java {{ extends CyclicBarrier }}
 
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Barrier( const uint32 n_threads )
+    ThreadBarrier( const uint32 n_threads )
     /**
     Constructor.
     Creates a barrier to block n_threads threads.
@@ -62,10 +67,15 @@ embed py {{ : threading.Barrier }}
       embed py {{
         super().__init__( n_threads )
       }}
+      
+      embed java {{
+        super( n_threads );
+        this._jv_timeout_default = 0;
+      }}
     }
 
     //-------------------------------------------------------------------------
-    Barrier( const uint32 n_threads, const float32 timeout )
+    ThreadBarrier( const uint32 n_threads, const float32 timeout )
     /**
     Constructor.
     Creates a timed out barrier to block n_threads threads.
@@ -80,6 +90,12 @@ embed py {{ : threading.Barrier }}
         except:
             raise ThreadTimeoutValueException()
       }}
+      
+      embed java {{
+        super( n_threads );
+        this._jv_timeout_default = long( timeout * 1000.0 + 0.5 );
+      }}
+      
     }
 
     //-------------------------------------------------------------------------
@@ -99,6 +115,10 @@ embed py {{ : threading.Barrier }}
       embed py {{
         return self.parties
       }}
+      
+      embed java {{
+        return getParties();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -109,6 +129,10 @@ embed py {{ : threading.Barrier }}
     {
       embed py {{
         return self.n_waiting
+      }}
+      
+      embed java {{
+        return getNumberWaiting();
       }}
     }
 
@@ -121,10 +145,14 @@ embed py {{ : threading.Barrier }}
       embed py {{
         return self.broken
       }}
+      
+      embed java {{
+        return isBroken();
+      }}
     }
 
     //-------------------------------------------------------------------------
-    final none reset()
+    final none reset()  exclude java
     /**
     Resets this barrier to its original state.
     Caution: may lead to a broken barrier with some platforms.
@@ -142,10 +170,23 @@ embed py {{ : threading.Barrier }}
     final const uint32 wait() exclude py
     /**
     Blocks threads until n_threads (see constructor) are waiting on barrier.
-    Returns a unique value in [0:n_threads). Each awaken thread may then 
-    process a unique action according to this number.
+    Returns a unique value in [0:n_threads). Each awaken thread may then process 
+    a unique action according to this number.
+    Raises ThreadBarrierException if this barrier is currently broken.
+    Raises ThreadInterruptedException if the waiting thread has been interrupted.
     */
     {
+      embed java {{
+        try {
+            await();
+        }
+        catch (BrokenBarrierException e) {
+            raise ThreadBarrierException();
+        }
+        catch (InterruptedException e) {
+            raise ThreadInterruptedException();
+        }
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -168,7 +209,13 @@ embed py {{ : threading.Barrier }}
         except:
             raise ThreadTimeoutValueException()
       }}
-    }
+    
+    
+    //-------------------------------------------------------------------------
+ :protected:
+   embed java {{
+    long _jv_timeout_default;
+   }}
 }
 
-//===== end of module   Thread.barrier.ty   =====//
+//===== end of module   Thread.thread_barrier.ty   =====//

@@ -22,10 +22,10 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module semaphore.ty
+// Module thread_semaphore.ty
 
 //=============================================================================
-from Thread.thread_exceptions import UnlockedException;
+from Thread.thread_exceptions import UnlockedException, ThreadInterruptedException;
 
 //=============================================================================
 // targeted languages specifics
@@ -33,8 +33,12 @@ embed py {{
 import threading
 }}
 
+embed java {{
+import java.util.concurrent.Semaphore;
+}}
+
 //=============================================================================
-class Semaphore
+class ThreadSemaphore
 /**
 Typee implementation of the semaphore concept.
 Notice: methods P() and V(), initially proposed by the inventor of semaphores
@@ -43,12 +47,13 @@ methods lock() and unlock().
 */
 
 embed py {{ : threading.Semaphore }}
+embed java {{ extends Semaphore }}
 
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Semaphore()
+    ThreadSemaphore()
     /**
     Default constructor. Internal atomic counter is set to 1.
     */
@@ -56,16 +61,24 @@ embed py {{ : threading.Semaphore }}
       embed py {{
         super().__init__( 1 )
       }}
+      
+      embed java {{
+        super( 1 );
+      }}
     }
 
     //-------------------------------------------------------------------------
-    Semaphore( const uint32 n )
+    ThreadSemaphore( const uint32 n_threads )
     /**
-    Default constructor. Internal atomic counter is set to n.
+    Default constructor. Internal atomic counter is set to n_threads.
     */
     {
       embed py {{
         super().__init__( n )
+      }}
+      
+      embed java {{
+        super( n_threads );
       }}
     }
 
@@ -87,10 +100,20 @@ embed py {{ : threading.Semaphore }}
     /**
     Infinitely blocking lock on this semaphore until awoken by unlock() (called
     by another thread).
+    Raises ThreadInterruptedException if waiting thread is interrupted.
     */
     {
       embed py {{
         self.acquire( True )
+      }}
+      
+      embed java {{
+        try {
+            acquire()
+        }
+        catch( InterruptedException e) {
+            raise ThreadInterruptedException();
+        }
       }}
     }
 
@@ -103,6 +126,10 @@ embed py {{ : threading.Semaphore }}
     {
       embed py {{
         return self.acquire( False )
+      }}
+      
+      embed java {{
+        return tryAcquire();
       }}
     }
 
@@ -124,6 +151,10 @@ embed py {{ : threading.Semaphore }}
             return self.acquire( True, timeout )
         except:
             raise ThreadTimeoutValueException( timeout )
+      }}
+      
+      embed java {{
+        return tryAcquire( (long)( timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
       }}
     }
     
@@ -157,6 +188,48 @@ embed py {{ : threading.Semaphore }}
         except:
             raise UnlockedException( self )
       }}
+      
+      embed java {{
+        release();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final none unlock()
+    /**
+    Releases once this semaphore.
+    */
+    {
+      embed py {{
+        try:
+            return self.release()
+        except:
+            raise UnlockedException( self )
+      }}
+      
+      embed java {{
+        release();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final none unlock( uint32 n_times )
+    /**
+    Releases n-times this semaphore.
+    */
+    {
+      embed py {{
+        try:
+            while n_times > 0 and self.release():
+                n_times -= 1
+            return n_times == 0
+        except:
+            raise UnlockedException( self )
+      }}
+      
+      embed java {{
+        release( n_times );
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -169,4 +242,4 @@ embed py {{ : threading.Semaphore }}
     }
 }
 
-//===== end of module   Thread.semaphore.ty   =====//
+//===== end of module   Thread.thread_semaphore.ty   =====//
