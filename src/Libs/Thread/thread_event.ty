@@ -25,12 +25,16 @@ SOFTWARE.
 // Module thread_event.ty
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadTimeoutValueException;
+from Thread.thread_exceptions import ThreadTimeoutValueException, ThreadInterruptedException;
 
 //=============================================================================
 // targeted languages specifics
 embed py {{
 import threading
+}}
+
+embed java {{
+import java.util.concurrent.TimeUnit;
 }}
 
 //=============================================================================
@@ -55,6 +59,10 @@ embed py {{ : threading.Event }}
       embed py {{
         super().__init__()
       }}
+      
+      embed java {{
+        _jv_init();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -62,7 +70,13 @@ embed py {{ : threading.Event }}
     /**
     Returns true if this event is currently in set mode, and false otherwise.
     */
-    {
+    {      
+      embed java {{
+        _jv_lock_condition();
+        boolean flag = this._jv_flag;
+        _jv_unlock_condition();
+        return flag;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -72,6 +86,9 @@ embed py {{ : threading.Event }}
     Any thread waiting then on this event doesn't get blocked.
     */
     {
+      embed java {{
+        _jv_set_flag( true );
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -83,6 +100,10 @@ embed py {{ : threading.Event }}
       embed py {{
         super().clear()
       }}
+      
+      embed java {{
+        _jv_set_flag( false );
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -91,15 +112,29 @@ embed py {{ : threading.Event }}
     Blocks the caller thread until this event becomes set.
     */
     {
+      embed java {{
+        _jv_lock_condition();
+        try{
+            while( ! this._jv_flag )
+                this._jv_cond.await();
+        }
+        catch(InterruptedException e){
+            _jv_unlock_condition();
+            raise ThreadInterruptedException();
+        }
+        _jv_unlock_condition();
+      }}
     }
 
     //-------------------------------------------------------------------------
     final const bool wait( const float32 timeout )
     /**
-    Blocks the caller thread until this event becomes set or  until  timeout.
-    Returns true if the event became set before timeout, and false otherwise.
-    Raises ThreadTimeoutValueException if the value of timeout value  is  too  
+    Blocks the caller thread until this event becomes set  or  until  timeout.
+    Returns true if the event became set before timeout,  and false otherwise.
+    Raises ThreadTimeoutValueException if the value of timeout  value  is  too  
     big compared with allowed values on the targeted platform.
+    Raises ThreadInterruptedException if thread gets interrupted while waiting
+    on this event.
     */
     {
       embed py {{
@@ -108,7 +143,56 @@ embed py {{ : threading.Event }}
         except:
             raise ThreadTimeoutValueException( timeout )
       }}
+      
+      embed java {{
+        _jv_lock_condition();
+        try{
+            while( ! this._jv_flag )
+                this._jv_cond.await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
+        }
+        catch(InterruptedException e){
+            _jv_unlock_condition();
+            raise ThreadInterruptedException();
+        }
+        _jv_unlock_condition();
+      }}
     }
+    
+ :protected:
+    //-------------------------------------------------------------------------
+  embed java {{
+  
+    Condition  _jv_cond;
+    boolean    _jv_flag;
+    Lock       _jv_lock;
+    
+    void _jv_init() {
+        this._jv_flag = false;
+        this._jv_lock = new ReentrantLock();
+        this._jv_cond = _lock.newCondition();
+    }
+    
+    void _jv_lock_condition() {
+        this._jv_lock.lock();
+    }
+    
+    void _jv_unlock_condition() {
+        this._jv_lock.unlock();
+    }
+    
+    void _jv_set_flag( boolean flag ) {
+        _jv_lock_condition();
+        try {
+            this._jv_flag = flag;
+            this._jv_cond.signalAll();
+        }
+        finally {
+            _jv_unlock_condition();
+        }
+    }
+    
+  }} // end of embed java
+    
 }
 
 //===== end of module   Thread.thread_event.ty   =====//
