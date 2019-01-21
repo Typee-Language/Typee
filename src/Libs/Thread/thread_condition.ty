@@ -36,6 +36,7 @@ import threading
 
 embed java {{
 import java.util.concurrent.locks;
+import java.util.concurrent.TimeUnit;
 }}
 
 //=============================================================================
@@ -168,7 +169,7 @@ embed py {{ : threading.Condition }}
       
       embed java {{
         try {
-            this._jv_cond.await( (long)(timeout * 1000.0 + 0.5) );
+            return this._jv_cond.await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
         }
         catch (InterruptedException e) {
             raise ThreadInterruptedException();

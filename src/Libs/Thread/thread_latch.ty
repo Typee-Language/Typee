@@ -22,7 +22,7 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module latch.ty
+// Module thread_latch.ty
 
 
 //=============================================================================
@@ -50,7 +50,7 @@ embed java {{ extends CountDownLatch }}
  :public:
 
     //-------------------------------------------------------------------------
-    Latch( const uint32 start_count )
+    ThreadLatch( const uint32 start_count )
     /**
     Default constructor.
     Start_count is the count to be decremented until notification  can  be
@@ -134,4 +134,4 @@ embed java {{ extends CountDownLatch }}
     }
 }
 
-//===== end of module   Thread.latch.ty   =====//
+//===== end of module   Thread.thread_latch.ty   =====//
