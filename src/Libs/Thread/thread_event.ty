@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 }}
 
 //=============================================================================
-class ThreadEvent  embed java {{ extends ??? }}
+class ThreadEvent
 /**
 Typee implementation of the event synchronization concept.
 Waiting on events is blocking (with optional timeout) while
@@ -114,6 +114,7 @@ embed py {{ : threading.Event }}
     /**
     Blocks the caller thread until this event becomes set.
     */
+    embed java {{ throws ThreadInterruptedException }}
     {
       embed java {{
         _jv_lock_condition();
@@ -121,9 +122,9 @@ embed py {{ : threading.Event }}
             while( ! this._jv_flag )
                 this._jv_cond.await();
         }
-        catch(InterruptedException e){
+        catch (InterruptedException e) {
             _jv_unlock_condition();
-            raise ThreadInterruptedException();
+            throw ThreadInterruptedException();
         }
         _jv_unlock_condition();
       }}
@@ -139,6 +140,7 @@ embed py {{ : threading.Event }}
     Raises ThreadInterruptedException if thread gets interrupted while waiting
     on this event.
     */
+    embed java {{ throws ThreadInterruptedException }}
     {
       embed py {{
         try:
@@ -153,9 +155,9 @@ embed py {{ : threading.Event }}
             while( ! this._jv_flag )
                 this._jv_cond.await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
         }
-        catch(InterruptedException e){
+        catch (InterruptedException e) {
             _jv_unlock_condition();
-            raise ThreadInterruptedException();
+            throw ThreadInterruptedException();
         }
         _jv_unlock_condition();
       }}

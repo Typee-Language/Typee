@@ -28,7 +28,7 @@ SOFTWARE.
 fwd class ThreadCondition;
 
 //=============================================================================
-from Thread.lockable          import Lockable;
+from Thread.thread_mutex      import ThreadMutex;
 from Thread.thread_exceptions import ThreadInterruptedException, ThreadTimeoutValueException;
 
 //=============================================================================
@@ -43,7 +43,10 @@ import java.util.concurrent.TimeUnit;
 }}
 
 embed cpp {{
+#include <chrono>
 #include <condition_variable>
+#include <mutex>
+#include <thread>
 }}
 
 //=============================================================================
@@ -54,6 +57,7 @@ wait by a signal.
 */
 
 embed py {{ : threading.Condition }}
+embed cpp {{ : std::condition_variable }}
 
 {
  :public:
@@ -62,7 +66,9 @@ embed py {{ : threading.Condition }}
     ThreadCondition()
     /**
     Default constructor.
+    Caution: C++ implementation may throw exception that are not caught up here.
     */
+    embed cpp {{ : std::condition_variable(), _c_ulock(_c_mutex) }}
     {
       embed py {{
         super().__init__()
@@ -75,17 +81,19 @@ embed py {{ : threading.Condition }}
     }
 
     //-------------------------------------------------------------------------
-    ThreadCondition( Lockable lock )
+    ThreadCondition( ThreadMutex mutex )
     /**
-    Default constructor.
+    Constructor.
+    Caution: C++ implementation may throw exception that are not caught up here.
     */
+    embed cpp {{ : std::condition_variable(), _c_ulock(mutex) }}
     {
       embed py {{
-        super().__init__( lock )
+        super().__init__( mutex )
       }}
       
       embed java {{
-        this._jv_lock = lock;
+        this._jv_lock = mutex;
         this._jv_cond = lock.newCondition();
       }}
     }
@@ -102,7 +110,7 @@ embed py {{ : threading.Condition }}
     //-------------------------------------------------------------------------
     final none signal()
     /**
-    'Awakens' one thread (from maybe many) waiting on this condition variable.
+    Awakens one thread (from maybe many) waiting on this condition variable.
     */
     {
       embed py {{
@@ -111,6 +119,10 @@ embed py {{ : threading.Condition }}
       
       embed java {{
         this._jv_cond.signal();
+      }}
+      
+      embed cpp {{
+        this->notify_one();
       }}
     }
     
@@ -127,28 +139,33 @@ embed py {{ : threading.Condition }}
       embed java {{
         this._jv_cond.signalAll();
       }}
+      
+      embed cpp {{
+        this->notify_all();
+      }}
     }
 
     //-------------------------------------------------------------------------
-    final none wait()
+    final none wait() exclude py
     /**
     Calling thread waits on this condition instance until signalled.
     Raises ThreadInterruptedException if the waiting thread has been 
     interrupted.
     See methods signal() and signal_all().
     */
+    embed java {{ throws ThreadInterruptedException }}
     {
-      embed py {{
-        self.wait()
-      }}
-      
       embed java {{
         try {
             this._jv_cond.await();
         }
         catch (InterruptedException e) {
-            raise ThreadInterruptedException();
+            throw ThreadInterruptedException();
         }
+      }}
+      
+      embed cpp {{
+        this->wait( *this->_c_ulock );
       }}
     }
 
@@ -164,6 +181,7 @@ embed py {{ : threading.Condition }}
     been interrupted.
     Raises AssertException if timeout is negative.
     */
+    embed java {{ throws ThreadInterruptedException }}
     {
         assert timeout >= 0.0;
         
@@ -179,8 +197,17 @@ embed py {{ : threading.Condition }}
             return this._jv_cond.await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
         }
         catch (InterruptedException e) {
-            raise ThreadInterruptedException();
+            throw ThreadInterruptedException();
         }
+        catch (Exception e) {
+            return false;
+        }
+      }}
+      
+      embed cpp {{
+        std::cv_status ret_status = this->wait_for( *this->_c_ulock,
+                                        std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ) );
+        return  ret_status == std::cv_status::no_timeout;
       }}
     }
 
@@ -189,6 +216,11 @@ embed py {{ : threading.Condition }}
   embed java {{
     ReentrantLock _jv_lock;
     Condition     _jv_cond;
+  }}
+  
+  embed cpp {{
+    std::mutex  _c_mutex;
+    std::unique_lock< std::mutex > _c_ulock;
   }}
 }
 
