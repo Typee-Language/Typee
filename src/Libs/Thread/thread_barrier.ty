@@ -24,12 +24,12 @@ SOFTWARE.
 // Built-in library Thread
 // Module thread_barrier.ty
 
-// defined classes:
-fwd class Barrier;
-fwd class Latch;
+// defined class
+fwd class ThreadBarrier;
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadBarrierException, ThreadInterruptedException;
+from Thread.thread_exceptions import ThreadBarrierException,
+                                     ThreadInterruptedException;
 
 //=============================================================================
 // targeted languages specifics
@@ -39,6 +39,11 @@ import threading
 
 embed java {{
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+}}
+
+embed cpp {{
+#include <chrono>
 }}
 
 //=============================================================================
@@ -51,7 +56,7 @@ awakened and may pass this barrier. Any new thread waiting on this
 barrier passes it then. Barriers may be reseted.
 */
 
-embed py {{ : threading.Barrier }}
+embed py   {{ : threading.Barrier }}
 embed java {{ extends CyclicBarrier }}
 
 {
@@ -63,6 +68,15 @@ embed java {{ extends CyclicBarrier }}
     Constructor.
     Creates a barrier to block n_threads threads.
     */
+  embed cpp {{
+      : _c_cond_var(),
+        _c_mutex(),
+        _c_barrier_count( n_threads ),
+        _c_max_count( n_threads ),
+        _c_waiting_threads( 0 ),
+        _c_default_timeout( -1.0 ),
+        _c_is_broken( false )
+  }}
     {
       embed py {{
         super().__init__( n_threads )
@@ -83,6 +97,15 @@ embed java {{ extends CyclicBarrier }}
     Raises ThreadTimeoutValueException if passed timeout is  too  big  for 
     targeted platform.
     */
+  embed cpp {{
+      : _c_cond_var(),
+        _c_mutex(),
+        _c_barrier_count( n_threads ),
+        _c_max_count( n_threads ),
+        _c_waiting_threads( 0 ),
+        _c_default_timeout( timeout ),
+        _c_is_broken( false )
+  }}
     {
       embed py {{
         try:
@@ -95,15 +118,18 @@ embed java {{ extends CyclicBarrier }}
         super( n_threads );
         this._jv_timeout_default = long( timeout * 1000.0 + 0.5 );
       }}
-      
     }
 
     //-------------------------------------------------------------------------
     final none abort() exclude py
     /**
     To be called when a potential deadlock could happen for a waiting thread.
+    Caution: may be not implemented for some platforms.
     */
     {
+      embed cpp {{
+        this->_c_is_broken = true;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -118,6 +144,10 @@ embed java {{ extends CyclicBarrier }}
       
       embed java {{
         return getParties();
+      }}
+      
+      embed cpp {{
+        return this->_c_max_count;
       }}
     }
 
@@ -134,6 +164,10 @@ embed java {{ extends CyclicBarrier }}
       embed java {{
         return getNumberWaiting();
       }}
+      
+      embed cpp {{
+        return this->_c_waiting_threads;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -148,6 +182,10 @@ embed java {{ extends CyclicBarrier }}
       
       embed java {{
         return isBroken();
+      }}
+      
+      embed cpp {{
+        return this->_c_is_broken;
       }}
     }
 
@@ -164,6 +202,11 @@ embed java {{ extends CyclicBarrier }}
         finally:
             raise ThreadTimeoutValueException()
       }}
+      
+      embed cpp {{
+        // TODO
+        this->_c_is_broken = true;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -178,13 +221,29 @@ embed java {{ extends CyclicBarrier }}
     {
       embed java {{
         try {
-            await();
+            return await();
         }
         catch (BrokenBarrierException e) {
             raise ThreadBarrierException();
         }
         catch (InterruptedException e) {
             raise ThreadInterruptedException();
+        }
+      }}
+      
+      embed cpp {{
+        if ( this->_c_default_timeout < 0.0 )
+            return this->wait( this->_c_default_timeout );
+        else
+        {
+            std::unique_lock<std::mutex> my_lock( this->_c_mutex );
+            ++ this->_c_waiting_threads;
+            -- this->_c_barrier_count;
+            this->_c_cond_var.wait( my_lock, []{ return this->_c_barrier_count == 0; } );
+            if( --this->_c_waiting_threads == 0)
+               this->_c_barrier_count = this->_c_max_count;
+            my_lock.unlock();
+            return this->_c_waiting_threads;
         }
       }}
     }
@@ -200,22 +259,68 @@ embed java {{ extends CyclicBarrier }}
     may then process a unique action according to this number.
     Raises ThreadTimeoutValueException if passed timeout is  too 
     big for platform.
-    If time out, the barrier is put in a broken state.
+    Raises ThreadBarrierException if a wait() timed out.
+    Raises ThreadInterruptedException if a thread has  been  int-
+    errupted while waiting on this barrier (Java only).
+    If timeout or interrupted,  the barrier is put  in  a  broken 
+    state.
     */
     {
       embed py {{
         try:
-            super().wait( timeout )
+            return super().wait( timeout )
         except:
-            raise ThreadTimeoutValueException()
+            raise ThreadBarrierException()
       }}
+      
+      embed java {{
+        try {
+            return await( timeout, TimeUnit.MILLISECONDS );
+        }
+        catch (BrokenBarrierException e) {
+            throw ThreadBarrierException();
+        }
+        catch (InterruptedException e) {
+            throw ThreadInterruptedException();
+        }
+      }}
+      
+      embed cpp {{
+        std::unique_lock<std::mutex> my_lock( this->_c_mutex );
+        ++ this->_c_waiting_threads;
+        -- this->_c_barrier_count;
+        if ( this->_c_cond_var.wait_for( my_lock,
+                 std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ),
+                 []{ return this->_c_barrier_count == 0; } ) )
+        {
+            this->abort();
+            throw ThreadBarrierException()
+
+        }
+        else
+        {
+            if( --this->_c_waiting_threads == 0)
+               this->_c_barrier_count = this->_c_max_count;
+            my_lock.unlock();
+            return this->_c_waiting_threads;
+        }
+      }}
+    }
     
     
+ :hidden:
     //-------------------------------------------------------------------------
- :protected:
-   embed java {{
+  embed java {{
     long _jv_timeout_default;
-   }}
+  }}
+   
+  embed cpp {{
+    std::condition_variable _c_cond_var;
+    std::mutex    _c_mutex;
+    unsigned long _c_barrier_count, _c_max_count, _c_waiting_threads;
+    float         _c_default_timeout;
+    boolean       _c_is_broken;
+  }}
 }
 
 //===== end of module   Thread.thread_barrier.ty   =====//

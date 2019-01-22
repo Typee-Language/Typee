@@ -24,6 +24,9 @@ SOFTWARE.
 // Built-in library Thread
 // Module thread_latch.ty
 
+// defined class
+fwd class ThreadLatch;
+
 //=============================================================================
 from Thread.thread_exceptions import ThreadInterruptedException;
 
