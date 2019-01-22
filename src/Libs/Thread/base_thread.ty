@@ -24,6 +24,9 @@ SOFTWARE.
 // Built-in library Thread
 // Module base_thread.ty
 
+// defined class
+fwd class BaseThread;
+
 //=============================================================================
 from Thread.thread_exceptions import all ;
 

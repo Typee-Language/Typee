@@ -22,7 +22,10 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module thread_lockable.ty
+// Module thread_mutex.ty
+
+// defined class
+fwd class ThreadMutex;
 
 //=============================================================================
 from Thread.thread_exceptions import ThreadInterruptedException,
@@ -49,7 +52,7 @@ embed cpp {{
 }}
 
 //=============================================================================
-class ThreadLockable
+class ThreadMutex
 /**
 Typee implementation of the mutex concept. Mutual Exclusion is associated 
 with  objects  for  which access  from threads must be exclusive:  no two
@@ -66,7 +69,7 @@ embed cpp  {{ : std::mutex }}
  :public:
 
     //-------------------------------------------------------------------------
-    ThreadLockable()
+    ThreadMutex()
     /**
     Default constructor.
     */
@@ -97,8 +100,8 @@ embed cpp  {{ : std::mutex }}
     //-------------------------------------------------------------------------
     final none lock() exclude java
     /**
-    Infinitively blocking version to acquire access to the mutually exclusive 
-    access to the object.
+    Infinitively blocking version to acquire access 
+    to the mutually exclusive access to the object.
     */
     {
       embed py {{
@@ -206,4 +209,4 @@ embed cpp  {{ : std::mutex }}
     }
 }
 
-//===== end of module   Thread.thread_lockable.ty   =====//
+//===== end of module   Thread.thread_mutex.ty   =====//

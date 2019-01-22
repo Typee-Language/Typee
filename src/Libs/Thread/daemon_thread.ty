@@ -24,6 +24,9 @@ SOFTWARE.
 // Built-in library Thread
 // Module daemon_thread.ty
 
+// defined class
+fwd class DaemonThread;
+
 //=============================================================================
 from Thread.base_thread import BaseThread;
 
@@ -91,6 +94,21 @@ more being so.
     }
 
     //-------------------------------------------------------------------------
+    const bool is_daemon() exclude java
+    /**
+    Returns true if this thread is daemonic, and false otherwise.
+    */
+    {
+      embed py {{
+        return self.daemon
+      }}
+      
+      embed cpp {{
+        return true;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
     none join()
     /**
     This is a synchronization point for external code.
@@ -102,7 +120,7 @@ more being so.
     {}
 
     //-------------------------------------------------------------------------
-    none set_daemon( const bool is_daemon ) exclude cpp
+    none set_daemon( const bool is_daemon )
     /**
     Sets the daemonic status of this thread.
     */

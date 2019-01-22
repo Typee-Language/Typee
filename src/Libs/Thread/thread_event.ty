@@ -24,6 +24,9 @@ SOFTWARE.
 // Built-in library Thread
 // Module thread_event.ty
 
+// defined class
+fwd class ThreadEvent;
+
 //=============================================================================
 from Thread.thread_exceptions import ThreadTimeoutValueException, ThreadInterruptedException;
 
