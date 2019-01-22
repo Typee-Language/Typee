@@ -35,9 +35,11 @@ import time
 }}
 
 embed cpp {{
-#include <std::thread>
-#include <std::string>
 #include <std::chrono>
+#include <std::list>
+#include <std::memory>
+#include <std::string>
+#include <std::thread>
 }}
 
 //=============================================================================
@@ -67,7 +69,7 @@ embed java {{ extends Thread }}
     languages. The only way to make a thread runnable is by impl-
     ementing the abstract method run().
     */
-    embed cpp {{ : _c_name("unnamed-thread") }}
+    embed cpp {{ : _c_name("unnamed-thread"), _c_thread(NULL) }}
     {
       embed py {{
         super().__init__()
@@ -84,7 +86,7 @@ embed java {{ extends Thread }}
     /**
     Constructor with defined name for this thread.
     */
-    embed cpp {{ : _c_name(name) }}
+    embed cpp {{ : _c_name(name), _c_thread(NULL) }}
     {
       embed py {{
         super().__init__( name=name )
@@ -106,7 +108,11 @@ embed java {{ extends Thread }}
     */
     {
       embed cpp {{
-        delete this->_thread;
+        if (this->_c_thread != NULL)
+        {
+            this->_c_threads_list.remove( this );
+            delete this->_c_thread;
+        }
       }}
     }
   
@@ -114,38 +120,36 @@ embed java {{ extends Thread }}
     static final BaseThread get_current()
     /**
     Returns a reference to the currently active thread.
+    Returns none if not available on targeted platform.
     */
     {
       embed py {{
         return threading.current_thread()
-      }}
+      }} exit
       
       embed java {{
         return this.currentThread();
-      }}
+      }} exit
       
-      embed cpp {{
-        return this->_thread; // is this correct? Certainely not most of the time...
-      }}
+      return none;
     }
 
     //-------------------------------------------------------------------------
     static final const uint32 get_active_ID()
     /**
     Returns the identifier of the currently active thread.
+    Returns 0xffff_ffff if not available on targeted platform.
     */
     {
       embed py {{
         return threading.get_ident()
-      }}
+      }} exit
       
       embed java {{
         return this.currentThread().getId();
-      }}
+      }} exit
       
-      embed cpp {{
-        return this->_thread.get_id(); // is this correct? Certainely not most of the time...
-      }}
+        return 0xffff_ffff;
     }
 
     //-------------------------------------------------------------------------
@@ -163,7 +167,7 @@ embed java {{ extends Thread }}
       }}
       
       embed cpp {{
-        return this->_thread.get_id();
+        return this->_c_thread->get_id();
       }}
     }
 
@@ -176,13 +180,13 @@ embed java {{ extends Thread }}
     {
       embed py {{
         return threading.main_thread()
-      }}
+      }} exit
       
       embed java {{
         return this->_main_thread;
-      }}
+      }} exit
       
-      return none;
+        return none;
     }
 
     //-------------------------------------------------------------------------
@@ -195,9 +199,9 @@ embed java {{ extends Thread }}
     {
       embed py {{
         return threading.stack_size()
-      }}
+      }} exit
       
-      return 0;
+        return 0;
     }
 
     //-------------------------------------------------------------------------
@@ -215,7 +219,9 @@ embed java {{ extends Thread }}
         return this.activeCount();
       }}
     
-        return 0;
+      embed cpp {{
+        return std::distance( this->_c_threads_list.begin, this->_c_threads_list.end );
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -233,7 +239,9 @@ embed java {{ extends Thread }}
         return this.enumerate();
       }}
       
-      return none;
+      embed cpp {{
+        return this->_c_threads_list;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -251,10 +259,13 @@ embed java {{ extends Thread }}
     /**
     Returns true if this thread is the active one.
     Returns false otherwise.
-    Caution:
-    C++ implementation may lead to some issues since it always returns true.
+    Caution: C++ implementation may lead to some issues.
     */
     {
+      embed cpp {{
+        return this->_c_thread != NULL;
+      }} exit
+      
         return me.get_ID() == me.get_active_ID();
     }
 
@@ -266,6 +277,10 @@ embed java {{ extends Thread }}
     Returns true if this information is not available (e.g. C++).
     */
     {
+      embed cpp {{
+        return this->_c_thread != NULL;
+      }} exit
+      
       return true;
     }
 
@@ -300,7 +315,7 @@ embed java {{ extends Thread }}
       
       embed cpp {{
         try {
-            this->_thread.join();
+            this->_c_thread->join();
         }
         catch (std::system_error se) {
             if ( se.code() == std::resource_deadlock_would_occur )
@@ -434,15 +449,9 @@ embed java {{ extends Thread }}
             return True
         except:
             raise ThreadStackSizeException( size )
-      }}
+      }} exit
       
-      embed java {{
         return false;
-      }}
-      
-      embed cpp {{
-        return  false;
-      }}
     }
 
     //-------------------------------------------------------------------------
@@ -483,7 +492,8 @@ embed java {{ extends Thread }}
       
       embed cpp {{
         try {
-            this->_thread = new std::thread( this->run, this );
+            this->_c_thread = new std::thread( this->run, this );
+            this->_c_threads_list.insert( this );
         } catch ( ... ) {
             raise ThreadException( "cannot create thread" );
         }
@@ -517,8 +527,9 @@ embed java {{ extends Thread }}
   }}
   
   embed cpp {{
-    std::string  _c_name;
-    std::thread  _thread;
+    std::string    _c_name;
+    std::thread *  _c_thread;
+    static std::atomic< std::forward_list<BaseThread*> >  _c_threads_list;
   }}
 }
 
