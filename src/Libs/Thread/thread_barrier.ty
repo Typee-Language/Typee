@@ -218,6 +218,7 @@ embed java {{ extends CyclicBarrier }}
     Raises ThreadBarrierException if this barrier is currently broken.
     Raises ThreadInterruptedException if the waiting thread has been interrupted.
     */
+    embed java {{ throws ThreadBarrierException, ThreadInterruptedException }}
     {
       embed java {{
         try {
@@ -265,6 +266,7 @@ embed java {{ extends CyclicBarrier }}
     If timeout or interrupted,  the barrier is put  in  a  broken 
     state.
     */
+    embed java {{ throws ThreadBarrierException, ThreadInterruptedException }}
     {
       embed py {{
         try:

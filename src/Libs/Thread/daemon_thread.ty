@@ -154,7 +154,7 @@ more being so.
             this->_c_thread = new std::thread( this->run, this );
             this->_c_thread->detach();
         } catch ( ... ) {
-            raise ThreadException( "cannot create thread" );
+            throw ThreadException( "cannot create thread" );
         }
       }}
     }

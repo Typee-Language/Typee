@@ -422,7 +422,7 @@ embed java {{ extends Thread }}
       }}
       
       embed java {{
-        setName( _name );
+        this.setName( _name );
       }}
       
       embed cpp {{
@@ -498,7 +498,7 @@ embed java {{ extends Thread }}
             this->_c_thread = new std::thread( this->run, this );
             this->_c_threads_list.insert( this );
         } catch ( ... ) {
-            raise ThreadException( "cannot create thread" );
+            throw ThreadException( "cannot create thread" );
         }
       }}
     }
