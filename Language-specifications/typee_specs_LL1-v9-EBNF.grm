@@ -408,9 +408,10 @@ SOFTWARE.
 <embed statement>           ::= 'embed' <language>
                                     (<dotted name> <simple statement end>  |
                                      <embedded language code>)
+                                    [ 'exit' ]
 
 <embedded language code>    ::= '{{' <embedded language code'>
-<embeded language code'>    ::= <any embedded code char> <embeded language code'>  |
+<embedded language code'>   ::= <any embedded code char> <embeded language code'>  |
                                 '}' <embedded language code">
 <embedded language code">   ::= <any embedded code char> <embeded language code'>  |
                                 '}' 
