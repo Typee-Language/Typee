@@ -42,6 +42,10 @@ import java.util.concurrent.locks;
 import java.util.concurrent.TimeUnit;
 }}
 
+embed cpp {{
+#include <condition_variable>
+}}
+
 //=============================================================================
 class ThreadCondition
 /**
