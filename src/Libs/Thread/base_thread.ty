@@ -458,24 +458,24 @@ embed java {{ extends Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none sleep( const float32  timeout )
+    static final none sleep( const float32  duration )
     /**
-    Puts this thread to sleep for the specified duration (unit: seconds).
+    Puts current thread to sleep for the specified duration (unit: seconds).
     Raises AssertException if duration is negative.
     */
     {
-        assert timeout >= 0.0;
+        assert duration >= 0.0;
         
       embed py {{
-        time.sleep( timeout )
+        time.sleep( duration )
       }}
       
       embed java {{
-        super.sleep( (long)(timeout * 1000.0 + 0.5) );
+        Thread.sleep( (long)(duration * 1000.0 + 0.5) );
       }}
       
       embed cpp {{
-        std::this_thread::sleep_for( std::chrono::milliseconds( (long)(timeout + 1000.0 + 0.5) ) );
+        std::this_thread::sleep_for( std::chrono::milliseconds( (long)(duration + 1000.0 + 0.5) ) );
       }}
     }
 

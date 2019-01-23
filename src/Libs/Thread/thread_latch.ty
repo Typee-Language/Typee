@@ -72,9 +72,7 @@ embed java {{ extends CountDownLatch }}
       }} exit
         
         ThreadCondition();
-        
         me._count_mutex = ThreadMutex();
-        
         me._count_mutex.lock();
         me._count = start_count;
         me._count_mutex.unlock();
@@ -168,8 +166,10 @@ embed java {{ extends CountDownLatch }}
 
  :hidden:
     //-------------------------------------------------------------------------
+  exclude java {{
     uint32      _count;
     ThreadMutex _count_mutex;
+  }}
 }
 
 //===== end of module   Thread.thread_latch.ty   =====//

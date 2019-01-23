@@ -32,16 +32,17 @@ fwd class ThreadForbiddenOpException;
 fwd class ThreadInterruptedException;
 fwd class ThreadJoinException;
 fwd class ThreadLockedException;
+fwd class ThreadSemaphoreValueException;
 fwd class ThreadStackSizeException;
 fwd class ThreadStartException;
 fwd class ThreadTimeoutValueException;
 fwd class UnlockedException;
 
 //=============================================================================
-from Thread.base_thread import BaseThread;
-from Thread.lockable    import Lockable;
-from Thread.semaphore   import Semaphore;
-from Thread.timer       import Timer;
+from Thread.base_thread      import BaseThread;
+from Thread.thread_mutex     import ThreadMutex;
+from Thread.thread_semaphore import ThreadSemaphore;
+from Thread.thread_timer     import ThreadTimer;
 
 //=============================================================================
 //-----------------------------------------------------------------------------
@@ -96,6 +97,12 @@ class ThreadLockedException : Exception {
     }
 }
 //-----------------------------------------------------------------------------
+class ThreadSemaphoreValueException : Exception {
+    ThreadSemaphoreValueException( ThreadSempahore sem ){
+        Exception( "Too many releases on semaphore {}".format(sem) );
+    }
+}
+//-----------------------------------------------------------------------------
 class ThreadStackSizeException : Exception {
     ThreadStackSizeException( const uint32 erroneous_size ){
         Exception( "Erroneous stack size for a Thread: {}".format(erroneous_size) );
@@ -115,17 +122,17 @@ class ThreadTimeoutValueException : Exception {
 }
 //-----------------------------------------------------------------------------
 class TimerStartException : Exception {
-    TimerStartException( Timer timer ){
+    TimerStartException( ThreadTimer timer ){
         Exception( "Trying to start again running timer {}".format(timer) );
     }
 }
 //-----------------------------------------------------------------------------
 class UnlockedException : Exception {
-    UnlockedException( Lockable lock ){
-        Exception( "Trying to release unlocked object {}".format( lock ) );
+    UnlockedException( ThreadMutex mutex ){
+        Exception( "Trying to release unlocked mutex {}".format(mutex) );
     }
-    UnlockedException( Semaphore sem ){
-        Exception( "Trying to release unlocked semaphore {}".format( sem ) );
+    UnlockedException( ThreadSemaphore sem ){
+        Exception( "Trying to release unlocked semaphore {}".format(sem) );
     }
 }
 
