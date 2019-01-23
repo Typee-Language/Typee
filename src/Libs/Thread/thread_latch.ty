@@ -28,28 +28,30 @@ SOFTWARE.
 fwd class ThreadLatch;
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadInterruptedException;
+from Thread.thread_condition     import ThreadCondition;
+from Thread.thread_guarded_block import ThreadGuardedBlock;
+from Thread.thread_exceptions    import ThreadInterruptedException;
+from Thread.thread_mutex         import ThreadMutex;
 
 //=============================================================================
 // targeted languages specifics
-embed py {{
-import threading
-}}
-
 embed java {{
 import java.util.concurrent.CountDownLatch;
 }}
 
 //=============================================================================
-class ThreadLatch
+class ThreadLatch  exclude java {{ : ThreadCondition }}
 /**
-Threads may wait on Latch instances and can be signaled the end of the 
+Threads may wait on Latch instances and can be signaled the end  of  the 
 wait by a notification.
-This may be sued for applicative thread to wait for all initialization
+Latches are associated with a starting count which can be decremented by
+other threads.  When this count reaches value zero,  all threads waiting
+on this latch are immediately awaken
+This may be used for applicative threads to wait for all i nitialization
 threads to complete their initializations.
+This is NOT resettable.  Once a latch has sent notifications,  it cannot
+be used again and can be deleted instead.
 */
-
-embed py   {{ : threading.Condition }}
 embed java {{ extends CountDownLatch }}
 {
  :public:
@@ -60,19 +62,22 @@ embed java {{ extends CountDownLatch }}
     Default constructor.
     Start_count is the count to be decremented until notification  can  be
     sent to every blocked threads that are waiting for this latch to open.
-    Raises AssertException if start_count iz 0.
+    Raises AssertException if start_count is 0.
     */
     {
         assert start_count != 0;
-        
-      embed py {{
-        self._count = start_count
-        super().__init__()
-      }}
       
       embed java {{
         super( start_count );
-      }}
+      }} exit
+        
+        ThreadCondition();
+        
+        me._count_mutex = ThreadMutex();
+        
+        me._count_mutex.lock();
+        me._count = start_count;
+        me._count_mutex.unlock();
     }
     
     //-------------------------------------------------------------------------
@@ -82,16 +87,15 @@ embed java {{ extends CountDownLatch }}
     Notifies all waiting threads when internal count is 0.
     */
     {
-      embed py {{
-        if self._count > 0:
-            self._count -= 1
-        if self._count == 0:
-            self.notify_all()
-      }}
-      
       embed java {{
-        countDown();
-      }}
+        this.countDown();
+      }} exit
+      
+        with ThreadGuardedBlock() {
+            if (me._count > 0)
+                if (--me._count == 0)
+                    me.signal_all();
+        }
     }
     
     //-------------------------------------------------------------------------
@@ -100,17 +104,18 @@ embed java {{ extends CountDownLatch }}
     Returns the actual internal count.
     */
     {
-      embed py {{
-        return self._count
-      }}
-      
       embed java {{
         return getCount();
-      }}
+      }} exit
+      
+        me._count_mutex.lock();
+        const uint32 ret_count = me._count;
+        me._count_mutex.unlock();
+        return ret_count;
     }
 
     //-------------------------------------------------------------------------
-    final none wait() exclude py
+    final none wait()
     /**
     Calling thread waits on this latch until signalled.
     Raises ThreadInterruptedException if waiting thread has been interrupted.
@@ -123,7 +128,9 @@ embed java {{ extends CountDownLatch }}
         catch (InterruptException e) {
             raise ThreadInterruptedException();
         }
-      }}
+      }} exit
+      
+      ThreadCondition.wait();
     }
 
     //-------------------------------------------------------------------------
@@ -145,7 +152,7 @@ embed java {{ extends CountDownLatch }}
             super().wait( timeout )
         except:
             raise ThreadTimeoutValueException( timeout )
-      }}
+      }} exit
       
       embed java {{
         try {
@@ -154,8 +161,15 @@ embed java {{ extends CountDownLatch }}
         catch (InterruptedException e) {
             raise ThreadInterruptedException();
         }
-      }}
+      }} exit
+      
+      ThreadCondition.wait( timeout );
     }
+
+ :hidden:
+    //-------------------------------------------------------------------------
+    uint32      _count;
+    ThreadMutex _count_mutex;
 }
 
 //===== end of module   Thread.thread_latch.ty   =====//
