@@ -28,7 +28,12 @@ SOFTWARE.
 fwd class ThreadSemaphore;
 
 //=============================================================================
-from Thread.thread_exceptions import UnlockedException, ThreadInterruptedException;
+from Thread.thread_condition     import ThreadCondition;
+from Thread.thread_exceptions    import ThreadInterruptedException,
+                                        ThreadSemaphoreValueException,
+                                        UnlockedException;
+from Thread.thread_guarded_block import ThreadGuardedBlock;
+from Thread.thread_mutex         import ThreadMutex;
 
 //=============================================================================
 // targeted languages specifics
@@ -41,7 +46,7 @@ import java.util.concurrent.Semaphore;
 }}
 
 //=============================================================================
-class ThreadSemaphore
+class ThreadSemaphore exclude py, java {{ : ThreadCondition }}
 /**
 Typee implementation of the semaphore concept.
 Notice: methods P() and V(), initially proposed by the inventor of semaphores
@@ -49,7 +54,7 @@ Dutch scientist Edsger W. Dijkstra,  are available as wrappers for this class
 methods lock() and unlock(). 
 */
 
-embed py {{ : threading.Semaphore }}
+embed py {{ : threading.BoundedSemaphore }}
 embed java {{ extends Semaphore }}
 
 {
@@ -63,11 +68,18 @@ embed java {{ extends Semaphore }}
     {
       embed py {{
         super().__init__( 1 )
-      }}
+      }} exit
       
       embed java {{
         super( 1 );
-      }}
+      }} exit
+      
+        ThreadCondition();
+        me._count_mutex = ThreadMutex();
+        me._count_mutex.lock();
+        me._count = 1;
+        me._count_mutex.unlock();
+        me._max_count = 1;
     }
 
     //-------------------------------------------------------------------------
@@ -78,11 +90,19 @@ embed java {{ extends Semaphore }}
     {
       embed py {{
         super().__init__( n )
-      }}
+      }} exit
       
       embed java {{
         super( n_threads );
-      }}
+        this._max_count = n_threads;
+      }} exit
+      
+        ThreadCondition();
+        me._count_mutex = ThreadMutex();
+        me._count_mutex.lock();
+        me._count = n_threads;
+        me._count_mutex.unlock();
+        me._max_count = n_threads;
     }
 
     //-------------------------------------------------------------------------
@@ -95,11 +115,13 @@ embed java {{ extends Semaphore }}
     {
       embed py {{
         super().__del__()
-      }}
+      }} exit
+      
+      delete me._count_mutex;
     }
 
     //-------------------------------------------------------------------------
-    final none lock()
+    final none acquire()
     /**
     Infinitely blocking lock on this semaphore until awoken by unlock() (called
     by another thread).
@@ -107,37 +129,53 @@ embed java {{ extends Semaphore }}
     */
     {
       embed py {{
-        self.acquire( True )
-      }}
+        super().acquire( True )
+      }} exit
       
       embed java {{
         try {
-            acquire()
+            super.acquire()
         }
-        catch( InterruptedException e) {
+        catch (InterruptedException e) {
             raise ThreadInterruptedException();
         }
-      }}
+      }} exit
+      
+        with ThreadGuardedBlock() {
+            if (me._count > 0) {
+                --me._count;
+                return ;
+            }       
+        }
+        me.wait();
     }
 
     //-------------------------------------------------------------------------
-    final const bool lock()
+    final const bool acquire()
     /**
     Non blocking lock on this semaphore.
     Returns true if semaphore passed and false otherwise. 
     */
     {
       embed py {{
-        return self.acquire( False )
-      }}
+        return super().acquire( False )
+      }} exit
       
       embed java {{
         return tryAcquire();
-      }}
+      }} exit
+     
+        with ThreadGuardedBlock() {
+            if (me._count > 0) {
+                --me._count;
+                return true ;
+            else
+                return false ;
+        }
     }
 
     //-------------------------------------------------------------------------
-    final const bool lock( const float32 timeout )
+    final const bool acquire( const float32 timeout )
     /**
     Timed-out blocking version on this semaphore.
     Returns true when semaphore has passed and false if not after the 
@@ -148,17 +186,25 @@ embed java {{ extends Semaphore }}
     */
     {
         assert timeout >= 0.0;
-        
+
       embed py {{
         try:
-            return self.acquire( True, timeout )
+            return super().acquire( True, timeout )
         except:
             raise ThreadTimeoutValueException( timeout )
-      }}
+      }} exit
       
       embed java {{
         return tryAcquire( (long)( timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
-      }}
+      }} exit
+      
+        with ThreadGuardedBlock() {
+            if (me._count > 0) {
+                --me._count;
+                return true ;
+            }       
+        }
+        return me.wait( timeout );
     }
     
     //-------------------------------------------------------------------------
@@ -167,7 +213,7 @@ embed java {{ extends Semaphore }}
     Edsger W. Dijkstra form of lock.
     */
     {
-        me.lock();
+        me.acquire();
     }
 
     //-------------------------------------------------------------------------
@@ -176,63 +222,54 @@ embed java {{ extends Semaphore }}
     Edsger W. Dijkstra form of timed-out lock.
     */
     {
-        me.lock( timeout );
+        me.acquire( timeout );
     }
 
     //-------------------------------------------------------------------------
-    final none unlock()
+    final none release() exclude java
     /**
     Releases this semaphore.
+    Raises ThreadSemaphoreValueException when number  of  releases  exceeed
+    the starting value associated with this semaphore.
+    Caution: Java semaphores are unbounded. Checking on release() number of
+    calls is not done and toom uch releasings does not raise any exception.
     */
     {
       embed py {{
         try:
-            return self.release()
-        except:
+            super().release()
+        except ValueError:
+            raise ThreadSemaphoreValueException( self )
+        except Exception:
             raise UnlockedException( self )
-      }}
-      
-      embed java {{
-        release();
-      }}
+      }} exit
+
+        with ThreadGuardedBlock() {
+            if ( me._count == 0 )
+                me.signal();
+            if ( me._count == me._max_count )
+                raise ThreadSemaphoreValueException( me );
+            ++ me._count ;
+        }
     }
 
     //-------------------------------------------------------------------------
-    final none unlock()
-    /**
-    Releases once this semaphore.
-    */
-    {
-      embed py {{
-        try:
-            return self.release()
-        except:
-            raise UnlockedException( self )
-      }}
-      
-      embed java {{
-        release();
-      }}
-    }
-
-    //-------------------------------------------------------------------------
-    final none unlock( uint32 n_times )
+    final none release( uint32 n_times ) exclude java
     /**
     Releases n-times this semaphore.
+    Raises ThreadSemaphoreValueException when number  of  releases  exceeed
+    the starting value associated with this semaphore.
+    Caution: Java semaphores are unbounded. Checking on release() number of
+    calls is not done and toom uch releasings does not raise any exception.
     */
     {
-      embed py {{
-        try:
-            while n_times > 0 and self.release():
-                n_times -= 1
-            return n_times == 0
-        except:
-            raise UnlockedException( self )
-      }}
-      
-      embed java {{
-        release( n_times );
-      }}
+        try {
+            while ( n_times-- > 0 )
+                me.release();
+        }
+        except (Exception as e) {
+            raise e;
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -241,8 +278,15 @@ embed java {{ extends Semaphore }}
     Edsger W. Dijkstra form of unlock.
     */
     {
-        me.unlock();
+        me.release();
     }
+
+ :hidden:
+    //-------------------------------------------------------------------------
+  exclude py {{
+    uint32      _count, _max_count;
+    ThreadMutex _count_mutex;
+  }}
 }
 
 //===== end of module   Thread.thread_semaphore.ty   =====//
