@@ -28,7 +28,8 @@ SOFTWARE.
 fwd class ThreadEvent;
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadTimeoutValueException, ThreadInterruptedException;
+from Thread.thread_exceptions import ThreadTimeoutValueException,
+                                     ThreadInterruptedException;
 
 //=============================================================================
 // targeted languages specifics
@@ -38,6 +39,10 @@ import threading
 
 embed java {{
 import java.util.concurrent.TimeUnit;
+}}
+
+exclude py, java {{
+from Thread.thread_condition import ThreadCondition;
 }}
 
 //=============================================================================
@@ -167,9 +172,9 @@ embed py {{ : threading.Event }}
     //-------------------------------------------------------------------------
   embed java {{
   
-    Condition  _jv_cond;
-    boolean    _jv_flag;
-    Lock       _jv_lock;
+    Condition     _jv_cond;
+    boolean       _jv_flag;
+    ReentrantLock _jv_lock;
     
     void _jv_init() {
         this._jv_flag = false;
@@ -195,6 +200,10 @@ embed py {{ : threading.Event }}
             _jv_unlock_condition();
         }
     }
+  
+  embed cpp {{
+    ThreadCondition  _condition;
+  }}
     
   }} // end of embed java
     
