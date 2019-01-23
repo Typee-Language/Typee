@@ -165,7 +165,7 @@ embed cpp {{ : std::condition_variable }}
       }}
       
       embed cpp {{
-        this->wait( *this->_c_ulock );
+        this->wait( *(this->_c_ulock) );
       }}
     }
 
@@ -205,8 +205,9 @@ embed cpp {{ : std::condition_variable }}
       }}
       
       embed cpp {{
-        std::cv_status ret_status = this->wait_for( *this->_c_ulock,
-                                        std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ) );
+        std::cv_status ret_status =
+            this->wait_for( *(this->_c_ulock),
+                std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ) );
         return  ret_status == std::cv_status::no_timeout;
       }}
     }
