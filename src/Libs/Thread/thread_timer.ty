@@ -173,9 +173,10 @@ embed java {{ extends TimerTask }}
       }} exit
       
       embed cpp {{
+        const long k_milliseconds = (long)(period * 1000.0 + 0.5);
         while ( me._nb == 0  or  me._count < me._nb ) {
-            std::this_thread::sleep_for( std::chrono::milliseconds((long)(period * 1000.0 + 0.5)) );
-            me._run();  // <-- to be implemented in inheriting classes!
+            std::this_thread::sleep_for( std::chrono::milliseconds(k_milliseconds) );
+            me._run();  // (remember: '_run()' must be implemented in inheriting classes!)
             ++ me._count;
         }
       }}
