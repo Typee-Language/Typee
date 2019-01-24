@@ -22,10 +22,18 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module lockable.ty
+// Module thread_mutex.ty
+
+// defined class
+fwd class ThreadMutex;
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadInterruptedException, UnlockedException;
+from Thread.thread_exceptions import ThreadInterruptedException,
+                                     ThreadDeadlockException,
+                                     ThreadForbiddenOpException,
+                                     ThreadLockedException,
+                                     UnlockedException;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -38,8 +46,14 @@ import java.util.concurrent.locks;
 import java.util.concurrent.TimeUnit;
 }}
 
+embed cpp {{
+#include <mutex>
+#include <chrono>
+#include <thread>
+}}
+
 //=============================================================================
-class Lockable
+class ThreadMutex
 /**
 Typee implementation of the mutex concept. Mutual Exclusion is associated 
 with  objects  for  which access  from threads must be exclusive:  no two
@@ -49,16 +63,18 @@ an object. Classes which inherit form Lockable get this functionnality.
 Notice: not applicable to statement 'with'.
 */
 
-embed py {{ : threading.Lock }}
+embed py   {{ : threading.Lock }}
 embed java {{ extends ReentrantLock }}
+embed cpp  {{ : std::mutex }}
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Lockable()
+    ThreadMutex()
     /**
     Default constructor.
     */
+    embed cpp {{ : std::mutex() }}
     {
       embed py {{
         super().__init__()
@@ -85,13 +101,34 @@ embed java {{ extends ReentrantLock }}
     //-------------------------------------------------------------------------
     final none lock() exclude java
     /**
-    Infinitively blocking version to acquire access to the mutually exclusive 
-    access to the object.
+    Infinitively blocking version to acquire access 
+    to the mutually exclusive access to the object.
     */
     {
       embed py {{
         self.acquire( True )
       }}
+      
+      embed cpp {{
+        try {
+            std::mutex::lock();
+        }
+        catch ( const std::system_error &e )
+        {
+            switch ( e.code() )
+            {
+                case std::resource_deadlock_would_occur:
+                    throw ThreadDeadlockException( e.what() );
+                    break;
+                case std::operation_not_permitted:
+                    throw ThreadForbiddenOpException( e.what() );
+                    break;
+                case std::device_or_resource_busy:
+                    throw ThreadLockedException( e.what() );
+                    break;
+            }
+        }
+      }} // end of embed cpp
     }
 
     //-------------------------------------------------------------------------
@@ -109,6 +146,10 @@ embed java {{ extends ReentrantLock }}
       embed java {{
         return tryLock();
       }}
+      
+      embed cpp {{
+        return std::mutex::try_lock();
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -122,6 +163,7 @@ embed java {{ extends ReentrantLock }}
     timeout is too big.
     Raises ThreadInterruptedException if waiting thread has been interrupted.
     Raises AssertException if timeout is negative.
+    Caution: behavior may differ from different targeted platforms.
     */
     {
         assert timeout >= 0.0;
@@ -135,16 +177,21 @@ embed java {{ extends ReentrantLock }}
       
       embed java {{
         try {
-            tryLock( (long)(timeout * 1000.0 + 0.5, TimeUnit.MILLISECONDS);
+            tryLock( utils.set_to_ms(timeout), TimeUnit.MILLISECONDS);
         }
         catch (InterruptedException e) {
             raise ThreadInterruptedException()
         }
       }}
+      
+      embed cpp {{
+        std::this_thread::sleep_for( std::chrono::milliseconds( utils.sec_to_ms(timeout) ) );
+        return std::mutex::try_lock();
+      }}
     }
     
     //-------------------------------------------------------------------------
-    final none unlock() exclude java
+    final none unlock() exclude java, cpp
     /**
     Releases this object for it to be acquirable again.
     Raises UnlockedException when unlocking  an  object 
@@ -163,4 +210,4 @@ embed java {{ extends ReentrantLock }}
     }
 }
 
-//===== end of module   Thread.lockable.ty   =====//
+//===== end of module   Thread.thread_mutex.ty   =====//
