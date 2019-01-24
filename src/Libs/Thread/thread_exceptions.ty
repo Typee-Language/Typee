@@ -26,24 +26,53 @@ SOFTWARE.
 
 // defined exceptions:
 fwd class ThreadBarrierException;
-fwd clasw ThreadInterruptedException;
+fwd class ThreadDeadlockException;
+fwd class ThreadException;
+fwd class ThreadForbiddenOpException;
+fwd class ThreadInterruptedException;
 fwd class ThreadJoinException;
+fwd class ThreadLockedException;
+fwd class ThreadSemaphoreValueException;
 fwd class ThreadStackSizeException;
 fwd class ThreadStartException;
 fwd class ThreadTimeoutValueException;
 fwd class UnlockedException;
 
 //=============================================================================
-from Thread.base_thread import BaseThread;
-from Thread.lockable    import Lockable;
-from Thread.semaphore   import Semaphore;
-from Thread.timer       import Timer;
+from Thread.base_thread      import BaseThread;
+from Thread.thread_mutex     import ThreadMutex;
+from Thread.thread_semaphore import ThreadSemaphore;
+from Thread.thread_timer     import ThreadTimer;
 
 //=============================================================================
 //-----------------------------------------------------------------------------
 class ThreadBarrierException : Exception {
     ThreadBarrierException(){
         Exception( "Broken barrier exception." );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadDeadlockException : Exception {
+    ThreadDeadlockException(){
+        Exception( "A deadlock was detected (trying to lock twice a same thread on a same Lock?)" );
+    }
+    ThreadDeadlockException( str msg ){
+        Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadException : Exception {
+    ThreadException( str msg ){
+        Exception( "Thread exception: {}".format(msg) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadForbiddenOpException : Exception {
+    ThreadForbiddenOpException( BaseThread thread, const str op_name ){
+        Exception( "{} is not an allowed operation for thread {}".format(op_name, thread.name) );
+    }
+    ThreadForbiddenOpException( str msg ){
+        Exception( msg );
     }
 }
 //-----------------------------------------------------------------------------
@@ -56,6 +85,21 @@ class ThreadInterruptedException : Exception {
 class ThreadJoinException : Exception {
     ThreadJoinException( BaseThread thread ){
         Exception( "Thread {} cannot join itself - deadlocks avoidance".format(thread.name) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadLockedException : Exception {
+    ThreadLockedException( BaseThread thread ){
+        Exception( "Thread {} tries to lock an already locked resource".format(thread.name) );
+    }
+    ThreadLockedException( str msg ){
+        Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadSemaphoreValueException : Exception {
+    ThreadSemaphoreValueException( ThreadSempahore sem ){
+        Exception( "Too many releases on semaphore {}".format(sem) );
     }
 }
 //-----------------------------------------------------------------------------
@@ -78,17 +122,17 @@ class ThreadTimeoutValueException : Exception {
 }
 //-----------------------------------------------------------------------------
 class TimerStartException : Exception {
-    TimerStartException( Timer timer ){
+    TimerStartException( ThreadTimer timer ){
         Exception( "Trying to start again running timer {}".format(timer) );
     }
 }
 //-----------------------------------------------------------------------------
 class UnlockedException : Exception {
-    UnlockedException( Lockable lock ){
-        Exception( "Trying to release unlocked object {}".format( lock ) );
+    UnlockedException( ThreadMutex mutex ){
+        Exception( "Trying to release unlocked mutex {}".format(mutex) );
     }
-    UnlockedException( Semaphore sem ){
-        Exception( "Trying to release unlocked semaphore {}".format( sem ) );
+    UnlockedException( ThreadSemaphore sem ){
+        Exception( "Trying to release unlocked semaphore {}".format(sem) );
     }
 }
 

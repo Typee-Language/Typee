@@ -24,6 +24,9 @@ SOFTWARE.
 // Built-in library Thread
 // Module daemon_thread.ty
 
+// defined class
+fwd class DaemonThread;
+
 //=============================================================================
 from Thread.base_thread import BaseThread;
 
@@ -51,6 +54,7 @@ more being so.
     /**
     Default constructor.
     */
+    embed cpp {{ : BaseThread() }}
     {
       embed py {{
         threading.Thread.__init__( daemon=True )
@@ -66,6 +70,7 @@ more being so.
     /**
     Constructor with defined name for this thread.
     */
+    embed cpp {{ : BaseThread(name) }}
     {
       embed py {{
         threading.Thread.__init__( name=name, daemon=True )
@@ -89,6 +94,32 @@ more being so.
     }
 
     //-------------------------------------------------------------------------
+    const bool is_daemon() exclude java
+    /**
+    Returns true if this thread is daemonic, and false otherwise.
+    */
+    {
+      embed py {{
+        return self.daemon
+      }}
+      
+      embed cpp {{
+        return true;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none join()
+    /**
+    This is a synchronization point for external code.
+    Daemonic threads are NOT joinable: they run for ever.
+    To avoid any deadlock, and while to 'join()' on a deamonic thread is
+    not  available  with some platforms,  we nevertheless allow calls to
+    'join()' inTypee:  joining on daemonic threads returns immediately.
+    */
+    {}
+
+    //-------------------------------------------------------------------------
     none set_daemon( const bool is_daemon )
     /**
     Sets the daemonic status of this thread.
@@ -100,6 +131,31 @@ more being so.
       
       embed java {{
         setDaemon( is_daemon );
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none start()
+    /**
+    Starts this thread in a new thread context and runs its method run().
+    Raises ThreadException if thread cannot be created or run.
+    */
+    {
+      embed py {{
+        super().start()
+      }}
+      
+      embed java {{
+        super.start();
+      }}
+      
+      embed cpp {{
+        try {
+            this->_c_thread = new std::thread( this->run, this );
+            this->_c_thread->detach();
+        } catch ( ... ) {
+            throw ThreadException( "cannot create thread" );
+        }
       }}
     }
 }
