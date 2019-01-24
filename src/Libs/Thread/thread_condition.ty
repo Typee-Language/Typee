@@ -30,6 +30,7 @@ fwd class ThreadCondition;
 //=============================================================================
 from Thread.thread_mutex      import ThreadMutex;
 from Thread.thread_exceptions import ThreadInterruptedException, ThreadTimeoutValueException;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -194,7 +195,7 @@ embed cpp {{ : std::condition_variable }}
       
       embed java {{
         try {
-            return this._jv_cond.await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
+            return this._jv_cond.await( utils.sec_to_ms(timeout), TimeUnit.MILLISECONDS );
         }
         catch (InterruptedException e) {
             throw ThreadInterruptedException();
@@ -207,7 +208,7 @@ embed cpp {{ : std::condition_variable }}
       embed cpp {{
         std::cv_status ret_status =
             this->wait_for( *(this->_c_ulock),
-                std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ) );
+                std::chrono::milliseconds( utils.sec_to_ms(timeout) ) );
         return  ret_status == std::cv_status::no_timeout;
       }}
     }

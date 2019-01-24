@@ -30,6 +30,7 @@ fwd class ThreadBarrier;
 //=============================================================================
 from Thread.thread_exceptions import ThreadBarrierException,
                                      ThreadInterruptedException;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -116,7 +117,7 @@ embed java {{ extends CyclicBarrier }}
       
       embed java {{
         super( n_threads );
-        this._jv_timeout_default = long( timeout * 1000.0 + 0.5 );
+        this._jv_timeout_default = utils.sec_to_ms(timeout);
       }}
     }
 
@@ -292,7 +293,7 @@ embed java {{ extends CyclicBarrier }}
         ++ this->_c_waiting_threads;
         -- this->_c_barrier_count;
         if ( this->_c_cond_var.wait_for( my_lock,
-                 std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ),
+                 std::chrono::milliseconds( utils.sec_to_ms(timeout) ),
                  []{ return this->_c_barrier_count == 0; } ) )
         {
             this->abort();

@@ -33,6 +33,7 @@ from Thread.thread_exceptions import ThreadInterruptedException,
                                      ThreadForbiddenOpException,
                                      ThreadLockedException,
                                      UnlockedException;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -176,7 +177,7 @@ embed cpp  {{ : std::mutex }}
       
       embed java {{
         try {
-            tryLock( (long)(timeout * 1000.0 + 0.5, TimeUnit.MILLISECONDS);
+            tryLock( utils.set_to_ms(timeout), TimeUnit.MILLISECONDS);
         }
         catch (InterruptedException e) {
             raise ThreadInterruptedException()
@@ -184,7 +185,7 @@ embed cpp  {{ : std::mutex }}
       }}
       
       embed cpp {{
-        std::this_thread::sleep_for( std::chrono::milliseconds( (long)(timeout * 1000.0 + 0.5) ) );
+        std::this_thread::sleep_for( std::chrono::milliseconds( utils.sec_to_ms(timeout) ) );
         return std::mutex::try_lock();
       }}
     }

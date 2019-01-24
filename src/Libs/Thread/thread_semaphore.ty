@@ -34,6 +34,7 @@ from Thread.thread_exceptions    import ThreadInterruptedException,
                                         UnlockedException;
 from Thread.thread_guarded_block import ThreadGuardedBlock;
 from Thread.thread_mutex         import ThreadMutex;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -195,7 +196,7 @@ embed java {{ extends Semaphore }}
       }} exit
       
       embed java {{
-        return tryAcquire( (long)( timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
+        return tryAcquire( utils.sec_to_ms(timeout), TimeUnit.MILLISECONDS );
       }} exit
       
         with ThreadGuardedBlock() {
