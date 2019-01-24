@@ -32,6 +32,7 @@ from Thread.thread_condition     import ThreadCondition;
 from Thread.thread_guarded_block import ThreadGuardedBlock;
 from Thread.thread_exceptions    import ThreadInterruptedException;
 from Thread.thread_mutex         import ThreadMutex;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -154,7 +155,7 @@ embed java {{ extends CountDownLatch }}
       
       embed java {{
         try {
-            return await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLSECONDS );
+            return await( utils.sec_to_ms(timeout), TimeUnit.MILLSECONDS );
         }
         catch (InterruptedException e) {
             raise ThreadInterruptedException();

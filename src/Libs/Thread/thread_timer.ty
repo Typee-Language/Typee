@@ -29,6 +29,7 @@ fwd class ThreadTimer;
 
 //=============================================================================
 from Thread.thread_exceptions import TimerStartException;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -168,12 +169,12 @@ embed java {{ extends TimerTask }}
       }} exit
       
       embed java {{
-        long milliseconds = (long)(period * 1000.0 + 0.5);
+        long milliseconds = utils.set_to_ms( period );
         this._timer.scheduleAtFixedRate( this, milliseconds, milliseconds );
       }} exit
       
       embed cpp {{
-        const long k_milliseconds = (long)(period * 1000.0 + 0.5);
+        const long k_milliseconds = utils.set_to_ms( period );
         while ( me._nb == 0  or  me._count < me._nb ) {
             std::this_thread::sleep_for( std::chrono::milliseconds(k_milliseconds) );
             me._run();  // (remember: '_run()' must be implemented in inheriting classes!)
