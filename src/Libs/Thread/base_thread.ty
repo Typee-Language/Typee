@@ -29,6 +29,7 @@ fwd class BaseThread;
 
 //=============================================================================
 from Thread.thread_exceptions import all ;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -131,6 +132,11 @@ embed java {{ extends Thread }}
             this->_c_threads_list.remove( this );
             delete this->_c_thread;
         }
+      }}
+      
+      embed cs {{
+        if ( _cs_thread != null )
+            _cs_thread = null;
       }}
     }
   
@@ -367,18 +373,18 @@ embed java {{ extends Thread }}
     Caution: Behaviors may differ between different platforms.
     */
     {
-        assert seconds >= 0.0;
+        assert timeout >= 0.0;
         
       embed py {{
-        time.sleep( seconds )
+        time.sleep( timeout )
       }}
       
       embed java {{
-        super.join( (long)( seconds * 1000.0 + 0.5) );
+        super.join( utils.sec_to_ms(timeout) );
       }}
       
       embed cpp {{
-        sleep( seconds );
+        sleep( timeout );
         join();
       }}
     }
@@ -499,11 +505,11 @@ embed java {{ extends Thread }}
       }}
       
       embed java {{
-        Thread.sleep( (long)(duration * 1000.0 + 0.5) );
+        Thread.sleep( utils.sec_to_ms(duration) );
       }}
       
       embed cpp {{
-        std::this_thread::sleep_for( std::chrono::milliseconds( (long)(duration + 1000.0 + 0.5) ) );
+        std::this_thread::sleep_for( std::chrono::milliseconds( utils.sec_to_ms(duration) ) );
       }}
     }
 
