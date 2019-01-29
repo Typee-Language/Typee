@@ -29,7 +29,11 @@ fwd class BaseThread;
 
 //=============================================================================
 from Thread.thread_exceptions import all ;
-import Thread.utils.utils as utils;
+from Thread.thread_exceptions import ThreadException,
+                                       ThreadInterruptedException,
+                                       ThreadNotStartedException;
+from Thread.thread_mutex import ThreadMutex;
+from Thread.utils.utils import sec_to_ms as ut_sec_to_ms;
 
 //=============================================================================
 // targeted languages specifics
@@ -42,11 +46,13 @@ embed cpp {{
 #include <std::chrono>
 #include <std::list>
 #include <std::memory>
+#include <stdio.h>
 #include <std::string>
 #include <std::thread>
 }}
 
 embed cs {{
+using System;
 using System.Threading;
 }}
 
@@ -68,6 +74,14 @@ embed java {{ extends Thread }}
  :public:
 
     //-------------------------------------------------------------------------
+    abstract none run();
+    /**
+    This is the definition of this thread processings.
+    Method run() is ran when method start() is called.
+    MUST be implemented in inheriting classes.
+    */
+
+    //-------------------------------------------------------------------------
     BaseThread()
     /**
     Default constructor.
@@ -77,7 +91,7 @@ embed java {{ extends Thread }}
     languages. The only way to make a thread runnable is by impl-
     ementing the abstract method run().
     */
-    embed cpp {{ : _c_name("unnamed-thread"), _c_thread(NULL) }}
+    embed cpp {{ : _c_name(""), _c_thread(NULL) }}
     {
       embed py {{
         super().__init__()
@@ -89,7 +103,7 @@ embed java {{ extends Thread }}
       }}
       
       embed cs {{
-        _cs_name = "unnamed-thread";
+        _cs_name = "";
         _cs_thread = null ;
       }}
     }
@@ -132,14 +146,19 @@ embed java {{ extends Thread }}
             this->_c_threads_list.remove( this );
             delete this->_c_thread;
         }
-      }}
+      }} exit
       
       embed cs {{
         if ( _cs_thread != null )
+        {
+            _threads_mutex.lock();
+            _threads_list.delitem( _cs_thread );
+            _threads_mutex.unlock();
             _cs_thread = null;
+        }
       }}
     }
-  
+
     //-------------------------------------------------------------------------
     static final BaseThread get_current()
     /**
@@ -248,17 +267,17 @@ embed java {{ extends Thread }}
     {
       embed py {{
         return threading.active_count()
-      }}
+      }} exit
       
       embed java {{
         return this.activeCount();
-      }}
+      }} exit
     
       embed cpp {{
         return std::distance( this->_c_threads_list.begin, this->_c_threads_list.end );
-      }}
+      }} exit
       
-      return 0;
+      return me._threads_list.count();
     }
 
     //-------------------------------------------------------------------------
@@ -270,38 +289,60 @@ embed java {{ extends Thread }}
     {
       embed py {{
         return threading.enumerate()
-      }}
+      }} exit
       
       embed java {{
         return this.enumerate();
-      }}
+      }} exit
       
       embed cpp {{
         return this->_c_threads_list;
-      }}
+      }} exit
+      
+      return me._threads_list;
     }
 
     //-------------------------------------------------------------------------
     none interrupt() exclude py, java, cpp
     /**
     Interrupts this thread.
+    Raises ThreadException if the caller does  not  have  the  appropriate 
+    SecurityPermission (C# only).
     Caution:
     Behaviors may differ between different targeted programming languages.
     Deprecated or not allowed in Python and Java because deadlock-prone.
     */
-    {}
+    {
+        embed cs {{
+            try {
+                _cs_thread.Interrupt();
+            }
+            catch {
+                throw ThreadException( "Trying to interrupt a thread with no appropriate security permission" );
+            }
+        }}
+    }
 
     //-------------------------------------------------------------------------
     final const bool is_active()
     /**
     Returns true if this thread is the active one.
     Returns false otherwise.
-    Caution: C++ implementation may lead to some issues.
     */
     {
       embed cpp {{
         return this->_c_thread != NULL;
       }} exit
+      
+      embed cs {{
+        try {
+            return _cs_thread.Name == _cs_thread.CurrentThread.Name;
+        }
+        catch
+        {
+            return false;
+        }
+      }}
       
         return me.get_ID() == me.get_active_ID();
     }
@@ -316,6 +357,15 @@ embed java {{ extends Thread }}
     {
       embed cpp {{
         return this->_c_thread != NULL;
+      }} exit
+      
+      embed cs {{
+        try {
+            return _cs_thread.ThreadState & Running == Running;
+        }
+        catch {
+            raise ThreadNotStartedException( "is_alive()" );
+        }
       }} exit
       
       return true;
@@ -334,6 +384,15 @@ embed java {{ extends Thread }}
       embed cpp {{
         return false;
       }}
+      
+      embed cs {{
+        try {
+            return _cs_thread.IsBackground;
+        }
+        catch {
+            raise ThreadNotStartedException( "is_daemon()" );
+        }
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -351,14 +410,15 @@ embed java {{ extends Thread }}
       }}
       
       embed cpp {{
+        _c_join();
+      }}
+      
+      embed cs {{
         try {
-            this->_c_thread->join();
+            _cs_thread.Join();
         }
-        catch (std::system_error se) {
-            if ( se.code() == std::resource_deadlock_would_occur )
-                throw ThreadDeadlockException( se.what() );
-            else
-                throw ThreadException( se.what() );
+        catch {
+            raise ThreadNotStartedException( "join()" );
         }
       }}
     }
@@ -380,12 +440,21 @@ embed java {{ extends Thread }}
       }}
       
       embed java {{
-        super.join( utils.sec_to_ms(timeout) );
+        super.join( ut_sec_to_ms(timeout) );
       }}
       
       embed cpp {{
         sleep( timeout );
-        join();
+        _c_join();
+      }}
+      
+      embed cs {{
+        try {
+            _cs_thread.Join( (int)ut_sec_to_ms(timeout) );
+        }
+        catch {
+            raise ThreadNotStartedException( "join()" );
+        }
       }}
     }
 
@@ -406,6 +475,8 @@ embed java {{ extends Thread }}
       embed cpp {{
         return this->_c_name;
       }}
+      
+      embed 
     }
 
     //-------------------------------------------------------------------------
@@ -428,22 +499,13 @@ embed java {{ extends Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none resume() exclude py, java, cpp
+    none resume() exclude py, java, cpp, cs
     /**
     Resumes this thread after having been stopped.
     Caution:
-    Behaviors may differ between different targeted programming languages.
-    Deprecated or not allowed in Python and Java because deadlock-prone.
+    Deprecated or not allowed in Python, Java, C++ and C# because deadlock-prone.
     */
     {}
-
-    //-------------------------------------------------------------------------
-    abstract none run();
-    /**
-    This is the definition of this thread processings. Method run() is ran
-    when method start() is called.
-    MUST be implemented in inheriting classes.
-    */
 
     //-------------------------------------------------------------------------
     none set_name( const ? in (str,str16) _name )
@@ -460,7 +522,13 @@ embed java {{ extends Thread }}
       }}
       
       embed cpp {{
-        this->_c_name = name;
+        this->_c_name = _name;
+      }}
+      
+      embed cs {{
+        _cs_name = _name;
+        if ( _cs_thread != null )
+            _cs_thread.Name = _name;
       }}
     }
 
@@ -505,11 +573,15 @@ embed java {{ extends Thread }}
       }}
       
       embed java {{
-        Thread.sleep( utils.sec_to_ms(duration) );
+        Thread.sleep( ut_sec_to_ms(duration) );
       }}
       
       embed cpp {{
-        std::this_thread::sleep_for( std::chrono::milliseconds( utils.sec_to_ms(duration) ) );
+        std::this_thread::sleep_for( std::chrono::milliseconds( ut_sec_to_ms(duration) ) );
+      }}
+      
+      embed cs {{
+        Thread.Sleep( ut_sec_to_ms(duration) );
       }}
     }
 
@@ -531,29 +603,51 @@ embed java {{ extends Thread }}
         try {
             this->_c_thread = new std::thread( this->run, this );
             this->_c_threads_list.insert( this );
+            _threads_mutex.lock();
+            ++ _threads_created_count ;
+            if ( this->_c_name == "" )
+            {
+                char buffer[24];
+                sprintf( buffer, "Thread-%d", _threads_created_count );
+                this->_c_name = std::string( buffer );
+            }
+            _threads_mutex.unlock();
         } catch ( ... ) {
-            throw ThreadException( "cannot create thread" );
+            throw ThreadException( "cannot create a new thread" );
         }
+      }}
+      
+      embed cs {{
+        _cs_thread = new Thread( new ThreadStart(run) );
+        if ( _cs_thread == null )
+            throw ThreadException( string.Format("unable to start thread {0}", _cs_name );
+        _threads_mutex.lock();
+        _threads_list.insert( _cs_thread );
+        ++ _threads_created_count ;
+        if ( _cs_name == "" )
+            _cs_name = string.Format( "Thread-{0}", _threads_created_count );
+        _threads_mutex.unlock();
+        _cs_thread.Name = _cs_name;
       }}
     }
 
     //-------------------------------------------------------------------------
-    none stop() exclude py, java, cpp
+    none stop() exclude py, java, cpp, cs
     /**
     Stops this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
-    Deprecated or not allowed in Python and Java because deadlock-prone.
+    Deprecated or not allowed in Python, Java, C++ and C# because deadlock-prone.
     */
     {}
 
     //-------------------------------------------------------------------------
-    none suspend() exclude py, java, cpp
+    none suspend() exclude py, java, cpp, cs
     /**
     Suspends this thread.
     Caution:
     Behaviors may differ between different targeted programming languages.
-    Deprecated or not allowed in Python and Java because deadlock-prone.
+    Deprecated or not allowed in Python, Java, C++ and C# because deadlock-prone.
     */
     {}
 
@@ -561,18 +655,38 @@ embed java {{ extends Thread }}
     //------------------------------------------------------------------------- 
   embed java {{    
     static long _main_thread = Thread.currentThread();
-  }}
+  }} exit
   
   embed cpp {{
     std::string    _c_name;
     std::thread *  _c_thread;
     static std::atomic< std::forward_list<BaseThread*> >  _c_threads_list;
-  }}
+    
+    none _c_join()
+    {
+        try {
+            this->_c_thread->join();
+        }
+        catch (std::system_error se) {
+            if ( se.code() == std::resource_deadlock_would_occur )
+                throw ThreadDeadlockException( se.what() );
+            else
+                throw ThreadException( se.what() );
+        }
+        catch {
+            raise ThreadNotStartedException( "join()" );
+        }
+    }
+  }} exit
   
   embed cs {{
     String  _cs_name;
     Thread  _cs_thread;
   }}
+  
+    static ThreadMutex        _threads_mutex = ThreadMutex();
+    static list< BaseThread > _threads_list = list< BaseThread >(); // no needs to guard this at creation time
+    static int32              _threads_created_count = 0;  // no needs to guard this at creation time
 }
 
 //===== end of module   Thread.base_thread.ty   =====//
