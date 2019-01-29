@@ -32,10 +32,12 @@ fwd class ThreadForbiddenOpException;
 fwd class ThreadInterruptedException;
 fwd class ThreadJoinException;
 fwd class ThreadLockedException;
+fwd class ThreadNotStartedException;
 fwd class ThreadSemaphoreValueException;
 fwd class ThreadStackSizeException;
 fwd class ThreadStartException;
 fwd class ThreadTimeoutValueException;
+fwd class TimerStartException;
 fwd class UnlockedException;
 
 //=============================================================================
@@ -49,6 +51,9 @@ from Thread.thread_timer     import ThreadTimer;
 class ThreadBarrierException : Exception {
     ThreadBarrierException(){
         Exception( "Broken barrier exception." );
+    }
+    ThreadBarrierException( str msg ){
+        Exception( "Barrier exception: {}".format(msg)  );
     }
 }
 //-----------------------------------------------------------------------------
@@ -94,6 +99,15 @@ class ThreadLockedException : Exception {
     }
     ThreadLockedException( str msg ){
         Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadNotStartedException : Exception {
+    ThreadNotStartedException(){
+        Exception( "Trying to operate a not started thread" );
+    }
+    ThreadNotStartedException( str msg ){
+        Exception( "Trying to operate {} on a not started thread".format(msg) );
     }
 }
 //-----------------------------------------------------------------------------
