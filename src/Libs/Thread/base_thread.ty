@@ -685,7 +685,7 @@ embed java {{ extends Thread }}
   }}
   
     static ThreadMutex        _threads_mutex = ThreadMutex();
-    static list< BaseThread > _threads_list = list< BaseThread >(); // no needs to guard this at creation time
+    static list< BaseThread > _threads_list  = [];         // no needs to guard this at creation time
     static int32              _threads_created_count = 0;  // no needs to guard this at creation time
 }
 
