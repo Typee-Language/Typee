@@ -48,6 +48,14 @@ exclude py, java {{
 from Thread.thread_condition import ThreadCondition;
 }}
 
+embed cs {{
+using System.Threading;
+}}
+
+exclude py, java, cpp {{
+import Thread.utils.utils as utils;
+}}
+
 //=============================================================================
 class ThreadEvent
 /**
@@ -68,6 +76,12 @@ embed py {{ : threading.Event }}
       embed py {{
         super().__init__()
       }} exit
+      
+      embed cs {{
+        _cs_flg_mutex = new Mutex();
+        _cs_mre = new ManualResetEvent( false );
+        _cs_clr_flag();
+      }} exit
 
         me._flag = false;
         me._condition = ThreadCondition()
@@ -78,8 +92,12 @@ embed py {{ : threading.Event }}
     /**
     Returns true if this event is currently in set mode, and false otherwise.
     */
-    {      
-      return me._flag;
+    {
+      embed cs {{
+        return _cs_get_flag();
+      }} exit
+      
+        return me._flag;
     }
 
     //-------------------------------------------------------------------------
@@ -88,7 +106,12 @@ embed py {{ : threading.Event }}
     Any blocked thread waiting on this event becomes awakened.
     Any thread waiting then on this event doesn't get blocked.
     */
-    {
+    {      
+      embed cs {{
+        _cs_mre.Set();
+        _cs_set_flag();
+      }} exit
+
       me._flag = true;
       me._condition.signal_all();
     }
@@ -103,6 +126,11 @@ embed py {{ : threading.Event }}
         self.clear()
       }} exit
       
+      embed cs {{
+        _cs_mre.Reset();
+        _cs_clr_flag();
+      }} exit
+
         me._flag = false;
     }
 
@@ -113,6 +141,10 @@ embed py {{ : threading.Event }}
     */
     embed java {{ throws ThreadInterruptedException }}
     {
+      embed cs {{
+        _cs_mre.WaitOne();
+      }} exit
+      
         if ( not me._flag )
             me._condition.wait();
     }
@@ -128,6 +160,10 @@ embed py {{ : threading.Event }}
     on this event.
     */
     {
+      embed cs {{
+        _cs_mre.WaitOne( utils.sec_to_ms(timeout) );
+      }} exit
+      
         if ( me._flag )
             return true ;
         else
@@ -136,6 +172,26 @@ embed py {{ : threading.Event }}
     
  :protected:
     //-------------------------------------------------------------------------
+  embed cs {{
+    ManualResetEvent _cs_mre;
+    Mutex _cs_flg_mutex;
+    bool _cs_flag;
+    
+    void _cs_clr_flag()
+    {
+        _cs_flg_mutex.WaitOne();
+        _cs_flag = false;
+        _cs_flg_mutex.ReleaseMutex();
+    }
+    
+    void _cs_set_flag()
+    {
+        _cs_flg_mutex.WaitOne();
+        _cs_flag = true;
+        _cs_flg_mutex.ReleaseMutex();
+    }
+  }} exit
+  
   exclude py {{
     ThreadGuardedVar< bool > _flag;
     ThreadCondition          _condition;
