@@ -645,6 +645,8 @@ class FEScanner:
         'ensure':       ICTokenNode_ENSURE,
         'enum':         ICTokenNode_ENUM,
         'except':       ICTokenNode_EXCEPT,
+        'exclude':      ICTokenNode_EXCLUDE,
+        'exit':         ICTokenNode_EXIT,
         'file':         ICTokenNode_FILE,
         'False':        ICTokenNode_FALSE,
         'false':        ICTokenNode_FALSE,
@@ -654,7 +656,9 @@ class FEScanner:
         'float64':      ICTokenNode_SCALAR_TYPE,
         'for':          ICTokenNode_FOR,
         'forever':      ICTokenNode_FOREVER,
+        'forward':      ICTokenNode_FORWARD,
         'from':         ICTokenNode_FROM,
+        'fwd':          ICTokenNode_FORWARD,
         'hidden':       ICTokenNode_HIDDEN,
         'if':           ICTokenNode_IF,
         'import':       ICTokenNode_IMPORT,
@@ -675,6 +679,7 @@ class FEScanner:
         'not':          ICTokenNode_NOT,
         'operator':     ICTokenNode_OPERATOR,
         'or':           ICTokenNode_OR,
+        'otherwise':    ICTokenNode_OTHERWISE,
         'pass':         ICTokenNode_NOP,
         'post':         ICTokenNode_POST,
         'pre':          ICTokenNode_PRE,
@@ -707,7 +712,7 @@ class FEScanner:
     }
     
     _LANGUAGE_KWDS = (
-        'cpp', 'java', 'javascript', 'm6809','python', 'py'
+        'cpp', 'ccs', 'csharp', 'java', 'javascript', 'm6809','python', 'py'
     )
     
 #=====   end of   FrontEnd.Scanner.fe_scanner   =====#
