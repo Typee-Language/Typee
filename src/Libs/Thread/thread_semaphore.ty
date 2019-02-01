@@ -46,8 +46,12 @@ embed java {{
 import java.util.concurrent.Semaphore;
 }}
 
+embed cs {{
+using System.Threading;
+}}
+
 //=============================================================================
-class ThreadSemaphore exclude py, java {{ : ThreadCondition }}
+class ThreadSemaphore exclude py, java, cs {{ : ThreadCondition }}
 /**
 Typee implementation of the semaphore concept.
 Notice: methods P() and V(), initially proposed by the inventor of semaphores
@@ -55,8 +59,9 @@ Dutch scientist Edsger W. Dijkstra,  are available as wrappers for this class
 methods lock() and unlock(). 
 */
 
-embed py {{ : threading.BoundedSemaphore }}
+embed py   {{ : threading.BoundedSemaphore }}
 embed java {{ extends Semaphore }}
+embed cs   {{ : SemaphoreSlim }}
 
 {
  :public:
@@ -75,6 +80,10 @@ embed java {{ extends Semaphore }}
         super( 1 );
       }} exit
       
+      embed cs {{
+        base( 1 );
+      }} exit
+      
         ThreadCondition();
         me._count_mutex = ThreadMutex();
         me._count_mutex.lock();
@@ -89,6 +98,8 @@ embed java {{ extends Semaphore }}
     Default constructor. Internal atomic counter is set to n_threads.
     */
     {
+        assert n_threads <= 0x7fff_ffff;
+        
       embed py {{
         super().__init__( n )
       }} exit
@@ -98,6 +109,10 @@ embed java {{ extends Semaphore }}
         this._max_count = n_threads;
       }} exit
       
+      embed cs {{
+        base( n_threads );
+      }} exit
+
         ThreadCondition();
         me._count_mutex = ThreadMutex();
         me._count_mutex.lock();
@@ -118,11 +133,15 @@ embed java {{ extends Semaphore }}
         super().__del__()
       }} exit
       
+      embed cs {{
+        base.Dispose();
+      }}
+      
       delete me._count_mutex;
     }
 
     //-------------------------------------------------------------------------
-    final none acquire()
+    final none acquire() embed java {{ throws ThreadInterruptedException }}
     /**
     Infinitely blocking lock on this semaphore until awoken by unlock() (called
     by another thread).
@@ -138,7 +157,16 @@ embed java {{ extends Semaphore }}
             super.acquire()
         }
         catch (InterruptedException e) {
-            raise ThreadInterruptedException();
+            throw ThreadInterruptedException();
+        }
+      }} exit
+      
+      embed cs {{
+        try {
+            base.Wait();
+        }
+        catch (Exception e) {
+            throw ThreadException( "C# exception caught: " + e.ToString() );
         }
       }} exit
       
@@ -166,13 +194,7 @@ embed java {{ extends Semaphore }}
         return tryAcquire();
       }} exit
      
-        with ThreadGuardedBlock() {
-            if (me._count > 0) {
-                --me._count;
-                return true ;
-            else
-                return false ;
-        }
+        return me.acquire( 0.0 );
     }
 
     //-------------------------------------------------------------------------
@@ -198,6 +220,16 @@ embed java {{ extends Semaphore }}
       embed java {{
         return tryAcquire( utils.sec_to_ms(timeout), TimeUnit.MILLISECONDS );
       }} exit
+      
+      embed cs {{
+        try {
+            return base.Wait( utils.sec_to_ms(timeout) );
+        }
+        catch (Exception e) {
+            throw ThreadException( "C# exception caught: " + e.ToString() );
+        }
+      }} exit
+
       
         with ThreadGuardedBlock() {
             if (me._count > 0) {
@@ -244,6 +276,15 @@ embed java {{ extends Semaphore }}
         except Exception:
             raise UnlockedException( self )
       }} exit
+      
+      embed cs {{
+        try {
+            base.Release();
+        }
+        catch (Exception e) {
+            throw ThreadException( "C# exception caught: " + e.ToString() );
+        }
+      }}
 
         with ThreadGuardedBlock() {
             if ( me._count == 0 )
@@ -263,7 +304,16 @@ embed java {{ extends Semaphore }}
     Caution: Java semaphores are unbounded. Checking on release() number of
     calls is not done and toom uch releasings does not raise any exception.
     */
-    {
+    {      
+      embed cs {{
+        try {
+            base.Release( n_times);
+        }
+        catch (Exception e) {
+            throw ThreadException( "C# exception caught: " + e.ToString() );
+        }
+      }}
+
         try {
             while ( n_times-- > 0 )
                 me.release();
