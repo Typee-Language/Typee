@@ -48,6 +48,10 @@ embed cpp {{
 #include <thread>
 }}
 
+embed cs {{
+using System.Threading;
+}}
+
 //=============================================================================
 class ThreadTimer
 /**
@@ -56,6 +60,7 @@ Timers are inactive for specified periods and run their code between
 those periods.
 */
 embed java {{ extends TimerTask }}
+embed cs   {{ : Timer }}
 {
  :public:
 
@@ -72,6 +77,10 @@ embed java {{ extends TimerTask }}
         super( name );
         this._timer = new Timer( name );
        }}
+       
+       embed cs {{
+        base ( run, null, Infinity, Infinity );
+       }}
     }
 
     //-------------------------------------------------------------------------
@@ -87,6 +96,10 @@ embed java {{ extends TimerTask }}
         super( name16 );
         this._timer = new Timer( name16 );
       }}
+       
+       embed cs {{
+        base ( run, null, Infinity, Infinity );
+       }}
     }
 
     //-------------------------------------------------------------------------
@@ -103,6 +116,10 @@ embed java {{ extends TimerTask }}
         this._timer.purge();
         this._timer.cancel();
         this.cancel();
+      }}
+      
+      embed cs {{
+        base.Dispose();
       }}
     }
 
@@ -166,12 +183,12 @@ embed java {{ extends TimerTask }}
         
       embed py {{
         self._timer = Timer( period, self.run )
-      }} exit
+      }}
       
       embed java {{
         long milliseconds = utils.set_to_ms( period );
         this._timer.scheduleAtFixedRate( this, milliseconds, milliseconds );
-      }} exit
+      }}
       
       embed cpp {{
         const long k_milliseconds = utils.set_to_ms( period );
@@ -180,6 +197,10 @@ embed java {{ extends TimerTask }}
             me._run();  // (remember: '_run()' must be implemented in inheriting classes!)
             ++ me._count;
         }
+      }}
+      
+      embed cs {{
+        base.Change( (int32) 0, utils.set_to_ms(period) );
       }}
     }
 
