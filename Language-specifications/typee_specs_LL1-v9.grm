@@ -577,16 +577,17 @@ SOFTWARE.
                              | EPS
 
 <embed statement>           ::= 'embed' <language> <embed statement'>
-<embed statement'>          ::= <dotted name> <simple statement end> <embed statement''>    ###
-                             |  <embedded language code> <embed statement''>                ###
-<embed statement''>         ::= 'exit'                                                      ###
-                             |  EPS                                                         ###
+<embed statement'>          ::= <dotted name> <simple statement end>
+                             |  <embedded language code>
 
 <embedded language code>    ::= '{{' <embedded language code'>
 <embeded language code'>    ::= <any embedded code char> <embeded language code'>
-                             |  '}' <embedded language code">
-<embedded language code">   ::= <any embedded code char> <embeded language code'>
-                             |  '}'
+                             |  '}' <embedded language code''>
+<embedded language code''>  ::= <any embedded code char> <embeded language code'>
+                             |  '}' <embedded language exit>                                ###
+
+<embedded language exit>    ::= 'exit'                                                      ###
+                             |  EPS                                                         ###
 
 <ensure statement>          ::= 'ensure' <expression> <ensure statement'>
 <ensure statement'>         ::= ',' <expression>
