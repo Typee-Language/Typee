@@ -50,6 +50,10 @@ embed cpp {{
 #include <thread>
 }}
 
+embed cs {{
+using System.Threading;
+}}
+
 //=============================================================================
 class ThreadCondition
 /**
@@ -79,6 +83,10 @@ embed cpp {{ : std::condition_variable }}
         this._jv_lock = new ReentrantLock();
         this._jv_cond = this._jv_lock.newCondition();
       }}
+      
+      embed cs {{
+        _cs_mre = new ManualResetEvent( false );
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -95,7 +103,11 @@ embed cpp {{ : std::condition_variable }}
       
       embed java {{
         this._jv_lock = mutex;
-        this._jv_cond = lock.newCondition();
+        this._jv_cond = this._jv_lock.newCondition();
+      }}
+      
+      embed cs {{
+        _cs_mre = new ManualResetEvent( false );
       }}
     }
 
@@ -112,6 +124,7 @@ embed cpp {{ : std::condition_variable }}
     final none signal()
     /**
     Awakens one thread (from maybe many) waiting on this condition variable.
+    Caution: in C#, signal signals ALL waiting threads.
     */
     {
       embed py {{
@@ -124,6 +137,10 @@ embed cpp {{ : std::condition_variable }}
       
       embed cpp {{
         this->notify_one();
+      }}
+      
+      embed cs {{
+        _cs_mre.Set();
       }}
     }
     
@@ -143,6 +160,10 @@ embed cpp {{ : std::condition_variable }}
       
       embed cpp {{
         this->notify_all();
+      }}
+      
+      embed cs {{
+        _cs_mre.Set();
       }}
     }
 
@@ -167,6 +188,10 @@ embed cpp {{ : std::condition_variable }}
       
       embed cpp {{
         this->wait( *(this->_c_ulock) );
+      }}
+      
+      embed cs {{
+        _cs_mre.WaitOne();
       }}
     }
 
@@ -211,6 +236,10 @@ embed cpp {{ : std::condition_variable }}
                 std::chrono::milliseconds( utils.sec_to_ms(timeout) ) );
         return  ret_status == std::cv_status::no_timeout;
       }}
+      
+      embed cs {{
+        _cs_mre.WaitOne( utils.sec_to_ms(timeout) );
+      }}
     }
 
  :protected:
@@ -223,6 +252,10 @@ embed cpp {{ : std::condition_variable }}
   embed cpp {{
     std::mutex  _c_mutex;
     std::unique_lock< std::mutex > _c_ulock;
+  }}
+  
+  embed cs {{
+    ManualResetEvent _cs_mre;
   }}
 }
 

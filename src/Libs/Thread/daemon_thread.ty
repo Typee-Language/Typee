@@ -29,6 +29,7 @@ fwd class DaemonThread;
 
 //=============================================================================
 from Thread.base_thread import BaseThread;
+from Thread.thread_exceptions import all ;
 
 //=============================================================================
 // targeted languages specifics
@@ -94,7 +95,7 @@ more being so.
     }
 
     //-------------------------------------------------------------------------
-    const bool is_daemon() exclude java
+    const bool is_daemon() exclude java, cs
     /**
     Returns true if this thread is daemonic, and false otherwise.
     */
@@ -132,6 +133,12 @@ more being so.
       embed java {{
         setDaemon( is_daemon );
       }}
+      
+      embed cs {{
+        if ( _cs_thread == null )
+            throw ThreadNotStartedException( "set_daemon()" );
+        _cs_thread.IsBackground = is_daemon;
+      }}
     }
 
     //-------------------------------------------------------------------------
@@ -141,22 +148,16 @@ more being so.
     Raises ThreadException if thread cannot be created or run.
     */
     {
-      embed py {{
-        super().start()
-      }}
-      
-      embed java {{
-        super.start();
-      }}
-      
-      embed cpp {{
         try {
-            this->_c_thread = new std::thread( this->run, this );
-            this->_c_thread->detach();
-        } catch ( ... ) {
-            throw ThreadException( "cannot create thread" );
+            BaseThread.start();
+            me.set_daemon( true );
+            embed cpp {{
+                this->_c_thread->detach();
+            }}
         }
-      }}
+        except ( Exception as e ) {
+            raise e;
+        }
     }
 }
 
