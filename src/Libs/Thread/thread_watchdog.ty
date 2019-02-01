@@ -60,6 +60,13 @@ run forever (until stopped) and may be reset from times to times.
     }
 
     //-------------------------------------------------------------------------
+    abstract protected none _run();
+    /**
+    Runs the internal code for this watch-dog.
+    MUST BE IMPLEMENTED IN INHERITING CLASSES.
+    */    
+
+    //-------------------------------------------------------------------------
     str operator cast str ()
     {
         return me._timer.name;
@@ -78,7 +85,6 @@ run forever (until stopped) and may be reset from times to times.
     {
         const str name   = me._timer.name;
         const str name16 = me._timer.name16;
-        del me._timer;
         me._initialize_timer( name16 if name is none else name );
         me._timer.start( me._current_period );
     }
@@ -93,13 +99,6 @@ run forever (until stopped) and may be reset from times to times.
         me._current_period = period;
         me.reset();
     }
-
-    //-------------------------------------------------------------------------
-    abstract protected none _run();
-    /**
-    Runs the internal code for this watch-dog.
-    MUST BE IMPLEMENTED IN INHERITING CLASSES.
-    */    
 
     //-------------------------------------------------------------------------
     final none start( const float32 period )
@@ -118,6 +117,8 @@ run forever (until stopped) and may be reset from times to times.
  :hidden:
     //-------------------------------------------------------------------------
     final none _initialize_timer( const ? in (str,str16) name) {
+        if ( me._timer is not none )
+            del me._timer;
         me._timer = me._MyTimer( name );
     }
 
