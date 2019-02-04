@@ -309,6 +309,7 @@ SOFTWARE.
 
 <compound statement>        ::= <assign decl def func-call statement>  |
                                 <embed statement>                      |
+                                <enum statement>                       |            ##
                                 <exclude statement>                    |
                                 <for statement>                        |
                                 <forever statement>                    |
@@ -323,6 +324,7 @@ SOFTWARE.
 
 <simple statement>          ::= ( <assert statement> | <del statement>    |
                                   <ensure statement> | <flow statement>   |
+                                  file endianness>   | <file flushing>    |         ##
                                   <import statement> | <nop statement>    |
                                   <access protection statement> | 
                                   <raise statement>  | <require statement> )
@@ -385,7 +387,8 @@ SOFTWARE.
                                 <type alias> <simple statement end>  |
                                 <decl or def statement''>
 
-<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  |  
+<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  | 
+                                <enum definition>  |
                                 <identifier> <decl constructor or decl end>
 
 <decl or def statement'''>  ::= <identifier> <decl or def statement''''>  |
@@ -417,7 +420,23 @@ SOFTWARE.
 
 <ensure statement>          ::= 'ensure' <expression> (',' <expression>)*
 
+<enum statement>            ::= <enum type> <identifier> '{' <enum list> '}'                ##
+
+<enum item>                 ::= <identifier> [ '=' <expression> ]                           ##
+
+<enum list>                 ::= <enum item> ( ',' <enum item> )*                            ##
+
 <exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}'
+
+<file endianness>           ::= ( '<' | '>' ) <expression>                                  ##
+                                    ( ( '<<' | '>> | '>>>' ) <expression> )*                ##
+                             
+<file flushing>             ::= '!' <dotted name> [<file flushing'>]                        ##
+<file flushing'>            ::= '(' <expression> [<file flushing''>] ')'                    ##
+                             |  '[' <expression> ']' '=' <expression>                       ##
+                             |  '>>' <expression>                                           ##
+                             |  '>>>' <expression>                                          ##
+<file flushing''>           ::= ',' <expression> <file flushing'>                           ##
 
 <flow statement>            ::= 'break'  |  'continue'  |
                                 <raise statement>  |  <return statement>
