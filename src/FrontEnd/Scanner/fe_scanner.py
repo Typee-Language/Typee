@@ -243,7 +243,9 @@ class FEScanner:
         elif self._current == '0':
             self._next_char()
             if self._current in "xX":
-                self._check_escaped_char( 4, FEScanner._HEXA_CHARS )
+                self._check_escaped_char( 2, FEScanner._HEXA_CHARS )
+                if self._current in FEScanner._HEXA_CHARS:
+                    self._check_escaped_char( 2, FEScanner._HEXA_CHARS )
             elif self._current == '0':
                 self._check_escaped_char( 3, FEScanner._OCTAL_CHARS )
             else:
@@ -448,7 +450,7 @@ class FEScanner:
         if self._current == '!':
             self._check_augmented_operator( ICTokenNode_OP_2EXCL, ICTokenNode_AUG_2EXCL, '!!' )
         else:
-            self._check_augmented_operator( ICTokenNode_UNEXPECTED, ICTokenNode_NE, '!', False )
+            self._check_augmented_operator( ICTokenNode_EXCL, ICTokenNode_NE, '!', False )
     #-------------------------------------------------------------------------
     def _greater(self):
         self._next_char()
@@ -580,8 +582,8 @@ class FEScanner:
     _NAME_ALPHA_CHARS   = _ALPHA_CHARS + '_'
     _NAME_CHARS         = _ALPHA_NUM_CHARS + '_'
     _DOTTED_NAME_CHARS  = _NAME_CHARS + '.'
-    _BIN_CHARS          = _NUM_CHARS[:2] + '_'
-    _OCTAL_CHARS        = _NUM_CHARS[:8] + '_'
+    _BIN_CHARS          = _NUM_CHARS[:2]  ## + '_'
+    _OCTAL_CHARS        = _NUM_CHARS[:8]  ## + '_'
     _HEXA_CHARS         = _NUM_CHARS + "ABCDEFabcdef"
     _SPACE              = " \t"
     _STRING_START       = "'\""
@@ -692,6 +694,7 @@ class FEScanner:
         'ret':          ICTokenNode_RETURN,
         'return':       ICTokenNode_RETURN,
         'set':          ICTokenNode_SET,
+        'slice':        ICTokenNode_SCALAR_TYPE,
         'static':       ICTokenNode_STATIC,
         'str':          ICTokenNode_SCALAR_TYPE,
         'str16':        ICTokenNode_SCALAR_TYPE,
