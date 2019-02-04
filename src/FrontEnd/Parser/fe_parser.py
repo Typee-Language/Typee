@@ -1405,7 +1405,7 @@ class FEParser:
         #=======================================================================
         while self._current.is_SHIFTL() or \
                 self._current.is_SHIFTR() or \
-                self._current.is_SHIFT0L():
+                self._current.is_SHIFT0R():
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._expression():
@@ -1415,12 +1415,12 @@ class FEParser:
     #-------------------------------------------------------------------------
     def file_flushing(self) -> bool:
         #=======================================================================
-        # <file flushing> ::= '!' <expression> <file flushing'>
+        # <file flushing> ::= '!' <dotted name> <file flushing'>
         #=======================================================================
         if self._current.is_EXCL():
             self._append_syntaxic_node()
             self._next_token_node()
-            if not self._expression()():
+            if not self._dotted_name():
                 self._append_error( FESyntaxErrors.FILE_FLUSH_IDENT )
             self._file_flushing1();
             return True
@@ -1468,7 +1468,7 @@ class FEParser:
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._expression():
-                self._append_error( FESyntaxErrors.FILE_FLUSH_STORE_EXPR )
+                self._append_error( FESyntaxErrors.FILE_FLUSH_STREAM_EXPR )
         elif self._current.is_SHIFT0R():
             self._append_syntaxic_node()
             self._next_token_node()
