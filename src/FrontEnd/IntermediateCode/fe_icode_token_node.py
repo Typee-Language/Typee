@@ -234,6 +234,9 @@ class FEICodeTokenNode:
     def is_EXCEPT(self) -> bool:
         return self.tk_ident == FEICodeTokens.TK_EXCEPT
     @property
+    def is_EXCL(self) -> bool:
+        return self.tk_ident == FEICodeTokens.TK_EXCL
+    @property
     def is_EXCLUDE(self) -> bool:
         return self.tk_ident == FEICodeTokens.TK_EXCLUDE
     @property
@@ -722,6 +725,10 @@ class ICTokenNode_EQ( FEICodeTokenNode ):
 class ICTokenNode_EXCEPT( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='except'):
         super().__init__( scanner, FEICodeTokens.TK_EXCEPT, data )
+
+class ICTokenNode_EXCL( FEICodeTokenNode ):
+    def __init__(self, scanner=None, data='!'):
+        super().__init__( scanner, FEICodeTokens.TK_EXCL, data )
 
 class ICTokenNode_EXCLUDE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='exclude'):

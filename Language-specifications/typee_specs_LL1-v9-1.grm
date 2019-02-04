@@ -598,7 +598,7 @@ SOFTWARE.
                              |  '>>>' <expression> <file endianness'>
                              |  EPS
                              
-<file flushing>             ::= '!' <dotted name> <file flushing'>
+<file flushing>             ::= '!' <dotted.name> <file flushing'>
 <file flushing'>            ::= '(' <expression> <file flushing''> ')'
                              |  '[' <expression> ']' '=' <expression> 
                              |  '>>' <expression>
