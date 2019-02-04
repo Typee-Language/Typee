@@ -200,20 +200,25 @@ get when it is starting to parse a new statement.
 
 The root rule of __Typee__ language reads this way:
 ```
-<code file> ::=  <statements list> <ENDOFFILE>
+<code file> ::= <statements list> <ENDOFFILE>
 ```
 with `<statements list>` specified as:
 ```
-<statements list>   ::= <empty statement> <statements list>
-                     |  <compound statement> <statements list>
-                     |  <simple statement> <statements list>
-                     |  <statements block> <statements list>
-                     |  EPS
+<statements list> ::= <empty statement> <statements list>
+                   |  <compound statement> <statements list>
+                   |  <simple statement> <statements list>
+                   |  <statements block> <statements list>
+                   |  EPS
 ```
-and `<statements block>` recursively specified  as:
+and with `<statements block>` recursively specified  as:
 ```
-<statements block>  ::= '{' <statements list> '}' | ...
+<statements block> ::= '{' <statements list> '}' | ...
 ```
+
+Each time the __Parser__ starts parsing grammar rule `<statements list>`, it 
+appends a new ___statement node___to the _syntaxic tree_, (i.e. the tree that 
+contains the _syntaxic intermediate code_). The structure of a ___statement 
+node___ is described in next subsection.
 
 
 
