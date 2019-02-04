@@ -103,6 +103,17 @@ class FESyntaxErrors:
     EXCEPT_EXPR_END             = 'missing ) at end of except clause in try-except instruction, leads to unpaired (',
     EXPR_FOR_COMPREHENSION      = 'missing keyword for after expression in comprehension clause',
     
+    FILE_ENDIAN_EXPR            = 'missing or badly formed expression after file identifier while specifying endianness',
+    FILE_FLUSH_APPEND_EXPR      = 'missing or badly formed expression in file appending while flushing file',
+    FILE_FLUSH_FUNC_CALL        = 'missing or badly formed arguments of function/method while flushing file',
+    FILE_FLUSH_FUNC_END         = 'missing ) at end of arguments of function/method call while flushing file',
+    FILE_FLUSH_IDENT            = 'missing or badly formed identifier of file while applying flush operator "!"',
+    FILE_FLUSH_INDEX            = 'missing or badly formed expression in index while flushing indexed file',
+    FILE_FLUSH_INDEX_ASSIGN     = 'missing = after container indexing while flushing file',
+    FILE_FLUSH_INDEX_END        = 'missing ] at end of index while flushing indexed file',
+    FILE_FLUSH_INDEX_EXPR       = 'missing or badly formed expression to store while flushing indexed file'
+    FILE_FLUSH_STREAM_EXPR      = 'missing or badly formed expression in file streaming while flushing file',
+    FILE_STREAM_EXPR            = 'missing or badly formed expression in file streaming while specifying endianness',
     FINAL_DEF                   = 'missing type identifier after keyword "final"',
     FOR_BODY                    = 'missing instruction or block of instructions after for clause in for instruction',
     FOR_COMPR_CONDITION         = 'missing or badly formed condition after keyword "if" in for-comprehension clause',
