@@ -868,6 +868,7 @@ class FEParser:
     def _decl_or_def_statement2(self) -> bool: ###
         #=======================================================================
         # <decl or def statement''> ::= <TYPE'> <decl or def statement'''>
+        #                            |  <enum definition>
         #                            |  <identifier> <decl constructor or decl end>
         #=======================================================================
         if self._TYPE1():
@@ -877,6 +878,8 @@ class FEParser:
         elif self._identifier():
             if not self._decl_constructor_or_decl_end():
                 self._append_error( FESyntaxErrors.DECL_DEF_TYPE )
+            return True
+        elif self._enum_definition():
             return True
         else:
             self._append_error( FESyntaxErrors.VAR_TYPE )
@@ -1206,7 +1209,7 @@ class FEParser:
         if self._current.is_ENUM():
             self._append_syntaxic_node()
             self._next_token_node()
-            if self._current.is_IDENT:
+            if self._current.is_IDENT():
                 self._append_syntaxic_node()
                 self._next_token_node()
             else:
@@ -1216,12 +1219,9 @@ class FEParser:
                 self._next_token_node()
             else:
                 self._append_error( FESyntaxErrors.ENUM_BRACKET_OP )
-            if self._enum_list():
-                self._append_syntaxic_node()
-                self._next_token_node()
-            else:
+            if not self._enum_list():
                 self._append_error( FESyntaxErrors.ENUM_LIST )
-            if self._current.is_BRACKETCL:
+            if self._current.is_BRACKETCL():
                 self._append_syntaxic_node()
                 self._next_token_node()
             else:
@@ -1413,7 +1413,7 @@ class FEParser:
         return True
     
     #-------------------------------------------------------------------------
-    def file_flushing(self) -> bool:
+    def _file_flushing(self) -> bool:
         #=======================================================================
         # <file flushing> ::= '!' <dotted name> <file flushing'>
         #=======================================================================
@@ -1428,7 +1428,7 @@ class FEParser:
             return False
         
     #-------------------------------------------------------------------------
-    def file_flushing1(self) -> bool:
+    def _file_flushing1(self) -> bool:
         #=======================================================================
         # <file flushing'> ::= '(' <expression> <file flushing''> ')'
         #                   |  '[' <expression> ']' '=' <expression>
@@ -2935,6 +2935,8 @@ class FEParser:
         # <simple statement> ::= <assert statement> <simple statement end>
         #                     |  <del statement> <simple statement end>
         #                     |  <ensure statement> <simple statement end>
+        #                     |  <file endianness>
+        #                     |  <file flushing>
         #                     |  <flow statement> <simple statement end>
         #                     |  <import statement> <simple statement end>
         #                     |  <nop statement> <simple statement end>
@@ -2945,6 +2947,8 @@ class FEParser:
         if self._assert_statement() or \
                 self._del_statement() or \
                 self._ensure_statement() or \
+                self._file_endianness() or \
+                self._file_flushing() or \
                 self._flow_statement() or \
                 self._import_statement() or \
                 self._nop_statement() or \
@@ -4139,5 +4143,3 @@ class FEParser:
         return  self._current
 
 #=====   end of   FrontEnd.Parser.parser   =====#
-
-        
