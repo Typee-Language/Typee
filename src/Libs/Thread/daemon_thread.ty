@@ -24,8 +24,12 @@ SOFTWARE.
 // Built-in library Thread
 // Module daemon_thread.ty
 
+// defined class
+fwd class DaemonThread;
+
 //=============================================================================
 from Thread.base_thread import BaseThread;
+from Thread.thread_exceptions import all ;
 
 //=============================================================================
 // targeted languages specifics
@@ -51,6 +55,7 @@ more being so.
     /**
     Default constructor.
     */
+    embed cpp {{ : BaseThread() }}
     {
       embed py {{
         threading.Thread.__init__( daemon=True )
@@ -66,6 +71,7 @@ more being so.
     /**
     Constructor with defined name for this thread.
     */
+    embed cpp {{ : BaseThread(name) }}
     {
       embed py {{
         threading.Thread.__init__( name=name, daemon=True )
@@ -89,6 +95,32 @@ more being so.
     }
 
     //-------------------------------------------------------------------------
+    const bool is_daemon() exclude java, cs
+    /**
+    Returns true if this thread is daemonic, and false otherwise.
+    */
+    {
+      embed py {{
+        return self.daemon
+      }}
+      
+      embed cpp {{
+        return true;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none join()
+    /**
+    This is a synchronization point for external code.
+    Daemonic threads are NOT joinable: they run for ever.
+    To avoid any deadlock, and while to 'join()' on a deamonic thread is
+    not  available  with some platforms,  we nevertheless allow calls to
+    'join()' inTypee:  joining on daemonic threads returns immediately.
+    */
+    {}
+
+    //-------------------------------------------------------------------------
     none set_daemon( const bool is_daemon )
     /**
     Sets the daemonic status of this thread.
@@ -99,8 +131,33 @@ more being so.
       }}
       
       embed java {{
-        seteDaemon( is_daemon );
+        setDaemon( is_daemon );
       }}
+      
+      embed cs {{
+        if ( _cs_thread == null )
+            throw ThreadNotStartedException( "set_daemon()" );
+        _cs_thread.IsBackground = is_daemon;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none start()
+    /**
+    Starts this thread in a new thread context and runs its method run().
+    Raises ThreadException if thread cannot be created or run.
+    */
+    {
+        try {
+            BaseThread.start();
+            me.set_daemon( true );
+            embed cpp {{
+                this->_c_thread->detach();
+            }}
+        }
+        except ( Exception as e ) {
+            raise e;
+        }
     }
 }
 
