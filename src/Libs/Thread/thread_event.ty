@@ -22,10 +22,17 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module event.ty
+// Module thread_event.ty
+
+// defined class
+fwd class ThreadEvent;
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadTimeoutValueException;
+from Thread.thread_exceptions import ThreadTimeoutValueException,
+                                     ThreadInterruptedException;
+exclude py {{
+from Thread.thread_guarded_var import ThreadGuardedVar;
+}}
 
 //=============================================================================
 // targeted languages specifics
@@ -33,16 +40,30 @@ embed py {{
 import threading
 }}
 
+embed java {{
+import java.util.concurrent.TimeUnit;
+}}
+
+exclude py, java {{
+from Thread.thread_condition import ThreadCondition;
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
+exclude py, java, cpp {{
+import Thread.utils.utils as utils;
+}}
+
 //=============================================================================
-class Event
+class ThreadEvent
 /**
 Typee implementation of the event synchronization concept.
 Waiting on events is blocking (with optional timeout) while
 the event is unset and until the event becomes set.
 */
-
 embed py {{ : threading.Event }}
-
 {
  :public:
 
@@ -54,30 +75,45 @@ embed py {{ : threading.Event }}
     {
       embed py {{
         super().__init__()
-      }}
+      }} exit
+      
+      embed cs {{
+        _cs_flg_mutex = new Mutex();
+        _cs_mre = new ManualResetEvent( false );
+        _cs_clr_flag();
+      }} exit
+
+        me._flag = false;
+        me._condition = ThreadCondition()
     }
 
     //-------------------------------------------------------------------------
-    final const bool is_set()
+    final const bool is_set() exclude py
     /**
     Returns true if this event is currently in set mode, and false otherwise.
     */
     {
-      embed py {{
-        return super().is_set()
-      }}
+      embed cs {{
+        return _cs_get_flag();
+      }} exit
+      
+        return me._flag;
     }
 
     //-------------------------------------------------------------------------
-    final none set()
+    final none set() exclude py
     /**
     Any blocked thread waiting on this event becomes awakened.
     Any thread waiting then on this event doesn't get blocked.
     */
-    {
-      embed py {{
-        super().set()
-      }}
+    {      
+      embed cs {{
+        _cs_mre.Set();
+        _cs_set_flag();
+      }} exit
+
+      me._flag = true;
+      me._condition.signal_all();
     }
 
     //-------------------------------------------------------------------------
@@ -87,37 +123,79 @@ embed py {{ : threading.Event }}
     */
     {
       embed py {{
-        super().clear()
-      }}
+        self.clear()
+      }} exit
+      
+      embed cs {{
+        _cs_mre.Reset();
+        _cs_clr_flag();
+      }} exit
+
+        me._flag = false;
     }
 
     //-------------------------------------------------------------------------
-    final none wait()
+    final none wait() exclude py
     /**
     Blocks the caller thread until this event becomes set.
     */
+    embed java {{ throws ThreadInterruptedException }}
     {
-      embed py {{
-        super().wait()
-      }}
+      embed cs {{
+        _cs_mre.WaitOne();
+      }} exit
+      
+        if ( not me._flag )
+            me._condition.wait();
     }
 
     //-------------------------------------------------------------------------
-    final const bool wait( const float32 timeout )
+    final const bool wait( const float32 timeout ) exclude py
     /**
-    Blocks the caller thread until this event becomes set or  until  timeout.
-    Returns true if the event became set before timeout, and false otherwise.
-    Raises ThreadTimeoutValueException if the value of timeout value  is  too  
+    Blocks the caller thread until this event becomes set  or  until  timeout.
+    Returns true if the event became set before timeout,  and false otherwise.
+    Raises ThreadTimeoutValueException if the value of timeout  value  is  too  
     big compared with allowed values on the targeted platform.
+    Raises ThreadInterruptedException if thread gets interrupted while waiting
+    on this event.
     */
     {
-      embed py {{
-        try:
-            return super().wait( timeout )
-        except:
-            raise ThreadTimeoutValueException( timeout )
-      }}
+      embed cs {{
+        _cs_mre.WaitOne( utils.sec_to_ms(timeout) );
+      }} exit
+      
+        if ( me._flag )
+            return true ;
+        else
+            return me._condition.wait( timeout );
     }
+    
+ :protected:
+    //-------------------------------------------------------------------------
+  embed cs {{
+    ManualResetEvent _cs_mre;
+    Mutex _cs_flg_mutex;
+    bool _cs_flag;
+    
+    void _cs_clr_flag()
+    {
+        _cs_flg_mutex.WaitOne();
+        _cs_flag = false;
+        _cs_flg_mutex.ReleaseMutex();
+    }
+    
+    void _cs_set_flag()
+    {
+        _cs_flg_mutex.WaitOne();
+        _cs_flag = true;
+        _cs_flg_mutex.ReleaseMutex();
+    }
+  }} exit
+  
+  exclude py {{
+    ThreadGuardedVar< bool > _flag;
+    ThreadCondition          _condition;
+  }}
 }
 
-//===== end of module   Thread.event.ty   =====//
+//===== end of module   Thread.thread_event.ty   =====//

@@ -22,96 +22,99 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module latch.ty
+// Module thread_guarded_var.ty
+
+// defined class
+fwd class ThreadGuardedVar;
+
+//=============================================================================
+from Thread.thread_mutex import ThreadMutex;
 
 
 //=============================================================================
-// targeted languages specifics
-embed py {{
-import threading
-}}
-
-//=============================================================================
-class Latch
+class ThreadGuardedVar< VarT >
 /**
-Threads may wait on Latch instances and can be signaled the end of the 
-wait by a notification.
-This may be sued for applicative thread to wait for all initialization
-threads to complete their initializations.
+Guarded variables are variables that are protected from concurrent access.
 */
-
-embed py {{ : threading.Condition }}
-
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Latch( const uint32 start_count )
+    ThreadGuardedVar()
     /**
     Default constructor.
-    Start_count is the count to be decremented until notification  can  be
-    sent to every blocked threads that are waiting for this latch to open.
-    Raises AssertException if start_count iz 0.
     */
     {
-        assert start_count != 0;
-        
-      embed py {{
-        super().__init__()
-        self._count = start_count
-      }}
-    }
-    
-    //-------------------------------------------------------------------------
-    final none count_down()
-    /**
-    Decrements internal count for this latch.
-    Notifies all waiting threads when internal count is 0.
-    */
-    {
-      embed py {{
-        if self._count > 0:
-            self._count -= 1
-        if self._count == 0:
-            self.notify_all()
-      }}
-    }
-    
-    //-------------------------------------------------------------------------
-    final const uint32 get_count()
-    /**
-    Returns the actual internal count.
-    */
-    {
-      embed py {{
-        return self._count
-      }}
+        me._mutex = ThreadMutex();
     }
 
     //-------------------------------------------------------------------------
-    final none wait() exclude py
+    ThreadGuardedVar( const VarT value )
     /**
-    Calling thread waits on this latch until signalled.
+    Sets initial value of variable content.
     */
     {
-      embed py {{
-        self.wait()
-      }}
+        me._mutex = ThreadMutex();
+        me._val = value;
     }
 
     //-------------------------------------------------------------------------
-    final const bool wait( const float32 timeout ) exclude py
+    none destroy ()
     /**
-    Timed-out waiting version applied to threads.
-    Returns true when returning from wait before timeout 
-    duration (unit: seconds), and False if timed-out.
-    Raises ThreadTimeoutValueException on some platforms 
-    when specified timeout has a too big value.
-    Raises AssertException if timeout is negative.
+    Destructor.
+    Caution:
+    Behaviors may differ between different targeted programming languages.
     */
     {
-        assert timeout >= 0.0;
+        del me._mutex;
     }
+
+    //-------------------------------------------------------------------------
+    const VarT operator cast VarT ()
+    /**
+    Returns the guarded value of this variable.
+    */
+    {
+        return me.get();
+    }
+
+    //-------------------------------------------------------------------------
+    VarT operator = ( const VarT value )
+    /**
+    Assigns value to this guarded variable.
+    */
+    {
+        return me.set();
+    }
+
+    //-------------------------------------------------------------------------
+    VarT get()
+    /**
+    Returns the guarded value of this variable.
+    */
+    {
+        me._mutex.lock();
+        VarT ret_value = me._val;
+        me._mutex.unlock();
+        return ret_value;
+    }
+
+    //-------------------------------------------------------------------------
+    VarT set( const VarT value )
+    /**
+    Assigns value to this guarded variable.
+    */
+    {
+        me._mutex.lock();
+        me._val = value;
+        me._mutex.unlock();
+        return me._val;
+    }
+
+ :hidden:
+    //-------------------------------------------------------------------------
+    VarT        _val;
+    ThreadMutex _mutex;
 }
 
-//===== end of module   Thread.latch.ty   =====//
+//===== end of module   Thread.thread_guarded_var.ty   =====//

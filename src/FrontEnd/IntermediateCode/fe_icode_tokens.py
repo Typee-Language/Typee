@@ -46,6 +46,7 @@ class FEICodeTokens:
     TK_MOD          = 0
     TK_POWER        = 0
     TK_TILD         = 0
+    TK_EXCL         = 0
 
     TK_BITAND       = 0
     TK_BITOR        = 0
@@ -242,6 +243,7 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_MOD ]         : '%',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_POWER ]       : '^^',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_TILD ]        : '~',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_EXCL ]        : '!',
     
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_BITAND ]      : '&',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_BITOR ]       : '|',
