@@ -92,27 +92,12 @@ class FEParser:
     def _abstract_or_final_qualif(self) -> bool: ###
         #=======================================================================
         # <abstract or final qualif> ::= <abstract qualifier>
-        #                             |  <final qualifier>
         #                             |  EPS
         #=======================================================================
-        if self._abstract_qualifier():
-            return True
-        elif self._final_qualifier():
-            return True
-        else:
-            return True
-
-    #-------------------------------------------------------------------------
-    def _abstract_qualifier(self) -> bool: ###
-        #=======================================================================
-        # <abstract qualif> ::= 'abstract'
-        #=======================================================================
-        if self._current.is_ABSTRACT():
+        if self._current.is_ABSTRACT() or self._current.is_FINAL():
             self._append_syntaxic_node()
             self._next_token_node()
-            return True
-        else:
-            return False
+        return True
 
     #-------------------------------------------------------------------------
     def _access_protection_statement(self) -> bool: ###
@@ -299,6 +284,7 @@ class FEParser:
         #=======================================================================
         # <atom> ::= <decr> <dotted name> <incr or decr>
         #         |  <incr> <dotted name> <incr or decr>
+        #         |  <dotted name> <incr or decr>
         #         |  <enclosure>
         #         |  <reference>
         #         |  <scalar>
@@ -312,11 +298,14 @@ class FEParser:
             if not self._dotted_name():
                 self._append_error( FESyntaxErrors.INCR_IDENT )
             return self._incr_or_decr()
+        elif self._dotted_name():
+            return self._incr_or_decr()
         else:
             return  self._enclosure() or \
                     self._reference() or \
                     self._scalar() or \
-                    self._string()
+                    self._string() or \
+                    self._boolean()
 
     #-------------------------------------------------------------------------
     def _atom_element(self) -> bool: ###
@@ -532,6 +521,13 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
+    def _boolean(self) -> bool:
+        #=======================================================================
+        # <boolean> ::= <TRUE>  |  <FALSE>
+        #=======================================================================
+        return self._true() or self._false()
+
+    #-------------------------------------------------------------------------
     def _bracket_form(self) -> bool: ###
         #=======================================================================
         # <bracket form> ::= '[' <expression> <list or map form> ']'
@@ -709,6 +705,7 @@ class FEParser:
         #=======================================================================
         # <compound statement> ::= <assign decl def func-call statement>
         #                       |  <embed statement>
+        #                       |  <exclude statement>
         #                       |  <for statement>
         #                       |  <forever statement>
         #                       |  <if statement>
@@ -720,6 +717,7 @@ class FEParser:
         #=======================================================================
         return self._assign_decl_def_funccall_statement() or \
                 self._embed_statement() or \
+                self._exclude_statement() or \
                 self._for_statement() or \
                 self._forever_statement() or \
                 self._if_statement() or \
@@ -822,23 +820,25 @@ class FEParser:
         # <decl or def statement> ::= <static qualifier> <decl or def statement'>
         #                          |  <class definition>
         #                          |  <decl or def statement'>
+        #                          |  <forward decl>
         #=======================================================================
         if self._static_qualifier():
             if not self._decl_or_def_statement1():
                 self._append_error( FESyntaxErrors.STATIC_DECL_DEF )
         else:
-            return self._class_definition() or self._decl_or_def_statement1()
+            return self._class_definition() or \
+                    self._decl_or_def_statement1() or \
+                    self._forward_decl()
 
     #-------------------------------------------------------------------------
     def _decl_or_def_statement1(self) -> bool: ###
         #=======================================================================
-        # <decl or def statement'> ::= <abstract qualifier> <method or operator definition>
-        #                           |  <final qualifier> <method or operator definition>
+        # <decl or def statement'> ::= <abstract or final qualif> <method or operator definition>
         #                           |  <volatile qualifier> <TYPE> <identifier> <memory address> <simple statement end>
         #                           |  <type alias> <simple statement end>
         #                           |  <decl or def statement''>
         #=======================================================================
-        if self._abstract_qualifier():
+        if self._abstract_or_final_qualif():
             if not self._method_or_operator_definition():
                 self._append_error( FESyntaxErrors.ABSTRACT_DEF )
             return True
@@ -907,66 +907,6 @@ class FEParser:
             return True
         else:
             return False
-
-    #-------------------------------------------------------------------------
-    def _declaration_or_definition_statement(self) -> bool: ###
-        #=======================================================================
-        # <declaration or definition statement> ::= "=" <expression> <declaration statement>
-        #                                        |  '<' <types list> '>' <function args declaration>
-        #                                        |  <declaration statement>
-        #                                        |  <function args declaration>
-        #=======================================================================
-        if self._current.is_ASSIGN():
-            self._append_syntaxic_node()
-            self._next_token_node()
-            if not self._expression():
-                self._append_error( FESyntaxErrors.DECL_ASSIGN_EXPR)
-            self._declaration_statement()  ## (notice: always returns True)
-            return True
-        elif self._current.is_LT():
-            self._append_syntaxic_node()
-            self._next_token_node()
-            if not self._types_list():
-                self._append_error( FESyntaxErrors.TYPES_LIST_TYPE )
-            if self._current.is_GT():
-                self._append_syntaxic_node()
-                self._next_token_node()
-            else:
-                self._append_error( FESyntaxErrors.TEMPLATE_ENDING )
-            if not self._function_args_declaration():
-                self._append_error( FESyntaxErrors.FUNCTION_ARGS_BEGIN )
-            return True
-        else:
-            return self._declaration_statement() or self._function_args_declaration()
-
-    #-------------------------------------------------------------------------
-    def _declaration_statement(self) -> bool: ###
-        #=======================================================================
-        # <declaration statement> ::= ',' <identifier> <declaration statement'>
-        #                          |  EPS
-        #=======================================================================
-        if self._current.is_COMMA():
-            self._append_syntaxic_node()
-            self._next_token_node()
-            if not self._identifier():
-                self._append_error( FESyntaxErrors.DECL_IDENT )
-            self.declaration_statement1() ## (notice: always returns True)
-        return True
-
-    #-------------------------------------------------------------------------
-    def _declaration_statement1(self) -> bool: ###
-        #=======================================================================
-        # <declaration statement'> ::= '=' <expression> <declaration statement>
-        #                           |  <declaration statement>
-        #=======================================================================
-        if self._current.is_ASSIGN():
-            self._append_syntaxic_node()
-            self._next_token_node()
-            if not self._expression():
-                self._append_error( FESyntaxErrors.DECL_ASSIGN_EXPR )
-            return True
-        else:
-            return self._declaration_statement() ## (notice: always returns True)
         
     #-------------------------------------------------------------------------
     def _declared_contained_type(self) -> bool: ###
@@ -1159,12 +1099,12 @@ class FEParser:
         # <embedded language code'>   ::= <any embedded code char> <embeded language code'>
         #                              |  '}' <embedded language code">
         # <embedded language code">   ::= <any embedded code char> <embeded language code'>
-        #                              |  '}'
+        #                              |  '}' <embedded language exit>
         #===================================================================
         if self._current.is_EMBED_CODE():  ## (notice: previously scanned by the Scanner)
             self._append_syntaxic_node()
             self._next_token_node()
-            return True
+            return self._embedded_language_exit()
         elif self._current.is_UNEXPECTED():
             self._append_syntaxic_node()
             self._next_token_node()
@@ -1172,6 +1112,17 @@ class FEParser:
             return True
         else:
             return False
+
+    #-------------------------------------------------------------------------
+    def _embedded_language_exit(self) -> bool:
+        #=======================================================================
+        # <embedded language exit> ::= 'exit'
+        #                           |  EPS
+        #=======================================================================
+        if self._current.is_EXIT():
+            self._append_syntaxic_node()
+            self._next_token_node()
+        return True
 
     #-------------------------------------------------------------------------
     def _empty_statement(self) -> bool: ###
@@ -1248,9 +1199,87 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
+    def _enum_definition(self) -> bool:
+        #=======================================================================
+        # <enum definition> ::= <enum type> <identifier> '{' <enum list> '}'
+        #=======================================================================
+        if self._current.is_ENUM():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if self._current.is_IDENT:
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.ENUM_IDENT )
+            if self._current.is_BRACKETOP:
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.ENUM_BRACKET_OP )
+            if self._enum_list():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.ENUM_LIST )
+            if self._current.is_BRACKETCL:
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.ENUM_BRACKET_CL )
+
+    #-------------------------------------------------------------------------
+    def _enum_item(self) -> bool:
+        #=======================================================================
+        # <enum item> ::= <identifier> <enum item'>
+        #=======================================================================
+        if self._current.is_IDENT():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            return self._enum_item1()
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _enum_item1(self) -> bool:
+        #=======================================================================
+        # <enum item'> ::= '=' <expression>
+        #               |  EPS
+        #=======================================================================
+        if self._current.is_ASSIGN():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.ENUM_EXPR )
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _enum_list(self) -> bool:
+        #=======================================================================
+        # <enum list>  ::= <enum item> <enum list'>
+        # <enum list'> ::= ',' <enum item> <enum list'>
+        #               |  EPS
+        #=======================================================================
+        if self._enum_item():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            while self._current.is_COMMA():
+                self._append_syntaxic_node()
+                self._next_token_node()
+                if self._enum_item():
+                    self._append_syntaxic_node()
+                    self._next_token_node()
+                else:
+                    self._append_error( FESyntaxErrors.ENUM_LIST_ITEM )
+            return True
+        else:
+            return False                
+
+    #-------------------------------------------------------------------------
     def _enum_type(self) -> bool: ###
         #=======================================================================
-        # <enum type> ::= "enum"
+        # <enum type> ::= 'enum'
         #=======================================================================
         if self._current.is_ENUM():
             self._append_syntaxic_node()
@@ -1258,6 +1287,25 @@ class FEParser:
             return True
         else:
             return False
+
+    #-------------------------------------------------------------------------
+    def _exclude_statement(self) -> bool:
+        #=======================================================================
+        # <exclude statement> ::= 'exclude' <languages> '{{' <statements list> '}}'        
+        #=======================================================================
+        if self._current.is_EXCLUDE():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._languages():
+                self._append_error( FESyntaxErrors.EXCLUDE_LANGS )
+            if self._current.is_EMBED_CODE():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.EXCLUDE_EMBED )
+            return True
+        else:
+            return False            
 
     #-------------------------------------------------------------------------
     def _expr_list(self) -> bool: ###
@@ -1332,6 +1380,116 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
+    def _file_endianness(self) -> bool:
+        #=======================================================================
+        # <file endianness> ::= '<' <expression> <file endianness'>
+        #                    |  '>' <expression> <file endianness'>
+        #=======================================================================
+        if self._current.is_LT() or self._current.is_GT():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_ENDIAN_EXPR )
+            self._file_endianness1()
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _file_endianness1(self) -> bool:
+        #=======================================================================
+        # <file endianness'> ::= '<<' <expression> <file endianness'>
+        #                     |  '>>' <expression> <file endianness'>
+        #                     |  '>>>' <expression> <file endianness'>
+        #                     |  EPS
+        #=======================================================================
+        while self._current.is_SHIFTL() or \
+                self._current.is_SHIFTR() or \
+                self._current.is_SHIFT0L():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_STREAM_EXPR )
+        return True
+    
+    #-------------------------------------------------------------------------
+    def file_flushing(self) -> bool:
+        #=======================================================================
+        # <file flushing> ::= '!' <expression> <file flushing'>
+        #=======================================================================
+        if self._current.is_EXCL():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression()():
+                self._append_error( FESyntaxErrors.FILE_FLUSH_IDENT )
+            self._file_flushing1();
+            return True
+        else:
+            return False
+        
+    #-------------------------------------------------------------------------
+    def file_flushing1(self) -> bool:
+        #=======================================================================
+        # <file flushing'> ::= '(' <expression> <file flushing''> ')'
+        #                   |  '[' <expression> ']' '=' <expression>
+        #                   |  '>>' <expression>
+        #                   |  '>>>' <expression>
+        #                   |  EPS
+        #=======================================================================
+        if self._current.is_PAROP():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_FLUSH_FUNC_CALL )
+            self._file_flushing2()
+            if self._current.is_PARCL():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.FILE_FLUSH_FUNC_END )
+        elif self._current.is_BRACKETOP():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_FLUSH_INDEX )
+            if self._current.is_BRACKETCL():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.FILE_FLUSH_INDEX_END )
+            if self._current.is_ASSIGN():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.FILE_FLUSH_INDEX_ASSIGN )
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_FLUSH_INDEX_EXPR )
+        elif self._current.is_SHIFTR():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_FLUSH_STORE_EXPR )
+        elif self._current.is_SHIFT0R():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_FLUSH_APPEND_EXPR )
+        return True
+    #-------------------------------------------------------------------------
+    def file_flushing2(self) -> bool:
+        #=======================================================================
+        # <file flushing''> ::= ',' <expression> <file flushing'>
+        #                    |  EPS
+        #=======================================================================
+        if self._current.is_COMMA():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.FILE_FLUSH_FUNC_CALL )
+            return self._file_flushing1()
+        return True
+
+    #-------------------------------------------------------------------------
     def _file_type(self) -> bool: ###
         #=======================================================================
         # <file type> ::= 'file' <contained type>
@@ -1340,18 +1498,6 @@ class FEParser:
             self._append_syntaxic_node()
             self._next_token_node()
             self._contained_type() ## (notice: always returns True)
-            return True
-        else:
-            return False
-
-    #-------------------------------------------------------------------------
-    def _final_qualifier(self) -> bool: ###
-        #=======================================================================
-        # <final qualifier> ::= 'final'
-        #=======================================================================
-        if self._current.is_FINAL():
-            self._append_syntaxic_node()
-            self._next_token_node()
             return True
         else:
             return False
@@ -1451,12 +1597,12 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def for_statement1(self) -> bool: ###
+    def _for_statement1(self) -> bool: ###
         #=======================================================================
-        # <for statement'> ::= 'else' <statements block>
+        # <for statement'> ::= 'otherwise' <statements block>
         #                   |  EPS
         #=======================================================================
-        if self._current.is_ELSE():
+        if self._current.is_OTHERWISE():
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._statements_block():
@@ -1464,7 +1610,7 @@ class FEParser:
         return True
         
     #-------------------------------------------------------------------------
-    def forever_statement(self) -> bool: ###
+    def _forever_statement(self) -> bool: ###
         #=======================================================================
         # <forever statement> ::= 'forever' '(' ')' <statements block>
         #=======================================================================
@@ -1486,6 +1632,90 @@ class FEParser:
             return True
         else:
             return False
+        
+    #-------------------------------------------------------------------------
+    def _forward_decl(self) -> bool:
+        #=======================================================================
+        # <forward decl> ::= <forward> <forward decl'>
+        #=======================================================================
+        if self._current.is_FORWARD():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._forward_decl1():
+                self._append_error( FESyntaxErrors.FORWARD_DECL )
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _forward_decl1(self) -> bool:
+        #=======================================================================
+        # <forward decl'> ::= <static qualifier> <forward decl''>
+        #                  |  <forward decl''>
+        #                  |  <fwd class decl>
+        #=======================================================================
+        if self._current.is_STATIC():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._forward_decl2():
+                self._append_error( FESyntaxErrors.FORWARD_STATIC_DECL )
+            return True
+        else:
+            return self._forward_decl2() or self._fwd_class_decl()
+
+    #-------------------------------------------------------------------------
+    def _forward_decl2(self) -> bool:
+        #=======================================================================
+        # <forward decl''> ::= <volatile qualifier> <type> <identifier>
+        #                   |  <fwd type decl>
+        #                   |  <forward decl'''>
+        #=======================================================================
+        if self._current.is_VOLATILE():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._type():
+                self._append_error( FESyntaxErrors.VOLATILE_TYPE )
+            return True
+        else:
+            return self._fwd_type_decl() or self._forward_decl3()
+
+    #-------------------------------------------------------------------------
+    def _forward_decl3(self) -> bool:
+        #=======================================================================
+        # <forward decl'''> ::= <TYPE'> <forward decl''''>
+        #                    |  <identifier> <fwd decl constructor>
+        #=======================================================================
+        if self._TYPE1():
+            if not self._forward_decl4():
+                self._append_error( FESyntaxErrors.FORWARD_TYPE_DECL )
+            return True
+        elif self._identifier():
+            if not self._fwd_decl_constructor():
+                self._append_error( FESyntaxErrors.FORWARD_DECL_CONSTR )
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _forward_decl4(self) -> bool:
+        #=======================================================================
+        # <forward decl''''> ::= <identifier> <forward decl'''''>
+        #                     |  <operator declaration>
+        #=======================================================================
+        if self._identifier():
+            if not self._forward_decl5():
+                self._append_error( FESyntaxErrors.FORWARD_FUNC_VAR_DECL )
+            return True
+        else:
+            return self._operator_declaration()
+
+    #-------------------------------------------------------------------------
+    def _forward_decl5(self) -> bool:
+        #=======================================================================
+        # <forward decl'''''> ::= <function declaration>
+        #                      |  <fwd var decl>
+        #=======================================================================
+        return self._function_declaration() or self._fwd_var_decl()
 
     #-------------------------------------------------------------------------
     def _function_args_declaration(self) -> bool: ###
@@ -1572,6 +1802,24 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
+    def _function_declaration(self) -> bool:
+        #=======================================================================
+        # <function declaration> ::= <template def> <function declaration'>
+        #                         |  <function declaration'>
+        #=======================================================================
+        if self._template_def():
+            return self._function_declaration1()
+        else:
+            return self._function_declaration1()
+
+    #-------------------------------------------------------------------------
+    def _function_declaration1(self) -> bool:
+        #=======================================================================
+        # <function declaration'> ::= <function args declaration>
+        #=======================================================================
+        return self._function_args_declaration()
+
+    #-------------------------------------------------------------------------
     def _function_definition(self) -> bool: ###
         #=======================================================================
         # <function definition> ::= <template def> <function definition'>
@@ -1585,13 +1833,67 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _function_definition1(self) -> bool: ###
         #=======================================================================
-        # <function definition'> ::= <function args declaration> <statements block>
+        # <function definition'> ::= <function args declaration> <function definition"> <statements block>
         #=======================================================================
         if not self._function_args_declaration():
             self._append_error( FESyntaxErrors.FUNCTION_ARGS )
-        elif not self._statements_block():
+        self._function_definition2()
+        if not self._statements_block():
             self._append_error( FESyntaxErrors.FUNCTION_BODY )
         return True 
+
+    #-------------------------------------------------------------------------
+    def _function_definition2(self) -> bool: ###
+        #=======================================================================
+        # <function definition"> ::= 'exclude' <languages> | EPS
+        #=======================================================================
+        if self._current.is_EXCLUDE():
+            if not self._languages():
+                self._append_error( FESyntaxErrors.LANGUAGES_LIST )
+        return True
+
+    #-------------------------------------------------------------------------
+    def _fwd_class_decl(self) -> bool:
+        #=======================================================================
+        # <fwd class decl>  ::= 'class' <identifier> <template def> <fwd class decl'>
+        # <fwd class decl'> ::= <inheritance>
+        #                    |  EPS
+        #=======================================================================
+        if self._current.is_CLASS():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._identifier():
+                self._append_error( FESyntaxErrors.CLASS_NAME )
+            self._template_def()
+            return self._inheritance()
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _fwd_decl_constructor(self) -> bool:
+        #=======================================================================
+        # <fwd decl constructor> ::= <dotted name'> <forward decl''''>
+        #                         |  <function declaration'>
+        #=======================================================================
+        if self._dotted_name1():
+            if not self._forward_decl4():
+                self._append_error( FESyntaxErrors.FORWARD_DECL_FUNC_VAR_OP )
+            return True
+        else:
+            return self._function_declaration1()
+
+    #-------------------------------------------------------------------------
+    def _fwd_var_decl(self) -> bool:
+        #=======================================================================
+        # <fwd var decl> ::= ',' <identifier> <fwd var decl>
+        #                 |  EPS
+        #=======================================================================
+        while self._current.is_COMMA():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._identifier():
+                self._append_error( FESyntaxErrors.FORWARD_VARS_LIST )
+        return True            
 
     #-------------------------------------------------------------------------
     def _identifier(self) -> bool: ###
@@ -1716,8 +2018,7 @@ class FEParser:
             self._next_token_node()
             if not self._statements_block():
                 self._append_error( FESyntaxErrors.ELSE_BODY )
-        return True            
-
+        return True
 
     #-------------------------------------------------------------------------
     def _import_as_name(self) -> bool: ###
@@ -2418,12 +2719,12 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _repeat_statement(self) -> bool: ###
         #=======================================================================
-        # <repeat statement> ::= 'repeat' <statements list> 'until' '(' <expression> ')' <simple statement end>
+        # <repeat statement> ::= 'repeat' <statements block> 'until' '(' <expression> ')' <simple statement end>
         #=======================================================================
         if self._current.is_REPEAT():
             self._append_syntaxic_node()
             self._next_token_node()
-            if not self._statements_list():
+            if not self._statements_block():
                 self._append_error( FESyntaxErrors.REPEAT_BODY )
             if self._current.is_UNTIL():
                 self._append_syntaxic_node()
@@ -2538,6 +2839,7 @@ class FEParser:
         #                  |  "int16"
         #                  |  "int32"
         #                  |  "int64"
+        #                  |  "slice"
         #                  |  "str"
         #                  |  "str16"
         #                  |  "uint8"
@@ -2936,10 +3238,10 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _switch_statement1(self) -> bool: ###
         #=======================================================================
-        # <switch statement'> ::= 'else' <statements block>
+        # <switch statement'> ::= 'otherwise' <statements block>
         #                      |  EPS
         #=======================================================================
-        if self._current.is_ELSE():
+        if self._current.is_OTHERWISE():
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._statements_block():
@@ -3209,9 +3511,9 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _try_else(self) -> bool: ###
         #=======================================================================
-        # <try else> ::= 'else'
+        # <try else> ::= 'otherwise'
         #=======================================================================
-        if self._current.is_ELSE():
+        if self._current.is_OTHERWISE():
             self._append_syntaxic_node()
             self._next_token_node()
             return True
@@ -3283,17 +3585,67 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _try_statement(self) -> bool: ###
         #=======================================================================
-        # <try statement> ::= 'try' <statements block> <try statement'>
+        # <try statement> ::= 'try' <statements block> <try statement excepts>
+        #                         <try statement else> <try statement finally>
         #=======================================================================
         if self._current.is_TRY():
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._statements_block():
                 self._append_error( FESyntaxErrors.TRY_BODY )
-            self._try_statement1() ## (notice: always returns True)
+            if not self._try_statement_excepts():
+                self._append_error( FESyntaxErrors.TRY_EXCEPTS )
+            self._try_statement_else()
+            self._try_statement_finally()
             return True
         else:
             return False
+
+    #-------------------------------------------------------------------------
+    def _try_statement_excepts(self) -> bool:
+        #=======================================================================
+        # <try statement excepts> ::= <try except> <statements block> <try statements excepts'>
+        #=======================================================================
+        if self._try_except():
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.TRY_EXCEPT_BODY )
+            return self._try_statement_excepts()
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _try_statement_excepts1(self) -> bool:
+        #=======================================================================
+        # <try statement excepts'> ::= <try except> <statements block> <try statement excepts'>                                        ##
+        #                           |  EPS                                                                                             ##
+        #=======================================================================
+        while self._try_except():
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.TRY_EXCEPT_BODY )
+        return True
+
+    #-------------------------------------------------------------------------
+    def _try_statement_else(self) -> bool:
+        #=======================================================================
+        # <try statement else> ::= <try else> <statements block>                                                                   ##
+        #                       |  EPS                                                                                             ##
+        #=======================================================================
+        if self._try_else():
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
+        return True
+
+    #-------------------------------------------------------------------------
+    def _try_statement_finally(self) -> bool:
+        #=======================================================================
+        # <try statement finally> ::= <try finally> <statements block>                                                                ##
+        #                          |  EPS                                                                                             ##
+        #=======================================================================
+        if self._try_finally():
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.TRY_FINALLY_BODY )
+        return True
+            
 
     #-------------------------------------------------------------------------
     def _try_statement1(self) -> bool: ###
@@ -3675,10 +4027,10 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _while_statement1(self) -> bool: ###
         #=======================================================================
-        # <while statement'> ::= 'else' <statements block>
+        # <while statement'> ::= 'otherwise' <statements block>
         #                     |  EPS
         #=======================================================================
-        if self._current.is_ELSE():
+        if self._current.is_OTHERWISE():
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._statements_block():
