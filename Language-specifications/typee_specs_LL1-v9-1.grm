@@ -584,26 +584,25 @@ SOFTWARE.
                              |  EPS
 
 <enum list>                 ::= <enum item> <enum list'>
-##                             |  EPS                                                         ####
 <enum list'>                ::= ',' <enum item> <enum list'>
                              |  EPS
 
 <exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}'
 
-<file endianness>           ::= '<' <expression> <file endianness'>                         ####
+<file endianness>           ::= '<' <expression> <file endianness'>
                              |  '>' <expression> <file endianness'>
 <file endianness'>          ::= '<<' <expression> <file endianness'>
                              |  '>>' <expression> <file endianness'>
                              |  '>>>' <expression> <file endianness'>
                              |  EPS
                              
-<file flushing>             ::= '!' <dotted.name> <file flushing'>                          ####
+<file flushing>             ::= '!' <dotted name> <file flushing'>
 <file flushing'>            ::= '(' <expression> <file flushing''> ')'
                              |  '[' <expression> ']' '=' <expression> 
                              |  '>>' <expression>
                              |  '>>>' <expression>
                              |  EPS
-<file flushing''>           ::= ',' <expression> <file flushing'>                           ####
+<file flushing''>           ::= ',' <expression> <file flushing'>
                              |  EPS
 
 <flow statement>            ::= 'break'
