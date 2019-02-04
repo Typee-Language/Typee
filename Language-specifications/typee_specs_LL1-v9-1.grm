@@ -459,6 +459,8 @@ SOFTWARE.
 <simple statement>  ::= <assert statement> <simple statement end>
                      |  <del statement> <simple statement end>
                      |  <ensure statement> <simple statement end>
+                     |  <file endianness>                                       ##
+                     |  <file flushing>                                         ##
                      |  <flow statement> <simple statement end>
                      |  <import statement> <simple statement end>
                      |  <nop statement> <simple statement end>
@@ -539,7 +541,7 @@ SOFTWARE.
                              |  <type alias> <simple statement end>
                              |  <decl or def statement''>
 <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
-                             |  <enum definition>                                           ####
+                             |  <enum definition>                                           ##
                              |  <identifier> <decl constructor or decl end>
 <decl or def statement'''>  ::= <identifier> <decl or def statement''''>
                              |  <operator definition>
@@ -577,10 +579,10 @@ SOFTWARE.
 <ensure statement'>         ::= ',' <expression>
                              |  EPS
 
-<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}'
+<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}'                ##
 
-<enum item>                 ::= <identifier> <enum item'>
-<enum item'>                ::= '=' <expression>
+<enum item>                 ::= <identifier> <enum item'>                                   ##
+<enum item'>                ::= '=' <expression>                                            ##
                              |  EPS
 
 <enum list>                 ::= <enum item> <enum list'>
@@ -596,7 +598,7 @@ SOFTWARE.
                              |  '>>>' <expression> <file endianness'>
                              |  EPS
                              
-<file flushing>             ::= '!' <dotted name> <file flushing'>
+<file flushing>             ::= '!' <dotted.name> <file flushing'>
 <file flushing'>            ::= '(' <expression> <file flushing''> ')'
                              |  '[' <expression> ']' '=' <expression> 
                              |  '>>' <expression>
