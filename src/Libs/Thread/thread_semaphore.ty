@@ -166,7 +166,7 @@ embed cs   {{ : SemaphoreSlim }}
             base.Wait();
         }
         catch (Exception e) {
-            throw ThreadException( "C# exception caught: " + e.ToString() );
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
         }
       }} exit
       
@@ -226,7 +226,7 @@ embed cs   {{ : SemaphoreSlim }}
             return base.Wait( utils.sec_to_ms(timeout) );
         }
         catch (Exception e) {
-            throw ThreadException( "C# exception caught: " + e.ToString() );
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
         }
       }} exit
 
@@ -282,7 +282,7 @@ embed cs   {{ : SemaphoreSlim }}
             base.Release();
         }
         catch (Exception e) {
-            throw ThreadException( "C# exception caught: " + e.ToString() );
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
         }
       }}
 
@@ -310,9 +310,9 @@ embed cs   {{ : SemaphoreSlim }}
             base.Release( n_times);
         }
         catch (Exception e) {
-            throw ThreadException( "C# exception caught: " + e.ToString() );
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
         }
-      }}
+      }} exit
 
         try {
             while ( n_times-- > 0 )
