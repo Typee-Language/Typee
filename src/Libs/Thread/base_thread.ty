@@ -318,7 +318,7 @@ embed java {{ extends Thread }}
                 _cs_thread.Interrupt();
             }
             catch {
-                throw ThreadException( "Trying to interrupt a thread with no appropriate security permission" );
+                throw new ThreadException( "Trying to interrupt a thread with no appropriate security permission" );
             }
         }}
     }
@@ -364,7 +364,7 @@ embed java {{ extends Thread }}
             return _cs_thread.ThreadState & Running == Running;
         }
         catch {
-            raise ThreadNotStartedException( "is_alive()" );
+            throw new ThreadNotStartedException( "is_alive()" );
         }
       }} exit
       
@@ -390,7 +390,7 @@ embed java {{ extends Thread }}
             return _cs_thread.IsBackground;
         }
         catch {
-            raise ThreadNotStartedException( "is_daemon()" );
+            throw new ThreadNotStartedException( "is_daemon()" );
         }
       }}
     }
@@ -418,7 +418,7 @@ embed java {{ extends Thread }}
             _cs_thread.Join();
         }
         catch {
-            raise ThreadNotStartedException( "join()" );
+            throw new ThreadNotStartedException( "join()" );
         }
       }}
     }
@@ -453,7 +453,7 @@ embed java {{ extends Thread }}
             _cs_thread.Join( (int)ut_sec_to_ms(timeout) );
         }
         catch {
-            raise ThreadNotStartedException( "join()" );
+            throw new ThreadNotStartedException( "join()" );
         }
       }}
     }
@@ -620,7 +620,7 @@ embed java {{ extends Thread }}
       embed cs {{
         _cs_thread = new Thread( new ThreadStart(run) );
         if ( _cs_thread == null )
-            throw ThreadException( string.Format("unable to start thread {0}", _cs_name );
+            throw new ThreadException( string.Format("unable to start thread {0}", _cs_name );
         _threads_mutex.lock();
         _threads_list.insert( _cs_thread );
         ++ _threads_created_count ;
