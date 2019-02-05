@@ -542,6 +542,7 @@ SOFTWARE.
                              |  <type alias> <simple statement end>
                              |  <decl or def statement''>
 <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
+                             |  <enum definition>                                                   ###
                              |  <identifier> <decl constructor or decl end>
 <decl or def statement'''>  ::= <identifier> <decl or def statement''''>
                              |  <operator definition>
@@ -579,7 +580,7 @@ SOFTWARE.
 <ensure statement'>         ::= ',' <expression>
                              |  EPS
 
-<enum statement>            ::= <enum type> <identifier> '{' <enum list> '}'                ##
+<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}'                ###
 
 <enum item>                 ::= <identifier> <enum item'>
 <enum item'>                ::= '=' <expression>
