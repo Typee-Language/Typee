@@ -443,7 +443,7 @@ SOFTWARE.
 
 <compound statement>    ::= <assign decl def func-call statement>
                          |  <embed statement>
-                         |  <enum statement>                                    ##
+                         |  <enum statement>
                          |  <exclude statement>
                          |  <for statement>
                          |  <forever statement>
@@ -460,8 +460,8 @@ SOFTWARE.
 <simple statement>  ::= <assert statement> <simple statement end>
                      |  <del statement> <simple statement end>
                      |  <ensure statement> <simple statement end>
-                     |  <file endianness> <simple statement end>                ##
-                     |  <file flushing> <simple statement end>                  ##
+                     |  <file endianness> <simple statement end>
+                     |  <file flushing> <simple statement end>
                      |  <flow statement> <simple statement end>
                      |  <import statement> <simple statement end>
                      |  <nop statement> <simple statement end>
@@ -542,7 +542,7 @@ SOFTWARE.
                              |  <type alias> <simple statement end>
                              |  <decl or def statement''>
 <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
-                             |  <enum definition>                                                   ###
+                             |  <enum definition>
                              |  <identifier> <decl constructor or decl end>
 <decl or def statement'''>  ::= <identifier> <decl or def statement''''>
                              |  <operator definition>
@@ -580,7 +580,7 @@ SOFTWARE.
 <ensure statement'>         ::= ',' <expression>
                              |  EPS
 
-<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}'                ###
+<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}'
 
 <enum item>                 ::= <identifier> <enum item'>
 <enum item'>                ::= '=' <expression>
