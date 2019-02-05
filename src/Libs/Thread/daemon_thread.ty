@@ -136,7 +136,7 @@ more being so.
       
       embed cs {{
         if ( _cs_thread == null )
-            throw ThreadNotStartedException( "set_daemon()" );
+            throw new ThreadNotStartedException( "set_daemon()" );
         _cs_thread.IsBackground = is_daemon;
       }}
     }
