@@ -845,92 +845,92 @@ SOFTWARE.
 
 /*****   TYPES   ****************************************************/
 
-<TYPE>  ::= <const qualifier> <type>                
-         |  <type>
-<TYPE'> ::= <const qualifier> <type>
-         |  <type'>
+<TYPE>                          ::= <const qualifier> <type>                
+                                 |  <type>
+<TYPE'>                         ::= <const qualifier> <type>
+                                 |  <type'>
 
-<type>  ::= <type'>
-         |  <templated type> <dimensions>
-<type'> ::= <auto type>
-         |  '(' <types list> ')'
-         |  <container type>
-         |  <file type>
-         |  <NONE>
-         |  <scalar type> <dimensions>
+<type>                          ::= <type'>
+                                 |  <templated type> <dimensions>
+<type'>                         ::= <auto type>
+                                 |  '(' <types list> ')'
+                                 |  <container type>
+                                 |  <file type>
+                                 |  <NONE>
+                                 |  <scalar type> <dimensions>
 
 
-<array type>    ::= 'array' <declared contained type>
+<array type>                    ::= 'array' <declared contained type>
 
-<auto type>     ::= '?' <auto type'>
-<auto type'>    ::= 'in' '(' <types list> ')'
-                 |  EPS
+<auto type>                     ::= '?' <auto type'>
+<auto type'>                    ::= 'in' '(' <types list> ')'
+                                 |  EPS
 
-<const qualifier>   ::= 'const'
+<const qualifier>               ::= 'const'
 
-<contained type>    ::= <declared contained type>
-                     |  EPS
+<contained type>                ::= <declared contained type>
+                                 |  EPS
 
-<container type>    ::= <array_type>
-                     |  <enum type>
-                     |  <list type>
-                     |  <map type>
-                     |  <set type>
+<container type>                ::= <array_type>
+                                 |  <enum type>
+                                 |  <list type>
+                                 |  <map type>
+                                 |  <set type>
 
-<declared contained type>    ::= '<' <TYPE> '>'
+<declared contained type>       ::= '<' <TYPE> '>'
 
-<dimensions>    ::= '[' <dimensions'> ']' <dimensions> 
-                 |  EPS
-<dimensions'>   ::= <integer number>
-                 |  <dotted name>
+<dimensions>                    ::= '[' <dimensions'> ']' <dimensions> 
+                                 |  EPS
+<dimensions'>                   ::= <integer number>
+                                 |  <dotted name>
 
 <scalar type or dotted name>    ::= <scalar type>
                                  |  <dotted name>
 
-<enum type>     ::= 'enum'
+<enum type>                     ::= 'enum'
 
-<file type>     ::= 'file' <contained type>
+<file type>                     ::= 'file' <contained type>
 
-<list type>     ::= 'list' <contained type>
+<list type>                     ::= 'list' <contained type>
 
-<map type>      ::= 'map' <contained type>
+<map type>                      ::= 'map' <contained type>
 
-<scalar type>   ::= 'bool'
-                 |  'char'
-                 |  'char16'
-                 |  'float32'
-                 |  'float64'
-                 |  'int8'
-                 |  'int16'
-                 |  'int32'
-                 |  'int64'
-                 |  'slice'
-                 |  'str'
-                 |  'str16'
-                 |  'uint8'
-                 |  'uint16'
-                 |  'uint32'
-                 |  'uint64'
+<scalar type>                   ::= 'bool'
+                                 |  'char'
+                                 |  'char16'
+                                 |  'float32'
+                                 |  'float64'
+                                 |  'int8'
+                                 |  'int16'
+                                 |  'int32'
+                                 |  'int64'
+                                 |  'slice'
+                                 |  'str'
+                                 |  'str16'
+                                 |  'uint8'
+                                 |  'uint16'
+                                 |  'uint32'
+                                 |  'uint64'
 
-<set type>              ::= 'set' <contained type>
+<set type>                      ::= 'set' <contained type>
 
-<static qualifier>      ::= 'static'
+<static qualifier>              ::= 'static'
 
-<templated type>        ::=  <dotted name> <templated type'>
-<templated type'>       ::= '<' <types and exprs list> '>'
-                         |  EPS
+<templated type>                ::=  <dotted name> <templated type'>
+<templated type'>               ::= '<' <types and exprs list> '>'
+                                 |  EPS
 
-<types and exprs list>  ::= <types and exprs list"> <types and exprs list'>
-<types and exprs list'> ::= ',' <types and exprs list"> <types and exprs list'>
-                         |  EPS
-<types and exprs list"> ::= <expression>
-                         |  <templated type>
+<types and exprs list>          ::= <types and exprs list"> <types and exprs list'>
+<types and exprs list'>         ::= ',' <types and exprs list"> <types and exprs list'>
+                                 |  EPS
+<types and exprs list">         ::= <expression>
+                                 |  <templated type>
 
-<types list>            ::= <TYPE> <types list'>
-<types list'>           ::= ',' <TYPE> <types list'>
-                         |  EPS
+<types list>                    ::= <TYPE> <types list'>
+<types list'>                   ::= ',' <TYPE> <types list'>
+                                 |  EPS
 
-<volatile qualifier>    ::= 'volatile'
+<volatile qualifier>            ::= 'volatile'
 
 
 /*================================================================================================*/
