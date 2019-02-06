@@ -40,10 +40,11 @@ SOFTWARE.
                             ( <dotted name'> | <function call> |
                             <subscription or slicing> )*
 
-<atom>                  ::= [<decr>|<incr>] <dotted name>                           ###
-                                [<decr>|<incr> | <for comprehension>] |             ###
-                            <enclosure>  |  <reference>  |  <scalar>  |
-                            <string>  |  <boolean>
+<atom>                  ::= (<decr>|<incr>) <dotted name> [<decr>|<incr>] |
+                            <dotted name>
+                                [<decr> | <incr> | <for comprehension> ]  |
+                            <enclosure>  |  <reference>  |  <scalar>      |
+                            <string>     |  <boolean>
 
 <boolean>               ::= <TRUE>  |  <FALSE>
 
