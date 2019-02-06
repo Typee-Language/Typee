@@ -45,14 +45,14 @@ SOFTWARE.
 
 <atom>          ::= <decr> <dotted name> <incr or decr>
                  |  <incr> <dotted name> <incr or decr>
-                 |  <dotted name> <atom'>                               ###
+                 |  <dotted name> <atom'>
                  |  <enclosure>
                  |  <reference>
                  |  <scalar>
                  |  <string>
                  |  <boolean>
-<atom'>         ::= <incr or decr>                                      ###
-                 |  <for comprehension>                                 ###
+<atom'>         ::= <incr or decr>
+                 |  <for comprehension>
 
 <boolean>       ::= <TRUE>
                  |  <FALSE>
