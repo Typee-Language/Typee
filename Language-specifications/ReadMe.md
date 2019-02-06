@@ -46,7 +46,7 @@ When defining literals, sets of characters are defined between brackets:
 When defining literals, the ellipsis define an interval of characters 
 specified by the starting and the ending character: 
 
-    <hexadecimal digit&gt; ::= ['0'...'9', 'a'...'f', 'A'...'F']`
+    <hexadecimal digit> ::= ['0'...'9', 'a'...'f', 'A'...'F']`
 
 When defining literals, characters may be specified by their unicode code:
 `u0x0041` stands for character 'A'.
@@ -134,7 +134,7 @@ Typee, `00` or `01_23_45_67` are legal octal numbers while `0123__4567` is not.
 
 When reading a `.grm` file on Windows, we recommend you to use Notepad++. We 
 have created a dedicated profile file accessible here:
-[../Notepad%2B%2BXML-configs/grammars.xml](grammars.xml), 
+[grammars.xml](../Notepad%2B%2BXML-configs/grammars.xml), 
 that you just have to put it in the same directory as executable file 
 `notepad++.exe` on your computer. You will then enjoy syntax coloring when 
 opening `.grm` files with Notepad++ (but with a few limitations when reading 
