@@ -428,7 +428,7 @@ binary code but source code in some other programming language.
 
 
 
-# 3. Typee Translator Design -- from Compiler design
+# 3. Typee Translator Design - from Compiler design
 
 As stated in the above conclusion (see subsection 2.4) the __Typee__ design is 
 simpler than the one of a compiler, since __Typee__ is a programming languages 
@@ -1529,5 +1529,5 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-12 | 0.0.9 | PhHays | A few corrections; completed section 3.2; removed not useful section 3.3 (redundant with section 4.) |
 | 2018-08-12 | 0.1.1 | PhHays | Completed section 4. This is the very first draft revision of this document, noted v0.1.1. It is not fully completed but is enough filled to keep on coding Typee code |
 | 2018-08-12 | 0.1.2 | Schmouk | Corrected mispelled intermediate code classes |
+| 2019-02-06 | 0.1.3 | Schmouk | Typo correction in title of section 3. |
 |  |  |  |  |
-

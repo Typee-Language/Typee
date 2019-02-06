@@ -24,8 +24,15 @@ SOFTWARE.
 // Built-in library Thread
 // Module thread_event.ty
 
+// defined class
+fwd class ThreadEvent;
+
 //=============================================================================
-from Thread.thread_exceptions import ThreadTimeoutValueException, ThreadInterruptedException;
+from Thread.thread_exceptions import ThreadTimeoutValueException,
+                                     ThreadInterruptedException;
+exclude py {{
+from Thread.thread_guarded_var import ThreadGuardedVar;
+}}
 
 //=============================================================================
 // targeted languages specifics
@@ -37,16 +44,26 @@ embed java {{
 import java.util.concurrent.TimeUnit;
 }}
 
+exclude py, java {{
+from Thread.thread_condition import ThreadCondition;
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
+exclude py, java, cpp {{
+import Thread.utils.utils as utils;
+}}
+
 //=============================================================================
-class ThreadEvent  embed java {{ extends ??? }}
+class ThreadEvent
 /**
 Typee implementation of the event synchronization concept.
 Waiting on events is blocking (with optional timeout) while
 the event is unset and until the event becomes set.
 */
-
 embed py {{ : threading.Event }}
-
 {
  :public:
 
@@ -58,11 +75,16 @@ embed py {{ : threading.Event }}
     {
       embed py {{
         super().__init__()
-      }}
+      }} exit
       
-      embed java {{
-        _jv_init();
-      }}
+      embed cs {{
+        _cs_flg_mutex = new Mutex();
+        _cs_mre = new ManualResetEvent( false );
+        _cs_clr_flag();
+      }} exit
+
+        me._flag = false;
+        me._condition = ThreadCondition()
     }
 
     //-------------------------------------------------------------------------
@@ -70,13 +92,12 @@ embed py {{ : threading.Event }}
     /**
     Returns true if this event is currently in set mode, and false otherwise.
     */
-    {      
-      embed java {{
-        _jv_lock_condition();
-        boolean flag = this._jv_flag;
-        _jv_unlock_condition();
-        return flag;
-      }}
+    {
+      embed cs {{
+        return _cs_get_flag();
+      }} exit
+      
+        return me._flag;
     }
 
     //-------------------------------------------------------------------------
@@ -85,10 +106,14 @@ embed py {{ : threading.Event }}
     Any blocked thread waiting on this event becomes awakened.
     Any thread waiting then on this event doesn't get blocked.
     */
-    {
-      embed java {{
-        _jv_set_flag( true );
-      }}
+    {      
+      embed cs {{
+        _cs_mre.Set();
+        _cs_set_flag();
+      }} exit
+
+      me._flag = true;
+      me._condition.signal_all();
     }
 
     //-------------------------------------------------------------------------
@@ -98,12 +123,15 @@ embed py {{ : threading.Event }}
     */
     {
       embed py {{
-        super().clear()
-      }}
+        self.clear()
+      }} exit
       
-      embed java {{
-        _jv_set_flag( false );
-      }}
+      embed cs {{
+        _cs_mre.Reset();
+        _cs_clr_flag();
+      }} exit
+
+        me._flag = false;
     }
 
     //-------------------------------------------------------------------------
@@ -111,23 +139,18 @@ embed py {{ : threading.Event }}
     /**
     Blocks the caller thread until this event becomes set.
     */
+    embed java {{ throws ThreadInterruptedException }}
     {
-      embed java {{
-        _jv_lock_condition();
-        try{
-            while( ! this._jv_flag )
-                this._jv_cond.await();
-        }
-        catch(InterruptedException e){
-            _jv_unlock_condition();
-            raise ThreadInterruptedException();
-        }
-        _jv_unlock_condition();
-      }}
+      embed cs {{
+        _cs_mre.WaitOne();
+      }} exit
+      
+        if ( not me._flag )
+            me._condition.wait();
     }
 
     //-------------------------------------------------------------------------
-    final const bool wait( const float32 timeout )
+    final const bool wait( const float32 timeout ) exclude py
     /**
     Blocks the caller thread until this event becomes set  or  until  timeout.
     Returns true if the event became set before timeout,  and false otherwise.
@@ -137,62 +160,42 @@ embed py {{ : threading.Event }}
     on this event.
     */
     {
-      embed py {{
-        try:
-            return super().wait( timeout )
-        except:
-            raise ThreadTimeoutValueException( timeout )
-      }}
+      embed cs {{
+        _cs_mre.WaitOne( utils.sec_to_ms(timeout) );
+      }} exit
       
-      embed java {{
-        _jv_lock_condition();
-        try{
-            while( ! this._jv_flag )
-                this._jv_cond.await( (long)(timeout * 1000.0 + 0.5), TimeUnit.MILLISECONDS );
-        }
-        catch(InterruptedException e){
-            _jv_unlock_condition();
-            raise ThreadInterruptedException();
-        }
-        _jv_unlock_condition();
-      }}
+        if ( me._flag )
+            return true ;
+        else
+            return me._condition.wait( timeout );
     }
     
  :protected:
     //-------------------------------------------------------------------------
-  embed java {{
+  embed cs {{
+    ManualResetEvent _cs_mre;
+    Mutex _cs_flg_mutex;
+    bool _cs_flag;
+    
+    void _cs_clr_flag()
+    {
+        _cs_flg_mutex.WaitOne();
+        _cs_flag = false;
+        _cs_flg_mutex.ReleaseMutex();
+    }
+    
+    void _cs_set_flag()
+    {
+        _cs_flg_mutex.WaitOne();
+        _cs_flag = true;
+        _cs_flg_mutex.ReleaseMutex();
+    }
+  }} exit
   
-    Condition  _jv_cond;
-    boolean    _jv_flag;
-    Lock       _jv_lock;
-    
-    void _jv_init() {
-        this._jv_flag = false;
-        this._jv_lock = new ReentrantLock();
-        this._jv_cond = _lock.newCondition();
-    }
-    
-    void _jv_lock_condition() {
-        this._jv_lock.lock();
-    }
-    
-    void _jv_unlock_condition() {
-        this._jv_lock.unlock();
-    }
-    
-    void _jv_set_flag( boolean flag ) {
-        _jv_lock_condition();
-        try {
-            this._jv_flag = flag;
-            this._jv_cond.signalAll();
-        }
-        finally {
-            _jv_unlock_condition();
-        }
-    }
-    
-  }} // end of embed java
-    
+  exclude py {{
+    ThreadGuardedVar< bool > _flag;
+    ThreadCondition          _condition;
+  }}
 }
 
 //===== end of module   Thread.thread_event.ty   =====//

@@ -46,6 +46,7 @@ class FEICodeTokens:
     TK_MOD          = 0
     TK_POWER        = 0
     TK_TILD         = 0
+    TK_EXCL         = 0
 
     TK_BITAND       = 0
     TK_BITOR        = 0
@@ -145,6 +146,7 @@ class FEICodeTokens:
     TK_FINAL        = 0
     TK_VOLATILE     = 0
     TK_STATIC       = 0
+    TK_FORWARD      = 0
     
     TK_ARRAY        = 0
     TK_LIST         = 0
@@ -174,6 +176,7 @@ class FEICodeTokens:
     TK_WHILE        = 0
     TK_REPEAT       = 0
     TK_UNTIL        = 0
+    TK_OTHERWISE    = 0
     TK_IF           = 0
     TK_ELIF         = 0
     TK_ELSE         = 0
@@ -195,6 +198,9 @@ class FEICodeTokens:
     TK_FROM         = 0
     TK_ALL          = 0
     TK_AS           = 0
+    
+    TK_EXCLUDE      = 0
+    TK_EXIT         = 0
     
     TK_NOP          = 0
     
@@ -218,7 +224,7 @@ class FEICodeTokens:
 
 #-------------------------------------------------------------------------
 # Automated numbering of tokens
-_OFFSET = 1000  # 1000 here is an arbitrary default value - do not change it...
+_OFFSET = 1000  ## 1000 here is an arbitrary default value - not to be changed right now...
 for tk_id, tk_nm in enumerate( [ tk for tk in FEICodeTokens.__dict__ if tk[:3] == 'TK_' ] ):
     setattr( FEICodeTokens, tk_nm, tk_id + _OFFSET )
     FEICodeTokens._TOKEN_NAMES[ tk_id + _OFFSET ] = tk_nm
@@ -237,6 +243,7 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_MOD ]         : '%',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_POWER ]       : '^^',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_TILD ]        : '~',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_EXCL ]        : '!',
     
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_BITAND ]      : '&',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_BITOR ]       : '|',
@@ -337,6 +344,7 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_FINAL ]       : 'final',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_VOLATILE ]    : 'volatile',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_STATIC ]      : 'static',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_FORWARD ]     : 'forward',
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_ARRAY ]       : 'array',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_LIST ]        : 'list',
@@ -366,6 +374,7 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_WHILE ]       : 'while',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_REPEAT ]      : 'repeat',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_UNTIL ]       : 'until',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OTHERWISE ]   : 'otherwise',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_IF ]          : 'if',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_ELIF ]        : 'elif',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_ELSE ]        : 'else',
@@ -388,6 +397,9 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_ALL ]         : 'all',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AS ]          : 'as',
         
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_EXCLUDE ]     : 'exclude',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_EXIT ]        : 'exit',
+
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_NOP ]         : 'nop',
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_NL ]          : 'new line',
