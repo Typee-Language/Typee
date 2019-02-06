@@ -97,7 +97,7 @@ derivation rules to specify a grammar rule.
 
 Parenthesis `( )` are used to group grammar rules together:
 
-    <identifier>  ::= ( <alpha char> | '_' ) <identifier'>
+    <identifier>  ::= <b>(</b> <alpha char> | '_' ) <identifier'>
     <identifier'> ::= ( <alpha num char> | '_' ) <identifier'>
 
 Here, an identifier is specified as starting with either an alphabetical 
