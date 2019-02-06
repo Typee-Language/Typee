@@ -134,7 +134,7 @@ Typee, `00` or `01_23_45_67` are legal octal numbers while `0123__4567` is not.
 
 When reading a `.grm` file on Windows, we recommend you to use Notepad++. We 
 have created a dedicated profile file accessible here:
-[grammars.xml](../Notepad%2B%2BXML-configs/grammars.xml), 
+[grammars.xml](../Notepad%2B%2BXML-configs/), 
 that you just have to put it in the same directory as executable file 
 `notepad++.exe` on your computer. You will then enjoy syntax coloring when 
 opening `.grm` files with Notepad++ (but with a few limitations when reading 
