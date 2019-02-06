@@ -1485,6 +1485,7 @@ class FEParser:
             if not self._expression():
                 self._append_error( FESyntaxErrors.FILE_FLUSH_APPEND_EXPR )
         return True
+    
     #-------------------------------------------------------------------------
     def file_flushing2(self) -> bool:
         #=======================================================================
@@ -3616,6 +3617,17 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
+    def _try_statement_else(self) -> bool:
+        #=======================================================================
+        # <try statement else> ::= <try else> <statements block>                                                                   ##
+        #                       |  EPS                                                                                             ##
+        #=======================================================================
+        if self._try_else():
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
+        return True
+
+    #-------------------------------------------------------------------------
     def _try_statement_excepts(self) -> bool:
         #=======================================================================
         # <try statement excepts> ::= <try except> <statements block> <try statements excepts'>
@@ -3623,7 +3635,7 @@ class FEParser:
         if self._try_except():
             if not self._statements_block():
                 self._append_error( FESyntaxErrors.TRY_EXCEPT_BODY )
-            return self._try_statement_excepts()
+            return self._try_statement_excepts1()
         else:
             return False
 
@@ -3639,17 +3651,6 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _try_statement_else(self) -> bool:
-        #=======================================================================
-        # <try statement else> ::= <try else> <statements block>                                                                   ##
-        #                       |  EPS                                                                                             ##
-        #=======================================================================
-        if self._try_else():
-            if not self._statements_block():
-                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
-        return True
-
-    #-------------------------------------------------------------------------
     def _try_statement_finally(self) -> bool:
         #=======================================================================
         # <try statement finally> ::= <try finally> <statements block>                                                                ##
@@ -3657,34 +3658,6 @@ class FEParser:
         #=======================================================================
         if self._try_finally():
             if not self._statements_block():
-                self._append_error( FESyntaxErrors.TRY_FINALLY_BODY )
-        return True
-            
-
-    #-------------------------------------------------------------------------
-    def _try_statement1(self) -> bool:
-        #=======================================================================
-        # <try statement'> ::= <try else> <statements block> <try statement">
-        #                   |  <try except> <statements block> <try statement'>
-        #                   |  EPS
-        #=======================================================================
-        while self._try_except():
-            if not self._statements_block():
-                self._append_error( FESyntaxErrors.TRY_EXCEPT_BODY )
-        if self._try_else():
-            if not self.statements_block():
-                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
-            self._try_statement2() ## (notice: always returns True)
-        return True
-
-    #-------------------------------------------------------------------------
-    def _try_statement2(self) -> bool:
-        #=======================================================================
-        # <try statement"> ::= <try finally> <statements block>
-        #                   |  EPS
-        #=======================================================================
-        if self._try_finally():
-            if not self.statements_block():
                 self._append_error( FESyntaxErrors.TRY_FINALLY_BODY )
         return True
 
