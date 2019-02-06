@@ -24,8 +24,12 @@ SOFTWARE.
 // Built-in library Thread
 // Module thread_timer.ty
 
+// defined class
+fwd class ThreadTimer;
+
 //=============================================================================
 from Thread.thread_exceptions import TimerStartException;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -39,6 +43,15 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 }}
 
+embed cpp {{
+#include <chrono>
+#include <thread>
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
 //=============================================================================
 class ThreadTimer
 /**
@@ -46,9 +59,8 @@ Typee implementation of the timer concept.
 Timers are inactive for specified periods and run their code between
 those periods.
 */
-
 embed java {{ extends TimerTask }}
-
+embed cs   {{ : Timer }}
 {
  :public:
 
@@ -65,6 +77,10 @@ embed java {{ extends TimerTask }}
         super( name );
         this._timer = new Timer( name );
        }}
+       
+       embed cs {{
+        base ( run, null, Infinity, Infinity );
+       }}
     }
 
     //-------------------------------------------------------------------------
@@ -80,6 +96,10 @@ embed java {{ extends TimerTask }}
         super( name16 );
         this._timer = new Timer( name16 );
       }}
+       
+       embed cs {{
+        base ( run, null, Infinity, Infinity );
+       }}
     }
 
     //-------------------------------------------------------------------------
@@ -96,6 +116,10 @@ embed java {{ extends TimerTask }}
         this._timer.purge();
         this._timer.cancel();
         this.cancel();
+      }}
+      
+      embed cs {{
+        base.Dispose();
       }}
     }
 
@@ -137,14 +161,17 @@ embed java {{ extends TimerTask }}
     }
 
     //-------------------------------------------------------------------------
-    final none start( const uint64 n_times )
+    final none start( const uint64 n_times, const float32 period )
     /**
-    Starts the running n_times of this timer.  Internally  calls  
-    method 'run()'.
+    Starts the running n_times of this timer. Internally calls method 'run()'.
     n_times set to 0 means infinite running.
     Running can be stopped by deleting the timer.
     Raises TimerStartException if starting again a running timer.
     Raises AssertException if period (unit: seconds) is negative.
+    Caution:
+    implementations may differ on different platforms.  For instance,  current 
+    implementation in Java leads to a fixed rate scheduling while it is not in 
+    C++ implementation.
     */
     {
         assert period >= 0.0;
@@ -155,12 +182,25 @@ embed java {{ extends TimerTask }}
         me._running = true;
         
       embed py {{
-        self._timer = Timer( period, self._run )
+        self._timer = Timer( period, self.run )
       }}
       
       embed java {{
-        long milliseconds = (long)(period * 1000.0 + 0.5);
+        long milliseconds = utils.set_to_ms( period );
         this._timer.scheduleAtFixedRate( this, milliseconds, milliseconds );
+      }}
+      
+      embed cpp {{
+        const long k_milliseconds = utils.set_to_ms( period );
+        while ( me._nb == 0  or  me._count < me._nb ) {
+            std::this_thread::sleep_for( std::chrono::milliseconds(k_milliseconds) );
+            me._run();  // (remember: '_run()' must be implemented in inheriting classes!)
+            ++ me._count;
+        }
+      }}
+      
+      embed cs {{
+        base.Change( (int32) 0, utils.set_to_ms(period) );
       }}
     }
 

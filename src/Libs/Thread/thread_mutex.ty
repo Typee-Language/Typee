@@ -22,10 +22,19 @@ SOFTWARE.
 
 //=============================================================================
 // Built-in library Thread
-// Module lockable.ty
+// Module thread_mutex.ty
+
+// defined class
+fwd class ThreadMutex;
 
 //=============================================================================
-from Thread.thread_exceptions import ThreadInterruptedException, UnlockedException;
+from Thread.thread_exceptions import ThreadInterruptedException,
+                                     ThreadDeadlockException,
+                                     ThreadException,
+                                     ThreadForbiddenOpException,
+                                     ThreadLockedException,
+                                     UnlockedException;
+import Thread.utils.utils as utils;
 
 //=============================================================================
 // targeted languages specifics
@@ -38,27 +47,41 @@ import java.util.concurrent.locks;
 import java.util.concurrent.TimeUnit;
 }}
 
+embed cpp {{
+#include <mutex>
+#include <chrono>
+#include <thread>
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
 //=============================================================================
-class Lockable
+class ThreadMutex
 /**
-Typee implementation of the mutex concept. Mutual Exclusion is associated 
-with  objects  for  which access  from threads must be exclusive:  no two
+Typee implementation of the mutex concept.  Mutual Exclusion is associated 
+with  objects  for  which  access  from threads must be exclusive:  no two
 different threads may simultaneously get access to this object.
-This is the class which defines the mutual exclusion between threads  for
-an object. Classes which inherit form Lockable get this functionnality.
+This is the class which defines the mutual exclusion between  threads  for
+an object. Classes which inherit form ThreadMutex get this functionnality.
 Notice: not applicable to statement 'with'.
 */
 
-embed py {{ : threading.Lock }}
+embed py   {{ : threading.Lock }}
 embed java {{ extends ReentrantLock }}
+embed cpp  {{ : std::mutex }}
+embed cs   {{ : Mutex }}
 {
  :public:
 
     //-------------------------------------------------------------------------
-    Lockable()
+    ThreadMutex()
     /**
     Default constructor.
     */
+    embed cpp {{ : std::mutex() }}
+    embed cs {{ : base() }}
     {
       embed py {{
         super().__init__()
@@ -85,12 +108,43 @@ embed java {{ extends ReentrantLock }}
     //-------------------------------------------------------------------------
     final none lock() exclude java
     /**
-    Infinitively blocking version to acquire access to the mutually exclusive 
-    access to the object.
+    Infinitively blocking version to acquire access 
+    to the mutually exclusive access to the object.
     */
     {
       embed py {{
         self.acquire( True )
+      }}
+      
+      embed cpp {{
+        try {
+            std::mutex::lock();
+        }
+        catch ( const std::system_error &e )
+        {
+            switch ( e.code() )
+            {
+                case std::resource_deadlock_would_occur:
+                    throw ThreadDeadlockException( e.what() );
+                    break;
+                case std::operation_not_permitted:
+                    throw ThreadForbiddenOpException( e.what() );
+                    break;
+                case std::device_or_resource_busy:
+                    throw ThreadLockedException( e.what() );
+                    break;
+            }
+        }
+      }} // end of embed cpp
+      
+      embed cs {{
+        try {
+            base.WaitOne();
+        }
+        catch ( Exception e )
+        {
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+        }
       }}
     }
 
@@ -104,11 +158,17 @@ embed java {{ extends ReentrantLock }}
     {
       embed py {{
         return self.acquire( False )
-      }}
+      }} exit
       
       embed java {{
         return tryLock();
-      }}
+      }} exit
+      
+      embed cpp {{
+        return std::mutex::try_lock();
+      }} exit
+      
+        me.lock( 0.0 );
     }
 
     //-------------------------------------------------------------------------
@@ -122,6 +182,7 @@ embed java {{ extends ReentrantLock }}
     timeout is too big.
     Raises ThreadInterruptedException if waiting thread has been interrupted.
     Raises AssertException if timeout is negative.
+    Caution: behavior may differ from different targeted platforms.
     */
     {
         assert timeout >= 0.0;
@@ -135,16 +196,31 @@ embed java {{ extends ReentrantLock }}
       
       embed java {{
         try {
-            tryLock( (long)(timeout * 1000.0 + 0.5, TimeUnit.MILLISECONDS);
+            tryLock( utils.set_to_ms(timeout), TimeUnit.MILLISECONDS);
         }
         catch (InterruptedException e) {
             raise ThreadInterruptedException()
         }
       }}
+      
+      embed cpp {{
+        std::this_thread::sleep_for( std::chrono::milliseconds( utils.sec_to_ms(timeout) ) );
+        return std::mutex::try_lock();
+      }}
+      
+      embed cs {{
+        try {
+            return base.WaitOne( utils.sec_to_ms(timeout) );
+        }
+        catch ( Exception e )
+        {
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+        }
+      }}
     }
     
     //-------------------------------------------------------------------------
-    final none unlock() exclude java
+    final none unlock() exclude java, cpp
     /**
     Releases this object for it to be acquirable again.
     Raises UnlockedException when unlocking  an  object 
@@ -160,7 +236,16 @@ embed java {{ extends ReentrantLock }}
         except:
             raise UnlockedException( self )
       }}
+      
+      embed cs {{
+        try {
+            base.ReleaseMutex();
+        }
+        catch ( Exception e ) {
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+        }
+      }}
     }
 }
 
-//===== end of module   Thread.lockable.ty   =====//
+//===== end of module   Thread.thread_mutex.ty   =====//
