@@ -56,7 +56,7 @@ soluce = [ ICTokenNode_COMMENT( None, " Compound tokens -- tokenization test sou
            ICTokenNode_ASSIGN(),
            ICTokenNode_EQ(),
            ICTokenNode_NL(),
-           ICTokenNode_UNEXPECTED(None, ' '),
+           ICTokenNode_EXCL(),
            ICTokenNode_OP_2EXCL(),
            ICTokenNode_NE(),
            ICTokenNode_AUG_2EXCL(),
