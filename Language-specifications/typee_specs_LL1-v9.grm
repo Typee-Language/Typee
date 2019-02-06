@@ -134,38 +134,38 @@ SOFTWARE.
 
 /*****   CONDITIONS and COMPARISONS   *******************************/
 
-<condition>     ::= <or test> <condition'>
-<condition'>    ::= 'if' <or test> 'else' <expression>
-                 |  EPS
+<condition>                 ::= <or test> <condition'>
+<condition'>                ::= 'if' <or test> 'else' <expression>
+                             |  EPS
 
-<and test>      ::= <not test> <and test'>
-<and test'>     ::= 'and' <not test>
-                 |  EPS
+<and test>                  ::= <not test> <and test'>
+<and test'>                 ::= 'and' <not test>
+                             |  EPS
 
-<comparison>    ::= <bitor expr> <comparison'>
-<comparison'>   ::= <comp operator> <template args> <bitor expr> <comparison'>
-                 |  <comp operator'> <spaced template args> <bitor expr> <comparison'>
-                 |  EPS
+<comparison>                ::= <bitor expr> <comparison'>
+<comparison'>               ::= <comp operator> <template args> <bitor expr> <comparison'>
+                             |  <comp operator'> <spaced template args> <bitor expr> <comparison'>
+                             |  EPS
 
-<comp operator>     ::= '<='  |  '=='  |  '!='  |  '>='
-                     |  'in'
-                     |  <is operator>
-                     |  'not' 'in'
-<comp operator'>    ::=  '<'  |  '>'
+<comp operator>             ::= '<='  |  '=='  |  '!='  |  '>='
+                             |  'in'
+                             |  <is operator>
+                             |  'not' 'in'
+<comp operator'>            ::=  '<'  |  '>'
 
 <condition or unnamed func> ::= <or test>
                              |  <unnamed func>          ##
 
-<is operator>   ::= 'is' <is operator'>
-<is operator'>  ::= 'not'
-                 |  EPS
+<is operator>               ::= 'is' <is operator'>
+<is operator'>              ::= 'not'
+                             |  EPS
 
-<not test>      ::= 'not' <not test>
-                 |  <comparison>
+<not test>                  ::= 'not' <not test>
+                             |  <comparison>
 
-<or test>       ::= <and test> <or test'>
-<or test'>      ::= 'or' <and test>
-                 |  EPS
+<or test>                   ::= <and test> <or test'>
+<or test'>                  ::= 'or' <and test>
+                             |  EPS
 
 
 
@@ -891,7 +891,7 @@ SOFTWARE.
                      |  <map type>
                      |  <set type>
 
-<declared contained type>    ::= '<' <TYPE> '>'
+<declared contained type>   ::= '<' <TYPE> '>'
 
 <dimensions>    ::= '[' <dimensions'> ']' <dimensions> 
                  |  EPS
