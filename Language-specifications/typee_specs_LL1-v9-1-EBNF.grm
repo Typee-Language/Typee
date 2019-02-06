@@ -40,9 +40,11 @@ SOFTWARE.
                             ( <dotted name'> | <function call> |
                             <subscription or slicing> )*
 
-<atom>                  ::= [<decr> | <incr>]  <dotted name>  [<decr> | <incr>]  |
-                            <enclosure>  |  <reference>  |  <scalar>  |
-                            <string>  |  <boolean>
+<atom>                  ::= (<decr>|<incr>) <dotted name> [<decr>|<incr>] |
+                            <dotted name>
+                                [<decr> | <incr> | <for comprehension> ]  |
+                            <enclosure>  |  <reference>  |  <scalar>      |
+                            <string>     |  <boolean>
 
 <boolean>               ::= <TRUE>  |  <FALSE>
 
@@ -82,7 +84,7 @@ SOFTWARE.
 <class definition>  ::= 'class' <identifier> [<template def>]
                             <inheritance> <statements block>
 
-<inheritance>       ::= [ ':' <inheritance item> (',' <inheritence item>)* ]
+<inheritance>       ::= [ ':' <inheritance item> ( ',' <inheritence item> )* ]
 
 <inheritance item>  ::= [<access qualifier>] <dotted name> [<template args>]
 
@@ -148,19 +150,24 @@ SOFTWARE.
              
 <map list or comprehension> ::= [ ',' <map item>]+  |  <for comprehension>
 
-<bitand expr>           ::= <shift expr> [ '&' [<template args>] <shift expr> ]*
+<bitand expr>           ::= <shift expr> 
+                                ( '&' [<template args>] <shift expr> )*
 
-<bitor expr>            ::= <bitxor expr> [ '|' [<template args>] <bitxor expr> ]*
+<bitor expr>            ::= <bitxor expr> 
+                                ( '|' [<template args>] <bitxor expr> )*
 
-<bitxor expr>           ::= <bitand expr> [ '^' [<template args>] <bitand expr> ]
+<bitxor expr>           ::= <bitand expr> 
+                                ( '^' [<template args>] <bitand expr> )*
 
 <shift expr>            ::= <arithmetic expr>
                                 ( ( ( '<<' | '<<<' ) [<spaced template args>]  |
                                     ( '>>' | '>>>' ) [<template args>] )
-                                      <arithmetic expr> )*
+                                    <arithmetic expr> )*
 
-<term>                  ::= <factor> ( ( ((<op_mul> | <op_user>) [<template args>]) |
-                                         '><' [<spaced template args>] ) <factor> )*
+<term>                  ::= <factor> ( ( ((<op_mul> | <op_user>)
+                                              [<template args>]) |
+                                          '><' [<spaced template args>] )
+                                        <factor> )*
              
 <unary expr>            ::= [ '+' | '-' | '~' | '#' ]  <factor>
 
@@ -228,14 +235,17 @@ SOFTWARE.
 
 <any embedded code char>        ::= u0x0000...u0xFFFF - ['}']
 
-<any escaped char>              ::= '\\' u0x0000...u0xFFFF - ['\n', '\r', '\f', u0x00]
+<any escaped char>              ::= '\\' u0x0000...u0xFFFF - ['\n', '\r',
+                                                              '\f', u0x00]
 
 <any non newline char>          ::= u0x0000...u0xFFFF - [ '\n' , '\r' , '\f' ]
 
 <any non star char>             ::= u0x0000...u0xFFFF - [ '*' ]
 
-<any string quote char>         ::= u0x0000...u0xFFFF - ["'", "\\", "\n", "\r", "\f", u0x00]
-<any string doublequote char>   ::= u0x0000...u0xFFFF - ['"', '\\', '\n', '\r', '\f', u0x00]
+<any string quote char>         ::= u0x0000...u0xFFFF - ["'", "\\", "\n",
+                                                         "\r", "\f", u0x00]
+<any string doublequote char>   ::= u0x0000...u0xFFFF - ['"', '\\', '\n',
+                                                         '\r', '\f', u0x00]
 
 <binary char>                   ::= '0'  |  '1' 
 
@@ -245,10 +255,11 @@ SOFTWARE.
 
 <ENDOFFILE>                     ::= u0x00
 
-<escaped char>                  ::= '\\' ( <alpha char> | '0' <octal or hexa char> )
+<escaped char>                  ::= '\\' ( <alpha char> |
+                                           '0' <octal or hexa char> )
 
 <octal or hexa char>            ::= <octal char> <octal char> <octal char> | 
-                                    ('x'|'X') <hexa char> <hexa char>
+                                    ( 'x' | 'X' ) <hexa char> <hexa char>
                                         [<hexa char> <hexa char>]
 
 <FALSE>                         ::= 'False'  |  'false' 
@@ -323,6 +334,7 @@ SOFTWARE.
 
 <simple statement>          ::= ( <assert statement> | <del statement>    |
                                   <ensure statement> | <flow statement>   |
+                                  <file endianness>  | <file flushing>    |
                                   <import statement> | <nop statement>    |
                                   <access protection statement> | 
                                   <raise statement>  | <require statement> )
@@ -333,7 +345,7 @@ SOFTWARE.
 <statements block>          ::= '{' [<statements list>] '}'  |
                                 [<nop statement>] <simple statement end>
 
-<assert statement>          ::= 'assert' <expression> (',' <expression>)*
+<assert statement>          ::= 'assert' <expression> ( ',' <expression>)*
 
 <assign decl def func-call statement>   ::= [<access qualifier>] 
                                                 <decl or def statement>  |
@@ -369,9 +381,10 @@ SOFTWARE.
                                 '/*' <multi lines comment>
 
 <multi lines comment>       ::= (<any non star char> | <NEWLINE>)*  |
-                                '*' ('/' | <multi lines comment>)
+                                '*' ( '/' | <multi lines comment> )
 
-<decl constructor or decl end>  ::= ('.' <identifier>)* <decl or def statement'''>  |
+<decl constructor or decl end>  ::= ( '.' <identifier> )* 
+                                        <decl or def statement'''>  |
                                     <function definition'>
 
 <decl or def statement>     ::= [<static qualifier>] <decl or def statement'>  |  
@@ -385,25 +398,26 @@ SOFTWARE.
                                 <type alias> <simple statement end>  |
                                 <decl or def statement''>
 
-<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  |  
+<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  | 
+                                <enum definition>  |
                                 <identifier> <decl constructor or decl end>
 
 <decl or def statement'''>  ::= <identifier> <decl or def statement''''>  |
                                 <operator definition>
 
 <decl or def statement''''> ::= <function definition>  |  
-                                [<var declaration or assignment>] <simple statement end>
+                                [<var declaration or assignment>] ';' 
 
 <declaration statement>     ::= ',' <identifier> ['=' <expression>] 
-                                    (',' <identifier> ['=' <expression>])*
+                                    ( ',' <identifier> [ '=' <expression> ] )*
 
 <del statement>             ::= 'del' <identifiers list>
                       
-<dotted as name>            ::= <dotted name> ['as' <identifier>]
+<dotted as name>            ::= <dotted name> [ 'as' <identifier> ]
 
-<dotted as names>           ::= <dotted as name> (',' <dotted as name>)*
+<dotted as names>           ::= <dotted as name> ( ',' <dotted as name> )*
 
-<dotted name>               ::= <identifier> ('.' <identifier>)*
+<dotted name>               ::= <identifier> ( '.' <identifier> )*
 
 <embed statement>           ::= 'embed' <language>
                                     (<dotted name> <simple statement end>  |
@@ -415,9 +429,25 @@ SOFTWARE.
 <embedded language code">   ::= <any embedded code char> <embeded language code'>  |
                                 '}' [ 'exit' ]
 
-<ensure statement>          ::= 'ensure' <expression> (',' <expression>)*
+<ensure statement>          ::= 'ensure' <expression> ( ',' <expression> )*
 
-<exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}'
+<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}' 
+
+<enum item>                 ::= <identifier> [ '=' <expression> ]
+
+<enum list>                 ::= <enum item> ( ',' <enum item> )*
+
+<exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}' 
+
+<file endianness>           ::= ( '<' | '>' ) <expression> 
+                                    ( ( '<<' | '>>' | '>>>' ) <expression> )*
+                             
+<file flushing>             ::= '!' <dotted name> [<file flushing'>]
+<file flushing'>            ::= '(' <expression> [<file flushing''>] ')' |
+                                '[' <expression> ']' '=' <expression>    |
+                                '>>' <expression>                        |
+                                '>>>' <expression>
+<file flushing''>           ::= ',' <expression> <file flushing'>
 
 <flow statement>            ::= 'break'  |  'continue'  |
                                 <raise statement>  |  <return statement>
@@ -430,7 +460,8 @@ SOFTWARE.
 
 <forward>                   ::= 'forward'  |  'fwd' 
 
-<forward decl>              ::= <forward> ( ([<static qualifier>] <forward decl'>) | 
+<forward decl>              ::= <forward> ( ([<static qualifier>]
+                                                 <forward decl'>) | 
                                             <fwd class decl> )
 <forward decl'>             ::= <volatile qualifier> <type> <identifier>  |
                                 <fwd type decl>  |
@@ -440,33 +471,35 @@ SOFTWARE.
                                       <identifier> (<fwd var decl> | 
                                                     <function declaration>) )
 
-<fwd class decl>            ::= 'class' <identifier> <template def> [<inheritance>]
+<fwd class decl>            ::= 'class' <identifier> <template def> 
+                                    [<inheritance>]
 
 <fwd decl constructor>      ::= <dotted name'> 
                                     ( <operator declaration>  |
                                       <identifier> 
-                                          (<fwd var decl> | <function declaration>) )  |
+                                          (<fwd var decl> | 
+                                           <function declaration>) )  |
                                     <function args declaration>
 
-<fwd var decl>              ::= (',' <identifier>)*
+<fwd var decl>              ::= ( ',' <identifier> )*
 
-<identifiers list>          ::= <dotted name> (',' <dotted name>)*
+<identifiers list>          ::= <dotted name> ( ',' <dotted name> )*
 
 <if statement>              ::= 'if' <parenthesised expr> 
                                     <statements block> [<elif statement'>]
-<elif statement'>           ::= ( 'elseif' <parenthesised expr> <statements block> )*  |
-                                ( 'elif' <parenthesised expr> <statements block> )*  |
-                                ( 'elsif' <parenthesised expr> <statements block> )*  |
+<elif statement'>           ::= ( ( 'elseif' | 'elif' | 'elsif' )
+                                       <parenthesized expr>
+                                       <statements block>   )*  |
                                 'else' <statements block>
 
-<import as name>            ::= <identifier> ['as' <identifier>]
+<import as name>            ::= <identifier> [ 'as' <identifier> ]
 
-<import as names>           ::= <import as name> (',' <import as name>)*
+<import as names>           ::= <import as name> ( ',' <import as name> )*
 
 <import from>               ::= 'from' ( '.' )* <dotted name> 'import' 
                                     ( 'all' | 
-                                      (<parenth open> <import as names> <parenth close>) |
-                                      <import as names> )
+                                      ( '(' <import as names> ')' ) |
+                                       <import as names> )
 
 <import name>               ::= 'import' <dotted as names>
 
@@ -486,7 +519,7 @@ SOFTWARE.
 
 <raise statement>           ::= 'raise' <expression> ['from' <expression>]
 
-<repeat statement>          ::= 'repeat' <statements block> 'until'  
+<repeat statement>          ::= 'repeat' <statements block> 'until' 
                                     <parenthesised expr> ';' 
 
 <require statement>         ::= 'require' <expression> [',' <expression>]
@@ -501,7 +534,7 @@ SOFTWARE.
 
 <target>                    ::= <dotted name> (<subscription or slicing>)*
 
-<target list>               ::= <typed target> (',' <typed target>)*
+<target list>               ::= <typed target> ( ',' <typed target> )*
 
 <try else>                  ::= 'otherwise' 
 
@@ -518,11 +551,12 @@ SOFTWARE.
                                     [<try finally> <statements block>]
 
 <type alias>                ::= 'type' <TYPE> 'as' <identifier>
-                                    (',' <TYPE> 'as' <identifier>)*
+                                    ( ',' <TYPE> 'as' <identifier> )*
 
 <typed target>              ::= <type'> <target>  |
                                 <dotted name> [<dotted name> |
-                                <templated type spec>] (<subscription or slicing>)*
+                                               <templated type spec>]
+                                    (<subscription or slicing>)*
 
 <var declaration or assignment> ::= ['=' <expression>] ',' <identifier> 
                                         (['=' <expression>] ',' <identifier>)*
@@ -532,7 +566,7 @@ SOFTWARE.
 
 <with item>                 ::= <expression> ['as' <target>]
 
-<with items list>           ::= <with item> (',' <with item>)*
+<with items list>           ::= <with item> ( ',' <with item> )*
 
 <with statement>            ::= 'with' <with items list> <statements block>
 
@@ -558,7 +592,7 @@ SOFTWARE.
 
 <spaced template def>       ::= ' <' <template def'> '>' 
 
-<template args>             ::= '<' [<condition> (',' <condition>)*] '>' 
+<template args>             ::= '<' [<condition> ( ',' <condition>)* ] '>' 
 
 <template def>              ::= '<' (<identifier> |
                                      <const qualifier> <template def const name>) 
@@ -588,7 +622,7 @@ SOFTWARE.
 
 <array type>            ::= 'array' <declared contained type>
 
-<auto type>             ::= '?' ['in' <parenth open> <types list> <parenth close>]
+<auto type>             ::= '?' ['in' '(' <types list> ')']
 
 <const qualifier>       ::= 'const' 
 
@@ -627,10 +661,10 @@ SOFTWARE.
 <templated type spec>   ::= '<' <types and exprs list> '>' 
 
 <types and exprs list>  ::= (<expression> | 
-                                <templated type>) ( ',' (<expression> |
-                                                        <templated type>) )*
+                             <templated type>) ( ',' (<expression> |
+                                                      <templated type>) )*
 
-<types list>            ::= <TYPE> (',' <TYPE>)*
+<types list>            ::= <TYPE> ( ',' <TYPE> )*
 
 <volatile qualifier>    ::= 'volatile' 
 
