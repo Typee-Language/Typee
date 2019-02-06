@@ -89,7 +89,7 @@ class FEParser:
 
     #=========================================================================
     #-------------------------------------------------------------------------
-    def _abstract_or_final_qualif(self) -> bool: ###
+    def _abstract_or_final_qualif(self) -> bool:
         #=======================================================================
         # <abstract or final qualif> ::= <abstract qualifier>
         #                             |  EPS
@@ -100,7 +100,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _access_protection_statement(self) -> bool: ###
+    def _access_protection_statement(self) -> bool:
         #=======================================================================
         # <access protection statement> ::= ':' <access qualifier> ':'
         #=======================================================================
@@ -119,7 +119,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _access_qualifier(self) -> bool: ###
+    def _access_qualifier(self) -> bool:
         #=======================================================================
         # <protection qualifier>  ::= 'hidden'
         #                          |  'local'
@@ -135,14 +135,14 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _and_test(self) -> bool: ###
+    def _and_test(self) -> bool:
         #=======================================================================
         # <and test> ::= <not test> <and test'>
         #=======================================================================
         return self._not_test() and self._and_test1()
 
     #-------------------------------------------------------------------------
-    def _and_test1(self) -> bool: ###
+    def _and_test1(self) -> bool:
         #=======================================================================
         # <and test'> ::= 'and' <not test>
         #              |  EPS
@@ -154,14 +154,14 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _arithmetic_expr(self) -> bool: ###
+    def _arithmetic_expr(self) -> bool:
         #=======================================================================
         # <arithmetic expr> ::= <term> <arithmetic expr'>
         #=======================================================================
         return self._term() and self._arithmetic_expr1()
 
     #-------------------------------------------------------------------------
-    def _arithmetic_expr1(self) -> bool: ###
+    def _arithmetic_expr1(self) -> bool:
         #=======================================================================
         # <artihmetic expr'>  ::= '+' <template args> <term> <arithmetic expr'>
         #                      |  '-' <template args> <term> <arithmetic expr'>
@@ -176,7 +176,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _array_type(self) -> bool: ###
+    def _array_type(self) -> bool:
         #=======================================================================
         # <array type> ::= "array" <declared contained type>
         #=======================================================================
@@ -190,7 +190,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assert_statement(self) -> bool: ###
+    def _assert_statement(self) -> bool:
         #===============================================================================
         # <assert statement> ::= 'assert' <expression> <assert statement'>
         #===============================================================================
@@ -205,7 +205,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assert_statement1(self) -> bool: ###
+    def _assert_statement1(self) -> bool:
         #=======================================================================
         # <assert statement'> ::= ',' <expression>
         #                      |  EPS
@@ -218,7 +218,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _assign_decl_def_funccall_statement(self) -> bool: ###
+    def _assign_decl_def_funccall_statement(self) -> bool:
         #=======================================================================
         # <assign decl def func-call statement> ::= <access qualifier> <decl or def statement>
         #                                        |  <decl or def statement>
@@ -240,7 +240,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assign_op(self) -> bool: ###
+    def _assign_op(self) -> bool:
         #=======================================================================
         # <assign op> ::= '='
         #              |  <augmented assign op>
@@ -253,7 +253,7 @@ class FEParser:
             return self._augmented_assign_op()
 
     #-------------------------------------------------------------------------
-    def _assign_or_funccall_statement(self) -> bool: ###
+    def _assign_or_funccall_statement(self) -> bool:
         #=======================================================================
         # <assign or func-call statement> ::= <target list'> <assignment statement>
         #                                  |  <function call>
@@ -268,7 +268,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _assignment_statement(self) -> bool: ###
+    def _assignment_statement(self) -> bool:
         #=======================================================================
         # <assignment statement> ::= <assign op> <expr list>
         #=======================================================================
@@ -280,7 +280,7 @@ class FEParser:
             return False
             
     #-------------------------------------------------------------------------
-    def _atom(self) -> bool: ###
+    def _atom(self) -> bool:
         #=======================================================================
         # <atom> ::= <decr> <dotted name> <incr or decr>
         #         |  <incr> <dotted name> <incr or decr>
@@ -308,7 +308,7 @@ class FEParser:
                     self._boolean()
 
     #-------------------------------------------------------------------------
-    def _atom_element(self) -> bool: ###
+    def _atom_element(self) -> bool:
         #===============================================================================
         # <atom element> ::= <atom> 
         #                 |  <dotted name> <atom element'>
@@ -329,7 +329,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _atom_element1(self) -> bool: ###
+    def _atom_element1(self) -> bool:
         #===============================================================================
         # <atom element'> ::= <atom element''>
         #                  |  <dotted name'> <atom element'>
@@ -345,7 +345,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _atom_element2(self) -> bool: ###
+    def _atom_element2(self) -> bool:
         #=======================================================================
         # <atom element"> ::= <is instance of>
         #                  |  <scalar type casting>
@@ -356,7 +356,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _atom_element3(self) -> bool: ###
+    def _atom_element3(self) -> bool:
         #=======================================================================
         # <atom element'''> ::= <scalar type> <scalar type casting>
         #=======================================================================
@@ -368,7 +368,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _augmented_assign_op(self) -> bool: ###
+    def _augmented_assign_op(self) -> bool:
         #===============================================================================
         # <augmented assign op> ::= '+='
         #                        |  '-='
@@ -410,7 +410,7 @@ class FEParser:
                                            ICTokenNode_AUG_SHIFTR) )
 
     #-------------------------------------------------------------------------
-    def _auto_type(self) -> bool: ###
+    def _auto_type(self) -> bool:
         #=======================================================================
         # <auto type> ::= '?' <auto type'>
         #=======================================================================
@@ -423,7 +423,7 @@ class FEParser:
             return False
         
     #-------------------------------------------------------------------------
-    def _auto_type1(self) -> bool: ###
+    def _auto_type1(self) -> bool:
         #=======================================================================
         # <auto type'> ::= 'in' '(' <types list> ')'
         #               |  EPS
@@ -446,7 +446,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _bitand_expr(self) -> bool: ###
+    def _bitand_expr(self) -> bool:
         #===============================================================================
         # <bitand expr> ::= <shift expr> <bitand expr'>
         #===============================================================================
@@ -457,7 +457,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _bitand_expr1(self) -> bool: ###
+    def _bitand_expr1(self) -> bool:
         #=======================================================================
         # <bitand expr'>  ::= '&' <template args> <shift expr> <bitand expr'>
         #                  |  EPS
@@ -471,7 +471,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _bitor_expr(self) -> bool: ###
+    def _bitor_expr(self) -> bool:
         #=======================================================================
         # <bitor expr> ::= <bitxor expr> <bitor expr'>
         #=======================================================================
@@ -482,7 +482,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _bitor_expr1(self) -> bool: ###
+    def _bitor_expr1(self) -> bool:
         #=======================================================================
         # <bitor expr'> ::= '|' <template args> <bitxor expr> <bitor expr'>
         #                |  EPS
@@ -496,7 +496,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _bitxor_expr(self) -> bool: ###
+    def _bitxor_expr(self) -> bool:
         #=======================================================================
         # <bitxor expr> ::= <bitand expr> <bitxor expr'>
         #=======================================================================
@@ -507,7 +507,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _bitxor_expr1(self) -> bool: ###
+    def _bitxor_expr1(self) -> bool:
         #=======================================================================
         # <bitxor expr'> ::= '^' <template args> <bitand expr> <bitxor expr'>
         #                 |  EPS
@@ -528,7 +528,7 @@ class FEParser:
         return self._true() or self._false()
 
     #-------------------------------------------------------------------------
-    def _bracket_form(self) -> bool: ###
+    def _bracket_form(self) -> bool:
         #=======================================================================
         # <bracket form> ::= '[' <expression> <list or map form> ']'
         #=======================================================================
@@ -549,7 +549,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _call_operator(self) -> bool: ###
+    def _call_operator(self) -> bool:
         #=======================================================================
         # <call operator> ::= '(' ')'
         #=======================================================================
@@ -567,7 +567,7 @@ class FEParser:
                 
 
     #-------------------------------------------------------------------------
-    def _case(self) -> bool: ###
+    def _case(self) -> bool:
         #=======================================================================
         # <case> ::= 'case' <expr list> <statements block>
         #=======================================================================
@@ -583,7 +583,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _cast_op(self) -> bool: ###
+    def _cast_op(self) -> bool:
         #=======================================================================
         # <cast op> ::= 'cast' <identifier>
         #=======================================================================
@@ -600,7 +600,7 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _class_definition(self) -> bool: ###
+    def _class_definition(self) -> bool:
         #=======================================================================
         # <class definition> ::= 'class' <identifier> <template def> <inheritance> <statements block>
         #=======================================================================
@@ -618,7 +618,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _comment(self) -> bool: ###
+    def _comment(self) -> bool:
         #=======================================================================
         # <comment>   ::= '//' <comment'>
         #              |  '/*' <multi lines comment>
@@ -634,14 +634,14 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _comparison(self) -> bool: ###
+    def _comparison(self) -> bool:
         #=======================================================================
         # <comparison> ::= <bitor expr> <comparison'>
         #=======================================================================
         return self._bitor_expr() and self._comparison1()
 
     #-------------------------------------------------------------------------
-    def _comparison1(self) -> bool: ###
+    def _comparison1(self) -> bool:
         #===============================================================================
         # <comparison'> ::= <comp operator> <template args> <bitor expr> <comparison'>
         #                |  <comp operator'> <spaced template args> <bitor expr> <comparison'>
@@ -661,7 +661,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _comp_operator(self) -> bool: ###
+    def _comp_operator(self) -> bool:
         #=======================================================================
         # <comp operator> ::= '<='  |  '=='  |  '!='  |  '>='
         #                  |  'in'
@@ -689,7 +689,7 @@ class FEParser:
             return self._is_operator()
 
     #-------------------------------------------------------------------------
-    def _comp_operator1(self) -> bool: ###
+    def _comp_operator1(self) -> bool:
         #=======================================================================
         # <comp operator'> ::= '<'  |  '>'
         #=======================================================================
@@ -701,7 +701,7 @@ class FEParser:
             return False
         
     #-------------------------------------------------------------------------
-    def _compound_statement(self) -> bool: ###
+    def _compound_statement(self) -> bool:
         #=======================================================================
         # <compound statement> ::= <assign decl def func-call statement>
         #                       |  <embed statement>
@@ -728,14 +728,14 @@ class FEParser:
                 self._with_statement()
 
     #-------------------------------------------------------------------------
-    def _condition(self) -> bool: ###
+    def _condition(self) -> bool:
         #=======================================================================
         # <condition> ::= <or test> <condition'>
         #=======================================================================
         return self._or_test() and self._condition1()
 
     #-------------------------------------------------------------------------
-    def _condition1(self) -> bool: ###
+    def _condition1(self) -> bool:
         #=======================================================================
         # <condition'> ::= 'if' <or test> 'else' <expression>
         #               |  EPS
@@ -758,7 +758,7 @@ class FEParser:
             return True                
 
     #-------------------------------------------------------------------------
-    def _condition_or_unnamed_func(self) -> bool: ###
+    def _condition_or_unnamed_func(self) -> bool:
         #=======================================================================
         # <condition or unnamed func> ::= <or test>
         #                              |  <unnamed function>
@@ -766,7 +766,7 @@ class FEParser:
         return self._or_test() or self._unnamed_function()
 
     #-------------------------------------------------------------------------
-    def _const_qualifier(self) -> bool: ###
+    def _const_qualifier(self) -> bool:
         #=======================================================================
         # <const qualifier> ::= "const"
         #=======================================================================
@@ -778,7 +778,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _contained_type(self) -> bool: ###
+    def _contained_type(self) -> bool:
         #=======================================================================
         # <contained type> ::= <declared contained type>
         #                   |  EPS
@@ -787,7 +787,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _container_type(self) -> bool: ###
+    def _container_type(self) -> bool:
         #=======================================================================
         # <container type> ::= <array_type>
         #                   |  <enum type>
@@ -802,7 +802,7 @@ class FEParser:
                 self._set_type()
 
     #-------------------------------------------------------------------------
-    def _decl_constructor_or_decl_end(self) -> bool: ###
+    def _decl_constructor_or_decl_end(self) -> bool:
         #=======================================================================
         # <decl constructor or decl end> ::= <dotted name'> <decl or def statement'''>
         #                                 |  <function definition'>
@@ -815,7 +815,7 @@ class FEParser:
             return self._function_definition1()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement(self) -> bool: ###
+    def _decl_or_def_statement(self) -> bool:
         #=======================================================================
         # <decl or def statement> ::= <static qualifier> <decl or def statement'>
         #                          |  <class definition>
@@ -831,7 +831,7 @@ class FEParser:
                     self._forward_decl()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement1(self) -> bool: ###
+    def _decl_or_def_statement1(self) -> bool:
         #=======================================================================
         # <decl or def statement'> ::= <abstract or final qualif> <method or operator definition>
         #                           |  <volatile qualifier> <TYPE> <identifier> <memory address> <simple statement end>
@@ -865,7 +865,7 @@ class FEParser:
             return self._decl_or_def_statement2()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement2(self) -> bool: ###
+    def _decl_or_def_statement2(self) -> bool:
         #=======================================================================
         # <decl or def statement''> ::= <TYPE'> <decl or def statement'''>
         #                            |  <enum definition>
@@ -886,7 +886,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement3(self) -> bool: ###
+    def _decl_or_def_statement3(self) -> bool:
         #=======================================================================
         # <decl or def statement'''> ::= <identifier> <decl or def statement''''>
         #                             |  <operator definition>
@@ -897,7 +897,7 @@ class FEParser:
             return self._operator_definition()
 
     #-------------------------------------------------------------------------
-    def _decl_or_def_statement4(self) -> bool: ###
+    def _decl_or_def_statement4(self) -> bool:
         #=======================================================================
         # <decl or def statement''''> ::= <function definition>
         #                              |  <var declaration or assignment> <simple statement end>
@@ -912,7 +912,7 @@ class FEParser:
             return False
         
     #-------------------------------------------------------------------------
-    def _declared_contained_type(self) -> bool: ###
+    def _declared_contained_type(self) -> bool:
         #=======================================================================
         # <declared contained type> ::= '<' <TYPE> '>'
         #=======================================================================
@@ -931,7 +931,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _del_statement(self) -> bool: ###
+    def _del_statement(self) -> bool:
         #=======================================================================
         # <del statement> ::= 'del' <identifiers list>
         #=======================================================================
@@ -945,7 +945,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _dimensions(self) -> bool: ###
+    def _dimensions(self) -> bool:
         #=======================================================================
         # <dimensions> ::= '[' <dimensions'> ']' <dimensions>
         #               |  EPS
@@ -966,7 +966,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _dimensions1(self) -> bool: ###
+    def _dimensions1(self) -> bool:
         #=======================================================================
         # <dimensions'> ::= <integer number>
         #                |  <dotted name>
@@ -979,7 +979,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _dotted_as_name(self) -> bool: ###
+    def _dotted_as_name(self) -> bool:
         #=======================================================================
         # <dotted as name> ::= <dotted name> <dotted as name'>
         #=======================================================================
@@ -989,7 +989,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def dotted_as_name1(self) -> bool: ###
+    def dotted_as_name1(self) -> bool:
         #=======================================================================
         # <dotted as name'> ::= 'as' <identifier>
         #                    |  EPS
@@ -1004,7 +1004,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _dotted_as_names(self) -> bool: ###
+    def _dotted_as_names(self) -> bool:
         #=======================================================================
         # <dotted as names> ::= <dotted as name> <dotted as names'>
         #=======================================================================
@@ -1014,7 +1014,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _dotted_as_names1(self) -> bool: ###
+    def _dotted_as_names1(self) -> bool:
         #=======================================================================
         # <dotted as names'> ::= ',' <dotted as name> <dotted as names'>
         #                     |  EPS
@@ -1027,7 +1027,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _dotted_name(self) -> bool: ###
+    def _dotted_name(self) -> bool:
         #=======================================================================
         # <dotted name> ::= <identifier> <dotted name'>
         #=======================================================================
@@ -1037,7 +1037,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _dotted_name1(self) -> bool: ###
+    def _dotted_name1(self) -> bool:
         #=======================================================================
         # <dotted name'> ::= '.' <identifier> <dotted name'>
         #                 | EPS
@@ -1050,7 +1050,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _ellipsis(self) -> bool: ###
+    def _ellipsis(self) -> bool:
         #=======================================================================
         # <ellipsis> ::= '...'
         #=======================================================================
@@ -1062,7 +1062,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _embed_statement(self) -> bool: ###
+    def _embed_statement(self) -> bool:
         #=======================================================================
         # <embed statement> ::= 'embed' <language> <embed statement'>
         #=======================================================================
@@ -1078,7 +1078,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _embed_statement1(self) -> bool: ###
+    def _embed_statement1(self) -> bool:
         #=======================================================================
         # <embed statement'> ::= <dotted name> <simple statement end>
         #                     |  <embedded language code>
@@ -1096,7 +1096,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _embedded_language_code(self) -> bool: ###
+    def _embedded_language_code(self) -> bool:
         #===================================================================
         # <embedded language code>    ::= '{{' <embedded language code'>
         # <embedded language code'>   ::= <any embedded code char> <embeded language code'>
@@ -1128,7 +1128,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _empty_statement(self) -> bool: ###
+    def _empty_statement(self) -> bool:
         #=======================================================================
         # <empty statement> ::= <comment>
         #                    |  <NEWLINE>
@@ -1141,7 +1141,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _enclosure(self) -> bool: ###
+    def _enclosure(self) -> bool:
         #=======================================================================
         # <enclosure> ::= <bracket form>
         #              |  <parenthesis form>
@@ -1149,7 +1149,7 @@ class FEParser:
         return self._bracket_form() or self._parenthesis_form()
 
     #-------------------------------------------------------------------------
-    def _end_line(self) -> bool: ###
+    def _end_line(self) -> bool:
         #=======================================================================
         # <end line> ::= <NEWLINE>
         #             |  <ENDOFFILE>
@@ -1162,7 +1162,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _end_of_file(self) -> bool: ###
+    def _end_of_file(self) -> bool:
         #=======================================================================
         # <ENDOFFILE> ::= u0x00
         #=======================================================================
@@ -1174,7 +1174,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _ensure_statement(self) -> bool: ###
+    def _ensure_statement(self) -> bool:
         #=======================================================================
         # <ensure statement> ::= 'ensure' <expression> <ensure statement'>
         #=======================================================================
@@ -1189,7 +1189,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _ensure_statement1(self) -> bool: ###
+    def _ensure_statement1(self) -> bool:
         #=======================================================================
         # <ensure statement'> ::= ',' <expression>
         #                      |  EPS
@@ -1277,7 +1277,7 @@ class FEParser:
             return False                
 
     #-------------------------------------------------------------------------
-    def _enum_type(self) -> bool: ###
+    def _enum_type(self) -> bool:
         #=======================================================================
         # <enum type> ::= 'enum'
         #=======================================================================
@@ -1308,14 +1308,14 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _expr_list(self) -> bool: ###
+    def _expr_list(self) -> bool:
         #=======================================================================
         # <expr list> ::= <expression> <expr list'>
         #=======================================================================
         return self._expression() and self._expr_list1()
 
     #-------------------------------------------------------------------------
-    def _expr_list1(self) -> bool: ###
+    def _expr_list1(self) -> bool:
         #=======================================================================
         # <expr list'> ::= ',' <expression> <expr list'>
         #               |  EPS
@@ -1328,7 +1328,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _expression(self) -> bool: ###
+    def _expression(self) -> bool:
         #=======================================================================
         # <expression> ::= <condition>
         #               |  <unnamed func>
@@ -1341,7 +1341,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _factor(self) -> bool: ###
+    def _factor(self) -> bool:
         #=======================================================================
         # <factor> ::= <atom element> <factor'>
         #=======================================================================
@@ -1352,7 +1352,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _factor1(self) -> bool: ###
+    def _factor1(self) -> bool:
         #=======================================================================
         # <factor'> ::= '**' <template args> <unary expr>
         #            |  '^^' <template args> <unary expr>
@@ -1367,7 +1367,7 @@ class FEParser:
         return True
         
     #-------------------------------------------------------------------------
-    def _false(self) -> bool: ###
+    def _false(self) -> bool:
         #=======================================================================
         # <FALSE> ::= 'False'
         #          |  'false'
@@ -1475,6 +1475,7 @@ class FEParser:
             if not self._expression():
                 self._append_error( FESyntaxErrors.FILE_FLUSH_APPEND_EXPR )
         return True
+    
     #-------------------------------------------------------------------------
     def file_flushing2(self) -> bool:
         #=======================================================================
@@ -1490,7 +1491,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _file_type(self) -> bool: ###
+    def _file_type(self) -> bool:
         #=======================================================================
         # <file type> ::= 'file' <contained type>
         #=======================================================================
@@ -1503,7 +1504,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _float_number(self) -> bool: ###
+    def _float_number(self) -> bool:
         if self._current.is_FLOAT():
             self._append_syntaxic_node()
             self._next_token_node()
@@ -1512,7 +1513,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _flow_statement(self) -> bool: ###
+    def _flow_statement(self) -> bool:
         #=======================================================================
         # <flow statement> ::= 'break'
         #                   |  'continue'
@@ -1531,7 +1532,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _for_comprehension(self) -> bool: ###
+    def _for_comprehension(self) -> bool:
         #=======================================================================
         # <for comprehension> ::= 'for' '(' <target list> 'in' <or test> <iter comprehension> ')'
         #=======================================================================
@@ -1563,7 +1564,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _for_statement(self) -> bool: ###
+    def _for_statement(self) -> bool:
         #=======================================================================
         # <for statement> ::= 'for' '(' <target list> 'in' <expr list> ')' <statements block> <for statement'>
         #=======================================================================
@@ -1597,7 +1598,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _for_statement1(self) -> bool: ###
+    def _for_statement1(self) -> bool:
         #=======================================================================
         # <for statement'> ::= 'otherwise' <statements block>
         #                   |  EPS
@@ -1610,7 +1611,7 @@ class FEParser:
         return True
         
     #-------------------------------------------------------------------------
-    def _forever_statement(self) -> bool: ###
+    def _forever_statement(self) -> bool:
         #=======================================================================
         # <forever statement> ::= 'forever' '(' ')' <statements block>
         #=======================================================================
@@ -1718,7 +1719,7 @@ class FEParser:
         return self._function_declaration() or self._fwd_var_decl()
 
     #-------------------------------------------------------------------------
-    def _function_args_declaration(self) -> bool: ###
+    def _function_args_declaration(self) -> bool:
         #=======================================================================
         # <function args declaration> ::= '(' <typed args list> ')'
         #=======================================================================
@@ -1736,7 +1737,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _function_call(self) -> bool: ###
+    def _function_call(self) -> bool:
         #=======================================================================
         # <function call> ::= <template args> '(' <function call args> ')'
         #=======================================================================
@@ -1757,7 +1758,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _function_call_args(self) -> bool: ###
+    def _function_call_args(self) -> bool:
         #=======================================================================
         # <function call args> ::= <expression> <function call args'>
         #                       |  EPS
@@ -1768,7 +1769,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _function_call_args1(self) -> bool: ###
+    def _function_call_args1(self) -> bool:
         #=======================================================================
         # <function call args'> ::= ',' <function call args">
         #                        |  <for comprehension>
@@ -1786,7 +1787,7 @@ class FEParser:
             return True        
 
     #-------------------------------------------------------------------------
-    def _function_call_args2(self) -> bool: ###
+    def _function_call_args2(self) -> bool:
         #=======================================================================
         # <function call args"> ::= <expression> <function call args'>
         #                        |  <ellipsis> <identifier>
@@ -1820,7 +1821,7 @@ class FEParser:
         return self._function_args_declaration()
 
     #-------------------------------------------------------------------------
-    def _function_definition(self) -> bool: ###
+    def _function_definition(self) -> bool:
         #=======================================================================
         # <function definition> ::= <template def> <function definition'>
         #                        |  <function definition'>
@@ -1831,7 +1832,7 @@ class FEParser:
             return self._function_definition1()
 
     #-------------------------------------------------------------------------
-    def _function_definition1(self) -> bool: ###
+    def _function_definition1(self) -> bool:
         #=======================================================================
         # <function definition'> ::= <function args declaration> <function definition"> <statements block>
         #=======================================================================
@@ -1843,7 +1844,7 @@ class FEParser:
         return True 
 
     #-------------------------------------------------------------------------
-    def _function_definition2(self) -> bool: ###
+    def _function_definition2(self) -> bool:
         #=======================================================================
         # <function definition"> ::= 'exclude' <languages> | EPS
         #=======================================================================
@@ -1896,7 +1897,7 @@ class FEParser:
         return True            
 
     #-------------------------------------------------------------------------
-    def _identifier(self) -> bool: ###
+    def _identifier(self) -> bool:
         #=======================================================================
         # <identifier>  ::= '_' <identifier'>
         #                |  <alpha char> <identifier'>
@@ -1913,7 +1914,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _identifiers_list(self) -> bool: ###
+    def _identifiers_list(self) -> bool:
         #=======================================================================
         # <identifiers list> ::= <dotted name> <identifiers list'>
         #=======================================================================
@@ -1923,7 +1924,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _identifiers_list1(self) -> bool: ###
+    def _identifiers_list1(self) -> bool:
         #=======================================================================
         # <identifiers list'> ::= ',' <dotted name> <identifiers list'>
         #                      |    EPS
@@ -1936,7 +1937,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _if_comprehension(self) -> bool: ###
+    def _if_comprehension(self) -> bool:
         #=======================================================================
         # <if comprehension> ::= 'if' '(' <condition or unnamed func> ')' <iter comprehension>
         #=======================================================================
@@ -1961,7 +1962,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _if_statement(self) -> bool: ###
+    def _if_statement(self) -> bool:
         #=======================================================================
         # <if statement> ::= 'if' '(' <expression> ')' <statements block> <if statement'>
         #=======================================================================
@@ -1988,7 +1989,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _if_statement1(self) -> bool: ###
+    def _if_statement1(self) -> bool:
         #=======================================================================
         # <if statement'> ::= 'elseif' '(' <expression> ')' <statements block> <if statement'>
         #                  |  'elif' '(' <expression> ')' <statements block> <if statement'>
@@ -2021,7 +2022,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _import_as_name(self) -> bool: ###
+    def _import_as_name(self) -> bool:
         #=======================================================================
         # <import as name> ::= <identifier> <import as name'>
         #=======================================================================
@@ -2031,7 +2032,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_as_name1(self) -> bool: ###
+    def _import_as_name1(self) -> bool:
         #=======================================================================
         # <import as name'> ::= 'as' <identifier>
         #                    |  EPS
@@ -2044,7 +2045,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _import_as_names(self) -> bool: ###
+    def _import_as_names(self) -> bool:
         #=======================================================================
         # <import as names> ::= <import as name> <import as names'>
         #=======================================================================
@@ -2055,7 +2056,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_as_names1(self) -> bool: ###
+    def _import_as_names1(self) -> bool:
         #=======================================================================
         # <import as names'> ::= ',' <import as name> <import as names'>
         #                     |  EPS
@@ -2068,7 +2069,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _import_from(self) -> bool: ###
+    def _import_from(self) -> bool:
         #=======================================================================
         # <import from> ::= 'from' <import from'>
         #=======================================================================
@@ -2081,7 +2082,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_from1(self) -> bool: ###
+    def _import_from1(self) -> bool:
         #=======================================================================
         # <import from'> ::= '.' <import from'>
         #                 |  <import from''>
@@ -2092,7 +2093,7 @@ class FEParser:
         return self._import_from2() ## (notice: always returns True)
 
     #-------------------------------------------------------------------------
-    def _import_from2(self) -> bool: ###
+    def _import_from2(self) -> bool:
         #=======================================================================
         # <import from''> ::= <dotted name> 'import' <import from'''>
         #=======================================================================
@@ -2108,7 +2109,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _import_from3(self) -> bool: ###
+    def _import_from3(self) -> bool:
         #=======================================================================
         # <import from'''> ::= 'all'
         #                   |  '(' <import as names> ')'
@@ -2135,7 +2136,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_name(self) -> bool: ###
+    def _import_name(self) -> bool:
         #=======================================================================
         # <import name> ::= 'import' <dotted as names>
         #=======================================================================
@@ -2149,7 +2150,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _import_statement(self) -> bool: ###
+    def _import_statement(self) -> bool:
         #=======================================================================
         # <import statement> ::= <import name>
         #                     |  <import from>
@@ -2157,7 +2158,7 @@ class FEParser:
         return self._import_name() or self._import_from()
 
     #-------------------------------------------------------------------------
-    def _incr_or_decr(self) -> bool: ###
+    def _incr_or_decr(self) -> bool:
         #=======================================================================
         # <incr or decr> ::= '--'  |  '++'  |  EPS
         #=======================================================================
@@ -2167,7 +2168,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _inheritance(self) -> bool: ###
+    def _inheritance(self) -> bool:
         #=======================================================================
         # <inheritance> ::= ':' <inheritance item> <inheritance'>
         #                |  EPS
@@ -2181,7 +2182,7 @@ class FEParser:
         return True
         
     #-------------------------------------------------------------------------
-    def _inheritance1(self) -> bool: ###
+    def _inheritance1(self) -> bool:
         #=======================================================================
         # <inheritance'> ::= ',' <inheritence item> <inheritance'>
         #                 |  EPS
@@ -2194,7 +2195,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _inheritance_item(self) -> bool: ###
+    def _inheritance_item(self) -> bool:
         #=======================================================================
         # <inheritance item> ::= <access qualifier> <inheritance item'>
         #                     |  <inheritance item'>
@@ -2205,7 +2206,7 @@ class FEParser:
             return self._inheritance_item1()
 
     #-------------------------------------------------------------------------
-    def _inheritance_item1(self) -> bool: ###
+    def _inheritance_item1(self) -> bool:
         #=======================================================================
         # <inheritance item'> ::= <dotted name> <template args>
         #=======================================================================
@@ -2216,7 +2217,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _integer_number(self) -> bool: ###
+    def _integer_number(self) -> bool:
         #=======================================================================
         # <integer number> ::= '1'...'9' <integer number'>
         #                   |  <octal hexa binary number>
@@ -2229,7 +2230,7 @@ class FEParser:
             return False
         
     #-------------------------------------------------------------------------
-    def _is_instance_of(self) -> bool: ###
+    def _is_instance_of(self) -> bool:
         #=======================================================================
         # <is instance of> ::= '->' <dotted name>
         #=======================================================================
@@ -2243,7 +2244,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _is_operator(self) -> bool: ###
+    def _is_operator(self) -> bool:
         #=======================================================================
         # <is operator> ::= 'is' <is operator'>
         #=======================================================================
@@ -2255,7 +2256,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _is_operator1(self) -> bool: ###
+    def _is_operator1(self) -> bool:
         #=======================================================================
         # <is operator'> ::= 'not'
         #                 |  EPS
@@ -2266,7 +2267,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _iter_comprehension(self) -> bool: ###
+    def _iter_comprehension(self) -> bool:
         #=======================================================================
         # <iter comprehension> ::= <for comprehension>
         #                       |  <if comprehension>
@@ -2280,7 +2281,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _language(self): ###
+    def _language(self) -> bool:
         #=======================================================================
         # <language> ::= 'cpp' | 'java' | 'python' | 'py' | 'javascript' | 'm6809'
         #=======================================================================
@@ -2292,7 +2293,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _list_form(self) -> bool: ###
+    def _list_form(self) -> bool:
         #=======================================================================
         # <list form>    ::= '[' <expression> <list or comprehension> ']'
         #=======================================================================
@@ -2312,7 +2313,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _list_or_comprehension(self) -> bool: ###
+    def _list_or_comprehension(self) -> bool:
         #=======================================================================
         # <list or comprehension> ::= <expr list'>
         #                          |  <for comprehension>
@@ -2324,7 +2325,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _list_or_map_form(self) -> bool: ###
+    def _list_or_map_form(self) -> bool:
         #=======================================================================
         # <list or map form> ::= <list form>
         #                      | <map form>
@@ -2332,7 +2333,7 @@ class FEParser:
         return self._list_form() or self._map_form()
 
     #-------------------------------------------------------------------------
-    def _list_type(self) -> bool: ###
+    def _list_type(self) -> bool:
         #=======================================================================
         # <list type> ::= "list" <contained type>
         #=======================================================================
@@ -2356,7 +2357,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _map_form(self) -> bool: ###
+    def _map_form(self) -> bool:
         #=======================================================================
         # <map form> ::= ':' <expression> <map list or comprehension>
         #=======================================================================
@@ -2372,7 +2373,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _map_item(self) -> bool: ###
+    def _map_item(self) -> bool:
         #=======================================================================
         # <map item> ::= <expression> ':' <expression>
         #=======================================================================
@@ -2389,7 +2390,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _map_list(self) -> bool: ###
+    def _map_list(self) -> bool:
         #=======================================================================
         # <map list> ::= ',' <map item> <map list>
         #             |  EPS
@@ -2402,7 +2403,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _map_list_or_comprehension(self) -> bool: ###
+    def _map_list_or_comprehension(self) -> bool:
         #=======================================================================
         # <map list or comprehension> ::= ',' <map item> <map list>
         #                              |  <for comprehension>
@@ -2418,7 +2419,7 @@ class FEParser:
             return self._for_comprehension()
 
     #-------------------------------------------------------------------------
-    def _map_type(self) -> bool: ###
+    def _map_type(self) -> bool:
         #=======================================================================
         # <<map type> ::= "map" <contained type>
         #=======================================================================
@@ -2431,7 +2432,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _me(self) -> bool: ###
+    def _me(self) -> bool:
         #=======================================================================
         # <ME> ::= 'me'
         #=======================================================================
@@ -2443,7 +2444,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _memory_address(self) -> bool: ###
+    def _memory_address(self) -> bool:
         #=======================================================================
         # <memory address> ::= '@' <integer number>
         #                   |  EPS
@@ -2456,7 +2457,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _method_or_operator_definition(self) -> bool: ###
+    def _method_or_operator_definition(self) -> bool:
         #=======================================================================
         # <method or operator definition> ::= <returned type> <method or operator definition'>
         #=======================================================================
@@ -2468,7 +2469,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _method_or_operator_definition1(self) -> bool: ###
+    def _method_or_operator_definition1(self) -> bool:
         #=======================================================================
         # <method or operator definition'> ::= <operator definition>
         #                                   |  <identifier> <function definition>
@@ -2493,7 +2494,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _none(self) -> bool: ###
+    def _none(self) -> bool:
         #=======================================================================
         # <NONE> ::= "None"
         #         |  "none"
@@ -2506,7 +2507,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _nop_statement(self) -> bool: ###
+    def _nop_statement(self) -> bool:
         #=======================================================================
         # <nop statement> ::= 'nop'
         #                  |  'pass'
@@ -2519,7 +2520,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _not_test(self) -> bool: ###
+    def _not_test(self) -> bool:
         #=======================================================================
         # <not test> ::= 'not' <not test>
         #             |  <comparison>
@@ -2535,7 +2536,7 @@ class FEParser:
             return self._comparison()
 
     #-------------------------------------------------------------------------
-    def _operator(self) -> bool: ###
+    def _operator(self) -> bool:
         #=======================================================================
         # <operator> ::= '<='  |  '=='  |  '!='  |  '>='
         #             |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'
@@ -2568,7 +2569,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _operator1(self) -> bool: ###
+    def _operator1(self) -> bool:
         #=======================================================================
         # <operator'> ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
         #=======================================================================
@@ -2582,7 +2583,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _operator_definition(self) -> bool: ###
+    def _operator_definition(self) -> bool:
         #=======================================================================
         # <operator definition> ::= 'operator' <operator definition'>
         #=======================================================================
@@ -2596,7 +2597,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _operator_definition1(self) -> bool: ###
+    def _operator_definition1(self) -> bool:
         #=======================================================================
         # <operator definition'> ::= <operator> <template def> <function args declaration> <statements block>
         #                         |  <operator'> <spaced template def> <function args declaration> <statements block>
@@ -2622,14 +2623,14 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _or_test(self) -> bool: ###
+    def _or_test(self) -> bool:
         #=======================================================================
         # <or test> ::= <and test> <or test'>
         #=======================================================================
         return self._and_test() and self._or_test1()
 
     #-------------------------------------------------------------------------
-    def _or_test1(self) -> bool: ###
+    def _or_test1(self) -> bool:
         #=======================================================================
         # <or test'> ::= 'or' <and test>
         #             |  EPS
@@ -2644,7 +2645,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _parenthesis_form(self) -> bool: ###
+    def _parenthesis_form(self) -> bool:
         #=======================================================================
         # <parenthesis form> ::= '(' <expr list> ')'
         #=======================================================================
@@ -2663,7 +2664,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _parse_code_file(self): ###
+    def _parse_code_file(self) -> bool:
         #=======================================================================
         # <code file> ::=  <statements list> <ENDOFFILE>
         #=======================================================================
@@ -2672,7 +2673,7 @@ class FEParser:
             self._append_error( FESyntaxErrors.END_OF_FILE )
 
     #-------------------------------------------------------------------------
-    def _raise_statement(self) -> bool: ###
+    def _raise_statement(self) -> bool:
         #=======================================================================
         # <raise statement> ::= 'raise' <expression> <raise statement'>
         #=======================================================================
@@ -2687,7 +2688,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _raise_statement1(self) -> bool: ###
+    def _raise_statement1(self) -> bool:
         #=======================================================================
         # <raise statement'> ::= 'from' <expression>
         #                     |  EPS
@@ -2702,7 +2703,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _reference(self) -> bool: ###
+    def _reference(self) -> bool:
         #=======================================================================
         # <reference> ::= '@' <dotted name>
         #=======================================================================
@@ -2717,7 +2718,7 @@ class FEParser:
 
 
     #-------------------------------------------------------------------------
-    def _repeat_statement(self) -> bool: ###
+    def _repeat_statement(self) -> bool:
         #=======================================================================
         # <repeat statement> ::= 'repeat' <statements block> 'until' '(' <expression> ')' <simple statement end>
         #=======================================================================
@@ -2753,7 +2754,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _require_statement(self) -> bool: ###
+    def _require_statement(self) -> bool:
         #=======================================================================
         # <require statement> ::= 'require' <expression> <require statement'>
         #=======================================================================
@@ -2768,7 +2769,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _require_statement1(self) -> bool: ###
+    def _require_statement1(self) -> bool:
         #=======================================================================
         # <require statement'> ::= ',' <expression>
         #                       |  EPS
@@ -2781,7 +2782,7 @@ class FEParser:
         return True            
 
     #-------------------------------------------------------------------------
-    def _return_statement(self) -> bool: ###
+    def _return_statement(self) -> bool:
         #=======================================================================
         # <return statement> ::= 'ret' <return statement'>
         #                     |  'return' <return statement'>
@@ -2795,7 +2796,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _return_statement1(self) -> bool: ###
+    def _return_statement1(self) -> bool:
         #=======================================================================
         # <return statement'> ::= <expr list>
         #                      |  EPS
@@ -2804,7 +2805,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _returned_type(self) -> bool: ###
+    def _returned_type(self) -> bool:
         #=======================================================================
         # <returned type> ::= <TYPE>
         #                  |  EPS
@@ -2815,7 +2816,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _scalar(self) -> bool: ###
+    def _scalar(self) -> bool:
         #=======================================================================
         # <scalar> ::= <decimal number>
         #           |  <octal hexa binary number>
@@ -2828,7 +2829,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _scalar_type(self) -> bool: ###
+    def _scalar_type(self) -> bool:
         #=======================================================================
         # <scalar type>   ::= "bool"
         #                  |  "char"
@@ -2855,7 +2856,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _scalar_type_casting(self) -> bool: ###
+    def _scalar_type_casting(self) -> bool:
         #=======================================================================
         # <scalar type casting> ::= '(' <expression> ')'
         #=======================================================================
@@ -2874,7 +2875,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _scalar_type_or_dotted_name(self) -> bool: ###
+    def _scalar_type_or_dotted_name(self) -> bool:
         #=======================================================================
         # <scalar type or dotted name> ::= <scalar type>
         #                               |  <dotted name>
@@ -2882,7 +2883,7 @@ class FEParser:
         return self._scalar_type() or self._dotted_name()
 
     #-------------------------------------------------------------------------
-    def _set_type(self) -> bool: ###
+    def _set_type(self) -> bool:
         #=======================================================================
         # <set type> ::= "set" <contained type>
         #=======================================================================
@@ -2895,7 +2896,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _shift_expr(self) -> bool: ###
+    def _shift_expr(self) -> bool:
         #=======================================================================
         # <shift expr> ::= <arithmetic expr> <shift expr'>
         #=======================================================================
@@ -2905,7 +2906,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _shift_expr1(self) -> bool: ###
+    def _shift_expr1(self) -> bool:
         #=======================================================================
         # <shift expr'>   ::= '<<'  <spaced template args> <arithmetic expr> <shift expr'>
         #                  |  '>>'  <template args> <arithmetic expr> <shift expr'>
@@ -2930,7 +2931,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _simple_statement(self) -> bool: ###
+    def _simple_statement(self) -> bool:
         #=======================================================================
         # <simple statement> ::= <assert statement> <simple statement end>
         #                     |  <del statement> <simple statement end>
@@ -2962,7 +2963,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _simple_statement_end(self): ###
+    def _simple_statement_end(self) -> bool:
         #=======================================================================
         # <simple statement end> ::= ';'
         #=======================================================================
@@ -2974,7 +2975,7 @@ class FEParser:
             return False   
 
     #-------------------------------------------------------------------------
-    def _slice_end(self) -> bool: ###
+    def _slice_end(self) -> bool:
         #=======================================================================
         # <slice end> ::= ']'
         #              |  ')'
@@ -2987,7 +2988,7 @@ class FEParser:
         return True 
 
     #-------------------------------------------------------------------------
-    def _slice_form(self) -> bool: ###
+    def _slice_form(self) -> bool:
         #=======================================================================
         # <slice form> ::= ':' <slice upper> <slice step>
         #=======================================================================
@@ -3001,7 +3002,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _slice_step(self) -> bool: ###
+    def _slice_step(self) -> bool:
         #=======================================================================
         # <slice step> ::= ':' <slice step'>
         #               |  EPS
@@ -3013,7 +3014,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _slice_step1(self) -> bool: ###
+    def _slice_step1(self) -> bool:
         #=======================================================================
         # <slice step'> ::= <expression>
         #                |    EPS 
@@ -3022,7 +3023,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _slice_upper(self) -> bool: ###
+    def _slice_upper(self) -> bool:
         #=======================================================================
         # <slice upper> ::= <expression>
         #                |    EPS
@@ -3031,7 +3032,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _spaced_template_args(self) -> bool: ###
+    def _spaced_template_args(self) -> bool:
         #=======================================================================
         # <spaced template args> ::= ' <' <template args'> '>'
         #                         |    EPS
@@ -3039,7 +3040,7 @@ class FEParser:
         return self._template_args() ## (notice: space before < is mandatory and has already be skipped by Scanner)
 
     #-------------------------------------------------------------------------
-    def _spaced_template_def(self) -> bool: ###
+    def _spaced_template_def(self) -> bool:
         #=======================================================================
         # <spaced template def>  ::= ' <' <template def'> '>'
         #                         |    EPS
@@ -3047,7 +3048,7 @@ class FEParser:
         return self._template_def() ## (notice: space before < is mandatory and has already be skipped by Scanner)
 
     #-------------------------------------------------------------------------
-    def _statements_block(self) -> bool: ###
+    def _statements_block(self) -> bool:
         #=======================================================================
         # <statements block> ::= '{' <statements list> '}'
         #                     |  <nop statement> <simple statement end>
@@ -3074,7 +3075,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _statements_list(self) -> bool: ###
+    def _statements_list(self) -> bool:
         #===============================================================================
         # <statements list> ::= <empty statement> <statements list>
         #                    |  <compound statement> <statements list>
@@ -3091,7 +3092,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _static_qualifier(self) -> bool: ###
+    def _static_qualifier(self) -> bool:
         #=======================================================================
         # <static qualifier> ::= "static"
         #=======================================================================
@@ -3103,7 +3104,7 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _string(self) -> bool: ###
+    def _string(self) -> bool:
         #=======================================================================
         # <string> ::= <single string> <string'> <string methods>
         #=======================================================================
@@ -3117,7 +3118,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _string1(self) -> bool: ###
+    def _string1(self) -> bool:
         #=======================================================================
         # <string'> ::= <single string> <string'>
         #            |  EPS
@@ -3128,7 +3129,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _string_methods(self) -> bool: ###
+    def _string_methods(self) -> bool:
         #=======================================================================
         # <string methods> ::= '.' <identifier> <function call> <string methods'>
         #                   |  EPS
@@ -3145,7 +3146,7 @@ class FEParser:
             return True
 
     #-------------------------------------------------------------------------
-    def _string_methods1(self) -> bool: ###
+    def _string_methods1(self) -> bool:
         #=======================================================================
         # <string methods'> ::= '.' <identifier> <function call> <string methods'>
         #                    |  EPS
@@ -3159,7 +3160,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _subscription_or_slicing(self) -> bool: ###
+    def _subscription_or_slicing(self) -> bool:
         #=======================================================================
         # <subscription or slicing> ::= '[' <expression> <subscription or slicing'>
         #=======================================================================
@@ -3174,7 +3175,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _subscription_or_slicing1(self) -> bool: ###
+    def _subscription_or_slicing1(self) -> bool:
         #=======================================================================
         # <subscription or slicing'> ::= <expr list'> ']'
         #                             |  <if comprehension>
@@ -3194,7 +3195,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _switch_block(self) -> bool: ###
+    def _switch_block(self) -> bool:
         #=======================================================================
         # <switch block> ::= <case> <switch block>
         #                 |  EPS
@@ -3204,7 +3205,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _switch_statement(self) -> bool: ###
+    def _switch_statement(self) -> bool:
         #=======================================================================
         # <switch statement> ::= 'switch' '(' <expression> ')' '{' <switch block> '}' <switch statement'>
         #=======================================================================
@@ -3240,7 +3241,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _switch_statement1(self) -> bool: ###
+    def _switch_statement1(self) -> bool:
         #=======================================================================
         # <switch statement'> ::= 'otherwise' <statements block>
         #                      |  EPS
@@ -3253,7 +3254,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _target(self) -> bool: ###
+    def _target(self) -> bool:
         #=======================================================================
         # <target> ::= <dotted name> <target'>
         #=======================================================================
@@ -3262,7 +3263,7 @@ class FEParser:
         return self._target1() ## (notice: always returns True)
 
     #-------------------------------------------------------------------------
-    def _target1(self) -> bool: ###
+    def _target1(self) -> bool:
         #=======================================================================
         # <target'> ::= <subscription or slicing> <target'>
         #            |   EPS
@@ -3272,7 +3273,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _target_list(self) -> bool: ###
+    def _target_list(self) -> bool:
         #=======================================================================
         # <target list> ::= <typed target> <target list'>
         #=======================================================================
@@ -3283,7 +3284,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _target_list1(self) -> bool: ###
+    def _target_list1(self) -> bool:
         #=======================================================================
         # <target list'> ::= ',' <typed target> <target list'>
         #                 |  EPS
@@ -3296,7 +3297,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _template_args(self) -> bool: ###
+    def _template_args(self) -> bool:
         #=======================================================================
         # <template args> ::= '<' template args'>
         #                  |  EPS
@@ -3309,7 +3310,7 @@ class FEParser:
         return True
         
     #-------------------------------------------------------------------------
-    def _template_args1(self) -> bool: ###
+    def _template_args1(self) -> bool:
         #=======================================================================
         # <template args'> ::= <condition> <template args">
         #                   |  '>'
@@ -3324,7 +3325,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_args2(self) -> bool: ###
+    def _template_args2(self) -> bool:
         #=======================================================================
         # <template args"> ::= ',' <condition> <template args">
         #                   |  '>'
@@ -3341,7 +3342,7 @@ class FEParser:
         else:
             return False
     #-------------------------------------------------------------------------
-    def _template_def(self) -> bool: ###
+    def _template_def(self) -> bool:
         #=======================================================================
         # <template def> ::= '<' template def'>
         #                  |  EPS
@@ -3354,7 +3355,7 @@ class FEParser:
         return True
         
     #-------------------------------------------------------------------------
-    def _template_def1(self) -> bool: ###
+    def _template_def1(self) -> bool:
         #=======================================================================
         # <template def'> ::= <template def''> <template def'''>
         #                  |  '>'
@@ -3371,7 +3372,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_def2(self) -> bool: ###
+    def _template_def2(self) -> bool:
         #=======================================================================
         # <template def''> ::= <identifier>
         #                   |  <const qualifier> <template def const name>
@@ -3386,7 +3387,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_def3(self) -> bool: ###
+    def _template_def3(self) -> bool:
         #=======================================================================
         # <template def'''> ::= ',' <template def''> <template def'''>
         #                    |  '>'
@@ -3404,7 +3405,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_def_const_name(self) -> bool: ###
+    def _template_def_const_name(self) -> bool:
         #=======================================================================
         # <template def const name> ::= <scalar type or dotted name> <identifier> <template def const name'>
         #=======================================================================
@@ -3417,7 +3418,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _template_def_const_name1(self) -> bool: ###
+    def _template_def_const_name1(self) -> bool:
         #=======================================================================
         # <template def const name'> ::= '=' <expression>
         #                             |  EPS
@@ -3430,7 +3431,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _templated_type(self) -> bool: ###
+    def _templated_type(self) -> bool:
         #=======================================================================
         # <templated type> ::=  <dotted name> <templated type'>
         #=======================================================================
@@ -3441,7 +3442,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _templated_type1(self): ###
+    def _templated_type1(self) -> bool:
         #=======================================================================
         # <templated type'> ::= '<' <types and exprs list> '>'
         #                    |  EPS
@@ -3459,7 +3460,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _term(self) -> bool: ###
+    def _term(self) -> bool:
         #=======================================================================
         # <term> ::= <factor> <term'>
         #=======================================================================
@@ -3469,7 +3470,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _term1(self) -> bool: ###
+    def _term1(self) -> bool:
         #=======================================================================
         # <term'> ::= '*' <template args> <factor> <term'>
         #          |  '/' <template args> <factor> <term'>
@@ -3500,7 +3501,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _true(self) -> bool: ###
+    def _true(self) -> bool:
         #=======================================================================
         # <TRUE> ::= 'True'
         #         |  'true'
@@ -3513,7 +3514,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_else(self) -> bool: ###
+    def _try_else(self) -> bool:
         #=======================================================================
         # <try else> ::= 'otherwise'
         #=======================================================================
@@ -3525,7 +3526,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_except(self) -> bool: ###
+    def _try_except(self) -> bool:
         #=======================================================================
         # <try except> ::= 'except' '(' <try except'> ')'
         #=======================================================================
@@ -3548,7 +3549,7 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _try_except1(self) -> bool: ###
+    def _try_except1(self) -> bool:
         #=======================================================================
         # <try except'> ::= <expression> <try except">
         #                |  'all'
@@ -3562,7 +3563,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _try_except2(self) -> bool: ###
+    def _try_except2(self) -> bool:
         #=======================================================================
         # <try except"> ::= 'as' <identifier>
         #                |  EPS
@@ -3575,7 +3576,7 @@ class FEParser:
         return True
             
     #-------------------------------------------------------------------------
-    def _try_finally(self) -> bool: ###
+    def _try_finally(self) -> bool:
         #=======================================================================
         # <try finally> ::= 'finally'
         #=======================================================================
@@ -3587,7 +3588,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_statement(self) -> bool: ###
+    def _try_statement(self) -> bool:
         #=======================================================================
         # <try statement> ::= 'try' <statements block> <try statement excepts>
         #                         <try statement else> <try statement finally>
@@ -3606,6 +3607,17 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
+    def _try_statement_else(self) -> bool:
+        #=======================================================================
+        # <try statement else> ::= <try else> <statements block>                                                                   ##
+        #                       |  EPS                                                                                             ##
+        #=======================================================================
+        if self._try_else():
+            if not self._statements_block():
+                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
+        return True
+
+    #-------------------------------------------------------------------------
     def _try_statement_excepts(self) -> bool:
         #=======================================================================
         # <try statement excepts> ::= <try except> <statements block> <try statements excepts'>
@@ -3613,7 +3625,7 @@ class FEParser:
         if self._try_except():
             if not self._statements_block():
                 self._append_error( FESyntaxErrors.TRY_EXCEPT_BODY )
-            return self._try_statement_excepts()
+            return self._try_statement_excepts1()
         else:
             return False
 
@@ -3629,17 +3641,6 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _try_statement_else(self) -> bool:
-        #=======================================================================
-        # <try statement else> ::= <try else> <statements block>                                                                   ##
-        #                       |  EPS                                                                                             ##
-        #=======================================================================
-        if self._try_else():
-            if not self._statements_block():
-                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
-        return True
-
-    #-------------------------------------------------------------------------
     def _try_statement_finally(self) -> bool:
         #=======================================================================
         # <try statement finally> ::= <try finally> <statements block>                                                                ##
@@ -3649,37 +3650,9 @@ class FEParser:
             if not self._statements_block():
                 self._append_error( FESyntaxErrors.TRY_FINALLY_BODY )
         return True
-            
 
     #-------------------------------------------------------------------------
-    def _try_statement1(self) -> bool: ###
-        #=======================================================================
-        # <try statement'> ::= <try else> <statements block> <try statement">
-        #                   |  <try except> <statements block> <try statement'>
-        #                   |  EPS
-        #=======================================================================
-        while self._try_except():
-            if not self._statements_block():
-                self._append_error( FESyntaxErrors.TRY_EXCEPT_BODY )
-        if self._try_else():
-            if not self.statements_block():
-                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
-            self._try_statement2() ## (notice: always returns True)
-        return True
-
-    #-------------------------------------------------------------------------
-    def _try_statement2(self) -> bool: ###
-        #=======================================================================
-        # <try statement"> ::= <try finally> <statements block>
-        #                   |  EPS
-        #=======================================================================
-        if self._try_finally():
-            if not self.statements_block():
-                self._append_error( FESyntaxErrors.TRY_FINALLY_BODY )
-        return True
-
-    #-------------------------------------------------------------------------
-    def _TYPE(self) -> bool: ###
+    def _TYPE(self) -> bool:
         #=======================================================================
         # <TYPE> ::= <const qualifier> <type>
         #         |  <type>
@@ -3692,7 +3665,7 @@ class FEParser:
             return self._type()
 
     #-------------------------------------------------------------------------
-    def _TYPE1(self) -> bool: ###
+    def _TYPE1(self) -> bool:
         #=======================================================================
         # <TYPE'> ::= <const qualifier> <type>
         #          |  <type'>
@@ -3705,7 +3678,7 @@ class FEParser:
             return self._type1()
 
     #-------------------------------------------------------------------------
-    def _type(self) -> bool: ###
+    def _type(self) -> bool:
         #=======================================================================
         # <type> ::= <type'>
         #         |  <templated type> <dimensions>
@@ -3719,7 +3692,7 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _type1(self) -> bool: ###
+    def _type1(self) -> bool:
         #=======================================================================
         # <type> ::= <auto type>
         #         |  (' <types list> ')'
@@ -3754,7 +3727,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _type_alias(self) -> bool: ###
+    def _type_alias(self) -> bool:
         #=======================================================================
         # <type alias> ::= 'type' <type alias"> <type alias'>
         #=======================================================================
@@ -3768,7 +3741,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _type_alias1(self) -> bool: ###
+    def _type_alias1(self) -> bool:
         #=======================================================================
         # <type alias'> ::= ',' <type alias"> <type alias'>
         #                |  EPS
@@ -3781,7 +3754,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _type_alias2(self) -> bool: ###
+    def _type_alias2(self) -> bool:
         #=======================================================================
         # <type alias"> ::= <TYPE> 'as' <identifier>
         #=======================================================================
@@ -3798,7 +3771,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _typed_target(self) -> bool: ###
+    def _typed_target(self) -> bool:
         #=======================================================================
         # <typed target> ::= <type'> <target>
         #                 |  <dotted name> <typed target'>
@@ -3813,7 +3786,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _typed_target1(self) -> bool: ###
+    def _typed_target1(self) -> bool:
         #=======================================================================
         # <typed target'> ::= <dotted name> <target'>
         #                  |  <target'>
@@ -3824,7 +3797,7 @@ class FEParser:
         return self._target1() ## (notice: always returns True)
 
     #-------------------------------------------------------------------------
-    def _types_and_exprs_list(self) -> bool: ###
+    def _types_and_exprs_list(self) -> bool:
         #=======================================================================
         # <types and exprs list> ::= <expression> <types and exprs list'>
         #                         |  <templated type> <types and exprs list'>
@@ -3836,7 +3809,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _types_and_exprs_list1(self) -> bool: ###
+    def _types_and_exprs_list1(self) -> bool:
         #=======================================================================
         # <types and exprs list'> ::= ',' <types and exprs list"> <types and exprs list'>
         #                          |  EPS
@@ -3849,7 +3822,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _types_and_exprs_list2(self) -> bool: ###
+    def _types_and_exprs_list2(self) -> bool:
         #=======================================================================
         # <types and exprs list"> ::= <expression>
         #                          | <templated type>
@@ -3857,7 +3830,7 @@ class FEParser:
         return self._expression() or self._templated_type()
 
     #-------------------------------------------------------------------------
-    def _typed_args_list(self) -> bool: ###
+    def _typed_args_list(self) -> bool:
         #=======================================================================
         # <typed args list> ::= <TYPE> <identifier> <typed args list'>
         #                    |  EPS
@@ -3871,7 +3844,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _typed_args_list1(self) -> bool: ###
+    def _typed_args_list1(self) -> bool:
         #=======================================================================
         # <typed args list'> ::= ',' <TYPE> <identifier> <typed args list'>
         #                     |  EPS
@@ -3886,7 +3859,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _types_list(self) -> bool: ###
+    def _types_list(self) -> bool:
         #=======================================================================
         # <types list> ::= <TYPE> <types list'>
         #=======================================================================
@@ -3897,7 +3870,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _types_list1(self) -> bool: ###
+    def _types_list1(self) -> bool:
         #=======================================================================
         # <types list'> ::= ',' <TYPE> <types list'>
         #                |  EPS
@@ -3910,7 +3883,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _unary_expr(self) -> bool: ###
+    def _unary_expr(self) -> bool:
         #=======================================================================
         # <unary expr> ::= <factor>
         #               |  '+' <factor>
@@ -3927,7 +3900,7 @@ class FEParser:
         return self._factor()
 
     #-------------------------------------------------------------------------
-    def _unnamed(self) -> bool: ###
+    def _unnamed(self) -> bool:
         #=======================================================================
         # <unnamed> ::= 'unnamed'
         #            |  'lambda'
@@ -3940,7 +3913,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _unnamed_func(self) -> bool: ###
+    def _unnamed_func(self) -> bool:
         #=======================================================================
         # <unnamed func> ::= <unnamed> <returned type> <function args declaration> <statements block>
         #=======================================================================
@@ -3956,7 +3929,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _var_declaration_or_assignment(self) -> bool: ###
+    def _var_declaration_or_assignment(self) -> bool:
         #=======================================================================
         # <var declaration or assignment> ::= '=' <expression> <var declaration or assignment'>
         #                                  |  ',' <identifier> <var declaration or assignment>
@@ -3976,7 +3949,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _var_declaration_or_assignment1(self) -> bool: ###
+    def _var_declaration_or_assignment1(self) -> bool:
         #=======================================================================
         # <var declaration or assignment'> ::= ',' <identifier> <var declaration or assignment>
         #                                   |    EPS
@@ -3990,7 +3963,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _volatile_qualifier(self) -> bool: ###
+    def _volatile_qualifier(self) -> bool:
         #=======================================================================
         # <volatile qualifier> ::= 'volatile'
         #=======================================================================
@@ -4002,7 +3975,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _while_statement(self) -> bool: ###
+    def _while_statement(self) -> bool:
         #=======================================================================
         # <while statement> ::= 'while' '(' <expression> ')' <statements block> <while statement'>
         #=======================================================================
@@ -4029,7 +4002,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _while_statement1(self) -> bool: ###
+    def _while_statement1(self) -> bool:
         #=======================================================================
         # <while statement'> ::= 'otherwise' <statements block>
         #                     |  EPS
@@ -4042,7 +4015,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _with_item(self) -> bool: ###
+    def _with_item(self) -> bool:
         #=======================================================================
         # <with item> ::= <expression> <with item'>
         #=======================================================================
@@ -4053,7 +4026,7 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _with_item1(self) -> bool: ###
+    def _with_item1(self) -> bool:
         #=======================================================================
         # <with item'> ::= 'as' <target>
         #               |  EPS
@@ -4066,7 +4039,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _with_items_list(self) -> bool: ###
+    def _with_items_list(self) -> bool:
         #=======================================================================
         # <with items list> ::= <with item> <with items list'>
         #=======================================================================
@@ -4076,7 +4049,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _with_items_list1(self) -> bool: ###
+    def _with_items_list1(self) -> bool:
         #=======================================================================
         # <with items list'> ::= ',' <with item> <with items list'>
         #                     |  EPS
@@ -4089,7 +4062,7 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
-    def _with_statement(self) -> bool: ###
+    def _with_statement(self) -> bool:
         #=======================================================================
         # <with statement> ::= 'with' <with items list> <statements block>
         #=======================================================================
