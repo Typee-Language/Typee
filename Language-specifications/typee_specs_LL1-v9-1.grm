@@ -45,12 +45,14 @@ SOFTWARE.
 
 <atom>          ::= <decr> <dotted name> <incr or decr>
                  |  <incr> <dotted name> <incr or decr>
-                 |  <dotted name> <incr or decr>
+                 |  <dotted name> <atom'>                               ###
                  |  <enclosure>
                  |  <reference>
                  |  <scalar>
                  |  <string>
                  |  <boolean>
+<atom'>         ::= <incr or decr>                                      ###
+                 |  <for comprehension>                                 ###
 
 <boolean>       ::= <TRUE>
                  |  <FALSE>
@@ -64,7 +66,9 @@ SOFTWARE.
 
 <incr>          ::= '++'
 
-<incr or decr>  ::= <decr>  |  <incr>  |  EPS
+<incr or decr>  ::= <decr>
+                 |  <incr>
+                 |  EPS
 
 <is instance of>    ::= '->' <dotted name>
 
