@@ -250,7 +250,7 @@ embed cs   {{ : Barrier }}
       }}
       
       embed cs {{
-        throw ThreadForbiddenOpException( "reset() is not implemented in C# on ThreadBarrier " );
+        throw new ThreadForbiddenOpException( "reset() is not implemented in C# on ThreadBarrier " );
       }}
     }
 
@@ -299,10 +299,10 @@ embed cs   {{ : Barrier }}
             base.SignalAndWait();
         }
         catch ( ObjectDisposedException ) {
-            throw ThreadBarrierException( "barrier has been disposed." );
+            throw new ThreadBarrierException( "barrier has been disposed." );
         }
         catch (Exception e ) {
-            throw ThreadBarrierException( String.Format("caught C# exception {0}.", e.ToString()) );
+            throw new ThreadBarrierException( String.Format("caught C# exception {0}.", e.ToString()) );
         }
       }}
     }
@@ -366,10 +366,10 @@ embed cs   {{ : Barrier }}
       embed cs {{
         try {
             if ( !base.SignalAndWait(ut_sec_to_ms(timeout)) )
-                throw ThreadBarrierException();
+                throw new ThreadBarrierException();
         }
         catch (Exception e) {
-            throw ThreadBarrierException( String.Format("caught C# exception {0}.", e.ToString()) );
+            throw new ThreadBarrierException( String.Format("caught C# exception {0}.", e.ToString()) );
         }
         return Interlocked.Increment( ref _cs_wait_num );
       }}
