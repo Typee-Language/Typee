@@ -39,7 +39,8 @@ if __name__ == '__main__':
                                                '../FrontEnd',
                                                '../local_tools',
                                                '../Tests',
-                                               '../Utils'] )
+                                               '../Utils',
+                                               '../../Language-specifications'] )
     
     my_copyright_modifier.modify_files( ['../../development-framework.md',
                                          '../../LICENSE',
