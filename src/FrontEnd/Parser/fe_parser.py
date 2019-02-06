@@ -43,7 +43,7 @@ class FEParser:
     Syntaxic Intermediate Code that will be  then  analyzed  by  the
     Typee Front-End Elaborator.
     
-    Currently, implements version 8 of Typee Grammar Specification.
+    Currently, implements version 9.1 of Typee Grammar Specification.
     """
     
     #-------------------------------------------------------------------------
