@@ -16,10 +16,13 @@ when running translated code._]
 
 Steps to reproduce the behavior:
 
-[_1. Directory Tree: Xxx/Yyy/Zzz/
- 2. Translated Typee module: mmm.ty
- 3. Command line as typed for translation: typee -opt1 -opt2 ...
- 4., 5., 6., ..., any other valuable information to reproduce the error_]
+[_
+1. Directory Tree: Xxx/Yyy/Zzz/
+2. Translated Typee module: mmm.ty
+3. Command line as typed for translation: typee -opt1 -opt2 ...
+4. ...
+5. ...
+6. ... any other valuable information to reproduce the error_]
 
  
 **Expected behavior**
