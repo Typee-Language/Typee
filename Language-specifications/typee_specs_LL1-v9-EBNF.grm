@@ -627,8 +627,8 @@ SOFTWARE.
 <templated type spec>   ::= '<' <types and exprs list> '>' 
 
 <types and exprs list>  ::= (<expression> | 
-                                <templated type>) ( ',' (<expression> |
-                                                        <templated type>) )*
+                            <templated type>) ( ',' (<expression> |
+                                                     <templated type>) )*
 
 <types list>            ::= <TYPE> (',' <TYPE>)*
 
