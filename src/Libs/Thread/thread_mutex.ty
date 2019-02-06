@@ -143,7 +143,7 @@ embed cs   {{ : Mutex }}
         }
         catch ( Exception e )
         {
-            throw ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
         }
       }}
     }
@@ -214,7 +214,7 @@ embed cs   {{ : Mutex }}
         }
         catch ( Exception e )
         {
-            throw ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
         }
       }}
     }
@@ -242,7 +242,7 @@ embed cs   {{ : Mutex }}
             base.ReleaseMutex();
         }
         catch ( Exception e ) {
-            throw ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
         }
       }}
     }
