@@ -46,34 +46,36 @@ When defining literals, sets of characters are defined between brackets:
 When defining literals, the ellipsis define an interval of characters 
 specified by the starting and the ending character: 
 
-    &lt;hexadecimal digit&gt; ::= ['0'...'9', 'a'...'f', 'A'...'F']`
+    <hexadecimal digit&gt; ::= ['0'...'9', 'a'...'f', 'A'...'F']`
 
 When defining literals, characters may be specified by their unicode code:
 `u0x0041` stands for character 'A'.
 
 When defining literals, groups of characters may be excluded from an interval 
 of characters with operator `-`:
+
     <any non newline char> ::= u0x0000...u0xFFFF - ['\n', '\r', '\f']
 
 The vertical bar `|` is used to specify options between derivations rules:
-    &lt;boolean> ::= &lt;TRUE>  | <FALSE>
-    &lt;TRUE>    ::= 'true'  | 'True'
-    &lt;FALSE>   ::= 'false' | 'False'
+
+    <boolean> ::= <TRUE>  | <FALSE>
+    <TRUE>    ::= 'true'  | 'True'
+    <FALSE>   ::= 'false' | 'False'
 
 This "option" vertical bar separates groups of rules. There is no need to 
 group together successive rule names between parenthesis. Next specifications 
 are unambiguous:
 
-    &lt;single string>     ::= "'" &lt;single string'> "'"
-                        |  '"' &lt;ingle string"> '"'
+    <single string>  ::= "'" <single string'> "'"
+                      |  '"' <ingle string"> '"'
 
-    &lt;single string'>    ::= &lt;any escaped char> &lt;single string'>
-                        |  &lt;any string quote char> &lt;single string'>
-                        |  EPS
+    <single string'> ::= <any escaped char> <single string'>
+                      |  <any string quote char> <single string'>
+                      |  EPS
 
-    &lt;single string">    ::= &lt;any escaped char> &lt;single string">
-                        |  &lt;any string doublequote char> &lt;single string">
-                        |  EPS
+    <single string"> ::= <any escaped char> <single string">
+                      |  <any string doublequote char> <single string">
+                      |  EPS
 
 Finally, keyword `EPS` specifies the empty (epsilon) rule. It specifies that 
 this rule may be not derived. In the above rules, it states that empty strings 
@@ -95,8 +97,8 @@ derivation rules to specify a grammar rule.
 
 Parenthesis `( )` are used to group grammar rules together:
 
-    &lt;identifier>  ::= ( &lt;alpha char> | '_' ) &lt;identifier'>
-    &lt;identifier'> ::= ( &lt;alpha num char> | '_' ) &lt;identifier'>
+    <identifier>  ::= ( <alpha char> | '_' ) <identifier'>
+    <identifier'> ::= ( <alpha num char> | '_' ) <identifier'>
 
 Here, an identifier is specified as starting with either an alphabetical 
 character, i.e. any character from group `['A'...'Z', 'a'...'z']`, or with an
@@ -107,7 +109,7 @@ Parenthesis are also used jointly with an ending character star `'*'`. There,
 they men that the derivations rules the group together may be derived from 0 
 to many times (with no limitations):
 
-    &lt;identifier>  ::= ( &lt;alpha char> | '_' ) ( &lt;alpha num char> | '_' )*
+    <identifier> ::= ( <alpha char> | '_' ) ( <alpha num char> | '_' )*
 
 You can get here that this kind of factorization helps easying the reading of 
 grammars specifications as well as it helps reducing their specifications 
@@ -118,8 +120,8 @@ Brackets `[ ]` are used to specify that some group of derivation rules may be
 derived at most once - which means that they may also not be derived. This 
 helps avoiding the use of keyword `EPS`:
 
-    &lt;octal number> ::= '0' &lt;octal char> ( ['_'] &lt;octal char> )*
-    &lt;octal char>   ::= '0'...'7' 
+    <octal number> ::= '0' <octal char> ( ['_'] <octal char> )*
+    <octal char>   ::= '0'...'7' 
 
 Here, octal numbers are specified as starting with character `'0'`, containing 
 then suites of any number of octal characters, i.e. characters from interval 
