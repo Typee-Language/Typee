@@ -9,7 +9,7 @@ If you wish to contribute, just contact main administrator
 [Schmouk](mailto:ph.schmouker@yahoo.fr) by e-mail and be patient. You will 
 eventually get a response and will enthousiastically be added to the 
 contributors list.
-Current developments are in _Python 3.6_, based on _Anaconda 3_, with 
+Current developments are in _Python 3.7_, based on _Anaconda 3_, with 
 _Eclipse Photon_ framework and _PyDev_ plug-in. Windows is currently used also 
 for these developments. So, if you get Linux expertise you're welcome!
 
@@ -17,7 +17,7 @@ for these developments. So, if you get Linux expertise you're welcome!
 ## What is Typee?
 
 __Typee__ is an Object Oriented Programming language. Its syntax is derived 
-from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.6_.
+from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.7_.
 
 ## Typee language characteristics
 
@@ -33,7 +33,7 @@ in _Python_;
 - 'for' and 'if' comprehensions - as in _Python_;
 - built-in containers for objects - as in _Python_: `list`, `set`, `dict`, 
 plus `array`;
-- classical instructions plus bonuses - e.g. `else` associated with `for` and 
+- classical instructions plus bonuses - e.g. `otherwise` associated with `for` and 
 `while` as in _Python_ or with `switch`;
 - classical exception handling;
 - classical operators plus a few bonuses - e.g. 0-shifting as built in _Java_;

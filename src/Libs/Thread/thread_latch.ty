@@ -1,0 +1,176 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module thread_latch.ty
+
+// defined class
+fwd class ThreadLatch;
+
+//=============================================================================
+from Thread.thread_condition     import ThreadCondition;
+from Thread.thread_guarded_block import ThreadGuardedBlock;
+from Thread.thread_exceptions    import ThreadInterruptedException;
+from Thread.thread_mutex         import ThreadMutex;
+import Thread.utils.utils as utils;
+
+//=============================================================================
+// targeted languages specifics
+embed java {{
+import java.util.concurrent.CountDownLatch;
+}}
+
+//=============================================================================
+class ThreadLatch  exclude java {{ : ThreadCondition }}
+/**
+Threads may wait on Latch instances and can be signaled the end  of  the 
+wait by a notification.
+Latches are associated with a starting count which can be decremented by
+other threads.  When this count reaches value zero,  all threads waiting
+on this latch are immediately awaken.
+This may be used for applicative threads to wait for all  initialization
+threads to complete their initializations.
+This is NOT resettable.  Once a latch has sent notifications,  it cannot
+be used again and can be deleted instead.
+*/
+embed java {{ extends CountDownLatch }}
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    ThreadLatch( const uint32 start_count )
+    /**
+    Default constructor.
+    Start_count is the count to be decremented until notification  can  be
+    sent to every blocked threads that are waiting for this latch to open.
+    Raises AssertException if start_count is 0.
+    */
+    {
+        assert start_count != 0;
+      
+      embed java {{
+        super( start_count );
+      }} exit
+        
+        ThreadCondition();
+        me._count_mutex = ThreadMutex();
+        me._count_mutex.lock();
+        me._count = start_count;
+        me._count_mutex.unlock();
+    }
+    
+    //-------------------------------------------------------------------------
+    final none count_down()
+    /**
+    Decrements internal count for this latch.
+    Notifies all waiting threads when internal count is 0.
+    */
+    {
+      embed java {{
+        this.countDown();
+      }} exit
+      
+        with ThreadGuardedBlock() {
+            if (me._count > 0)
+                if (--me._count == 0)
+                    me.signal_all();
+        }
+    }
+    
+    //-------------------------------------------------------------------------
+    final const uint32 get_count()
+    /**
+    Returns the actual internal count.
+    */
+    {
+      embed java {{
+        return getCount();
+      }} exit
+      
+        me._count_mutex.lock();
+        const uint32 ret_count = me._count;
+        me._count_mutex.unlock();
+        return ret_count;
+    }
+
+    //-------------------------------------------------------------------------
+    final none wait()
+    /**
+    Calling thread waits on this latch until signalled.
+    Raises ThreadInterruptedException if waiting thread has been interrupted.
+    */
+    {
+      embed java {{
+        try {
+            await();
+        }
+        catch (InterruptException e) {
+            raise ThreadInterruptedException();
+        }
+      }} exit
+      
+      ThreadCondition.wait();
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool wait( const float32 timeout )
+    /**
+    Timed-out waiting version applied to threads.
+    Returns true when returning from  wait  before  timeout  duration  (unit: 
+    seconds), and False if timed-out.
+    Raises  ThreadTimeoutValueException  on  some  platforms  when  specified 
+    timeout has a too big value.
+    Raises ThreadInterruptedException if waiting thread has been interrupted.
+    Raises AssertException if timeout is negative.
+    */
+    {
+        assert timeout >= 0.0;
+      
+      embed py {{
+        try:
+            super().wait( timeout )
+        except:
+            raise ThreadTimeoutValueException( timeout )
+      }} exit
+      
+      embed java {{
+        try {
+            return await( utils.sec_to_ms(timeout), TimeUnit.MILLSECONDS );
+        }
+        catch (InterruptedException e) {
+            raise ThreadInterruptedException();
+        }
+      }} exit
+      
+      ThreadCondition.wait( timeout );
+    }
+
+ :hidden:
+    //-------------------------------------------------------------------------
+  exclude java {{
+    uint32      _count;
+    ThreadMutex _count_mutex;
+  }}
+}
+
+//===== end of module   Thread.thread_latch.ty   =====//
