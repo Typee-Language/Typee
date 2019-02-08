@@ -1,0 +1,262 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module thread_condition.ty
+
+// defined class
+fwd class ThreadCondition;
+
+//=============================================================================
+from Thread.thread_mutex      import ThreadMutex;
+from Thread.thread_exceptions import ThreadInterruptedException, ThreadTimeoutValueException;
+import Thread.utils.utils as utils;
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+embed java {{
+import java.util.concurrent.locks;
+import java.util.concurrent.TimeUnit;
+}}
+
+embed cpp {{
+#include <chrono>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
+//=============================================================================
+class ThreadCondition
+/**
+Threads may wait on Condition instances and can be signaled the end of the 
+wait by a signal.
+*/
+
+embed py {{ : threading.Condition }}
+embed cpp {{ : std::condition_variable }}
+
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    ThreadCondition()
+    /**
+    Default constructor.
+    Caution: C++ implementation may throw exception that are not caught up here.
+    */
+    embed cpp {{ : std::condition_variable(), _c_ulock(_c_mutex) }}
+    {
+      embed py {{
+        super().__init__()
+      }}
+      
+      embed java {{
+        this._jv_lock = new ReentrantLock();
+        this._jv_cond = this._jv_lock.newCondition();
+      }}
+      
+      embed cs {{
+        _cs_mre = new ManualResetEvent( false );
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    ThreadCondition( ThreadMutex mutex )
+    /**
+    Constructor.
+    Caution: C++ implementation may throw exception that are not caught up here.
+    */
+    embed cpp {{ : std::condition_variable(), _c_ulock(mutex) }}
+    {
+      embed py {{
+        super().__init__( mutex )
+      }}
+      
+      embed java {{
+        this._jv_lock = mutex;
+        this._jv_cond = this._jv_lock.newCondition();
+      }}
+      
+      embed cs {{
+        _cs_mre = new ManualResetEvent( false );
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy ()
+    /**
+    Destructor.
+    Caution:
+    Behaviors may differ between different targeted programming languages.
+    */
+    {}
+    
+    //-------------------------------------------------------------------------
+    final none signal()
+    /**
+    Awakens one thread (from maybe many) waiting on this condition variable.
+    Caution: in C#, signal signals ALL waiting threads.
+    */
+    {
+      embed py {{
+        return self.notify( 1 )
+      }}
+      
+      embed java {{
+        this._jv_cond.signal();
+      }}
+      
+      embed cpp {{
+        this->notify_one();
+      }}
+      
+      embed cs {{
+        _cs_mre.Set();
+      }}
+    }
+    
+    //-------------------------------------------------------------------------
+    final none signal_all()
+    /**
+    'Awakens' all threads waiting on this condition variable.
+    */
+    {
+      embed py {{
+        return self.notify_all()
+      }}
+      
+      embed java {{
+        this._jv_cond.signalAll();
+      }}
+      
+      embed cpp {{
+        this->notify_all();
+      }}
+      
+      embed cs {{
+        _cs_mre.Set();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final none wait() exclude py
+    /**
+    Calling thread waits on this condition instance until signalled.
+    Raises ThreadInterruptedException if the waiting thread has been 
+    interrupted.
+    See methods signal() and signal_all().
+    */
+    embed java {{ throws ThreadInterruptedException }}
+    {
+      embed java {{
+        try {
+            this._jv_cond.await();
+        }
+        catch (InterruptedException e) {
+            throw ThreadInterruptedException();
+        }
+      }}
+      
+      embed cpp {{
+        this->wait( *(this->_c_ulock) );
+      }}
+      
+      embed cs {{
+        _cs_mre.WaitOne();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool wait( const float32 timeout )
+    /**
+    Timed-out waiting version applied to threads.
+    Returns true when returning from wait before timeout duration 
+    (unit: seconds), and False if timed-out.
+    Raises ThreadTimeoutValueException  on  some  platforms  when 
+    specified timeout has a too big value.
+    Raises ThreadInterruptedException if the waiting  thread  has 
+    been interrupted.
+    Raises AssertException if timeout is negative.
+    */
+    embed java {{ throws ThreadInterruptedException }}
+    {
+        assert timeout >= 0.0;
+        
+      embed py {{
+        try:
+            return self.wait( timeout )
+        except:
+            raise ThreadTimeoutValueException()
+      }}
+      
+      embed java {{
+        try {
+            return this._jv_cond.await( utils.sec_to_ms(timeout), TimeUnit.MILLISECONDS );
+        }
+        catch (InterruptedException e) {
+            throw ThreadInterruptedException();
+        }
+        catch (Exception e) {
+            return false;
+        }
+      }}
+      
+      embed cpp {{
+        std::cv_status ret_status =
+            this->wait_for( *(this->_c_ulock),
+                std::chrono::milliseconds( utils.sec_to_ms(timeout) ) );
+        return  ret_status == std::cv_status::no_timeout;
+      }}
+      
+      embed cs {{
+        _cs_mre.WaitOne( utils.sec_to_ms(timeout) );
+      }}
+    }
+
+ :protected:
+    //-------------------------------------------------------------------------
+  embed java {{
+    ReentrantLock _jv_lock;
+    Condition     _jv_cond;
+  }}
+  
+  embed cpp {{
+    std::mutex  _c_mutex;
+    std::unique_lock< std::mutex > _c_ulock;
+  }}
+  
+  embed cs {{
+    ManualResetEvent _cs_mre;
+  }}
+}
+
+//===== end of module   Thread.thread_condition.ty   =====//
