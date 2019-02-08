@@ -44,30 +44,30 @@ class FESyntaxICode:
         self._current_block = self._root = FESICodeBlockNode()
 
     #-------------------------------------------------------------------------
-    def add_statement(self, inode:FEICodeTokenNode ):
+    def add_statement(self, inode:FEICodeTokenNode ) -> FESyntaxICode:
         self.create_statement_node()
         self.add_inode( inode )
         return self
 
     #-------------------------------------------------------------------------
-    def add_inode(self, inode:FEICodeTokenNode):
+    def add_inode(self, inode:FEICodeTokenNode) -> FESyntaxICode:
         self._current_statement.append( inode )
         return self
    
     #-------------------------------------------------------------------------
-    def close_block_node(self):
+    def close_block_node(self) -> FESyntaxICode:
         self._current_block = self._current_block.parent
         return self
    
     #-------------------------------------------------------------------------
-    def create_block_node(self):
+    def create_block_node(self) -> FESyntaxICode:
         new_node = FESICodeBlockNode( self._current_block )
         self._current.append( new_node )
         self._current = new_node
         return self
    
     #-------------------------------------------------------------------------
-    def create_statement_node(self, inode:FEICodeTokenNode):
+    def create_statement_node(self, inode:FEICodeTokenNode) -> FESyntaxICode:
         new_node = FESICodeStatementNode( self._current_block )
         self._current_block.append( new_node )
         self._current_statement = new_node
