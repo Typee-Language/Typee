@@ -28,7 +28,7 @@ from FrontEnd.IntermediateCode.fe_icode_token_node   import *
 from FrontEnd.IntermediateCode.fe_tokenized_icode    import FETokenizedICode
 
 from FrontEnd.IntermediateCode.fe_syntax_icode_node  import FESyntaxICodeNode
-from FrontEnd.IntermediateCode.fe_syntaxic_icode     import FESyntaxicICode
+from FrontEnd.IntermediateCode.fe_syntax_icode       import FESyntaxICode
 from FrontEnd.Errors.fe_syntax_errors                import FESyntaxErrors
 
 
@@ -58,7 +58,7 @@ class FEParser:
         self._icode = intermediate_code
    
     #-------------------------------------------------------------------------
-    def parse(self, intermediate_code:FETokenizedICode=None) -> tuple(FESyntaxicICode,int):
+    def parse(self, intermediate_code:FETokenizedICode=None) -> tuple(FESyntaxICode,int):
         '''
         Parses some Front-End Intermediate Code and generates the related
         Front-End Syntaxic Code.
@@ -4112,7 +4112,7 @@ class FEParser:
             return False
     #-------------------------------------------------------------------------
     def _init_parsing_state(self):
-        self._scode = FESyntaxicICode()
+        self._scode = FESyntaxICode()
         self._errors_count = 0
     #-------------------------------------------------------------------------
     def _next_token_node(self) -> FEICodeTokenNode:
