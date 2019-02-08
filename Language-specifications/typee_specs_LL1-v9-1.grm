@@ -476,8 +476,8 @@ SOFTWARE.
 <simple statement end> ::= ';'
 
 <statements block>  ::= '{' <statements list> '}'
-                     |  <empty statement> <statements block>                ###
                      |  <compound statement>                                ###
+                     |  <empty statement> <statements block>                ###
                      |  <simple statement>                                  ###
 ##                     |  <nop statement> <simple statement end>            ###
 ##                     |  <simple statement end>                            ###
