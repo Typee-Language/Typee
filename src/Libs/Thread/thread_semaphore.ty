@@ -1,0 +1,343 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module thread_semaphore.ty
+
+// defined class
+fwd class ThreadSemaphore;
+
+//=============================================================================
+from Thread.thread_condition     import ThreadCondition;
+from Thread.thread_exceptions    import ThreadInterruptedException,
+                                        ThreadSemaphoreValueException,
+                                        UnlockedException;
+from Thread.thread_guarded_block import ThreadGuardedBlock;
+from Thread.thread_mutex         import ThreadMutex;
+import Thread.utils.utils as utils;
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+embed java {{
+import java.util.concurrent.Semaphore;
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
+//=============================================================================
+class ThreadSemaphore exclude py, java, cs {{ : ThreadCondition }}
+/**
+Typee implementation of the semaphore concept.
+Notice: methods P() and V(), initially proposed by the inventor of semaphores
+Dutch scientist Edsger W. Dijkstra,  are available as wrappers for this class 
+methods lock() and unlock(). 
+*/
+
+embed py   {{ : threading.BoundedSemaphore }}
+embed java {{ extends Semaphore }}
+embed cs   {{ : SemaphoreSlim }}
+
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    ThreadSemaphore()
+    /**
+    Default constructor. Internal atomic counter is set to 1.
+    */
+    {
+      embed py {{
+        super().__init__( 1 )
+      }} exit
+      
+      embed java {{
+        super( 1 );
+      }} exit
+      
+      embed cs {{
+        base( 1 );
+      }} exit
+      
+        ThreadCondition();
+        me._count_mutex = ThreadMutex();
+        me._count_mutex.lock();
+        me._count = 1;
+        me._count_mutex.unlock();
+        me._max_count = 1;
+    }
+
+    //-------------------------------------------------------------------------
+    ThreadSemaphore( const uint32 n_threads )
+    /**
+    Default constructor. Internal atomic counter is set to n_threads.
+    */
+    {
+        assert n_threads <= 0x7fff_ffff;
+        
+      embed py {{
+        super().__init__( n )
+      }} exit
+      
+      embed java {{
+        super( n_threads );
+        this._max_count = n_threads;
+      }} exit
+      
+      embed cs {{
+        base( n_threads );
+      }} exit
+
+        ThreadCondition();
+        me._count_mutex = ThreadMutex();
+        me._count_mutex.lock();
+        me._count = n_threads;
+        me._count_mutex.unlock();
+        me._max_count = n_threads;
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy ()
+    /**
+    Destructor.
+    Caution:
+    Behaviors may differ between different targeted programming languages.
+    */
+    {
+      embed py {{
+        super().__del__()
+      }} exit
+      
+      embed cs {{
+        base.Dispose();
+      }}
+      
+      delete me._count_mutex;
+    }
+
+    //-------------------------------------------------------------------------
+    final none acquire() embed java {{ throws ThreadInterruptedException }}
+    /**
+    Infinitely blocking lock on this semaphore until awoken by unlock() (called
+    by another thread).
+    Raises ThreadInterruptedException if waiting thread is interrupted.
+    */
+    {
+      embed py {{
+        super().acquire( True )
+      }} exit
+      
+      embed java {{
+        try {
+            super.acquire()
+        }
+        catch (InterruptedException e) {
+            throw ThreadInterruptedException();
+        }
+      }} exit
+      
+      embed cs {{
+        try {
+            base.Wait();
+        }
+        catch (Exception e) {
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
+        }
+      }} exit
+      
+        with ThreadGuardedBlock() {
+            if (me._count > 0) {
+                --me._count;
+                return ;
+            }       
+        }
+        me.wait();
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool acquire()
+    /**
+    Non blocking lock on this semaphore.
+    Returns true if semaphore passed and false otherwise. 
+    */
+    {
+      embed py {{
+        return super().acquire( False )
+      }} exit
+      
+      embed java {{
+        return tryAcquire();
+      }} exit
+     
+        return me.acquire( 0.0 );
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool acquire( const float32 timeout )
+    /**
+    Timed-out blocking version on this semaphore.
+    Returns true when semaphore has passed and false if not after the 
+    specified timeout duration (unit: seconds).
+    Raises ThreadTimeoutValueException on some platforms when specified 
+    timeout is too big.
+    Raises AssertException if timeout is negative.
+    */
+    {
+        assert timeout >= 0.0;
+
+      embed py {{
+        try:
+            return super().acquire( True, timeout )
+        except:
+            raise ThreadTimeoutValueException( timeout )
+      }} exit
+      
+      embed java {{
+        return tryAcquire( utils.sec_to_ms(timeout), TimeUnit.MILLISECONDS );
+      }} exit
+      
+      embed cs {{
+        try {
+            return base.Wait( utils.sec_to_ms(timeout) );
+        }
+        catch (Exception e) {
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
+        }
+      }} exit
+
+      
+        with ThreadGuardedBlock() {
+            if (me._count > 0) {
+                --me._count;
+                return true ;
+            }       
+        }
+        return me.wait( timeout );
+    }
+    
+    //-------------------------------------------------------------------------
+    final none P()
+    /**
+    Edsger W. Dijkstra form of lock.
+    */
+    {
+        me.acquire();
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool P( const float32 timeout )
+    /**
+    Edsger W. Dijkstra form of timed-out lock.
+    */
+    {
+        me.acquire( timeout );
+    }
+
+    //-------------------------------------------------------------------------
+    final none release() exclude java
+    /**
+    Releases this semaphore.
+    Raises ThreadSemaphoreValueException when number  of  releases  exceeed
+    the starting value associated with this semaphore.
+    Caution: Java semaphores are unbounded. Checking on release() number of
+    calls is not done and toom uch releasings does not raise any exception.
+    */
+    {
+      embed py {{
+        try:
+            super().release()
+        except ValueError:
+            raise ThreadSemaphoreValueException( self )
+        except Exception:
+            raise UnlockedException( self )
+      }} exit
+      
+      embed cs {{
+        try {
+            base.Release();
+        }
+        catch (Exception e) {
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
+        }
+      }}
+
+        with ThreadGuardedBlock() {
+            if ( me._count == 0 )
+                me.signal();
+            if ( me._count == me._max_count )
+                raise ThreadSemaphoreValueException( me );
+            ++ me._count ;
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    final none release( uint32 n_times ) exclude java
+    /**
+    Releases n-times this semaphore.
+    Raises ThreadSemaphoreValueException when number  of  releases  exceeed
+    the starting value associated with this semaphore.
+    Caution: Java semaphores are unbounded. Checking on release() number of
+    calls is not done and toom uch releasings does not raise any exception.
+    */
+    {      
+      embed cs {{
+        try {
+            base.Release( n_times);
+        }
+        catch (Exception e) {
+            throw new ThreadException( "C# exception caught: " + e.ToString() );
+        }
+      }} exit
+
+        try {
+            while ( n_times-- > 0 )
+                me.release();
+        }
+        except (Exception as e) {
+            raise e;
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    final none V()
+    /**
+    Edsger W. Dijkstra form of unlock.
+    */
+    {
+        me.release();
+    }
+
+ :hidden:
+    //-------------------------------------------------------------------------
+  exclude py {{
+    uint32      _count, _max_count;
+    ThreadMutex _count_mutex;
+  }}
+}
+
+//===== end of module   Thread.thread_semaphore.ty   =====//

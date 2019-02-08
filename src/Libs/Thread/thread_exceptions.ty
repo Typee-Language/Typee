@@ -1,0 +1,153 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module thread_exceptions.ty
+
+// defined exceptions:
+fwd class ThreadBarrierException;
+fwd class ThreadDeadlockException;
+fwd class ThreadException;
+fwd class ThreadForbiddenOpException;
+fwd class ThreadInterruptedException;
+fwd class ThreadJoinException;
+fwd class ThreadLockedException;
+fwd class ThreadNotStartedException;
+fwd class ThreadSemaphoreValueException;
+fwd class ThreadStackSizeException;
+fwd class ThreadStartException;
+fwd class ThreadTimeoutValueException;
+fwd class TimerStartException;
+fwd class UnlockedException;
+
+//=============================================================================
+from Thread.base_thread      import BaseThread;
+from Thread.thread_mutex     import ThreadMutex;
+from Thread.thread_semaphore import ThreadSemaphore;
+from Thread.thread_timer     import ThreadTimer;
+
+//=============================================================================
+//-----------------------------------------------------------------------------
+class ThreadBarrierException : Exception {
+    ThreadBarrierException(){
+        Exception( "Broken barrier exception." );
+    }
+    ThreadBarrierException( str msg ){
+        Exception( "Barrier exception: {}".format(msg)  );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadDeadlockException : Exception {
+    ThreadDeadlockException(){
+        Exception( "A deadlock was detected (trying to lock twice a same thread on a same Lock?)" );
+    }
+    ThreadDeadlockException( str msg ){
+        Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadException : Exception {
+    ThreadException( str msg ){
+        Exception( "Thread exception: {}".format(msg) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadForbiddenOpException : Exception {
+    ThreadForbiddenOpException( BaseThread thread, const str op_name ){
+        Exception( "{} is not an allowed operation for thread {}".format(op_name, thread.name) );
+    }
+    ThreadForbiddenOpException( str msg ){
+        Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadInterruptedException : Exception {
+    ThreadInterruptedException(){
+        Exception( "A thread has been interrupted while waiting for a resource." );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadJoinException : Exception {
+    ThreadJoinException( BaseThread thread ){
+        Exception( "Thread {} cannot join itself - deadlocks avoidance".format(thread.name) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadLockedException : Exception {
+    ThreadLockedException( BaseThread thread ){
+        Exception( "Thread {} tries to lock an already locked resource".format(thread.name) );
+    }
+    ThreadLockedException( str msg ){
+        Exception( msg );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadNotStartedException : Exception {
+    ThreadNotStartedException(){
+        Exception( "Trying to operate a not started thread" );
+    }
+    ThreadNotStartedException( str msg ){
+        Exception( "Trying to operate {} on a not started thread".format(msg) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadSemaphoreValueException : Exception {
+    ThreadSemaphoreValueException( ThreadSempahore sem ){
+        Exception( "Too many releases on semaphore {}".format(sem) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadStackSizeException : Exception {
+    ThreadStackSizeException( const uint32 erroneous_size ){
+        Exception( "Erroneous stack size for a Thread: {}".format(erroneous_size) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadStartException : Exception {
+    ThreadStartException( BaseThread thread ){
+        Exception( "Trying to start thread {} more than once".format(thread.name) );
+    }
+}
+//-----------------------------------------------------------------------------
+class ThreadTimeoutValueException : Exception {
+    ThreadTimeoutValueException( const float32 erroneous_duration ){
+        Exception( "Erroneous duration specification for a timed-out MutEx: {}".format(erroneous_duration) );
+    }
+}
+//-----------------------------------------------------------------------------
+class TimerStartException : Exception {
+    TimerStartException( ThreadTimer timer ){
+        Exception( "Trying to start again running timer {}".format(timer) );
+    }
+}
+//-----------------------------------------------------------------------------
+class UnlockedException : Exception {
+    UnlockedException( ThreadMutex mutex ){
+        Exception( "Trying to release unlocked mutex {}".format(mutex) );
+    }
+    UnlockedException( ThreadSemaphore sem ){
+        Exception( "Trying to release unlocked semaphore {}".format(sem) );
+    }
+}
+
+//===== end of module   Thread.thread_exceptions.ty   =====//
