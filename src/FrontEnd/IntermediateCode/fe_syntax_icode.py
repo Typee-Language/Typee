@@ -75,8 +75,7 @@ class FESyntaxICode:
 
     #-------------------------------------------------------------------------
     def walk(self, node:FESyntaxICodeNode=None) -> FESyntaxICodeNode:
-        if node is None:
-            node = self._root
+        node = node or self._root
         yield node
         for child in node:
             if child.is_block:
