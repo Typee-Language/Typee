@@ -4092,7 +4092,7 @@ class FEParser:
     def _append_error(self, err_data=None):
         self._errors_count += 1
         err_node = ICTokenNode_UNEXPECTED( data=err_data or self._current.tk_data )
-        err_node.set_num_line( self._current )
+        err_node.num_line = self._current.num_line
         self._append_syntaxic_node( err_node )
     #-------------------------------------------------------------------------
     def _append_syntaxic_node(self) -> bool:
