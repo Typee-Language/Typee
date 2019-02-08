@@ -52,7 +52,7 @@ class FESyntaxICodeNode( list ):
     blocks with many instructions.
     """    
     #-------------------------------------------------------------------------
-    def __init__(self, parent=None, is_block:bool=True):
+    def __init__(self, parent=None, is_block:bool=False):
         '''
         Constructor.
                 
@@ -82,7 +82,7 @@ class FESyntaxICodeNode( list ):
 class FESICodeBlockNode( FESyntaxICodeNode ):
     """
     This is the class of nodes for the syntaxic intermediate code as used in
-    the Front-End of the Typee project,  dedicated to the representation of
+    the  Front-End of the Typee project,  dedicated to the representation of
     blocks of instructions.
     """
     #-------------------------------------------------------------------------
