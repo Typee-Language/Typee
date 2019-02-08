@@ -29,26 +29,26 @@ SOFTWARE.
 #=============================================================================
 class FESyntaxICodeNode( list ):
     """
-    This is the class of nodes for the syntaxic intermediate code as used in the 
+    This is the class of nodes for  the syntaxic intermediate code as used in the 
     Front-End of the Typee project.
     
-    A Syntaxic Code Node is a symbolic representation of a block of instructions 
-    as well as of a single statement.  As such, since blocks of instructions can 
-    be nested, a Syntaxic Code Node is a node in a tree,  whose siblings are the 
-    other  blocks  of  instructions  at  the same level within a module  (i.e. a 
-    source file),  and whose children are the nested blocks of  instructions  it 
-    embeds.
-    Each Syntaxic Code Node contains the whole list  of  its  nested  blocks  of 
-    instructions, i.e. it is represented as a list of FESCodeNodes.
-    Representing the Syntaxic Tree this way will help evaluating the  visibility 
-    of  variables  as  well  as  the  correct  checking  of types,  later in the 
+    A Syntaxic ICode Node is a symbolic representation of a block of instructions 
+    as well as of a single statement.  As such,  since blocks of instructions can 
+    be nested, a Syntaxic ICode Node is a node in a tree,  whose siblings are the 
+    other  blocks  of  instructions at that lay at the same level within a module 
+    (i.e. a source file),  and whose children are the nested blocks  of  instruc-
+    tions it embeds.
+    Each Syntaxic ICode Node contains the whole list  of  its  nested  blocks  of 
+    instructions, i.e. it is represented as a list of FESyntaxICodeNodes.
+    Representing the Syntaxic Tree this way will help evaluating  the  visibility 
+    of  variables  as  well  as  the  correct  checking  of  types,  later in the 
     Elaboration step of the Front End.
     
-    See definitions of FESICodeBlockNode and FESICodeStatementNode below in this 
+    See definitions of FESICodeBlockNode and FESICodeStatementNode below in  this 
     same module.
     
-    Notice that there are in Typee three kinds of blocks of instructions: blocks 
-    with  no instruction,  blocks with a single instruction and blocks with many 
+    Notice that in Typee there are three kinds of blocks of instructions:  blocks 
+    with  no  instruction,  blocks with a single instruction and blocks with many 
     instructions.
     """    
     #-------------------------------------------------------------------------
@@ -103,7 +103,7 @@ class FESICodeBlockNode( FESyntaxICodeNode ):
 class FESICodeStatementNode( FESyntaxICodeNode ):
     """
     This is the class of nodes for the syntaxic intermediate code as used in
-    the Front-End of the Typee project,  dedicated to the representation of
+    the  Front-End of the Typee project,  dedicated to the representation of
     single instructions.
     """
     #-------------------------------------------------------------------------
