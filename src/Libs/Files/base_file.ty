@@ -260,8 +260,8 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     is run. This directory may be explicitely named also with “./“.
     The directories separator in the file  path  is  exclusively  “/“.  Windows 
     programmers should mind this.
-    To go “up a level” in a directory tree,  file paths may be prefixed with as 
-    many “../” as necessary.
+    To go “up a level” once to many times in a directory tree,  file paths  may 
+    be prefixed with as many “../” as necessary.
     Finaly,  absolute paths are specified with a  leading  “/“.  Unfortunately, 
     absolute paths get different syntaxes with different Operating Systems. 
     When translating a Typee program for both Windows and Linux,  for instance, 
@@ -353,8 +353,8 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     is run. This directory may be explicitely named also with “./“.
     The directories separator in the file  path  is  exclusively  “/“.  Windows 
     programmers should mind this.
-    To go “up a level” in a directory tree,  file paths may be prefixed with as 
-    many “../” as necessary.
+    To go “up a level” once to many times in a directory tree,  file paths  may 
+    be prefixed with as many “../” as necessary.
     Finaly,  absolute paths are specified with a  leading  “/“.  Unfortunately, 
     absolute paths get different syntaxes with different Operating Systems. 
     When translating a Typee program for both Windows and Linux,  for instance, 
@@ -377,9 +377,10 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     strings specified right above.
     */
     {
-        me._checked_opened();
-        else
+        if ( me.is_opened() )
             me._file.reopen( filepath, rw_mode );
+        else
+            me._file.open( filepath, rw_mode );
     }
 
     //-------------------------------------------------------------------------
