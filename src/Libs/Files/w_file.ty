@@ -27,6 +27,8 @@ SOFTWARE.
 // defined classes:
 fwd class WFile;
 fwd class WFile< ItemT >;
+fwd type  WFileText;
+fwd type  WFileText16;
 
 //=============================================================================
 from Files.types     import FileCursorPos, FileIndex;
@@ -52,6 +54,7 @@ that are not evaluataed in constructors of this base class WFile.
     {
         BaseFile();
     }
+    
     //-------------------------------------------------------------------------
     WFile( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
     /**
@@ -140,10 +143,10 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     WFile operator << ( WFile f, const ? item )
     /**
-    Writes the specified item at current  position of cursor or index in  the 
+    Writes the specified item at current position of cursor or index in the 
     file.
-    Returns a reference to current instance, for this method to be cascadable 
-    with other methods and operators.
+    Returns a reference to current instance of file,  for this method to be 
+    cascadable with other methods and operators.
     Raises FileNotOpenedException if file is not currently opened.
     */
     {
@@ -155,8 +158,7 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     none operator <<= ( const ? item )
     /**
-    Writes the specified item at current  position of cursor or index in  the 
-    file.
+    Writes the specified item at current position of cursor or index in the file.
     Raises FileNotOpenedException if file is not currently opened.
     */
     {
@@ -168,7 +170,7 @@ that are not evaluataed in constructors of this base class WFile.
     WFile operator <<< ( WFile f, const ? item )
     /**
     Writes the specified item at the end of the file.
-    Returns a reference to current instance, for this method to be
+    Returns a reference to current instance of file, for this method to be 
     cascadable with other methods and operators.
     Raises FileNotOpenedException if file is not currently opened.
     */
@@ -195,13 +197,16 @@ that are not evaluataed in constructors of this base class WFile.
     Sets the position of the cursor or of the index according to the
     specified position.
     May be used jointly with operators '=' and '<<'.
+    Caution: only sets the position of the cursor or of the index in
+    the file. Any further writing will be operated via other operat-
+    ions - e.g. operators '=' or '<<', see example below.
     Returns a reference to current file.
     Raises FileNotOpenedException if file is not currently opened.
     Usage example:
+        // writes a long float64 at position 2 of file
         my_file[2] = 3.14159_26535_89793_23846_26433_83;
-        // writes this long float64 at position 2 of file
-        my_file[10] << 6.022_140_76e023;
         // writes Avogadro's number at position 10 of file
+        my_file[10] << 6.022_140_76e023;
         // (remember: positions start at 0)
     */
     {
@@ -213,24 +218,19 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     WFile operator = ( const ? item )
     /**
-    Writes the specified item at current position of cursor or index into  file.
+    Writes  the specified item at current position of cursor or index into file.
     May be used jointly with operator '[]'.
     Returns a reference to current file for this operation to be cascadable with
     other methods and operators.
     Raises FileNotOpenedException if file is not currently opened.
     Usage example:
+        // writes a long float64 at position 2 of file
         my_file[2] = 3.14159_26535_89793_23846_26433_83;
-        // writes this long float64 at position 2 of file
-        // (positions start at 0)
+        // (remember: positions start at 0)
     */
     {
-        if ( item -> WFile )
-            me = item;
-        else
-        {
-            me._checked_opened();
-            me._file << item;
-        }
+        me._checked_opened();
+        me._file << item_or_file;
         return me ;
     }
 
@@ -254,8 +254,8 @@ that are not evaluataed in constructors of this base class WFile.
     /**
     Writes nb_times the specified item at current position of cursor or index 
     in the file.
-    Returns a reference to current instance, for this method to be cascadable 
-    with other methods and operators.
+    Returns  a  reference to current instance of file,  for this method to be 
+    cascadable with other methods and operators.
     Raises FileNotOpenedException if file is not currently opened.
     */
     {
@@ -268,15 +268,280 @@ that are not evaluataed in constructors of this base class WFile.
 
 
 //=============================================================================
-class WFile<ItemT> : WFile, BaseFile<ItemT>
+class WFile<ItemT> : BaseFile<ItemT>
 /**
-Base class for all files with declared types for their contained  items  and 
-with Write access rights in Typee built-in  library Files.
-See also classes WOFile<ItemT> and RWFile<itemT>.
-Users should not instantiate this class, but should rather instantiate class
-WOFile or class RWFile.  Many checkings are done in these inheriting classes
-that are not evaluataed in constructors of this base class WFile.
+Templated class for all files with declared types for their contained 
+items and with Write access rights in Typee built-in  library Files.
+See also classes RFile<ItemT> and RWFile<itemT>.
 */
-{}
+{
+ :public:
+ 
+    //-------------------------------------------------------------------------
+    WFile<ItemT>()
+    /**
+    Default constructor.
+    */
+    {
+        BaseFile<ItemT>();
+    }
+    
+    //-------------------------------------------------------------------------
+    WFile<ItemT>( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read/write mode.
+    Raises FileNotFoundException if file is  not  found  or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with ‘w’ in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legal ones.
+    */
+    {
+        BaseFile<ItemT>( filepath, rw_mode );
+    }
+
+    //-------------------------------------------------------------------------
+    WFile<ItemT> append( const ItemT item )
+    /**
+    Writes the specified item at the end of the file.
+    Returns  a  reference  to  current instance of file,  for this 
+    method to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        me._file.append( item );
+        return me;
+    }
+    
+    //-------------------------------------------------------------------------
+    WFile<ItemT> append( const ItemT item, const uint64 nb_times )
+    /**
+    Writes nb_times the specified item at the end of the file.
+    Returns  a  reference  to  current instance of file,  for this 
+    method to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        if ( nb_times > 0 )
+            me._file.append( item, nb_times );
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    WFile<ItemT> flush()
+    /**
+    Flushes all pending data in operating system buffers.
+    Caution: flushing buffers should only be done when writing very precious 
+    data  or while writing on file synchronizing data,  since this may break 
+    down the OS optimizations on disk accesses and slow  down  your  running 
+    program. Well, this is true unless you use asynchronous transfers files. 
+    Fortunately, many OS and programming languages allow this.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        me._file.flush();
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    none operator ! ()
+    /**
+    Flushes all pending data in operating system buffers.
+    Caution: flushing buffers should only be done when writing very precious 
+    data  or while writing on file synchronizing data,  since this may break 
+    down the OS optimizations on disk accesses and slow  down  your  running 
+    program. Well, this is true unless you use asynchronous transfers files. 
+    Fortunately, many OS and programming languages allow this.
+    Raises FileNotOpenedException if file is not currently opened.
+    Usage:
+        WFile my_file = WFile( 'some_path', 'wo' );
+        my_file.write( 'some text' );
+        ! my_file;  //  flushes the file
+        // or, more concise coding:
+        ! my_file.write( 'next line text' );  // flushing takes place after writing
+        // and also:
+        ! my_file[ 4 ] = 2.71828_18284_59045;  // do you know Mr John Napier?
+    */
+    {
+        me._checked_opened();
+        ! me._file;
+    }
+
+    //-------------------------------------------------------------------------
+    WFile<ItemT> operator << ( WFile<ItemT> f, const ItemT item )
+    /**
+    Writes  the  specified  item  at current position of cursor or 
+    index in the file.
+    Returns  a  reference  to  current instance of file,  for this 
+    method to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        me._file << item;
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    none operator <<= ( const ItemT item )
+    /**
+    Writes  the  specified  item  at current position of cursor or 
+    index in the file.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        me._file <<= item;
+    }
+
+    //-------------------------------------------------------------------------
+    WFile<ItemT> operator <<< ( WFile<ItemT> f, const ItemT item )
+    /**
+    Writes the specified item at the end of the file.
+    Returns  a  reference  to  current instance of file,  for this 
+    method to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        me._file <<< item;
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    none operator <<<= ( const ItemT item )
+    /**
+    Writes the specified item at the end of current file.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        me._file <<<= item;
+    }
+
+    //-------------------------------------------------------------------------
+    WFile<ItemT> operator [] ( const ? in (FileCursorPos, FileIndex) pos )
+    /**
+    Sets the position of the cursor or of the index according to the
+    specified position.
+    May be used jointly with operators '=' and '<<'.
+    Returns a reference to current file.
+    Raises FileNotOpenedException if file is not currently opened.
+    Usage example:
+        my_file[2] = 3.14159_26535_89793_23846_26433_83;
+        // writes this long float64 at position 2 of file
+        my_file[10] << 6.022_140_76e023;
+        // writes Avogadro's number at position 10 of file
+        // (remember: positions start at 0)
+    */
+    {
+        me._checked_opened();
+        me._file.set_pos( pos );
+        return me ;
+    }
+
+    //-------------------------------------------------------------------------
+    WFile<ItemT> operator = ( const ItemT item )
+    /**
+    Writes  the  specified  item  at current position of cursor or 
+    index into  file.
+    May be used jointly with operator '[]'.
+    Returns  a  reference  to  current instance of file,  for this 
+    method to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is not currently opened.
+    Usage example:
+        my_file[2] = 3.14159_26535_89793_23846_26433_83;
+        // writes this long float64 at position 2 of file
+        // (positions start at 0)
+    */
+    {
+        if ( item -> WFile )
+            me = item;
+        else
+        {
+            me._checked_opened();
+            me._file << item;
+        }
+        return me ;
+    }
+
+    //-------------------------------------------------------------------------
+    WFile<ItemT> write( const ItemT item )
+    /**
+    Writes  the  specified  item  at current position of cursor or 
+    index in the file.
+    Returns  a  reference  to  current instance of file,  for this 
+    method to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        me._file.write( item );
+        return me;
+    }
+    
+    //-------------------------------------------------------------------------
+    WFile<ItemT> write( const ItemT item, const uint64 nb_times )
+    /**
+    Writes  'nb_times'  the  specified item at current position of 
+    cursor or index in the file.
+    Returns  a  reference  to  current instance of file,  for this 
+    method to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is not currently opened.
+    */
+    {
+        me._checked_opened();
+        if ( nb_times > 0 )
+            me._file.write( item, nb_times );
+        return me;
+    }
+}
+
+
+//=============================================================================
+hidden
+class _WFileText<StrT> : BaseFile<StrT>
+/**
+Local base class for all text files and with Write access rights.
+See also classes WOFileText<StrT> and RWFileText<StrT>.
+Users should not instantiate this class, but should rather instantiate class
+WFileText or WFileText16.
+*/
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    _WFileText<StrT>()
+    /**
+    Default constructor.
+    */
+    {
+        BaseFile<StrT>();
+    }
+    
+    //-------------------------------------------------------------------------
+    _WFileText<StrT>( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read/write mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with ‘w’ in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        BaseFile<StrT>( filepath, rw_mode );
+    }
+}
+
+
+//=============================================================================
+type _WFileText<str>   as WFileText;
+type _WFileText<str16> as WFileText16;
 
 //===== end of module   Files.w_file.ty   =====//
