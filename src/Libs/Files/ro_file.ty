@@ -96,9 +96,9 @@ Inherits from RFile, so inherits also from BaseFile.
 //=============================================================================
 class ROFile<ItemT> : RFile<ItemT>
 /**
-Base class for all files with declared types for their contained  items  and 
-with Read-Only access permission in Typee built-in library Files.
-See also class RFile<ItemT> and RWFile<ItemT>.
+Templated  class  for  all  files  with  declared types for their contained 
+items and with Read-Only access permission in Typee built-in library Files.
+See also class WOFile<ItemT> and RWFile<ItemT>.
 */
 {
  :public:
@@ -157,7 +157,7 @@ See also class RFile<ItemT> and RWFile<ItemT>.
 //=============================================================================
 class ROFileText : RFileText
 /**
-Class for all Read Only access text files.
+Class for all Read Only access text files (8-bits characters).
 See also classes WOFileText and RWFileText.
 */
 {
@@ -192,7 +192,7 @@ See also classes WOFileText and RWFileText.
 //=============================================================================
 class ROFileText16 : RFileText16
 /**
-Class for all Read Only access 16-bits chars text files.
+Class for all Read Only access 16-bits chars text files (16-bits characters).
 See also classes WOFileText16 and RWFileText16.
 */
 {
