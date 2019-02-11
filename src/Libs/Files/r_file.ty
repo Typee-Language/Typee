@@ -203,8 +203,8 @@ that are not evaluataed in constructors of this base class RFile.
 //=============================================================================
 class RFile<ItemT> : BaseFile<ItemT>
 /**
-Base class for all files with declared types for their contained  items  and 
-with Read access permission, in Typee built-in  library Files.
+Templated  class  for  all files with declared types for their contained
+items and with Read access permission, in Typee built-in  library Files.
 See also classes WFile<ItemT> and RWFile<ItemT>.
 */
 {

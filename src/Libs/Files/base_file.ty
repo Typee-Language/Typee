@@ -49,6 +49,7 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     {
         me._file = none;
     }
+    
     //-------------------------------------------------------------------------
     BaseFile( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
     /**
@@ -290,6 +291,16 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     }
 
     //-------------------------------------------------------------------------
+    none operator = ( Basefile left, BaseFile right )
+    /**
+    Assignment operation between files references.
+    Caution: may have to be overridden in inheriting classes.
+    */
+    {
+        left._file = right._file;
+    }
+
+    //-------------------------------------------------------------------------
     BaseFile operator > ()
     /**
     Sets the writing and the reading mode to big endian.  Next read and write 
@@ -331,6 +342,24 @@ in related inheriting classes: ROFile, WOFile and RWFile.
         return me;
     }
 
+    //-------------------------------------------------------------------------
+    none operator >> ( BaseFile left, BaseFile right )
+    /**
+    The reading of a file reference from another file is a not-authorized operation. 
+    */
+    {
+        raise NotAvailableOperationException( 'reading a file reference from another file' );
+    }
+    
+    //-------------------------------------------------------------------------
+    none operator << ( BaseFile left, BaseFile right )
+    /**
+    The writing of a file reference into another file is a not-authorized operation. 
+    */
+    {
+        raise NotAvailableOperationException( 'writing a file reference into another file' );
+    }
+    
     //-------------------------------------------------------------------------
     uint64 operator cast uint64 ()
     /**
@@ -548,8 +577,8 @@ in related inheriting classes: ROFile, WOFile and RWFile.
 //=============================================================================
 class BaseFile<ItemT> : BaseFile
 /**
-Base class for all types of files in Typee built-in library Files with 
-declared types for items.
+Templated class  for all types of files in Typee built-in library Files 
+with declared types for items.
 ItemT is the type of the stored items. It may be set as:
     ? in (type_1, type_2, ..., type_n)
 in which case file may contain items of different sizes.
@@ -565,7 +594,7 @@ positionning in file as an indexed positionning on items, not on bytes.
     Default constructor.
     */
     {
-        me._file = none;
+        BaseFile();
     }
     //-------------------------------------------------------------------------
     BaseFile<ItemT>( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
@@ -579,7 +608,7 @@ positionning in file as an indexed positionning on items, not on bytes.
     ValueException if argument rw_mode is not one of the three legalones.
     */
     {
-        me._file = file<ItemT>( filepath, rw_mode );
+        BaseFile( filepath, rw_mode );
     }
 
 
