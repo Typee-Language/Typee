@@ -57,18 +57,18 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
     incorrect,  FileAccessException  if  access to the file cannot be granted, 
     TypeException if any of the arguments is not a string, FileExistsException 
-    when trying to create (with ‘w’ in rw_mode) an already existing file,  and 
+    when trying to create (with 'w' in rw_mode) an already existing file,  and 
     ValueException if argument rw_mode is not one of the three legalones.
     */
     {
-        me._file = file ( filepath, rw_mode );
+        me._file = file( filepath, rw_mode );
     }
 
     //-------------------------------------------------------------------------
     none destroy ()
     /**
-    Called on deletion or desctruction of this instance. Closess hte file.
-    Raises  FileException in any error case, except when file had not been
+    Called on deletion or destruction of this instance.  Closes the file.
+    Raises FileException in any error case, except when file has not been
     previously opened - this case is checked here.
     */
     {
@@ -80,8 +80,8 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     BaseFile big_endian()
     /**
     Sets the writing and the reading mode to big endian.  Next read and write 
-    operations  will  get and put first lowest significant bytes and end with 
-    highest significant bytes (i.e. big-at-end).
+    operations  will  get  and put first lowest significant byte and end with 
+    highest significant byte (i.e. big-at-end).
     Returns a reference to the operated file, to be cascadable with other op-
     erations.
     This method may be applied to the file before any  other  operation.  The 
@@ -99,12 +99,12 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     //-------------------------------------------------------------------------
     none close()
     /**
-    Closes any previously opened file. This function operates first the writing 
-    of  any  pending data onto the physical permanent storage media if the file 
-    had been opened with write access.  It operates then the releasing  of  any 
-    allocated  resource  to  the file by the Operating System.  Once closed, no 
-    access to the physical permanent storage media can be granted to the file.
-    Raises FileNotOpenedException if attempting to close a file that was not 
+    Closes any previously opened file.  This function operates first the  writing 
+    of  any  pending  data  onto the physical permanent storage media if the file 
+    has been opened with write access permission.  It operates then the releasing 
+    of  any allocated resource to the file by the Operating System.  Once closed, 
+    no access to the physical permanent storage media can be granted to the file.
+    Raises  FileNotOpenedException  if  attempting  to  close a file that was not 
     already opened and FileException in any other error case.
     */
     {
@@ -158,9 +158,9 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     const FileCursorPos end_pos()
     /**
     Puts the file cursor at the very end of the file,  i.e. one byte further 
-    than  it  ending byte.  At that position,  no read operation is allowed. 
-    Only write ones are.  When a constant size for types has been  specified 
-    at  declaration  of the file,  the  index position gets according value, 
+    than  its ending byte.  At that position,  no read operation is allowed. 
+    Only write operation is. When a constant size for types has been specif-
+    ied at declaration of the file, the index position gets according value, 
     i.e. 1 value further the current number of items (or records)  that  are 
     present in the file.
     Returns the cursor position (in bytes) if no constant size type has been 
@@ -179,7 +179,7 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     The new position of the file cursor (and of the file index) is evaluated 
     as relative to the very end position of the file.
     If a constant-size type has been declared for the file content, argument 
-    n is a number of records (or items) to skip. If no constant-size types 
+    'n' is a number of records (or items) to skip. If no constant-size types 
     have been declared for the file content, argument n is a number of bytes.
     Raises FilePosException in case of file out-of-bounds. Raises also 
     FileNotOpenedException, FileClosedException, FileAccessException or 
@@ -197,12 +197,12 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     /**
     Returns the current index value, evaluated as cursor_pos / type_size 
     if a constant size has been specified for items stored in file,  and 
-    evaluated  as  cursor_pos – i.e. as a bytes count from start – if no 
+    evaluated  as  cursor_pos  (i.e. as a bytes count from start)  if no 
     constant size has been specified.
     Notice:
     For this base class, no constant  size  is  specified  for  contained
-    items,  so  returned value is a bytes count.  Some inheriting classes 
-    will automatically modify this behavior.
+    items,  so  returned value is a bytes count.  Inheriting classes will 
+    automatically modify this behavior.
     Raises FileNotOpenedException if file has not been previously opened.
     */
     {
@@ -213,7 +213,7 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     //-------------------------------------------------------------------------
     const bool is_empty()
     /**
-    Returns true if file cintains nothing and false otherwise.
+    Returns true if file contains nothing and false otherwise.
     Raises FileNotOpenedException if file has not been previously opened.
     */
     {
@@ -247,7 +247,7 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     */
     {
         me._checked_opened();
-        me.file_.little_endian();
+        me._file.little_endian();
         return me;
     }
 
@@ -257,29 +257,29 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     Opens a previously declared file according to the specified file  path  and 
     with the specified read/write access mode.
     By default, file paths are relative to the directory from which the program 
-    is run. This directory may be explicitely named also with “./“.
-    The directories separator in the file  path  is  exclusively  “/“.  Windows 
+    is run. This directory may be explicitely named also with "./".
+    The directories separator in the file  path  is  exclusively  "/".  Windows 
     programmers should mind this.
     To go “up a level” once to many times in a directory tree,  file paths  may 
-    be prefixed with as many “../” as necessary.
-    Finaly,  absolute paths are specified with a  leading  “/“.  Unfortunately, 
+    be prefixed with as many "../" as necessary.
+    Finaly,  absolute paths are specified with a  leading  "/".  Unfortunately, 
     absolute paths get different syntaxes with different Operating Systems. 
     When translating a Typee program for both Windows and Linux,  for instance, 
     absolute paths for a same file will be different. Up today, there is no way 
     in Typee to distinguish between targeted  Operating Systems  in  code.  So, 
     programmers  are  strongly  encouraged  to  use relative file paths to take 
     benefit of maximalist portability.
-    This is an identified issue that will be fixed with high priority.
+    This is an identified issue that will be further fixed with high priority.
 
     Argument rw_mode is a string. Actually, accepted strings are:
-        "ro" for Read-Only access;
-        "wo" for Write-Only access;
-        "rw" for Read-Write access;
+        "ro" for Read-Only access permission;
+        "wo" for Write-Only access permission;
+        "rw" for Read-Write access permission;
         
     Raises FileNotFoundException if file  is  not  found  or  if  file_path  is 
     incorrect,  FileAccessException  if  access  to the file cannot be granted, 
     TypeException if any of the arguments is not a string,  FileExistsException 
-    when  trying  to  create  (with ‘w’ in rw_mode)  an  already existing file, 
+    when  trying  to  create  (with 'w' in rw_mode)  an  already existing file, 
     FileOpenedException  when  trying  to  open  an  already  opened  file  and 
     ValueException  if  argument  rw_mode is not one of the three legal 2-chars 
     strings specified right above.
@@ -313,16 +313,16 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     //-------------------------------------------------------------------------
     BaseFile operator < ()
     /**
-    Sets the writing and the reading mode to big endian.  Next read and write 
-    operations  will  get and put first lowest significant bytes and end with 
+    Sets the writing and the reading mode to little endian. Next read and write 
+    operations  will  get  and  put first lowest significant bytes and end with 
     highest significant bytes (i.e. big-at-end).
-    Returns a reference to the operated file, to be cascadable with other op-
+    Returns a reference to the operated file,  to be cascadable with other  op-
     erations.
-    This operator may be applied to the file before any other operation.  The 
+    This operator may be applied to the file before  any  other operation.  The 
     file may not have been already opened, for instance. 
-    It may be applied also after a call to method close()  to  a  file.  This 
+    It may be applied also after a call to  method  close()  to  a  file.  This 
     helps modifying the endianness of the file before it to be open again. 
-    Notice : big endian is the default behavior for read and write  files  in 
+    Notice:  big endian is the default behavior for read  and  write  files  in 
     Typee.
     */
     {
@@ -350,29 +350,29 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     Closes first an already opened file,  then opens it again according to  the 
     specified file path and with the specified read/write access mode.
     By default, file paths are relative to the directory from which the program 
-    is run. This directory may be explicitely named also with “./“.
-    The directories separator in the file  path  is  exclusively  “/“.  Windows 
+    is run. This directory may be explicitely named also with "./".
+    The directories separator in the file  path  is  exclusively  "/".  Windows 
     programmers should mind this.
     To go “up a level” once to many times in a directory tree,  file paths  may 
-    be prefixed with as many “../” as necessary.
-    Finaly,  absolute paths are specified with a  leading  “/“.  Unfortunately, 
+    be prefixed with as many "../" as necessary.
+    Finaly,  absolute paths are specified with a  leading  "/".  Unfortunately, 
     absolute paths get different syntaxes with different Operating Systems. 
     When translating a Typee program for both Windows and Linux,  for instance, 
     absolute paths for a same file will be different. Up today, there is no way 
     in Typee to distinguish between targeted  Operating Systems  in  code.  So, 
     programmers  are  strongly  encouraged  to  use relative file paths to take 
     benefit of maximalist portability.
-    This is an identified issue that will be fixed with high priority.
+    This is an identified issue that will be further fixed with high priority.
 
     Argument rw_mode is a string. Actually, accepted strings are:
-        "ro" for Read-Only access;
-        "wo" for Write-Only access;
-        "rw" for Read-Write access;
+        "ro" for Read-Only access permission;
+        "wo" for Write-Only access permission;
+        "rw" for Read-Write access permission;
         
     Raises FileNotFoundException if file  is  not  found  or  if  file_path  is 
     incorrect,  FileAccessException  if  access  to the file cannot be granted, 
     TypeException if any of the arguments is not a string,  FileExistsException 
-    when  trying to create (with ‘w’ in rw_mode) an already existing file,  and 
+    when  trying to create (with 'w' in rw_mode) an already existing file,  and 
     ValueException if argument rw_mode is not one of the  three  legal  2-chars 
     strings specified right above.
     */
@@ -501,8 +501,7 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     Returns a reference to the operated file,  for this function to be cascad-
     able with other file functions.
     Raises FileNotOpenedException if file is not  opened,  FileAccessException 
-    if access has not been granted to file, OutOfBoundsExceptionpos is greater 
-    than the current size of the file.
+    if access has not been granted to file.
     */
     {
         me._checked_opened();
@@ -513,15 +512,15 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     none trunc( const ? in (FileCursorPos, FileIndex) pos )
     /**
     Removes the end of the file from disk from specified position of index (if 
-    file has been declared with a single,  fixed-sized, type) and at specified 
+    file has been declared with a single, fixed-sized, type)  and at specified 
     position of cursor otherwise.
     The specified pos is also removed from file on disk.  The size of the file 
     is then set accordingly.
     Returns a reference to the operated file,  for this function to be cascad-
     able with other file functions.
     Raises FileNotOpenedException if file is not  opened,  FileAccessException 
-    if access has not been granted to file, OutOfBoundsExceptionpos is greater 
-    than the current size of the file.
+    if  access  has  not been granted to file,  OutOfBoundsException if pos is 
+    greater than the current size of the file.
     */
     {
         me._checked_opened();
@@ -547,7 +546,7 @@ in related inheriting classes: ROFile, WOFile and RWFile.
 
 
 //=============================================================================
-class BaseFile< ItemT > : BaseFile
+class BaseFile<ItemT> : BaseFile
 /**
 Base class for all types of files in Typee built-in library Files with 
 declared types for items.
@@ -558,7 +557,32 @@ in which case file may contain items of different sizes.
 When items are all of the same size,  Typee  automatically  understands 
 positionning in file as an indexed positionning on items, not on bytes.
 */
-{
+{ :public:
+ 
+    //-------------------------------------------------------------------------
+    BaseFile<ItemT>()
+    /**
+    Default constructor.
+    */
+    {
+        me._file = none;
+    }
+    //-------------------------------------------------------------------------
+    BaseFile<ItemT>( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read/write mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with 'w' in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        me._file = file<ItemT>( filepath, rw_mode );
+    }
+
+
  :protected:
     file<ItemT>  _file;
 }

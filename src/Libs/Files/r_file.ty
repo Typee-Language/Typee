@@ -26,7 +26,9 @@ SOFTWARE.
 
 // defined classes:
 fwd class RFile;
-fwd class RFile< ItemT >;
+fwd class RFile<ItemT>;
+fwd type  RFileText;
+fwd type  RFileText16;
 
 //=============================================================================
 from Files.types     import FileCursorPos, FileIndex;
@@ -39,7 +41,7 @@ Base class for all files with Read access rights in Typee  built-in  library
 Files. See also classes ROFile and RWFile.
 Users should not instantiate this class, but should rather instantiate class
 ROFile or class RWFile.  Many checkings are done in these inheriting classes
-that are not evaluataed in constructors of this base class WFile.
+that are not evaluataed in constructors of this base class RFile.
 */
 {
  :public:
@@ -52,16 +54,17 @@ that are not evaluataed in constructors of this base class WFile.
     {
         BaseFile();
     }
+    
     //-------------------------------------------------------------------------
     RFile( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
     /**
-    Instantiates the file and  opens  it  with  specified  filepath  and  with
-    specifed read/write mode.
-    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
-    incorrect,  FileAccessException  if  access to the file cannot be granted, 
-    TypeException if any of the arguments is not a string, FileExistsException 
-    when trying to create (with ‘w’ in rw_mode) an already existing file,  and 
-    ValueException if argument rw_mode is not one of the three legalones.
+    Instantiates the file and opens it with specified filepath and with specif-
+    ied read/write mode.
+    Raises FileNotFoundException if file  is  not  found  or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file  cannot be granted, 
+    TypeException if any of the arguments is not a string,  FileExistsException 
+    when  trying to create (with 'w' in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legal ones.
     */
     {
         BaseFile( filepath, rw_mode );
@@ -70,14 +73,14 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     RFile operator >> ( RFile f, ? item )
     /**
-    Reads the specified item at current position of cursor or  index  in 
-    the file.
-    Returns a reference to current  instance,  for  this  method  to  be 
-    cascadable with other methods and operators.
-    Raises FileNotOpenedException  if  file  is  not  currently  opened, 
-    FilePosException   in   case  of  out-of-bounds  indexing  and  also 
-    FileNotOpenedException,  FileClosedException,   FileAccessException, 
-    FilePermissionException, code>FileRWModeException, FileEOFException, 
+    Reads the specified item at current position of cursor  or  index 
+    in the file.
+    Returns a reference to current instance of file,  for this method
+    to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     */
     {
@@ -89,12 +92,12 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     none operator >>= ( ? item )
     /**
-    Reads the specified item at current position of cursor or  index  in 
-    the file.
-    Raises FileNotOpenedException  if  file  is  not  currently  opened, 
-    FilePosException   in   case  of  out-of-bounds  indexing  and  also 
-    FileNotOpenedException,  FileClosedException,   FileAccessException, 
-    FilePermissionException, code>FileRWModeException, FileEOFException, 
+    Reads the specified item at current position of cursor  or  index 
+    in the file.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     */
     {
@@ -105,31 +108,30 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     RFile operator >>> ( RFile f, list<(str,str16)> lines )
     /**
-    Reads all text lines from current position of cursor and  until  the
+    Reads all text lines from current position of  cursor  and  until 
     the end of the file.
-    Returns a reference to current  instance,  for  this  method  to  be
+    Returns a reference to the operated file,  for this method to  be
     cascadable with other methods and operators.
-    Raises FileNotOpenedException  if  file  is  not  currently  opened, 
-    FilePosException   in   case  of  out-of-bounds  indexing  and  also 
-    FileNotOpenedException,  FileClosedException,   FileAccessException, 
-    FilePermissionException, code>FileRWModeException, FileEOFException, 
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     */
     {
-        me._checked_opened();
-        me._file >>> lines;
-        return me;
+        f >>>= lines;
+        return f;
     }
 
     //-------------------------------------------------------------------------
     none operator >>>= ( list<(str,str16)> lines )
     /**
-    Reads all text lines from current position of cursor and  until  the
-    end of the file.
-    Raises FileNotOpenedException  if  file  is  not  currently  opened, 
-    FilePosException   in   case  of  out-of-bounds  indexing  and  also 
-    FileNotOpenedException,  FileClosedException,   FileAccessException, 
-    FilePermissionException, code>FileRWModeException, FileEOFException, 
+    Reads all text lines from current position of  cursor  and  until  
+    the end of the file.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     */
     {
@@ -140,19 +142,18 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     const ? operator [] ( const ? in (FileCursorPos, FileIndex) pos )
     /**
-    Sets the position of the cursor or of the index  according  to  the
-    specified position.
+    Sets the position of the cursor or of the index according to  the 
+    specified  position,  then reads from file the value according to
+    its expected type.
     Returns a not mutable reference to the read item.
-    Raises FileNotOpenedException  if  file  is  not  currently  opened, 
-    FilePosException   in   case  of  out-of-bounds  indexing  and  also 
-    FileNotOpenedException,  FileClosedException,   FileAccessException, 
-    FilePermissionException, code>FileRWModeException, FileEOFException, 
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     Usage example:
-        my_file[2] = 3.14159_26535_89793_23846_26433_83;
-        // writes this long float64 at position 2 of file
-        print( "{:.4f}".format( my_file[2] ) );
-        // prints: 3.1416
+        // reads a float64 value at position 2 of file
+        float64 val = my_file[2]
     */
     {
         me._checked_opened();
@@ -163,14 +164,14 @@ that are not evaluataed in constructors of this base class WFile.
     //-------------------------------------------------------------------------
     RFile read( ? item )
     /**
-    Reads the specified item at current position of cursor or  index  in 
-    the file.
-    Returns a reference to current  instance,  for  this  method  to  be 
-    cascadable with other methods and operators.
-    Raises FileNotOpenedException  if  file  is  not  currently  opened, 
-    FilePosException   in   case  of  out-of-bounds  indexing  and  also 
-    FileNotOpenedException,  FileClosedException,   FileAccessException, 
-    FilePermissionException, code>FileRWModeException, FileEOFException, 
+    Reads the specified item at current position of cursor  or  index
+    in the file.
+    Returns a reference to current instance of file,  for this method
+    to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     */
     {
@@ -180,16 +181,16 @@ that are not evaluataed in constructors of this base class WFile.
     }
 
     //-------------------------------------------------------------------------
-    list< (str,str16) > readlines()
+    list<(str,str16)> readlines()
     /**
-    Reads all strings from file,  starting at current position of  file  
+    Reads all strings from file, starting at current position of file 
     cursor and until end of file.
-    Returns a reference to a list  containing  the  successive  strings 
+    Returns a reference to a list containing the  successive  strings 
     read from file.
-    Raises FileNotOpenedException  if  file  is  not  currently  opened, 
-    FilePosException   in   case  of  out-of-bounds  indexing  and  also 
-    FileNotOpenedException,  FileClosedException,   FileAccessException, 
-    FilePermissionException, code>FileRWModeException, FileEOFException, 
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     */
     {
@@ -200,15 +201,208 @@ that are not evaluataed in constructors of this base class WFile.
 
 
 //=============================================================================
-class RFile<ItemT> : RFile, BaseFile< ItemT >
+class RFile<ItemT> : BaseFile<ItemT>
 /**
 Base class for all files with declared types for their contained  items  and 
-with Read access rights in Typee built-in  library Files.
-See also classes WOFile<ItemT> and RWFile<itemT>.
-Users should not instantiate this class, but should rather instantiate class
-WOFile or class RWFile.  Many checkings are done in these inheriting classes
-that are not evaluataed in constructors of this base class WFile.
+with Read access permission, in Typee built-in  library Files.
+See also classes WFile<ItemT> and RWFile<ItemT>.
 */
-{}
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    RFile<ItemT>()
+    /**
+    Default constructor.
+    */
+    {
+        BaseFile<ItemT>();
+    }
+    
+    //-------------------------------------------------------------------------
+    RFile<ItemT>( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read/write permission mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with 'w' in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        BaseFile<ItemT>( filepath, rw_mode );
+    }
+
+    //-------------------------------------------------------------------------
+    RFile<ItemT> operator >> ( RFile<ItemT> f, ItemT item )
+    /**
+    Reads the specified item at current position of cursor  or  index 
+    in the file.
+    Returns a reference to current instance of file,  for this method  
+    to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
+    TypeException and FileException in case of related errors.
+    */
+    {
+        me._checked_opened();
+        me._file >> item;
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    none operator >>= ( ItemT item )
+    /**
+    Reads the specified item at current position of cursor  or  index 
+    in the file.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
+    TypeException and FileException in case of related errors.
+    */
+    {
+        me._checked_opened();
+        me._file >>= item;
+    }
+
+    //-------------------------------------------------------------------------
+    const ItemT operator [] ( const ? in (FileCursorPos, FileIndex) pos )
+    /**
+    Sets the position of the cursor or of the index according to the 
+    specified position.
+    Returns a not mutable reference to the read item.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
+    TypeException and FileException in case of related errors.
+    Usage example:
+        // reads a  float64 at position 2 of file
+        float64 val = my_file[2];
+    */
+    {
+        me._checked_opened();
+        me._file.set_pos( pos );
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    RFile<ItemT> read( ItemT item )
+    /**
+    Reads the specified item at current position of cursor  or  index
+    in the file.
+    Returns a reference to current instance of file,  for this method  
+    to be cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
+    TypeException and FileException in case of related errors.
+    */
+    {
+        me._checked_opened();
+        me._file.read( item );
+        return me;
+    }
+}
+
+
+//=============================================================================
+hidden
+class _RFileText<StrT> : BaseFile<StrT>
+/**
+Local base class for all text files with Read access permission.
+See also class _WFileText<StrT>.
+Users should not instantiate this class, but should rather instantiate class
+RFileText or RFileText16.
+*/
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    _RFileText<StrT>()
+    /**
+    Default constructor.
+    */
+    {
+        BaseFile<StrT>();
+    }
+    
+    //-------------------------------------------------------------------------
+    _RFileText<StrT>( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read/write permission mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with 'w' in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legal ones.
+    */
+    {
+        BaseFile<StrT>( filepath, rw_mode );
+    }
+
+    //-------------------------------------------------------------------------
+    RFile<StrT> operator >>> ( RFile<StrT> f, list<StrT> lines )
+    /**
+    Reads all text lines from current position of  cursor  and  until 
+    the end of the file.
+    Returns a reference to  processed  file,  for this method  to  be
+    cascadable with other methods and operators.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
+    TypeException and FileException in case of related errors.
+    */
+    {
+        f >>>= lines;
+        return f;
+    }
+
+    //-------------------------------------------------------------------------
+    none operator >>>= ( list<StrT> lines )
+    /**
+    Reads all text lines from current position of  cursor  and  until  
+    the end of the file.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
+    TypeException and FileException in case of related errors.
+    */
+    {
+        me._checked_opened();
+        me._file >>>= lines;
+    }
+
+    //-------------------------------------------------------------------------
+    list<StrT> readlines()
+    /**
+    Reads all strings from file, starting at current position of file 
+    cursor and until end of file.
+    Returns a reference to a list containing the  successive  strings 
+    read from file.
+    Raises FileNotOpenedException if file is  not  currently  opened, 
+    FilePosException  in  case  of  out-of-bounds  indexing  and also 
+    FileNotOpenedException, FileClosedException, FileAccessException, 
+    FilePermissionException,  FileRWModeException,  FileEOFException, 
+    TypeException and FileException in case of related errors.
+    */
+    {
+        me._checked_opened();
+        return me._file.read_lines();
+    }
+}
+
+
+//=============================================================================
+type _RFileText<str>   as RFileText;
+type _RFileText<str16> as RFileText16;
 
 //===== end of module   Files.r_file.ty   =====//
