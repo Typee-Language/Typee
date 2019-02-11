@@ -27,9 +27,11 @@ SOFTWARE.
 // defined classes:
 fwd class WOFile;
 fwd class WOFile< ItemT >;
+fwd class WOFileText;
+fwd class WOFileText16;
 
 //=============================================================================
-from Files.w_file import WFile, WFile<T>;
+from Files.w_file import WFile, WFile<T>, WFileText, WFileText16;
 
 //=============================================================================
 class WOFile : WFile
@@ -48,6 +50,7 @@ Inherits from WFile, so inherits also from BaseFile.
     {
         WFile();
     }
+    
     //-------------------------------------------------------------------------
     WOFile( ? in (str,str16) filepath )
     /**
@@ -92,7 +95,6 @@ Inherits from WFile, so inherits also from BaseFile.
     {
         BaseFile.open( filepath, "wo" );
     }
-
 }
 
 
@@ -103,6 +105,132 @@ Base class for all files with declared types for their contained  items  and
 with Write-Only access rights in Typee built-in library Files.
 See also class RWFile<itemT>.
 */
-{}
+{
+ :public:
+ 
+    //-------------------------------------------------------------------------
+    WOFile<ItemT>()
+    /**
+    Default constructor.
+    */
+    {
+        WFile<ItemT>();
+    }
+    
+    //-------------------------------------------------------------------------
+    WOFile<ItemT>( ? in (str,str16) filepath )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specific write-only mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with ‘w’ in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        WFile<ItemT>( filepath, "wo" );
+    }
+
+    //-------------------------------------------------------------------------
+    none open( ? in (str,str16) filepath )
+    /**
+    Opens a previously declared file according to the specified file  path  and 
+    with the specified read/write access mode.
+    By default, file paths are relative to the directory from which the program 
+    is run. This directory may be explicitely named also with “./“.
+    The directories separator in the file  path  is  exclusively  “/“.  Windows 
+    programmers should mind this.
+    To go “up a level” in a directory tree,  file paths may be prefixed with as 
+    many “../” as necessary.
+    Finaly,  absolute paths are specified with a  leading  “/“.  Unfortunately, 
+    absolute paths get different syntaxes with different Operating Systems. 
+    When translating a Typee program for both Windows and Linux,  for instance, 
+    absolute paths for a same file will be different. Up today, there is no way 
+    in Typee to distinguish between targeted  Operating Systems  in  code.  So, 
+    programmers  are  strongly  encouraged  to  use relative file paths to take 
+    benefit of maximalist portability.
+    This is an identified issue that will be fixed with high priority.
+        
+    Raises FileNotFoundException if file_path is incorrect, FileAccessException 
+    if  access  to  the  file  cannot  be granted,  FileExistsException if file 
+    already exists (instantiate class RWFile instead,  to append or write  data 
+    in an already existing file and FileOpenedException when trying to open  an  
+    already opened file.
+    */
+    {
+        WFile<ItemT>.open( filepath, "wo" );
+    }
+}
+
+
+//=============================================================================
+class WOFileText : WFileText
+/**
+Class for all Write Only access text files.
+See also classes WOFileText and RWFileText.
+*/
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    WOFileText()
+    /**
+    Default constructor.
+    */
+    {
+        WFileText();
+    }
+    
+    //-------------------------------------------------------------------------
+    WOFileText( ? in (str,str16) filepath )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read-only mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with ‘w’ in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        WFileText( filepath, "ro" );
+    }
+}
+
+
+//=============================================================================
+class WOFileText16 : WFileText16
+/**
+Class for all Write Only access 16-bits chars text files.
+See also classes WOFileText16 and RWFileText16.
+*/
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    WOFileText16()
+    /**
+    Default constructor.
+    */
+    {
+        WFileText16();
+    }
+    
+    //-------------------------------------------------------------------------
+    WOFileText16( ? in (str,str16) filepath )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read-only mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with ‘w’ in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        WFileText16( filepath, "ro" );
+    }
+}
 
 //===== end of module   Files.wo_file.ty   =====//
