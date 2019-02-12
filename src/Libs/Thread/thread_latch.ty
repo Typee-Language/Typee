@@ -29,7 +29,6 @@ fwd class ThreadLatch;
 
 //=============================================================================
 from Thread.thread_condition     import ThreadCondition;
-from Thread.thread_guarded_block import ThreadGuardedBlock;
 from Thread.thread_exceptions    import ThreadInterruptedException;
 from Thread.thread_mutex         import ThreadMutex;
 import Thread.utils.utils as utils;
@@ -41,7 +40,7 @@ import java.util.concurrent.CountDownLatch;
 }}
 
 //=============================================================================
-class ThreadLatch  exclude java {{ : ThreadCondition }}
+class ThreadLatch
 /**
 Threads may wait on Latch instances and can be signaled the end  of  the 
 wait by a notification.
@@ -53,7 +52,8 @@ threads to complete their initializations.
 This is NOT resettable.  Once a latch has sent notifications,  it cannot
 be used again and can be deleted instead.
 */
-embed java {{ extends CountDownLatch }}
+embed   java {{ extends CountDownLatch }}
+exclude java {{ : ThreadCondition }}
 {
  :public:
 
@@ -61,8 +61,8 @@ embed java {{ extends CountDownLatch }}
     ThreadLatch( const uint32 start_count )
     /**
     Default constructor.
-    Start_count is the count to be decremented until notification  can  be
-    sent to every blocked threads that are waiting for this latch to open.
+    start_count is the count to be decremented until notification is sent 
+    to every blocked threads that are waiting for this latch to open.
     Raises AssertException if start_count is 0.
     */
     {
@@ -90,11 +90,11 @@ embed java {{ extends CountDownLatch }}
         this.countDown();
       }} exit
       
-        with ThreadGuardedBlock() {
-            if (me._count > 0)
-                if (--me._count == 0)
-                    me.signal_all();
-        }
+        me._count_mutex.lock();
+        if (me._count > 0)
+            if (--me._count == 0)
+                me.signal_all();
+        me._count_mutex.unlock();
     }
     
     //-------------------------------------------------------------------------

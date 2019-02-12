@@ -123,7 +123,8 @@ embed cpp {{ : std::condition_variable }}
     //-------------------------------------------------------------------------
     final none signal()
     /**
-    Awakens one thread (from maybe many) waiting on this condition variable.
+    Awakens one thread (from maybe many) that is waiting on 
+    this condition variable.
     Caution: in C#, signal signals ALL waiting threads.
     */
     {
