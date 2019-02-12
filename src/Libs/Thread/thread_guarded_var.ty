@@ -70,6 +70,31 @@ Guarded variables are variables that are protected from concurrent access.
     }
 
     //-------------------------------------------------------------------------
+    const VarT get()
+    /**
+    Returns the guarded value of this variable.
+    */
+    {
+        me._mutex.lock();
+        const VarT ret_value = me._val;
+        me._mutex.unlock();
+        return ret_value;
+    }
+
+    //-------------------------------------------------------------------------
+    const VarT set( const VarT value )
+    /**
+    Assigns value to this guarded variable.
+    Returns its new value.
+    */
+    {
+        me._mutex.lock();
+        me._val = value;
+        me._mutex.unlock();
+        return value;
+    }
+
+    //-------------------------------------------------------------------------
     const VarT operator cast VarT ()
     /**
     Returns the guarded value of this variable.
@@ -79,36 +104,12 @@ Guarded variables are variables that are protected from concurrent access.
     }
 
     //-------------------------------------------------------------------------
-    VarT operator = ( const VarT value )
+    const VarT operator = ( const VarT value )
     /**
     Assigns value to this guarded variable.
     */
     {
-        return me.set();
-    }
-
-    //-------------------------------------------------------------------------
-    VarT get()
-    /**
-    Returns the guarded value of this variable.
-    */
-    {
-        me._mutex.lock();
-        VarT ret_value = me._val;
-        me._mutex.unlock();
-        return ret_value;
-    }
-
-    //-------------------------------------------------------------------------
-    VarT set( const VarT value )
-    /**
-    Assigns value to this guarded variable.
-    */
-    {
-        me._mutex.lock();
-        me._val = value;
-        me._mutex.unlock();
-        return me._val;
+        return me.set( value );
     }
 
  :hidden:
