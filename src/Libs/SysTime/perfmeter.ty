@@ -136,6 +136,19 @@ Elapsed times are displayed with format 'HH:MM:SS.frac'.
 
     //---------------------------------------------------------------------
     str operator str () {
+        //-------------------------------------------------------------
+        const str _frmt_decs( const float64 val ){
+            if ( me._decimals == 0 )
+                return '';
+            elif ( me._decimals == 1 )
+                return ".{:1d}".format( uint64(val*10 + 0.5) );
+            else{
+                me._decimals = min( me._K_MAX_DECIMALS, me._decimals );
+                str frmt = ".\{:={:d}d\}".format( me._decimals );
+                return frmt.format( uint64(val * (10^^me._decimals) + 0.5) );
+            }
+        }
+        //-------------------------------------------------------------
         str time_text;
         if ( me._mark is none )
             me._mark = proctime_ns();
@@ -164,19 +177,6 @@ Elapsed times are displayed with format 'HH:MM:SS.frac'.
     }
 
   :hidden:
-    //---------------------------------------------------------------------
-    const str _frmt_decs( const float64 val ){
-        if ( me._decimals == 0 )
-            return '';
-        elif ( me._decimals == 1 )
-            return ".{:1d}".format( uint64(val*10 + 0.5) );
-        else{
-            me._decimals = min( me._K_MAX_DECIMALS, me._decimals );
-            str frmt = ".\{:={:d}d\}".format( me._decimals );
-            return frmt.format( uint64(val * (10^^me._decimals) + 0.5) );
-        }
-    }
-
     //---------------------------------------------------------------------
     uint8         _decimals;
     static uint8  _K_DEFAULT_DECIMALS = 3;
