@@ -33,9 +33,9 @@ Generator with long period (1.2e+14_903).
 Multiple Recursive Generators (MRGs)  use  recurrence  to  evaluate  pseudo-random
 numbers suites. Recurrence is of the form:
 
-   x(i) = A * SUM[ x(i-k) ]  mod M
+   x(i) = A * SUM[ x(i-k) ]  mod M,
 
-for 2 to more k different values.
+for 2 to more different values of k.
 
 MRGs offer very large periods with the best known results  in  the  evaluation  of 
 their  randomness,  as  stated  in  the  evaluation  done  by  Pierre L'Ecuyer and 
@@ -53,9 +53,9 @@ and  offers  a  period  of  about  2^49507  -  i.e. nearly 1.2e+14_903  -  with 
 computation time.
 
 See Rand287 for  a  short  period  MR-Generator (2^287,  i.e. 2.49e+86)  with  low
-computation time but 256 integers memory consumption.
+computation time but 256 32-bits integers memory consumption.
 See Rand1457 for a longer period  (2^1_457, i.e. 3.98e+438)  with  low  computation
-time too (31-bits modulus) but use  of more memory space (1_597 integers).
+time too (31-bits modulus) but use of more memory space (1,597 32-bits integers).
   
 Furthermore this class is callable.
 Example:
@@ -65,8 +65,7 @@ Example:
   print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Notice that for simulating the roll of a dice you should program.
-Example:
+Notice that for simulating the roll of a dice you should code this way:
 
   Rand49507 diceRoll = Rand49507();
   print( int(diceRoll(1, 7)) ); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
@@ -78,8 +77,8 @@ file README.md.
 
 | class name | TU01 generator name | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
 | ---------- | ------------------- | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
-|  Rand287   | Marsa-LFIB4         |   256 x 4-bytes | 2^287   |    3.40     |     0.8      |          0       |       0     |       0        |
-|  Rand1457  | DX-47-3             |    47 x 4-bytes | 2^1457  |    n.a.     |     1.4      |          0       |       0     |       0        |
+|  Rand287   | Marsa-LFIB4         |   256 x 4-bytes |   2^287 |    3.40     |     0.8      |          0       |       0     |       0        |
+|  Rand1457  | DX-47-3             |    47 x 4-bytes |  2^1457 |    n.a.     |     1.4      |          0       |       0     |       0        |
 |  Rand49507 | DX-1597-2-7         | 1,597 x 4-bytes | 2^49507 |    n.a.     |     1.4      |          0       |       0     |       0        |
 
 * _small crush_ is a small set of simple tests that quickly tests some  of
@@ -99,6 +98,7 @@ should definitively pass.
     {
         Base49507();
     }
+    
     //-------------------------------------------------------------------------
     Rand49507( const MyInternalState seed_state )
     /**
@@ -120,7 +120,7 @@ should definitively pass.
         // evaluates indexes in suite for the i-1, i-24 (and i-47) -th values
         int16 k7  = self._state._index - 7;
         if( k < 0 )
-            k7 = Base1457.K_SIZE - 1;
+            k7 = Base49507.K_SIZE - 1;
         
         // then evaluates current value
         const uint32 myValue =
@@ -129,7 +129,7 @@ should definitively pass.
         self._state._list[self._state._index] = myValue;
         
         // next index
-        self._state._index = (self._state._index + 1) % Base1457.K_SIZE;
+        self._state._index = (self._state._index + 1) % Base49507.K_SIZE;
         
         // then returns float value within [0.0, 1.0)
         return  myValue / 2_147_483_647.0;

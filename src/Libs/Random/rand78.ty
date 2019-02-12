@@ -35,7 +35,7 @@ Generator with quite short period (3.0e+23).
 
 Lagged Fibonacci generators LFib( m, r, k, op) use the recurrence
 
-    x(i) = (x(i-r) op (x(i-k)) mod m
+    x(i) = ( x(i-r) op x(i-k) ) mod m
 
 where op is an operation that can be:
     + (addition),
@@ -45,8 +45,8 @@ where op is an operation that can be:
 
 With the + or - operation, such generators are in fact MRGs. They offer very large
 periods  with  the  best  known  results in the evaluation of their randomness, as
-stated in the evaluation done by Pierre L'Ecuyer and Richard Simard (Universite de
-Montreal)  in  "TestU01:  A  C  Library  for Empirical Testing  of  Random  Number  
+stated in the evaluation done by Pierre L'Ecuyer and Richard Simard (Université de
+Montréal)  in  "TestU01:  A  C  Library  for Empirical Testing  of  Random  Number  
 Generators - ACM Transactions  on  Mathematical  Software,  vol.33 n.4,  pp.22-40, 
 August 2007".  It  is  recommended  to  use  such pseudo-random numbers generators 
 rather than LCG ones for serious simulation applications.
@@ -78,8 +78,7 @@ Example:
   print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Notice that for simulating the roll of a dice you should program:
-Example:
+Notice that for simulating the roll of a dice you should code this way:
 
   Rand78 diceRoll = Rand78();
   print(uint8(diceRoll(1, 7))); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
@@ -91,9 +90,9 @@ file README.md.
 
 | class name | TU01 generator name      | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
 | ---------- | ------------------------ | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
-|  Rand78    | LFib(2^64, 17, 5, +)     |    34 x 4-bytes | 2^78    |    n.a.     |     1.1      |          0       |       0     |       0        |
-|  Rand116   | LFib(2^64, 55, 24, +)    |   110 x 4-bytes | 2^116   |    n.a.     |     1.0      |          0       |       0     |       0        |
-|  Rand668   | LFib(2^64, 607, 273, +)  | 1,214 x 4-bytes | 2^668   |    n.a.     |     0.9      |          0       |       0     |       0        |
+|  Rand78    | LFib(2^64,   17,   5, +) |    34 x 4-bytes |   2^78  |    n.a.     |     1.1      |          0       |       0     |       0        |
+|  Rand116   | LFib(2^64,   55,  24, +) |   110 x 4-bytes |  2^116  |    n.a.     |     1.0      |          0       |       0     |       0        |
+|  Rand668   | LFib(2^64,  607, 273, +) | 1,214 x 4-bytes |  2^668  |    n.a.     |     0.9      |          0       |       0     |       0        |
 |  Rand1340  | LFib(2^64, 1279, 861, +) | 2,558 x 4-bytes | 2^1340  |    n.a.     |     0.9      |          0       |       0     |       0        |
 
 * _small crush_ is a small set of simple tests that quickly tests some  of
@@ -113,8 +112,9 @@ should definitively pass.
     {
         Base78();
     }
+    
     //-------------------------------------------------------------------------
-    Rand78( const MyInternalState seed_state )
+    Rand78( const InternalState seed_state )
     /**
     Constructor.
     seed_state is an internal state that has been gotten back from a former
