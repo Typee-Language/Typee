@@ -38,16 +38,16 @@ to  63-bits calculations with very short period (about 9.2e+18) and short
 time computation.
 
 LCG models evaluate pseudo-random numbers suites x(i) as a simple mathem-
-atical function of 
+atical function of x(i-1):
 
-    x(i-1): x(i) = (a*x(i-1) + c) mod m 
+    x(i) = (a*x(i-1) + c) mod m 
  
-Results  are  nevertheless  considered  to  be  poor  as  stated  in  the 
-evaluation done by Pierre L'Ecuyer and Richard Simard (Universite de 
-Montreal) in 'TestU01: A C Library for Empirical Testing of Random Number 
-Generators  -  ACM  Transactions  on Mathematical Software,  vol.33  n.4,  
-pp.22-40,  August 2007'.  It is not recommended to use such pseudo-random 
-numbers generators for serious simulation applications.
+Results are nevertheless considered to be poor as stated in the evaluation 
+done  by  Pierre  L'Ecuyer  and Richard Simard (Université de Montréal) in 
+'TestU01: A C Library for Empirical Testing of  Random  Number  Generators
+- ACM Transactions on Mathematical Software, vol.33 n.4, pp.22-40,  August 
+2007'.  It is not recommended to use such pseudo-random numbers generators 
+for serious simulation applications.
 
 The implementation of this LCG 63-bits model is based on (a=9219741426499971445, c=1)
 since  these  two  values  have  evaluated  to be the 'best' ones for LCGs 
@@ -65,8 +65,7 @@ Example:
   print( rand(a) );   // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Notice that for simulating the roll of a dice you should program.
-Example:
+Notice that for simulating the roll of a dice you should code this way:
 
   Rand63 diceRoll = Rand63();
   print(uint8(diceRoll(1, 7))); // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
@@ -75,10 +74,10 @@ Reminder:
 We give you here below a copy of the table of tests for the LCGs that have 
 been implemented in PyRandLib, as provided in paper "TestU01, ..."
 
-| class name | TU01 generator name                | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
-| ---------- | ---------------------------------- | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
-|  Rand32    | LCG(2^32, 69069, 1)                |     1 x 4-bytes | 2^32    |    3.20     |     0.67     |         11       |     106     |   *too many*   |
-|  Rand63    | LCG(2^63, 9219741426499971445, 1)  |     2 x 4-bytes | 2^63    |    4.20     |     0.75     |          0       |       5     |       7        |
+| class name | TU01 generator name                | Memory Usage | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
+| ---------- | ---------------------------------- | ------------ | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
+|  Rand32    | LCG(2^32, 69069, 1)                |  1 x 4-bytes |  2^32   |    3.20     |     0.67     |         11       |     106     |   *too many*   |
+|  Rand63    | LCG(2^63, 9219741426499971445, 1)  |  2 x 4-bytes |  2^63   |    4.20     |     0.75     |          0       |       5     |       7        |
 
 * _small crush_ is a small set of simple tests that quickly tests some  of
 the expected characteristics for a pretty good PRG;

@@ -51,7 +51,7 @@ This is the base class for all pseudo-random numbers generators.
     //-------------------------------------------------------------------------
     const float64 operator () ( const float64 b )
     /**
-    Returns a pseudo-random value in interval: [0.0, b) if b > 0 and [b, 0.0) otherwise.
+    Returns a pseudo-random value in interval: [0.0, b) if b > 0 and (b, 0.0] otherwise.
     */
     {
         return b * me.random();
@@ -83,7 +83,7 @@ This is the base class for all pseudo-random numbers generators.
     //-------------------------------------------------------------------------
     const int64 operator () ( const int64 b )
     /**
-    Returns a pseudo-random value in interval: [0, b) if b > 0 and [b, 0) otherwise.
+    Returns a pseudo-random value in interval: [0, b) if b > 0 and (b, 0] otherwise.
     */
     {
         return const int64( b * me.random() );
@@ -113,9 +113,9 @@ This is the base class for all pseudo-random numbers generators.
         return const uint64( me.random() * 0xffff_ffff_ffff_ffff );
     }
     //-------------------------------------------------------------------------
-    const uint64 operator () ( const iunt64 b )
+    const uint64 operator () ( const uint64 b )
     /**
-    Returns a pseudo-random value in interval: [0, b) if b > 0 and [b, 0) otherwise.
+    Returns a pseudo-random value in interval: [0, b) if b > 0 and (b, 0] otherwise.
     */
     {
         return const int64( b * me.random() );

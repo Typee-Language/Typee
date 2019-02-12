@@ -36,13 +36,13 @@ Generator with a long period (2.49e+86).
 Multiple Recursive Generators (MRGs)  use  recurrence  to  evaluate  pseudo-random
 numbers suites. Recurrence is of the form:
 
-   x(i) = A * SUM[ x(i-k) ]  mod M
+   x(i) = A * SUM[ x(i-k) ]  mod M,
 
-for 2 to more k different values.
+for 2 to more different values of k.
 
 MRGs offer very large periods with the best known results  in  the  evaluation  of 
 their  randomness,  as  stated  in  the  evaluation  done  by  Pierre L'Ecuyer and 
-Richard Simard (Universite de Montreal)  in "TestU01:  A C Library  for  Empirical 
+Richard Simard (Université de Montréal)  in "TestU01:  A C Library  for  Empirical 
 Testing of Random  Number Generators  - ACM Transactions on Mathematical Software, 
 vol.33 n.4, pp.22-40, August 2007".  It is recommended to use  such  pseudo-random
 numbers generators rather than LCG ones for serious simulation applications.
@@ -64,18 +64,18 @@ periods  with  the  best  known  results in the evaluation of their randomness, 
 stated in the evaluation done by Pierre L'Ecuyer and Richard Simard (Universite de
 Montreal) paper.
 
-The Marsa-LIBF4 version uses the recurrence
+The Marsa-LIBF4 version uses the recurrence (with A = 1)
 
     x(i) = (x(i-55) + x(i-119) + x(i-179) + x(i-256)) mod 2^32
 
 and offers a period of about 2^287 - i.e. 2.49e+86 - with low computation time due
-to the use of a 2^32 modulo.
+to the use of a 2^32 modulo but the use of 256 32-bits integers.
 
 See Rand1457 for a longer period MR-Generator (2^1457,  i.e. 4.0e+438)  and longer 
 computation  time  (2^31-1 modulus calculations) but less memory space consumption 
-(47 64-bits integers).
+(47 32-bits integers).
 See Rand49507 for a far longer period (2^49507, i.e. 1.2e+14_903 with low  comput-
-ation time too (31-bits modulus) but use of more memory space (1597 64-bits integ-
+ation time too (31-bits modulus) but use of more memory space (1597 32-bits integ-
 ers).
   
 Furthermore this class is callable.
@@ -86,8 +86,7 @@ Example:
   print( rand(a) ) ;  // prints a uniform pseudo-random value within [0.0, a)
   print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
 
-Please notice that for simulating the roll of a dice you should program.
-Example:
+Please notice that for simulating the roll of a dice you should code this way:
 
   Rand287 diceRoll = Rand287();
   print( int(diceRoll(1, 7)) ) // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
@@ -99,8 +98,8 @@ been  implemented  in  Bases.Random,  as  provided in paper "TestU01, ..."
 
 | class name | TU01 generator name | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
 | ---------- | ------------------- | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
-|  Rand287   | Marsa-LFIB4         |   256 x 4-bytes | 2^287   |    3.40     |     0.8      |          0       |       0     |       0        |
-|  Rand1457  | DX-47-3             |    47 x 4-bytes | 2^1457  |    n.a.     |     1.4      |          0       |       0     |       0        |
+|  Rand287   | Marsa-LFIB4         |   256 x 4-bytes |   2^287 |    3.40     |     0.8      |          0       |       0     |       0        |
+|  Rand1457  | DX-47-3             |    47 x 4-bytes |  2^1457 |    n.a.     |     1.4      |          0       |       0     |       0        |
 |  Rand49507 | DX-1597-2-7         | 1,597 x 4-bytes | 2^49507 |    n.a.     |     1.4      |          0       |       0     |       0        |
 
 * _small crush_ is a small set of simple tests that quickly tests some  of
@@ -120,8 +119,9 @@ should definitively pass.
     {
         Base287();
     }
+    
     //-------------------------------------------------------------------------
-    Rand287( const MyInternalState seed_state )
+    Rand287( const InternalState seed_state )
     /**
     Constructor.
     seed_state is an internal state that has been gotten back from a former
@@ -135,7 +135,6 @@ should definitively pass.
     const float64 random();
     /**
     This is the core of the pseudo-random generator.
-    Returned values should be uniformly distributed within [0.0, 1.0).
     */
     {
         //The Marsa-LIBF4 version uses the recurrence
@@ -155,7 +154,10 @@ should definitively pass.
             k179 += Base287.K_SIZE;
         
         // then evaluates current value
-        myValue = (self._state._list[k55] + self._state._list[k119] + self._state._list[k179] + self._state._list[self._state._index]);
+        myValue = self._state._list[k55] + 
+                    self._state._list[k119] + 
+                    self._state._list[k179] + 
+                    self._state._list[self._state._index];
         self._state._list[ self._state._index ] = myValue;
         
         // next index
