@@ -54,7 +54,7 @@ embed cs {{
 float32 systime()
 /**
 Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
-as a 32-bits floating point in fractional seconds.
+as a 32-bits floating point and in fractional seconds.
 
 Starting date as 1970-01-01 is common to most platforms and  systems  but 
 may  differ  on  a few of them.  Windows and Linux programmers should not
