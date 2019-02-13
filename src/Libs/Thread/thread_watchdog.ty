@@ -28,7 +28,7 @@ SOFTWARE.
 fwd class ThreadWatchdog;
 
 //=============================================================================
-from Thread.thread_timer       import ThreadTimer;
+from Thread.thread_timer import ThreadTimer;
 
 //=============================================================================
 class ThreadWatchdog
@@ -69,12 +69,12 @@ run forever (until stopped) and may be reset from times to times.
     //-------------------------------------------------------------------------
     str operator cast str ()
     {
-        return me._timer.name;
+        return str( me._timer );
     }
     //-------------------------------------------------------------------------
     str16 operator cast str16 ()
     {
-        return me._timer.name16;
+        return str16( me._timer );
     }
 
     //-------------------------------------------------------------------------
@@ -83,17 +83,15 @@ run forever (until stopped) and may be reset from times to times.
     Resets this watch-dog: the timeout period is initialized again.
     */
     {
-        const str name   = me._timer.name;
-        const str name16 = me._timer.name16;
-        me._initialize_timer( name16 if name is none else name );
+        me._initialize_timer( me._timer.name );
         me._timer.start( me._current_period );
     }
 
     //-------------------------------------------------------------------------
     final none reset( const float32 period )
     /**
-    Resets this watch-dog: the timeout period is initialized again with a
-    new value.
+    Resets this watch-dog: the timeout period is initialized again 
+    with a new value.
     */
     {
         me._current_period = period;
