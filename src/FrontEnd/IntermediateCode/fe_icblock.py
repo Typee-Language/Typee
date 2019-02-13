@@ -19,6 +19,7 @@ by Thomson Licensing under express agreement.
 
 #=============================================================================
 from FrontEnd.IntermediateCode.fe_icnode import FEICNode
+from FrontEnd.IntermediateCode.fe_icleaf import FEICLeaf
 
 
 #=============================================================================
@@ -42,14 +43,19 @@ class FEICBlock( FEICNode ):
         Appends a new node into this block.
         '''
         self.content.append( ic_node )
+        return self
 
     #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
+    def walk(self):
         '''
-        Walks through the list of nodes contained within this block.
+        Walks through the list of nodes contained within
+        this block.
         Walk-through is depth-first implemented.
+        Returns:
+            every content of the leaves in  this  block,
+            in a depth-first walking through manner.
         '''
-        for icnode in self._content:
-            yield icnode.walk()
+        for icnode in self.content:
+            yield from icnode.walk()
 
 #=====   end of   FrontEnd.IntermediateCode.fe_icblock   =====#
