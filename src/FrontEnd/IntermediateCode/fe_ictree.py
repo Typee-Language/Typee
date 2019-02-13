@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typhee project, http://www.typee.ovh
+Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -24,21 +23,12 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.Scanner_Tokens.tokens_test_base import TokensTestBase
+from FrontEnd.IntermediateCode.fe_icblock import FEICBlock 
+
 
 #=============================================================================
-def test_names_and_nums_tokens():
-    TokensTestBase( 'Names and Nums Tokens TEST',
-                    'Data/tokenization_names_and_nums_tokens.ty',
-                    'Data/tokenization_names_and_nums_solution.py' )
-    
-#=============================================================================
-if __name__ == '__main__':
-    """
-    Simple test for the tokenization of compound tokens.
-    """
-    #-------------------------------------------------------------------------
-    test_names_and_nums_tokens()
-
-#=====   end of   Tests.Scanner_Tokens.test_names_and_nums_tokens   =====#
-        
+FEICTree = FEICBlock
+"""
+The class of Intermediate Code Trees.
+"""
+#=====   end of   FrontEnd.IntermediateCode.fe_ictree   =====#
