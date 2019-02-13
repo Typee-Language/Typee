@@ -24,33 +24,21 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icode_token_node import *
-
+from Tests.FrontEnd.Scanner_Tokens.tokens_test_base import TokensTestBase
 
 #=============================================================================
-soluce = [
+def test_names_and_nums_tokens():
+    TokensTestBase( 'Names and Nums Tokens TEST',
+                    'Data/tokenization_names_and_nums_tokens.ty',
+                    'Data/tokenization_names_and_nums_solution.py' )
     
-    ICTokenNode_COMMENT( None, " Simple tokens -- tokenization test source" ),
-    ICTokenNode_NL(),
-    ICTokenNode_BRACKETOP(),
-    ICTokenNode_BRACKETCL(),
-    ICTokenNode_NL(),
-    ICTokenNode_PAROP(),
-    ICTokenNode_PARCL(),
-    ICTokenNode_NL(),
-    ICTokenNode_COMMA(),
-    ICTokenNode_SEMICOLON(),
-    ICTokenNode_NL(),
-    ICTokenNode_HASH(),
-    ICTokenNode_NL(),
-    ICTokenNode_DOT(),
-    ICTokenNode_NL(),
-    ICTokenNode_TILD(),
-    ICTokenNode_NL(),
-    ICTokenNode_ANY_TYPE( None, '?' ),
-    ICTokenNode_NL(),
-    ICTokenNode_EOF()
-]
+#=============================================================================
+if __name__ == '__main__':
+    """
+    Simple test for the tokenization of compound tokens.
+    """
+    #-------------------------------------------------------------------------
+    test_names_and_nums_tokens()
 
-#=====   end of   Tests.Data.tokenization_simple_solution   =====#
+#=====   end of   Tests.Scanner_Tokens.test_names_and_nums_tokens   =====#
         
