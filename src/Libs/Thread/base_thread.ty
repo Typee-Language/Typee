@@ -262,7 +262,6 @@ embed java {{ extends Thread }}
     static final const uint32 get_threads_count()
     /**
     Returns the number of currently active threads.
-    Returns 0 if this information is not available.
     */
     {
       embed py {{
@@ -310,7 +309,8 @@ embed java {{ extends Thread }}
     SecurityPermission (C# only).
     Caution:
     Behaviors may differ between different targeted programming languages.
-    Deprecated or not allowed in Python and Java because deadlock-prone.
+    Deprecated  or  not  allowed  in  Python, Java and C++ because this is 
+    deadlock prone.
     */
     {
         embed cs {{
@@ -492,7 +492,7 @@ embed java {{ extends Thread }}
     str16 operator cast str16 ()
     /**
     Returns a string representation of this thread.
-    Caution: behavior may fidder from different platforms.
+    Caution: behavior may differ with different platforms.
     */
     {
       return str16( me.name() );
