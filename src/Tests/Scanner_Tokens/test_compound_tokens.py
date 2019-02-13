@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 """
-Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typhee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -23,32 +24,21 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode 
-
+from Tests.Scanner_Tokens.tokens_test_base import TokensTestBase
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
+def test_compound_tokens():
+    TokensTestBase( 'Compound Tokens TEST',
+                    'Data/tokenization_compound_tokens.ty',
+                    'Data/tokenization_compound_solution.py' )    
+
+#=============================================================================
+if __name__ == '__main__':
     """
-    Class description.
-    """    
+    Simple test for the tokenization of compound tokens.
+    """
     #-------------------------------------------------------------------------
-    def __init__(self, content):
-        '''
-        Constructor.
+    test_compound_tokens()
+
+#=====   end of   Tests.Scanner_Tokens.test_compound_tokens   =====#
         
-        Args:
-            content: a reference to the content opf this leaf
-        '''
-        super().__init__( content )
-
-    #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
-        '''
-        Walks through the list of nodes contained within this block.
-        Walk-through is depth-first implemented.
-        Returns:
-            A reference to the content of this leaf.
-        '''
-        return self.content
-
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
