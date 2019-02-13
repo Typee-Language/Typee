@@ -24,7 +24,7 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.Scanner_Tokens.tokens_test_base import TokensTestBase
+from Tests.FrontEnd.Scanner_Tokens.tokens_test_base import TokensTestBase
 
 #=============================================================================
 def test_simple_tokens():
