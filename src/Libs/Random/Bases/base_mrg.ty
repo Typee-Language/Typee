@@ -34,15 +34,15 @@ class BaseMRG<const uint16 K_SIZE> : BaseRandState< Rand32, uint32, K_SIZE >
 Definition of the base class for all MRG pseudo-random generators.
 
 Multiple Recursive Generators (MRGs) uses  recurrence  to  evaluate  pseudo-random
-numbers suites. Recurrence is of the form:
+numbers series. Recurrence is of the form:
 
-   x(i) = A * SUM[ x(i-k) ]  mod M
+   x(i) = A * SUM[ x(i-k) ]  mod M,
 
-for 2 to more k different values.
+for 2 to more different values of k.
 
 MRGs offer very large periods with the best known results  in  the  evaluation  of 
 their  randomness,  as  stated  in  the  evaluation  done  by  Pierre L'Ecuyer and 
-Richard Simard (Universite de Montreal)  in "TestU01:  A C Library  for  Empirical 
+Richard Simard (Université de Montréal)  in "TestU01:  A C Library  for  Empirical 
 Testing of Random  Number Generators  - ACM Transactions on Mathematical Software, 
 vol.33 n.4, pp.22-40, August 2007".  It is recommended to use  such  pseudo-random
 numbers generators rather than LCG ones for serious simulation applications.
@@ -56,7 +56,7 @@ See Rand49507 for a  far  longer  period  (2^49507,  i.e. 1.2e+14903)  with  low
 computation  time  too  (32-bits  modulus)  but  use  of  more  memory space (1597 
 integers).
 
-Please notice that this class and all its  inheriting  sub-classes  are  callable.
+Please notice that this class and all its inheriting sub-classes are callable.
 Example:
 
   rand = BaseMRG()
@@ -70,8 +70,8 @@ been implemented in PyRandLib, as provided in paper "TestU01, ...".
 
 | class name | TU01 generator name | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
 | ---------- | ------------------- | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
-|  Rand287   | Marsa-LFIB4         |   256 x 4-bytes | 2^287   |    3.40     |     0.8      |          0       |       0     |       0        |
-|  Rand1457  | DX-47-3             |    47 x 4-bytes | 2^1457  |    n.a.     |     1.4      |          0       |       0     |       0        |
+|  Rand287   | Marsa-LFIB4         |   256 x 4-bytes |   2^287 |    3.40     |     0.8      |          0       |       0     |       0        |
+|  Rand1457  | DX-47-3             |    47 x 4-bytes |  2^1457 |    n.a.     |     1.4      |          0       |       0     |       0        |
 |  Rand49507 | DX-1597-2-7         | 1,597 x 4-bytes | 2^49507 |    n.a.     |     1.4      |          0       |       0     |       0        |
 
 * _small crush_ is a small set of simple tests that quickly tests some  of

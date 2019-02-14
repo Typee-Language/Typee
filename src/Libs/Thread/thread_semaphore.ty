@@ -32,7 +32,6 @@ from Thread.thread_condition     import ThreadCondition;
 from Thread.thread_exceptions    import ThreadInterruptedException,
                                         ThreadSemaphoreValueException,
                                         UnlockedException;
-from Thread.thread_guarded_block import ThreadGuardedBlock;
 from Thread.thread_mutex         import ThreadMutex;
 import Thread.utils.utils as utils;
 
@@ -170,12 +169,14 @@ embed cs   {{ : SemaphoreSlim }}
         }
       }} exit
       
-        with ThreadGuardedBlock() {
-            if (me._count > 0) {
-                --me._count;
-                return ;
-            }       
-        }
+        me._count_mutex.lock();
+        if (me._count > 0) {
+            --me._count;
+            me._count_mutex.unlock();
+            return ;
+        }       
+        me._count_mutex.unlock();
+        
         me.wait();
     }
 
@@ -230,13 +231,14 @@ embed cs   {{ : SemaphoreSlim }}
         }
       }} exit
 
-      
-        with ThreadGuardedBlock() {
-            if (me._count > 0) {
-                --me._count;
-                return true ;
-            }       
-        }
+        me._count_mutex.lock();
+        if (me._count > 0) {
+            --me._count;
+            me._count_mutex.unlock();
+            return ;
+        }       
+        me._count_mutex.unlock();
+
         return me.wait( timeout );
     }
     
@@ -262,10 +264,10 @@ embed cs   {{ : SemaphoreSlim }}
     final none release() exclude java
     /**
     Releases this semaphore.
-    Raises ThreadSemaphoreValueException when number  of  releases  exceeed
+    Raises ThreadSemaphoreValueException when number of  releases  exceeeds
     the starting value associated with this semaphore.
     Caution: Java semaphores are unbounded. Checking on release() number of
-    calls is not done and toom uch releasings does not raise any exception.
+    calls is not done and too much releasings does not raise any exception.
     */
     {
       embed py {{
@@ -286,13 +288,16 @@ embed cs   {{ : SemaphoreSlim }}
         }
       }}
 
-        with ThreadGuardedBlock() {
-            if ( me._count == 0 )
-                me.signal();
-            if ( me._count == me._max_count )
-                raise ThreadSemaphoreValueException( me );
-            ++ me._count ;
+        me._count_mutex.lock();
+        if ( me._count == 0 )
+            me.signal();
+        if ( me._count == me._max_count )
+        {
+            me._count_mutex.unlock();
+            raise ThreadSemaphoreValueException( me );
         }
+        ++ me._count ;
+        me._count_mutex.unlock();
     }
 
     //-------------------------------------------------------------------------
