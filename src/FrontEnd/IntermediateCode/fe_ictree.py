@@ -30,5 +30,7 @@ from FrontEnd.IntermediateCode.fe_icblock import FEICBlock
 FEICTree = FEICBlock
 """
 The class of Intermediate Code Trees.
+Well, Intermediate Code trees are only defined by their `root`.
 """
+
 #=====   end of   FrontEnd.IntermediateCode.fe_ictree   =====#
