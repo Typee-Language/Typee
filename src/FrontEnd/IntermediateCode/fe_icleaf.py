@@ -49,6 +49,14 @@ class FEICLeaf( FEICNode ):
         pass
 
     #-------------------------------------------------------------------------
+    def __iter__(self):
+        return self
+
+    #-------------------------------------------------------------------------
+    def __next__(self):
+        return self.content
+
+    #-------------------------------------------------------------------------
     def walk(self) -> FEICNode:
         '''
         Walks through the list of nodes contained within this block.

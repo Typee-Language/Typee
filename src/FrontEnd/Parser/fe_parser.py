@@ -3061,8 +3061,9 @@ class FEParser:
     def _statements_block(self) -> bool:
         #=======================================================================
         # <statements block> ::= '{' <statements list> '}'
-        #                     |  <nop statement> <simple statement end>
-        #                     |  <simple statement end>
+        #                     |  <compound statement>
+        #                     |  <empty statement> <statements block>
+        #                     |  <simple statement>
         #=======================================================================
         if self._current.is_BRACEOP():
             self._append_syntaxic_node()
@@ -3075,12 +3076,10 @@ class FEParser:
                 else:
                     self._append_error( FESyntaxErrors.BODY_END )
             return True
-        elif self._nop_statement():
-            if not self._simple_statement_end():
-                self._append_error( FESyntaxErrors.STATEMENT_END )
+        elif self._compound_statement() or self._simple_statement():
             return True
-        elif self._simple_statement_end():
-            return True
+        elif self._empty_statement():
+            return self._statements_block()
         else:
             return False
 
