@@ -37,6 +37,7 @@ if __name__ == '__main__':
     test_compound_tokens()
     test_names_and_nums_tokens()
     test_simple_tokens()
-   
+
+    print( "\n-- done!" )
 
 #=====   end of   Tests.Scanner_Tokens.script_scanner_test   =====#
