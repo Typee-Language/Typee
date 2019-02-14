@@ -476,9 +476,9 @@ SOFTWARE.
 <simple statement end> ::= ';'
 
 <statements block>  ::= '{' <statements list> '}'
-                     |  <nop statement> <simple statement end>
-                     |  <simple statement end>
-
+                     |  <compound statement>
+                     |  <empty statement> <statements block>
+                     |  <simple statement>
 
 <assert statement>  ::= 'assert' <expression> <assert statement'>
 <assert statement'> ::= ',' <expression>
