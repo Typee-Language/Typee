@@ -1,0 +1,619 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Files
+// Module base_file.ty
+
+// defined classes:
+fwd class BaseFile;
+fwd class BaseFile< ItemT >;
+
+//=============================================================================
+from Files.f_types import FileCursorPos, FileRelCursorPos, FileIndex;
+
+//=============================================================================
+class BaseFile
+/**
+Base class for all types of files in Typee built-in library Files.
+Defines every basic operations, but not read and write ones which are defined
+in related inheriting classes: ROFile, WOFile and RWFile.
+*/
+{
+ :public:
+ 
+    //-------------------------------------------------------------------------
+    BaseFile()
+    /**
+    Default constructor.
+    */
+    {
+        me._file = none;
+    }
+    
+    //-------------------------------------------------------------------------
+    BaseFile( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read/write mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with 'w' in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        me._file = file( filepath, rw_mode );
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy ()
+    /**
+    Called on deletion or destruction of this instance.  Closes the file.
+    Raises FileException in any error case, except when file has not been
+    previously opened - this case is checked here.
+    */
+    {
+        if ( me.is_opened() )
+            me._file.close();
+    }
+
+    //-------------------------------------------------------------------------
+    BaseFile big_endian()
+    /**
+    Sets the writing and the reading mode to big endian.  Next read and write 
+    operations  will  get  and put first lowest significant byte and end with 
+    highest significant byte (i.e. big-at-end).
+    Returns a reference to the operated file, to be cascadable with other op-
+    erations.
+    This method may be applied to the file before any  other  operation.  The 
+    file may not have been already opened, for instance. 
+    It may be applied also after a call to method close()  to  a  file.  This 
+    helps modifying the endianness of the file before it to be open again. 
+    Notice : big endian is the default behavior for read and write  files  in 
+    Typee.
+    */
+    {
+        me.file_.big_endian();
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    none close()
+    /**
+    Closes any previously opened file.  This function operates first the  writing 
+    of  any  pending  data  onto the physical permanent storage media if the file 
+    has been opened with write access permission.  It operates then the releasing 
+    of  any allocated resource to the file by the Operating System.  Once closed, 
+    no access to the physical permanent storage media can be granted to the file.
+    Raises  FileNotOpenedException  if  attempting  to  close a file that was not 
+    already opened and FileException in any other error case.
+    */
+    {
+        me._checked_opened();
+        me._file.close();
+    }
+
+    //-------------------------------------------------------------------------
+    const uint64 count()
+    /**
+    Returns the number of items contained in a file.  The file must  have  been 
+    declared with a fixed size, single type.  If not, count() returns the bytes 
+    size of the content of the file.
+    Raises FileNotOpenedException if file is not opened and FileAccessException 
+    if access has not been granted to file
+    */
+    {
+        me._checked_opened();
+        me._file.count();
+    }
+
+    //-------------------------------------------------------------------------
+    const FileCursorPos cursor_pos()
+    /**
+    Returns the file cursor current position. Positions start at 0.
+    Raises FileNotOpenedException if file has not been previously opened.
+    */
+    {
+        me._checked_opened();
+        return me._file.cursor_pos();
+    }
+
+    //-------------------------------------------------------------------------
+    BaseFile empty()
+    /**
+    Empties the file.  Any content is removed from the operated file.  The  size 
+    of  the  file  is  then 0.  This operation flushes also any data pending for 
+    their writing in Operating System buffers so that no  data  is  later  saved 
+    in the file.
+    Returns a reference to the operated file, for this function to be cascadable 
+    with other file functions.
+    Raises FileNotOpenedException if file is not opened and  FileAccessException 
+    if access has not been granted to file.
+    */
+    {
+        me._checked_opened();
+        return me._file.empty();
+    }
+
+    //-------------------------------------------------------------------------
+    const FileCursorPos end_pos()
+    /**
+    Puts the file cursor at the very end of the file,  i.e. one byte further 
+    than  its ending byte.  At that position,  no read operation is allowed. 
+    Only write operation is. When a constant size for types has been specif-
+    ied at declaration of the file, the index position gets according value, 
+    i.e. 1 value further the current number of items (or records)  that  are 
+    present in the file.
+    Returns the cursor position (in bytes) if no constant size type has been 
+    specified at declaration time, and index value otherwise.
+    Raises FilePosException,  FileNotOpenedException,   FileClosedException, 
+    FileAccessException or FileException in case of related errors.
+    */
+    {
+        me._checked_opened();
+        return me._file.end_pos();
+    }
+
+    //-------------------------------------------------------------------------
+    const ? in (FileCursorPos, FileIndex) from_end( const ? in (FileCursorPos, FileIndex) n )
+    /**
+    The new position of the file cursor (and of the file index) is evaluated 
+    as relative to the very end position of the file.
+    If a constant-size type has been declared for the file content, argument 
+    'n' is a number of records (or items) to skip. If no constant-size types 
+    have been declared for the file content, argument n is a number of bytes.
+    Raises FilePosException in case of file out-of-bounds. Raises also 
+    FileNotOpenedException, FileClosedException, FileAccessException or 
+    FileException in case of related errors.
+    Returns the cursor new position, or the index new position, according the 
+    constant-size type (or not) specified at declaration time.
+    */
+    {
+        me._checked_opened();
+        return me._file.from_end( n );
+    }
+
+    //-------------------------------------------------------------------------
+    const FileCursorPos index()
+    /**
+    Returns the current index value, evaluated as cursor_pos / type_size 
+    if a constant size has been specified for items stored in file,  and 
+    evaluated  as  cursor_pos  (i.e. as a bytes count from start)  if no 
+    constant size has been specified.
+    Notice:
+    For this base class, no constant  size  is  specified  for  contained
+    items,  so  returned value is a bytes count.  Inheriting classes will 
+    automatically modify this behavior.
+    Raises FileNotOpenedException if file has not been previously opened.
+    */
+    {
+        me._checked_opened();
+        return me._file.cursor_pos();
+    }
+
+    //-------------------------------------------------------------------------
+    const bool is_empty()
+    /**
+    Returns true if file contains nothing and false otherwise.
+    Raises FileNotOpenedException if file has not been previously opened.
+    */
+    {
+        me._checked_opened();
+        return me.size() == 0;
+    }
+
+    //-------------------------------------------------------------------------
+    const bool is_opened()
+    /**
+    Returns true if file is currently opened and false otherwise.
+    */
+    {
+        return me._file is not none;
+    }
+
+    //-------------------------------------------------------------------------
+    BaseFile little_endian()
+    /**
+    Sets the writing and the reading mode to little  endian.  Next  read  and 
+    write  operations  will  get  and put first highest significant bytes and 
+    end with lowest significant bytes (i.e. big-at-end).
+    Returns a reference to the operated file, to be cascadable with other op-
+    erations.
+    This method may be applied to the file before any  other  operation.  The 
+    file may not have been already opened, for instance. 
+    It may be applied also after a call to method close()  to  a  file.  This 
+    helps modifying the endianness of the file before it to be open again. 
+    Notice : default behavior is big endian the for read and write  files  in 
+    Typee.
+    */
+    {
+        me._checked_opened();
+        me._file.little_endian();
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    none open( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Opens a previously declared file according to the specified file  path  and 
+    with the specified read/write access mode.
+    By default, file paths are relative to the directory from which the program 
+    is run. This directory may be explicitely named also with "./".
+    The directories separator in the file  path  is  exclusively  "/".  Windows 
+    programmers should mind this.
+    To go “up a level” once to many times in a directory tree,  file paths  may 
+    be prefixed with as many "../" as necessary.
+    Finaly,  absolute paths are specified with a  leading  "/".  Unfortunately, 
+    absolute paths get different syntaxes with different Operating Systems. 
+    When translating a Typee program for both Windows and Linux,  for instance, 
+    absolute paths for a same file will be different. Up today, there is no way 
+    in Typee to distinguish between targeted  Operating Systems  in  code.  So, 
+    programmers  are  strongly  encouraged  to  use relative file paths to take 
+    benefit of maximalist portability.
+    This is an identified issue that will be further fixed with high priority.
+
+    Argument rw_mode is a string. Actually, accepted strings are:
+        "ro" for Read-Only access permission;
+        "wo" for Write-Only access permission;
+        "rw" for Read-Write access permission;
+        
+    Raises FileNotFoundException if file  is  not  found  or  if  file_path  is 
+    incorrect,  FileAccessException  if  access  to the file cannot be granted, 
+    TypeException if any of the arguments is not a string,  FileExistsException 
+    when  trying  to  create  (with 'w' in rw_mode)  an  already existing file, 
+    FileOpenedException  when  trying  to  open  an  already  opened  file  and 
+    ValueException  if  argument  rw_mode is not one of the three legal 2-chars 
+    strings specified right above.
+    */
+    {
+        me._checked_opened();
+        me._file.open( filepath, rw_mode );
+    }
+
+    //-------------------------------------------------------------------------
+    none operator = ( Basefile left, BaseFile right )
+    /**
+    Assignment operation between files references.
+    Caution: may have to be overridden in inheriting classes.
+    */
+    {
+        left._file = right._file;
+    }
+
+    //-------------------------------------------------------------------------
+    BaseFile operator > ()
+    /**
+    Sets the writing and the reading mode to big endian.  Next read and write 
+    operations  will  get and put first lowest significant bytes and end with 
+    highest significant bytes (i.e. big-at-end).
+    Returns a reference to the operated file, to be cascadable with other op-
+    erations.
+    This operator may be applied to the file before any other operation.  The 
+    file may not have been already opened, for instance. 
+    It may be applied also after a call to method close()  to  a  file.  This 
+    helps modifying the endianness of the file before it to be open again. 
+    Notice : big endian is the default behavior for read and write  files  in 
+    Typee.
+    */
+    {
+        me._checked_opened();
+        > me._file;
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    BaseFile operator < ()
+    /**
+    Sets the writing and the reading mode to little endian. Next read and write 
+    operations  will  get  and  put first lowest significant bytes and end with 
+    highest significant bytes (i.e. big-at-end).
+    Returns a reference to the operated file,  to be cascadable with other  op-
+    erations.
+    This operator may be applied to the file before  any  other operation.  The 
+    file may not have been already opened, for instance. 
+    It may be applied also after a call to  method  close()  to  a  file.  This 
+    helps modifying the endianness of the file before it to be open again. 
+    Notice:  big endian is the default behavior for read  and  write  files  in 
+    Typee.
+    */
+    {
+        me._checked_opened();
+        < me._file;
+        return me;
+    }
+
+    //-------------------------------------------------------------------------
+    none operator >> ( BaseFile left, BaseFile right )
+    /**
+    The reading of a file reference from another file is a not-authorized operation. 
+    */
+    {
+        raise NotAvailableOperationException( 'reading a file reference from another file' );
+    }
+    
+    //-------------------------------------------------------------------------
+    none operator << ( BaseFile left, BaseFile right )
+    /**
+    The writing of a file reference into another file is a not-authorized operation. 
+    */
+    {
+        raise NotAvailableOperationException( 'writing a file reference into another file' );
+    }
+    
+    //-------------------------------------------------------------------------
+    uint64 operator cast uint64 ()
+    /**
+    Returns the number of items contained in a file.  The file must  have  been 
+    declared with a fixed size, single type.  If not, count() returns the bytes 
+    size of the content of the file.
+    Raises FileNotOpenedException if file is not opened and FileAccessException 
+    if access has not been granted to file.
+    */
+    {
+        return me.count();
+    }
+
+    //-------------------------------------------------------------------------
+    none reopen( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Closes first an already opened file,  then opens it again according to  the 
+    specified file path and with the specified read/write access mode.
+    By default, file paths are relative to the directory from which the program 
+    is run. This directory may be explicitely named also with "./".
+    The directories separator in the file  path  is  exclusively  "/".  Windows 
+    programmers should mind this.
+    To go “up a level” once to many times in a directory tree,  file paths  may 
+    be prefixed with as many "../" as necessary.
+    Finaly,  absolute paths are specified with a  leading  "/".  Unfortunately, 
+    absolute paths get different syntaxes with different Operating Systems. 
+    When translating a Typee program for both Windows and Linux,  for instance, 
+    absolute paths for a same file will be different. Up today, there is no way 
+    in Typee to distinguish between targeted  Operating Systems  in  code.  So, 
+    programmers  are  strongly  encouraged  to  use relative file paths to take 
+    benefit of maximalist portability.
+    This is an identified issue that will be further fixed with high priority.
+
+    Argument rw_mode is a string. Actually, accepted strings are:
+        "ro" for Read-Only access permission;
+        "wo" for Write-Only access permission;
+        "rw" for Read-Write access permission;
+        
+    Raises FileNotFoundException if file  is  not  found  or  if  file_path  is 
+    incorrect,  FileAccessException  if  access  to the file cannot be granted, 
+    TypeException if any of the arguments is not a string,  FileExistsException 
+    when  trying to create (with 'w' in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the  three  legal  2-chars 
+    strings specified right above.
+    */
+    {
+        if ( me.is_opened() )
+            me._file.reopen( filepath, rw_mode );
+        else
+            me._file.open( filepath, rw_mode );
+    }
+
+    //-------------------------------------------------------------------------
+    none rewind()
+    /**
+    Puts the file cursor and the file index at  the very beginning of the 
+    file, at position 0.
+    Raises FilePosException, FileNotOpenedException, FileClosedException, 
+    FileAccessException or FileException in case of related errors.
+    */
+    {
+        me._checked_opened();
+        return me._file.rewind();
+    }
+
+    //-------------------------------------------------------------------------
+    const FileSize size()
+    /**
+    Returns the size of the content of the file.  This is not the  size  of  the 
+    file  on  disk,  which  most  of  the  time will be greater due to Operating 
+    System optimizations on disk storage  (files sizes are multiples  of  blocks 
+    which  are  a  few  KBytes  each).  To get the exact size of a file on disk, 
+    use the built-in library on Operating Systems - i.e. built-in library OpSys.
+    Returns the exact count of bytes occupied by the file content.
+    Raises FileNotOpenedException if file is not opened and  FileAccessException 
+    if access has not been granted to file.
+    */
+    {
+        me._checked_opened();
+        return me._file.size();
+    }
+
+    //-------------------------------------------------------------------------
+    const float32 size_kb()
+    /**
+    Returns the size of the content of the file as a floating  point  value  rep-
+    esenting KBytes.  This is not the size of the file on disk, which most of the 
+    time will be greater due to Operating System optimizations  on  disk  storage  
+    (files  sizes  are  multiples  of blocks which are a few KBytes each). To get 
+    the exact size of a file on disk,  use  the  built-in  library  on  Operating 
+    Systems - i.e. built-in library OpSys.
+    Returns the exact count of bytes occupied by the file content.
+    Raises FileNotOpenedException if file is not opened  and  FileAccessException 
+    if access has not been granted to file.
+    */
+    {
+        me._checked_opened();
+        return me._file.size_kb();
+    }
+
+    //-------------------------------------------------------------------------
+    const float32 size_mb()
+    /**
+    Returns the size of the content of the file as a floating  point  value  rep-
+    esenting MBytes.  This is not the size of the file on disk, which most of the 
+    time will be greater due to Operating System optimizations  on  disk  storage  
+    (files  sizes  are  multiples  of blocks which are a few KBytes each). To get 
+    the exact size of a file on disk,  use  the  built-in  library  on  Operating 
+    Systems - i.e. built-in library OpSys.
+    Returns the exact count of bytes occupied by the file content.
+    Raises FileNotOpenedException if file is not opened  and  FileAccessException 
+    if access has not been granted to file.
+    */
+    {
+        me._checked_opened();
+        return me._file.size_mb();
+    }
+
+    //-------------------------------------------------------------------------
+    const float32 size_gb()
+    /**
+    Returns the size of the content of the file as a floating  point  value  rep-
+    esenting GBytes.  This is not the size of the file on disk, which most of the 
+    time will be greater due to Operating System optimizations  on  disk  storage  
+    (files  sizes  are  multiples  of blocks which are a few KBytes each). To get 
+    the exact size of a file on disk,  use  the  built-in  library  on  Operating 
+    Systems - i.e. built-in library OpSys.
+    Returns the exact count of bytes occupied by the file content.
+    Raises FileNotOpenedException if file is not opened  and  FileAccessException 
+    if access has not been granted to file.
+    */
+    {
+        me._checked_opened();
+        return me._file.size_gb();
+    }
+
+    //-------------------------------------------------------------------------
+    const FileRelCursorPos skip( const FileRelCursorPos n )
+    /**
+    The new position of the file cursor (or of the file index) is evaluated  as 
+    relative to its current value.
+    If a constant-size type has been declared for the file content,  argument  n 
+    is  a  number of records (or items) to skip.  If no constant-size types have 
+    been declared for the file content, argument n is a number of bytes.
+    n is either a positive number, in which case a forward skipping takes place, 
+    or a negative number, in which case a backward skipping takes place.
+    In case of file out-of-bounds, function skip() raise a FilePosException.  It 
+    raises also FileNotOpenedException, FileClosedException, FileAccessException 
+    or FileException in case of related errors.
+    Returns the cursor new position, or the index new  position,  according  the 
+    constant-size type (or not) spcified at declaration time.
+    Caution:  this function acts according to the type declared for the  content 
+    of the file.
+    */
+    {
+        me._checked_opened();
+        return const FileRelCursorPos( me._file.skip( n ) );
+    }
+
+    //-------------------------------------------------------------------------
+    none trunc()
+    /**
+    Removes the end of the file from disk from current position  of index  (if 
+    file has been declared with a single,  fixed-sized, type) and from current 
+    position of cursor otherwise.
+    The specified pos is also removed from file on disk.  The size of the file 
+    is then set accordingly.
+    Returns a reference to the operated file,  for this function to be cascad-
+    able with other file functions.
+    Raises FileNotOpenedException if file is not  opened,  FileAccessException 
+    if access has not been granted to file.
+    */
+    {
+        me._checked_opened();
+        return me._file.trunc();
+    }
+
+    //-------------------------------------------------------------------------
+    none trunc( const ? in (FileCursorPos, FileIndex) pos )
+    /**
+    Removes the end of the file from disk from specified position of index (if 
+    file has been declared with a single, fixed-sized, type)  and at specified 
+    position of cursor otherwise.
+    The specified pos is also removed from file on disk.  The size of the file 
+    is then set accordingly.
+    Returns a reference to the operated file,  for this function to be cascad-
+    able with other file functions.
+    Raises FileNotOpenedException if file is not  opened,  FileAccessException 
+    if  access  has  not been granted to file,  OutOfBoundsException if pos is 
+    greater than the current size of the file.
+    */
+    {
+        me._checked_opened();
+        return me._file.trunc( pos );
+    }
+
+
+ :protected:
+    //-------------------------------------------------------------------------
+    file  _file;
+
+    //-------------------------------------------------------------------------
+    none _checked_opened()
+    /**
+    Checks if file is currently opened.
+    Raises FileNotOpenedException if file is not opened.
+    */
+    {
+        if ( me._file is none )
+            raise FileNotOpenedException;
+    }
+}
+
+
+//=============================================================================
+class BaseFile<ItemT> : BaseFile
+/**
+Templated class  for all types of files in Typee built-in library Files 
+with declared types for items.
+ItemT is the type of the stored items. It may be set as:
+    ? in (type_1, type_2, ..., type_n)
+in which case file may contain items of different sizes.
+
+When items are all of the same size,  Typee  automatically  understands 
+positionning in file as an indexed positionning on items, not on bytes.
+*/
+{ :public:
+ 
+    //-------------------------------------------------------------------------
+    BaseFile<ItemT>()
+    /**
+    Default constructor.
+    */
+    {
+        BaseFile();
+    }
+    //-------------------------------------------------------------------------
+    BaseFile<ItemT>( ? in (str,str16) filepath, ? in (str,str16) rw_mode )
+    /**
+    Instantiates the file and  opens  it  with  specified  filepath  and  with
+    specifed read/write mode.
+    Raises FileNotFoundException if file  is  not  found or  if  file_path  is 
+    incorrect,  FileAccessException  if  access to the file cannot be granted, 
+    TypeException if any of the arguments is not a string, FileExistsException 
+    when trying to create (with 'w' in rw_mode) an already existing file,  and 
+    ValueException if argument rw_mode is not one of the three legalones.
+    */
+    {
+        BaseFile( filepath, rw_mode );
+    }
+
+
+ :protected:
+    file<ItemT>  _file;
+}
+
+//===== end of module   Files.base_file.ty   =====//

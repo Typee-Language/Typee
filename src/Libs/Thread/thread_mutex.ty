@@ -1,0 +1,252 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module thread_mutex.ty
+
+// defined class
+fwd class ThreadMutex;
+
+//=============================================================================
+from Thread.thread_exceptions import ThreadInterruptedException,
+                                     ThreadDeadlockException,
+                                     ThreadException,
+                                     ThreadForbiddenOpException,
+                                     ThreadLockedException,
+                                     UnlockedException;
+import Thread.utils.utils as utils;
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+embed java {{
+import java.util.concurrent.locks;
+import java.util.concurrent.TimeUnit;
+}}
+
+embed cpp {{
+#include <mutex>
+#include <chrono>
+#include <thread>
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
+//=============================================================================
+class ThreadMutex
+/**
+Typee implementation of the mutex concept.
+Mutual Exclusion is associated with  objects for which access from threads 
+must be exclusive:  no two different threads may simultaneously get access 
+to this object.
+This is the class which defines the mutual exclusion between  threads  for
+an object. Classes which inherit form ThreadMutex get this functionnality.
+Notice: not applicable to statement 'with'.
+*/
+
+embed py   {{ : threading.Lock }}
+embed java {{ extends ReentrantLock }}
+embed cpp  {{ : std::mutex }}
+embed cs   {{ : Mutex }}
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    ThreadMutex()
+    /**
+    Default constructor.
+    */
+    embed cpp {{ : std::mutex() }}
+    embed cs  {{ : base() }}
+    {
+      embed py {{
+        super().__init__()
+      }}
+      
+      embed java {{
+        super();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy ()
+    /**
+    Destructor.
+    Caution:
+    Behaviors may differ between different targeted programming languages.
+    */
+    {
+      embed py {{
+        super().__del__()
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final none lock() exclude java
+    /**
+    Infinitively blocking version to acquire access 
+    to the mutually exclusive access to the object.
+    */
+    {
+      embed py {{
+        self.acquire( True )
+      }}
+      
+      embed cpp {{
+        try {
+            std::mutex::lock();
+        }
+        catch ( const std::system_error &e )
+        {
+            switch ( e.code() )
+            {
+                case std::resource_deadlock_would_occur:
+                    throw ThreadDeadlockException( e.what() );
+                    break;
+                case std::operation_not_permitted:
+                    throw ThreadForbiddenOpException( e.what() );
+                    break;
+                case std::device_or_resource_busy:
+                    throw ThreadLockedException( e.what() );
+                    break;
+            }
+        }
+      }} // end of embed cpp
+      
+      embed cs {{
+        try {
+            base.WaitOne();
+        }
+        catch ( Exception e )
+        {
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+        }
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool lock()
+    /**
+    Non blocking version to acquire access to the mutually exclusive 
+    access to the object.
+    Returns true if object has been acquired and false otherwise. 
+    */
+    {
+      embed py {{
+        return self.acquire( False )
+      }} exit
+      
+      embed java {{
+        return tryLock();
+      }} exit
+      
+      embed cpp {{
+        return std::mutex::try_lock();
+      }} exit
+      
+        me.lock( 0.0 );
+    }
+
+    //-------------------------------------------------------------------------
+    final const bool lock( const float32 timeout )
+    /**
+    Timed-out blocking version to acquire access to the  mutually  exclusive 
+    access to the object.
+    Returns true when object has been acquired and  false  if  not  acquired 
+    after the specified timeout duration (unit: seconds).
+    Raises ThreadTimeoutValueException  on  some  platforms  when  specified 
+    timeout is too big.
+    Raises ThreadInterruptedException if waiting thread has been interrupted.
+    Raises AssertException if timeout is negative.
+    Caution: behavior may differ from different targeted platforms.
+    */
+    {
+        assert timeout >= 0.0;
+        
+      embed py {{
+        try:
+            return self.acquire( True, timeout )
+        except:
+            raise ThreadTimeoutValueException( timeout )
+      }}
+      
+      embed java {{
+        try {
+            tryLock( utils.set_to_ms(timeout), TimeUnit.MILLISECONDS);
+        }
+        catch (InterruptedException e) {
+            raise ThreadInterruptedException()
+        }
+      }}
+      
+      embed cpp {{
+        std::this_thread::sleep_for( std::chrono::milliseconds( utils.sec_to_ms(timeout) ) );
+        return std::mutex::try_lock();
+      }}
+      
+      embed cs {{
+        try {
+            return base.WaitOne( utils.sec_to_ms(timeout) );
+        }
+        catch ( Exception e )
+        {
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+        }
+      }}
+    }
+    
+    //-------------------------------------------------------------------------
+    final none unlock() exclude java, cpp
+    /**
+    Releases this object for it to be acquirable again.
+    Raises UnlockedException when unlocking  an  object 
+    that is not currently locked.
+    Caution: with some targeted languages (e.g. Python),
+    objects may be unlocked from any thread and not only
+    from the thread which had locked the object.
+    */
+    {
+      embed py {{
+        try:
+            return self.release()
+        except:
+            raise UnlockedException( self )
+      }}
+      
+      embed cs {{
+        try {
+            base.ReleaseMutex();
+        }
+        catch ( Exception e ) {
+            throw new ThreadException( "C# Mutex exception '" + e.ToString() + "'" );
+        }
+      }}
+    }
+}
+
+//===== end of module   Thread.thread_mutex.ty   =====//
