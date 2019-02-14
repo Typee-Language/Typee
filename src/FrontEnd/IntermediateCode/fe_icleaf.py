@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typhon project, http://www.typee.ovh
+Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -24,21 +23,40 @@ SOFTWARE.
 """
 
 #=============================================================================
-from test_compound_tokens        import test_compound_tokens
-from test_names_and_nums_tokens  import test_names_and_nums_tokens
-from test_simple_tokens          import test_simple_tokens
+from FrontEnd.IntermediateCode.fe_icnode import FEICNode 
+
 
 #=============================================================================
-if __name__ == '__main__':
+class FEICLeaf( FEICNode ):
     """
-    This script calls every test functions dedicated to the Front-End Scanner.
-    """
+    Class description.
+    """    
     #-------------------------------------------------------------------------
-    test_compound_tokens()
-    test_names_and_nums_tokens()
-    test_simple_tokens()
-    
-    print( "\n-----   done!   -----")
-   
+    def __init__(self, content):
+        '''
+        Constructor.
+        
+        Args:
+            content: a reference to the content opf this leaf
+        '''
+        super().__init__( content )
 
-#=====   end of   Tests.Scanner_Tokens.script_scanner_test   =====#
+    #-------------------------------------------------------------------------
+    def __iter__(self):
+        return self
+
+    #-------------------------------------------------------------------------
+    def __next__(self):
+        return self.content
+
+    #-------------------------------------------------------------------------
+    def walk(self) -> FEICNode:
+        '''
+        Walks through the list of nodes contained within this block.
+        Walk-through is depth-first implemented.
+        Returns:
+            A reference to the content of this leaf.
+        '''
+        return self.content
+
+#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#

@@ -65,37 +65,18 @@ embed cs   {{ : Timer }}
  :public:
 
     //-------------------------------------------------------------------------
-    ThreadTimer( const str name )
+    ThreadTimer( const ? in (str, str16) name )
     /**
     Constructor.
     */
     {
-        me._name, me._name16 = name, none;
+        me._name = name;
         me._running = False;
         
        embed java {{
         super( name );
         this._timer = new Timer( name );
        }}
-       
-       embed cs {{
-        base ( run, null, Infinity, Infinity );
-       }}
-    }
-
-    //-------------------------------------------------------------------------
-    ThreadTimer( const str16 name16 )
-    /**
-    Constructor.
-    */
-    {
-        me._name, me._name16 = none, name16;
-        me._running = False;
-        
-      embed java {{
-        super( name16 );
-        this._timer = new Timer( name16 );
-      }}
        
        embed cs {{
         base ( run, null, Infinity, Infinity );
@@ -207,18 +188,17 @@ embed cs   {{ : Timer }}
     //-------------------------------------------------------------------------
     str operator cast str ()
     {
-        return me.name;
+        return str( me.name );
     }
     //-------------------------------------------------------------------------
     str16 operator cast str16 ()
     {
-        return me.name16;
+        return str16( me.name );
     }
 
  :protected:
     //-------------------------------------------------------------------------
-    str     _name;
-    str16   _name16;
+    ? in (str, str16)  _name;
     bool    _running;
     uint64  _count, _nb;
 

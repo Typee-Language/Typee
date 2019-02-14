@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typhee project, http://www.typee.ovh
+Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -24,33 +23,12 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icode_token_node import *
+from FrontEnd.IntermediateCode.fe_icblock import FEICBlock 
 
 
 #=============================================================================
-soluce = [
-    
-    ICTokenNode_COMMENT( None, " Simple tokens -- tokenization test source" ),
-    ICTokenNode_NL(),
-    ICTokenNode_BRACKETOP(),
-    ICTokenNode_BRACKETCL(),
-    ICTokenNode_NL(),
-    ICTokenNode_PAROP(),
-    ICTokenNode_PARCL(),
-    ICTokenNode_NL(),
-    ICTokenNode_COMMA(),
-    ICTokenNode_SEMICOLON(),
-    ICTokenNode_NL(),
-    ICTokenNode_HASH(),
-    ICTokenNode_NL(),
-    ICTokenNode_DOT(),
-    ICTokenNode_NL(),
-    ICTokenNode_TILD(),
-    ICTokenNode_NL(),
-    ICTokenNode_ANY_TYPE( None, '?' ),
-    ICTokenNode_NL(),
-    ICTokenNode_EOF()
-]
-
-#=====   end of   Tests.Data.tokenization_simple_solution   =====#
-        
+FEICTree = FEICBlock
+"""
+The class of Intermediate Code Trees.
+"""
+#=====   end of   FrontEnd.IntermediateCode.fe_ictree   =====#

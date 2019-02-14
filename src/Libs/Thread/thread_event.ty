@@ -153,7 +153,7 @@ embed py {{ : threading.Event }}
     final const bool wait( const float32 timeout ) exclude py
     /**
     Blocks the caller thread until this event becomes set  or  until  timeout.
-    Returns true if the event became set before timeout,  and false otherwise.
+    Returns true if the event becomes set before timeout, and false otherwise.
     Raises ThreadTimeoutValueException if the value of timeout  value  is  too  
     big compared with allowed values on the targeted platform.
     Raises ThreadInterruptedException if thread gets interrupted while waiting
