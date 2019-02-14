@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typhee project, http://www.typee.ovh
+Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -24,21 +23,47 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.Scanner_Tokens.tokens_test_base import TokensTestBase
+from FrontEnd.IntermediateCode.fe_icblock import FEICBlock 
+from FrontEnd.IntermediateCode.fe_icnode  import FEICNode 
+
 
 #=============================================================================
-def test_compound_tokens():
-    TokensTestBase( 'Compound Tokens TEST',
-                    'Data/tokenization_compound_tokens.ty',
-                    'Data/tokenization_compound_solution.py' )    
+class FEICTree:
+    """
+    The class of Intermediate Code trees.
+    """
 
-#=============================================================================
-if __name__ == '__main__':
-    """
-    Simple test for the tokenization of compound tokens.
-    """
     #-------------------------------------------------------------------------
-    test_compound_tokens()
+    def __init__(self):
+        '''
+        Constructor.
+        '''
+        self._root = FEICBlock()
+        self._current = self._root
 
-#=====   end of   Tests.Scanner_Tokens.test_compound_tokens   =====#
-        
+    #-------------------------------------------------------------------------
+    def __iadd__(self, ic_node:(FEICBlock,FEICNode)):
+        '''
+        Appends a new node into this block.
+        '''
+        ic_node.set_parent( self._current )
+        self._current += ic_node
+        if isinstance( ic_node, FEICBlock ):
+            self._current = ic_node
+
+    #-------------------------------------------------------------------------
+    def up(self):
+        '''
+        Goes back to parent block in IC Tree.
+        '''
+        self._current = self._current.parent
+
+    #-------------------------------------------------------------------------
+    def walk(self):
+        '''
+        Walks through this Intermediate Code tree.
+        Walk-through is depth-first implemented.
+        '''
+        self._root.walk()
+
+#=====   end of   FrontEnd.IntermediateCode.fe_ictree   =====#

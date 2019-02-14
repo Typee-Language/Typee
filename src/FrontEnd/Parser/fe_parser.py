@@ -28,7 +28,7 @@ from FrontEnd.IntermediateCode.fe_icode_token_node   import *
 from FrontEnd.IntermediateCode.fe_tokenized_icode    import FETokenizedICode
 
 from FrontEnd.IntermediateCode.fe_syntax_icode_node  import FESyntaxICodeNode
-from FrontEnd.IntermediateCode.fe_syntaxic_icode     import FESyntaxicICode
+from FrontEnd.IntermediateCode.fe_syntax_icode       import FESyntaxICode
 from FrontEnd.Errors.fe_syntax_errors                import FESyntaxErrors
 
 
@@ -58,7 +58,7 @@ class FEParser:
         self._icode = intermediate_code
    
     #-------------------------------------------------------------------------
-    def parse(self, intermediate_code:FETokenizedICode=None) -> tuple(FESyntaxicICode,int):
+    def parse(self, intermediate_code:FETokenizedICode=None) -> tuple(FESyntaxICode,int):
         '''
         Parses some Front-End Intermediate Code and generates the related
         Front-End Syntaxic Code.
@@ -3061,8 +3061,9 @@ class FEParser:
     def _statements_block(self) -> bool:
         #=======================================================================
         # <statements block> ::= '{' <statements list> '}'
-        #                     |  <nop statement> <simple statement end>
-        #                     |  <simple statement end>
+        #                     |  <compound statement>
+        #                     |  <empty statement> <statements block>
+        #                     |  <simple statement>
         #=======================================================================
         if self._current.is_BRACEOP():
             self._append_syntaxic_node()
@@ -3075,12 +3076,10 @@ class FEParser:
                 else:
                     self._append_error( FESyntaxErrors.BODY_END )
             return True
-        elif self._nop_statement():
-            if not self._simple_statement_end():
-                self._append_error( FESyntaxErrors.STATEMENT_END )
+        elif self._compound_statement() or self._simple_statement():
             return True
-        elif self._simple_statement_end():
-            return True
+        elif self._empty_statement():
+            return self._statements_block()
         else:
             return False
 
@@ -4092,7 +4091,8 @@ class FEParser:
     def _append_error(self, err_data=None):
         self._errors_count += 1
         err_node = ICTokenNode_UNEXPECTED( data=err_data or self._current.tk_data )
-        err_node.set_num_line( self._current )
+        err_node.num_line = self._current.num_line
+        err_node.num_coln = self._current.num_coln
         self._append_syntaxic_node( err_node )
     #-------------------------------------------------------------------------
     def _append_syntaxic_node(self) -> bool:
@@ -4112,7 +4112,7 @@ class FEParser:
             return False
     #-------------------------------------------------------------------------
     def _init_parsing_state(self):
-        self._scode = FESyntaxicICode()
+        self._scode = FESyntaxICode()
         self._errors_count = 0
     #-------------------------------------------------------------------------
     def _next_token_node(self) -> FEICodeTokenNode:
