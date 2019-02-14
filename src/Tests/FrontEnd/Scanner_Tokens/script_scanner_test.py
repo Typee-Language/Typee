@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typhee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typhon project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -24,21 +24,20 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.Scanner_Tokens.tokens_test_base import TokensTestBase
-
-#=============================================================================
-def test_simple_tokens():
-    TokensTestBase( 'Simple Tokens TEST',
-                    'Data/tokenization_simple_tokens.ty',
-                    'Data/tokenization_simple_solution.py' )
+from Tests.FrontEnd.Scanner_Tokens.test_compound_tokens        import test_compound_tokens
+from Tests.FrontEnd.Scanner_Tokens.test_names_and_nums_tokens  import test_names_and_nums_tokens
+from Tests.FrontEnd.Scanner_Tokens.test_simple_tokens          import test_simple_tokens
 
 #=============================================================================
 if __name__ == '__main__':
     """
-    Simple test for the tokenization of simple tokens.
+    This script calls every test functions dedicated to the Front-End Scanner.
     """
     #-------------------------------------------------------------------------
+    test_compound_tokens()
+    test_names_and_nums_tokens()
     test_simple_tokens()
 
-#=====   end of   Tests.test_simple_tokens   =====#
-        
+    print( "\n-- done!" )
+
+#=====   end of   Tests.Scanner_Tokens.script_scanner_test   =====#
