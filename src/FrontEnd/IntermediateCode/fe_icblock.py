@@ -31,7 +31,6 @@ class FEICBlock( FEICNode ):
     def __init__(self, parent:FEICNode=None):
         '''
         Constructor.
-
         '''
         super().__init__( [] )  ## content is an empty list (of FEICNode-s)
         self.parent = parent

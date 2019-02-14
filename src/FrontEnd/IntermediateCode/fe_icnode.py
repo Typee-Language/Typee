@@ -40,7 +40,14 @@ class FEICNode:
         self.content = content
 
     #-------------------------------------------------------------------------
-    def walk(self) -> FEICNodeI:
+    def set_parent(self, parent:FEICNode):
+        '''
+        Sets the parent of this node.
+        '''
+        self.parent = parent
+
+    #-------------------------------------------------------------------------
+    def walk(self) -> FEICNode:
         '''
         Walks through the list of nodes contained within this block.
         Walk-through is depth-first implemented.
