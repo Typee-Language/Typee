@@ -1,5 +1,5 @@
 /*****
-Copyright (c) 2018 Philippe Schmouker, Typhon project, http://www.typhon.eu
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -30,16 +30,18 @@ SOFTWARE.
 
 /*****   ATOMS   ****************************************************/
 
-<atom element>  ::= <atom> 
-                 |  <dotted name> <atom element'>
-                 |  <const qualifier> <scalar type> <scalar type casting>
-                 |  <scalar type> <scalar type casting>
-<atom element'> ::= <dotted name'> <atom element'>
-                 |  <is instance of>
-                 |  <subscription or slicing> <atom element'>
-                 |  <function call> <atom element'>
-                 |  <scalar type casting>
-                 |  EPS
+<atom element>      ::= <atom> 
+                     |  <dotted name> <atom element'>
+                     |  <const qualifier> <atom element'''>         ## --
+                     |  <atom element'''>                           ## --
+<atom element'>     ::= <atom element''>                            ## --
+                     |  <dotted name'> <atom element'>
+                     |  <function call> <atom element'>
+                     |  <subscription or slicing> <atom element'>
+                     |  EPS
+<atom element''>    ::= <is instance of>                            ## --
+                     |  <scalar type casting>                       ## --
+<atom element'''>   ::= <scalar type> <scalar type casting>         ## --
 
 <atom>          ::= <decr> <dotted name> <incr or decr>
                  |  <incr> <dotted name> <incr or decr>
@@ -147,7 +149,7 @@ SOFTWARE.
 <comp operator'>    ::=  '<'  |  '>'
 
 <condition or unnamed func> ::= <or test>
-                             |  <unnamed function>
+                             |  <unnamed func>          ##
 
 <is operator>   ::= 'is' <is operator'>
 <is operator'>  ::= 'not'
@@ -244,15 +246,15 @@ SOFTWARE.
 <function definition'>    ::= <function args declaration> <statements block>
 
 
-<abstract or final qualif>  ::= <abstract qualifier>
-                             |  <final qualifier>
+<abstract or final qualif>  ::= 'abstract'  |  'final'          ##
+##                             |  <final qualifier>
                              |  EPS
 
-<abstract qualifier>        ::= 'abstract'
+## <abstract qualifier>        ::= 'abstract'
 
 <call operator>             ::= '(' ')'
 
-<final qualifier>           ::= 'final'
+## <final qualifier>           ::= 'final'
 
 <function args declaration> ::= '(' <typed args list> ')'
 
@@ -331,7 +333,7 @@ SOFTWARE.
                  |  '0' <escaped char">
 <escaped char"> ::= 'x' <hexa char> <hexa char> <hexa char> <hexa char>
                  |  'X' <hexa char> <hexa char> <hexa char> <hexa char>
-                 |  <octal char> <octal char>
+                 |  <octal char> <octal char> <octal char>                          ##
 
 <FALSE>         ::= 'False'
                  |  'false'
@@ -364,7 +366,7 @@ SOFTWARE.
 
 
 <binary number>   ::= <binary char> <binary number'>
-                   |  '_' <binary char> <binary number'>
+##                   |  '_' <binary char> <binary number'>
 <binary number'>  ::= <binary char> <binary number'>
                    |  '_' <binary char> <binary number'>
                    |  EPS
@@ -393,7 +395,7 @@ SOFTWARE.
                      |  EPS
 
 <hexadecimal number>     ::= <hexa char> <hexadecimal number'>
-                          |  '_' <hexa char> <hexadecimal number'>
+##                          |  '_' <hexa char> <hexadecimal number'>
 <hexadecimal number'>    ::= <hexa char> <hexadecimal number'>
                           |  '_' <hexa char> <hexadecimal number'>
                           |  EPS
@@ -453,7 +455,7 @@ SOFTWARE.
                      |  <raise statement> <simple statement end>
                      |  <require statement> <simple statement end>
 
-<simple statement end> = ';'
+<simple statement end> ::= ';'
 
 <statements block>  ::= '{' <statements list> '}'
                      |  <nop statement> <simple statement end>
@@ -520,8 +522,7 @@ SOFTWARE.
 <decl or def statement>     ::= <static qualifier> <decl or def statement'>
                              |  <class definition>
                              |  <decl or def statement'>
-<decl or def statement'>    ::= <abstract qualifier> <method or operator definition>
-                             |  <final qualifier> <method or operator definition>
+<decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>                          ##
                              |  <volatile qualifier> <type> <identifier> <memory address> <simple statement end>
                              |  <type alias> <simple statement end>
                              |  <decl or def statement''>
@@ -532,7 +533,7 @@ SOFTWARE.
 <decl or def statement''''> ::= <function definition>
                              |  <var declaration or assignment> <simple statement end>
 
-<declaration or definition statement>   ::= '=' <expression> <declaration statement>
+<declaration or definition statement>   ::= '=' <expression> <declaration statement>                                ## !!!
                                          |  '<' <types list> '>' <function args declaration>
                                          |  <declaration statement>
                                          |  <function args declaration>
@@ -586,9 +587,9 @@ SOFTWARE.
                              |    EPS
 
 <if statement>              ::= 'if' '(' <expression> ')' <statements block> <if statement'>
-<if statement'>             ::= 'elseif' '(' <expression> ')' <statements list> <if statement'>
-                             |  'elif' '(' <expression> ')' <statements list> <if statement'>
-                             |  'elsif' '(' <expression> ')' <statements list> <if statement'>
+<if statement'>             ::= 'elseif' '(' <expression> ')' <statements block> <if statement'>        ##
+                             |  'elif' '(' <expression> ')' <statements block> <if statement'>          ##
+                             |  'elsif' '(' <expression> ')' <statements block> <if statement'>         ##
                              |  'else' <statements block>
                              |  EPS
 
@@ -636,7 +637,7 @@ SOFTWARE.
 <raise statement'>          ::= 'from' <expression>
                              |  EPS
 
-<repeat statement>          ::= 'repeat' <statements list> 'until' '(' <expression> ')' <simple statement end>      ## --
+<repeat statement>          ::= 'repeat' <statements block> 'until' '(' <expression> ')' <simple statement end>      ## 
 
 <require statement>         ::= 'require' <expression> <require statement'>
 <require statement'>        ::= ',' <expression>
@@ -665,8 +666,6 @@ SOFTWARE.
 
 <try else>                  ::= 'else'
 
-<try finally>               ::= 'finally'
-
 <try except>                ::= 'except' '(' <try except'> ')'
 <try except'>               ::= <expression> <try except">
                              |  'all'
@@ -674,16 +673,22 @@ SOFTWARE.
 <try except">               ::= 'as' <identifier>
                              |  EPS
 
-<try statement>             ::= 'try' <statements block> <try statement'>                                           ## --
-<try statement'>            ::= <try else> <statements block> <try statement">                                      ## --
-                             |  <try except> <statements block> <try statement'>                                    ## --
-                             |  EPS
-<try statement">            ::= <try finally> <statements block>                                                    ## --
-                             |  EPS
+<try finally>               ::= 'finally'
 
-<type alias>                ::= 'type' <TYPE> 'as' <identifier> <type alias'>
-<type alias'>               ::= ',' <TYPE> 'as' <identifier> <type alias'>
+<try statement>             ::= 'try' <statements block> <try statement excepts> <try statement else> <try statement finally>   ##
+<try statement excepts>     ::= <try except> <statements block> <try statements excepts'>                                       ##
+<try statement excepts'>    ::= <try except> <statements block> <try statement excepts'>                                        ##
+                             |  EPS                                                                                             ##
+<try statement else>        ::= <try else> <statements block>                                                                   ##
+                             |  EPS                                                                                             ##
+<try statement finally>     ::= <try finally> <statements block>                                                                ##
+                             |  EPS                                                                                             ##
+
+
+<type alias>                ::= 'type' <type alias"> <type alias'>          ## --
+<type alias'>               ::= ',' <type alias"> <type alias'>             ## --
                              |  EPS
+<type alias">               ::= <TYPE> 'as' <identifier>                    ## --
 
 <typed target>              ::= <type'> <target>
                              |  <dotted name> <typed target'>
@@ -695,7 +700,7 @@ SOFTWARE.
                                      |  ',' <identifier> <var declaration or assignment>    
                                      |  EPS                                                    
 <var declaration or assignment'>    ::= ',' <identifier> <var declaration or assignment>    
-                                     |    EPS                                                    
+                                     |  EPS                                                    
 
 <while statement>           ::= 'while' '(' <expression> ')' <statements block> <while statement'>                  ## --
 <while statement'>          ::= 'else' <statements block>
@@ -852,8 +857,9 @@ SOFTWARE.
 <templated type'>       ::= '<' <types and exprs list> '>'
                          |  EPS
 
-<types and exprs list>  ::= <expression> <types and exprs list'>
-                         |  <templated type> <types and exprs list'>
+<types and exprs list>  ::= <types and exprs list"> <types and exprs list'>         ##
+##<types and exprs list>  ::= <expression> <types and exprs list'>
+##                         |  <templated type> <types and exprs list'>
 <types and exprs list'> ::= ',' <types and exprs list"> <types and exprs list'>
                          |  EPS
 <types and exprs list"> ::= <expression>

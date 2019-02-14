@@ -1,0 +1,164 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module daemon_thread.ty
+
+// defined class
+fwd class DaemonThread;
+
+//=============================================================================
+from Thread.base_thread import BaseThread;
+from Thread.thread_exceptions import all ;
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+//=============================================================================
+class DaemonThread : BaseThread
+/**
+Base class for daemon threads in Typee  built-in  library  Thread.
+Daemon  threads  are  neither  stoppable  nor destroyable threads.
+Once run, they keep on running even after the program that created
+them has terminated.
+Meanwhile,  it is always possible to set a daemonic thread as  no 
+more being so.
+*/
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    DaemonThread()
+    /**
+    Default constructor.
+    */
+    embed cpp {{ : BaseThread() }}
+    {
+      embed py {{
+        threading.Thread.__init__( daemon=True )
+      }}
+      
+      embed java {{
+        setDaemon( true ) ;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    BaseThread( const ? in (str,str16) name )
+    /**
+    Constructor with defined name for this thread.
+    */
+    embed cpp {{ : BaseThread(name) }}
+    {
+      embed py {{
+        threading.Thread.__init__( name=name, daemon=True )
+      }}
+      
+      embed java {{
+        super( name );
+        setDaemon( true );
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy ()
+    /**
+    Destructor for this base class.
+    Caution:
+    Behaviors may differ between different targeted programming languages.
+    */
+    {
+        BaseThread.destroy();
+    }
+
+    //-------------------------------------------------------------------------
+    const bool is_daemon() exclude java, cs
+    /**
+    Returns true if this thread is daemonic, and false otherwise.
+    */
+    {
+      embed py {{
+        return self.daemon
+      }}
+      
+      embed cpp {{
+        return true;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none join()
+    /**
+    This is a synchronization point for external code.
+    Daemonic threads are NOT joinable: they run for ever.
+    To avoid any deadlock, and while to 'join()' on a deamonic thread is
+    not  available  with some platforms,  we nevertheless allow calls to
+    'join()' inTypee:  joining on daemonic threads returns immediately.
+    */
+    {}
+
+    //-------------------------------------------------------------------------
+    none set_daemon( const bool is_daemon )
+    /**
+    Sets the daemonic status of this thread.
+    */
+    {
+      embed py {{
+        self.daemon = is_daemon
+      }}
+      
+      embed java {{
+        setDaemon( is_daemon );
+      }}
+      
+      embed cs {{
+        if ( _cs_thread == null )
+            throw new ThreadNotStartedException( "set_daemon()" );
+        _cs_thread.IsBackground = is_daemon;
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none start()
+    /**
+    Starts this thread in a new thread context and runs its method run().
+    Raises ThreadException if thread cannot be created or run.
+    */
+    {
+        try {
+            BaseThread.start();
+            me.set_daemon( true );
+            embed cpp {{
+                this->_c_thread->detach();
+            }}
+        }
+        except ( Exception as e ) {
+            raise e;
+        }
+    }
+}
+
+//===== end of module   Thread.daemon_thread.ty   =====//
