@@ -40,6 +40,13 @@ class FEICLeaf( FEICNode ):
             content: a reference to the content opf this leaf
         '''
         super().__init__( content )
+    
+    #-------------------------------------------------------------------------
+    def set_parent(self, parent:FEICNode):
+        '''
+        Sets the parent of this node.
+        '''
+        pass
 
     #-------------------------------------------------------------------------
     def walk(self) -> FEICNode:

@@ -24,13 +24,46 @@ SOFTWARE.
 
 #=============================================================================
 from FrontEnd.IntermediateCode.fe_icblock import FEICBlock 
+from FrontEnd.IntermediateCode.fe_icnode  import FEICNode 
 
 
 #=============================================================================
-FEICTree = FEICBlock
-"""
-The class of Intermediate Code Trees.
-Well, Intermediate Code trees are only defined by their `root`.
-"""
+class FEICTree:
+    """
+    The class of Intermediate Code trees.
+    """
+
+    #-------------------------------------------------------------------------
+    def __init__(self):
+        '''
+        Constructor.
+        '''
+        self._root = FEICBlock()
+        self._current = self._root
+
+    #-------------------------------------------------------------------------
+    def __iadd__(self, ic_node:(FEICBlock,FEICNode)):
+        '''
+        Appends a new node into this block.
+        '''
+        ic_node.set_parent( self._current )
+        self._current += ic_node
+        if isinstance( ic_node, FEICBlock ):
+            self._current = ic_node
+
+    #-------------------------------------------------------------------------
+    def up(self):
+        '''
+        Goes back to parent block in IC Tree.
+        '''
+        self._current = self._current.parent
+
+    #-------------------------------------------------------------------------
+    def walk(self):
+        '''
+        Walks through this Intermediate Code tree.
+        Walk-through is depth-first implemented.
+        '''
+        self._root.walk()
 
 #=====   end of   FrontEnd.IntermediateCode.fe_ictree   =====#
