@@ -3,7 +3,7 @@
 This document is part of the Open Source project __Typee__. As such, it is
 delivered under the MIT license:
 ```
-Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -111,8 +111,8 @@ correct content and at the correct place in the soluce.
 
 ## That's it
 
-And before adding any new rule to __Typee__ grammar specification, just
-provide a TExP - Typpe EXtension Proposal.
+Before adding any new rule to __Typee__ grammar specification, just
+provide a TExP - Typee EXtension Proposal.
 Unfortunately, by those days, there is no yet defined formal way to create
 TExP. Surely soon to come on http://www.typee.ovh web site!
 
@@ -122,9 +122,10 @@ TExP. Surely soon to come on http://www.typee.ovh web site!
 
 | Date  | Rev.  | Author(s)  | Comments  |
 |---|---|---|---|
-| 2018-07-13 | 0.0.1 | Schmouk | Very first creation |
-| 2018-07-13 | 0.0.2 | Schmouk | One very minor typo correction |
-| 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and this history |
+| 2018-07-13 | 0.0.1 | Schmouk | Very first creation. |
+| 2018-07-13 | 0.0.2 | Schmouk | One very minor typo correction. |
+| 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and this history. |
+| 2019-02-06 | 0.0.4 | Schmouk | Corrected one typo in last paragraph. |
 |  |  |  |  |
 
 
