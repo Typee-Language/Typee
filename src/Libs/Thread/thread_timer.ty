@@ -1,0 +1,212 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Thread
+// Module thread_timer.ty
+
+// defined class
+fwd class ThreadTimer;
+
+//=============================================================================
+from Thread.thread_exceptions import TimerStartException;
+import Thread.utils.utils as utils;
+
+//=============================================================================
+// targeted languages specifics
+embed py {{
+import threading
+}}
+
+embed java {{
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+}}
+
+embed cpp {{
+#include <chrono>
+#include <thread>
+}}
+
+embed cs {{
+using System.Threading;
+}}
+
+//=============================================================================
+class ThreadTimer
+/**
+Typee implementation of the timer concept.
+Timers are inactive for specified periods and run their code between
+those periods.
+*/
+embed java {{ extends TimerTask }}
+embed cs   {{ : Timer }}
+{
+ :public:
+
+    //-------------------------------------------------------------------------
+    ThreadTimer( const ? in (str, str16) name )
+    /**
+    Constructor.
+    */
+    {
+        me._name = name;
+        me._running = False;
+        
+       embed java {{
+        super( name );
+        this._timer = new Timer( name );
+       }}
+       
+       embed cs {{
+        base ( run, null, Infinity, Infinity );
+       }}
+    }
+
+    //-------------------------------------------------------------------------
+    none destroy()
+    /**
+    Destructor. Cancels/stops this timer.
+    */
+    {
+      embed py {{
+        self._timer.cancel()
+      }}
+      
+      embed java {{
+        this._timer.purge();
+        this._timer.cancel();
+        this.cancel();
+      }}
+      
+      embed cs {{
+        base.Dispose();
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    none run()
+    /**
+    This is the definition of the code run with this  timer.
+    It internally calls protected and abstract method _run()
+    which MUST be implemented in any inheriting class.
+    */    
+    {
+        if ( me._nb == 0  or  me._count < me._nb )
+        {
+            me._run();  // <-- to be implemented in inheriting classes!
+            ++ me._count;
+        }
+        else
+            delete me;
+    }
+    
+    //-------------------------------------------------------------------------
+    protected abstract none _run();
+    /**
+    Runs the internal code for this timer.
+    MUST BE IMPLEMENTED IN INHERITING CLASSES.
+    */
+
+    //-------------------------------------------------------------------------
+    final none start( const float32 period )
+    /**
+    Starts the infinite running of this timer.  Internally  calls  
+    method 'run()' .
+    Infinite running can be stopped by deleting the timer.
+    Raises TimerStartException if starting again a running timer.
+    Raises AssertException if period (unit: seconds) is negative.
+    */
+    {
+        me.start( 0, period );
+    }
+
+    //-------------------------------------------------------------------------
+    final none start( const uint64 n_times, const float32 period )
+    /**
+    Starts the running n_times of this timer. Internally calls method 'run()'.
+    n_times set to 0 means infinite running.
+    Running can be stopped by deleting the timer.
+    Raises TimerStartException if starting again a running timer.
+    Raises AssertException if period (unit: seconds) is negative.
+    Caution:
+    implementations may differ on different platforms.  For instance,  current 
+    implementation in Java leads to a fixed rate scheduling while it is not in 
+    C++ implementation.
+    */
+    {
+        assert period >= 0.0;
+        if ( me._running )
+            raise TimerStartException( me );
+
+        me._count, me._nb = 0, n_times;
+        me._running = true;
+        
+      embed py {{
+        self._timer = Timer( period, self.run )
+      }}
+      
+      embed java {{
+        long milliseconds = utils.set_to_ms( period );
+        this._timer.scheduleAtFixedRate( this, milliseconds, milliseconds );
+      }}
+      
+      embed cpp {{
+        const long k_milliseconds = utils.set_to_ms( period );
+        while ( me._nb == 0  or  me._count < me._nb ) {
+            std::this_thread::sleep_for( std::chrono::milliseconds(k_milliseconds) );
+            me._run();  // (remember: '_run()' must be implemented in inheriting classes!)
+            ++ me._count;
+        }
+      }}
+      
+      embed cs {{
+        base.Change( (int32) 0, utils.set_to_ms(period) );
+      }}
+    }
+
+    //-------------------------------------------------------------------------
+    str operator cast str ()
+    {
+        return str( me.name );
+    }
+    //-------------------------------------------------------------------------
+    str16 operator cast str16 ()
+    {
+        return str16( me.name );
+    }
+
+ :protected:
+    //-------------------------------------------------------------------------
+    ? in (str, str16)  _name;
+    bool    _running;
+    uint64  _count, _nb;
+
+ :hidden: 
+    //-------------------------------------------------------------------------
+  embed py, java {{
+    Timer _timer;
+  }}
+}
+
+//===== end of module   Thread.thread_timer.ty   =====//

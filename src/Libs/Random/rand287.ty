@@ -1,0 +1,169 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Random
+// Module rand287.ty
+
+//=============================================================================
+from .Bases.basemrg import BaseMRG
+
+//=============================================================================
+class Rand287 : BaseMRG< 256 > as Base287
+/**
+Pseudo-random numbers generator  - Definition of a fast 32-bits Multiple Recursive
+Generator with a long period (2.49e+86).
+
+Multiple Recursive Generators (MRGs)  use  recurrence  to  evaluate  pseudo-random
+numbers suites. Recurrence is of the form:
+
+   x(i) = A * SUM[ x(i-k) ]  mod M,
+
+for 2 to more different values of k.
+
+MRGs offer very large periods with the best known results  in  the  evaluation  of 
+their  randomness,  as  stated  in  the  evaluation  done  by  Pierre L'Ecuyer and 
+Richard Simard (Université de Montréal)  in "TestU01:  A C Library  for  Empirical 
+Testing of Random  Number Generators  - ACM Transactions on Mathematical Software, 
+vol.33 n.4, pp.22-40, August 2007".  It is recommended to use  such  pseudo-random
+numbers generators rather than LCG ones for serious simulation applications.
+
+The implementation of this MRG 32-bits  model  is  based  on  a  Lagged  Fibonacci 
+generator (LFIB), the Marsa-LFIB4 one.
+Lagged Fibonacci generators LFib( m, r, k, op) use the recurrence
+
+    x(i) = (x(i-r) op (x(i-k)) mod m
+
+where op is an operation that can be
+    + (addition),
+    - (substraction),
+    * (multiplication),
+    ^(bitwise exclusive-or).
+
+With the + or - operation, such generators are in fact MRGs. They offer very large
+periods  with  the  best  known  results in the evaluation of their randomness, as
+stated in the evaluation done by Pierre L'Ecuyer and Richard Simard (Universite de
+Montreal) paper.
+
+The Marsa-LIBF4 version uses the recurrence (with A = 1)
+
+    x(i) = (x(i-55) + x(i-119) + x(i-179) + x(i-256)) mod 2^32
+
+and offers a period of about 2^287 - i.e. 2.49e+86 - with low computation time due
+to the use of a 2^32 modulo but the use of 256 32-bits integers.
+
+See Rand1457 for a longer period MR-Generator (2^1457,  i.e. 4.0e+438)  and longer 
+computation  time  (2^31-1 modulus calculations) but less memory space consumption 
+(47 32-bits integers).
+See Rand49507 for a far longer period (2^49507, i.e. 1.2e+14_903 with low  comput-
+ation time too (31-bits modulus) but use of more memory space (1597 32-bits integ-
+ers).
+  
+Furthermore this class is callable.
+Example:
+
+  Rand287 rand = Rand287();
+  print( rand() );    // prints a uniform pseudo-random value within [0.0, 1.0)
+  print( rand(a) ) ;  // prints a uniform pseudo-random value within [0.0, a)
+  print( rand(a,b) ); // prints a uniform pseudo-random value within [a  , b)
+
+Please notice that for simulating the roll of a dice you should code this way:
+
+  Rand287 diceRoll = Rand287();
+  print( int(diceRoll(1, 7)) ) // prints a uniform roll within set {1, 2, 3, 4, 5, 6}
+
+Reminder:
+We give you here below a copy of the table of tests for the MRGs that have 
+been  implemented  in  Bases.Random,  as  provided in paper "TestU01, ..."  
+- see file README.md.
+
+| class name | TU01 generator name | Memory Usage    | Period  | time-32bits | time-64 bits | SmallCrush fails | Crush fails | BigCrush fails |
+| ---------- | ------------------- | --------------- | ------- | ----------- | ------------ | ---------------- | ----------- | -------------- |
+|  Rand287   | Marsa-LFIB4         |   256 x 4-bytes |   2^287 |    3.40     |     0.8      |          0       |       0     |       0        |
+|  Rand1457  | DX-47-3             |    47 x 4-bytes |  2^1457 |    n.a.     |     1.4      |          0       |       0     |       0        |
+|  Rand49507 | DX-1597-2-7         | 1,597 x 4-bytes | 2^49507 |    n.a.     |     1.4      |          0       |       0     |       0        |
+
+* _small crush_ is a small set of simple tests that quickly tests some  of
+the expected characteristics for a pretty good PRG;
+* _crush_ is a bigger set of tests that test more deeply  expected  random 
+characteristics;
+* _big crush_ is the ultimate set of difficult tests  that  any  GOOD  PRG 
+should definitively pass.
+*/
+{
+    //-------------------------------------------------------------------------
+    Rand287()
+    /**
+    Constructor.
+    The shuffling of the local current time value is used as the initial seed.
+    */
+    {
+        Base287();
+    }
+    
+    //-------------------------------------------------------------------------
+    Rand287( const InternalState seed_state )
+    /**
+    Constructor.
+    seed_state is an internal state that has been gotten back from a former
+    call to get_state().
+    */
+    {
+        Base287( seed_state );
+    }
+    
+    //-------------------------------------------------------------------------
+    const float64 random();
+    /**
+    This is the core of the pseudo-random generator.
+    */
+    {
+        //The Marsa-LIBF4 version uses the recurrence
+        //    x(i) = (x(i-55) + x(i-119) + x(i-179) + x(i-256)) mod 2^32
+
+        // evaluates indexes in suite for the i-55, i-119, i-179 (and i-256) -th values
+        const uint16 k55 = self._state._index - 55;
+        if k55 < 0:
+            k55 += Base287.K_SIZE;
+        
+        const uint16 k119 = self._state._index-119;
+        if k119 < 0:
+            k119 += Base287.K_SIZE;
+        
+        const uint16 k179 = self._state._index-179;
+        if k179 < 0:
+            k179 += Base287.K_SIZE;
+        
+        // then evaluates current value
+        myValue = self._state._list[k55] + 
+                    self._state._list[k119] + 
+                    self._state._list[k179] + 
+                    self._state._list[self._state._index];
+        self._state._list[ self._state._index ] = myValue;
+        
+        // next index
+        self._state._index = (self._state._index+1) % Base287.K_SIZE;
+        
+        // then returns float value within [0.0, 1.0)
+        return  myValue / 4_294_967_296.0;
+ 
+//=====   end of module   rand287.py   =====//

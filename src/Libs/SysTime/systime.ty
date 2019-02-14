@@ -1,0 +1,241 @@
+/***
+Copyright (c) 2018-2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in Library SysTime
+// Module systime.py
+
+// Defined functions
+fwd float32  systime();      // System elapsed time , millisecond precision
+fwd float32  cputime();      // CPU elapsed time    , millisecond precision
+fwd float32  proctime();     // process elapsed time, millisecond precision
+
+fwd float64  systime_ns();   // System elapsed time , nanosecond precision
+fwd float64  cputime_ns();   // CPU elapsed time    , nanosecond precision
+fwd float64  proctime_ns();  // process elapsed time, nanosecond precision
+
+//=============================================================================
+// Targeted languages specificities
+embed python {{
+import time as py_time
+}}
+
+embed cpp {{
+#include <chrono>
+}}
+
+embed java, android {{
+import static java.lang.System;
+}}
+
+embed cs {{
+}}
+
+//=============================================================================
+float32 systime()
+/**
+Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
+as a 32-bits floating point and in fractional seconds.
+
+Starting date as 1970-01-01 is common to most platforms and  systems  but 
+may  differ  on  a few of them.  Windows and Linux programmers should not
+experience big surprises with this.
+It may be also that some systems provide time with 1 second as precision.
+*/
+{
+  embed python {{
+    return py_time.time()
+  }}
+
+  embed cpp {{
+    using namespace std::chrono;
+    chrono::duration_cast<chrono::milliseconds> sys_time = chrono::system_clock::now().time_since_epoch();
+    return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
+  }}
+
+  embed java, android {{
+    return (float)System.currentTimeMillis() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return (float)( DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7 );
+  }}
+}
+
+//=============================================================================
+float32 cputime()
+/**
+Returns a fractional seconds value as a 32-bits float for the  CPU  elapsed 
+time  since  a  starting  point that is not specified.  Should be only used 
+to evaluated elapsed time between to measurement points (i.e. two different
+calls to this function).
+*/
+{
+  embed python {{
+    return py_time.perf_counter()
+  }}
+
+  embed cpp {{
+    using namespace std::chrono;
+    chrono::duration_cast<chrono::milliseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
+    return (float)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
+  }}
+
+  embed java {{
+    return (float)System.nanoTime() * 1.0e-9;
+  }}
+
+  embed android {{
+    return (float)SystemClock.elapsedRealtime() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return time();
+  }}
+}
+
+//=============================================================================
+float32 proctime()
+/**
+Returns a fractional seconds value as a 32-bits  float  for  current 
+process elapsed  time since a starting  point that is not specified.  
+Should be only used to evaluated elapsed time between to measurement 
+points (i.e. two different calls to this function).
+*/
+{
+  embed python {{
+    return py_time.process_time()
+  }}
+
+  embed cpp {{
+    return cpu_time();
+  }}
+
+  embed java {{
+    return cpu_time();
+  }}
+
+  embed android {{
+    return (float)SystemClock.uptimeMillis() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return time();
+  }}
+}
+
+//=============================================================================
+float64 systime_ns()
+/**
+Returns  current  time  in seconds since January 1, 1970, 00:00:00 (UTC),
+as  a  64-bits  floating  point  in  fractional  seconds  with nanosecond 
+precision.
+
+Starting date as 1970-01-01 is common to most platforms and  systems  but 
+may  differ  on  a few of them.  Windows and Linux programmers should not
+experience big surprises with this.
+It may be also that some systems provide time with 1 second as precision.
+*/
+{
+  embed python {{
+    return py_time.time_ns()
+  }}
+
+  embed cpp {{
+    using namespace std::chrono;
+    chrono::duration_cast<chrono::nanoseconds> sys_time = chrono::system_clock::now().time_since_epoch();
+    return (double)sys_ticks.count() * chrono::system_clock::period.num / chrono::system_clock::period.den;
+  }}
+
+  embed java, android {{
+    return (double)System.currentTimeMillis() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return (double)( DateTime.FromUnixTimeMilliseconds( DateTime.now ).ticks * 1.0e-7 );
+  }}
+}
+
+//=============================================================================
+float64 cputime_ns()
+/**
+Returns a fractional seconds value as a 64-bits float for the  CPU  elapsed 
+time  since  a  starting  point that is not specified.  Should be only used 
+to evaluated elapsed time between to measurement points (i.e. two different
+calls to this function). Precision here is nanoseconds.
+*/
+{
+  embed python {{
+    return py_time.perf_counter_ns()
+  }}
+
+  embed cpp {{
+    using namespace std::chrono;
+    chrono::duration_cast<chrono::nanoseconds> cpu_time = chrono::steady_clock::now().time_since_epoch();
+    return (double)sys_ticks.count() * chrono::system_clock::period.num / schrono::ystem_clock::period.den;
+  }}
+
+  embed java {{
+    return (double)System.nanoTime() * 1.0e-9;
+  }}
+
+  embed android {{
+    return (double)SystemClock.elapsedRealtimeNanos() * 1.0e-9;
+  }}
+
+  embed cs {{
+    return time_ns();
+  }}
+}
+
+//=============================================================================
+float64 proctime_ns()
+/**
+Returns a fractional seconds value as a  64-bits  float  for  current 
+process  elapsed  time  since a starting  oint that is not specified.
+Should be only used to evaluated elapsed time between to  measurement 
+points (i.e. two different calls to this function). Precision here is 
+nanosecond.
+*/
+{
+  embed python {{
+    return py_time.process_time_ns()
+  }}
+
+  embed cpp {{
+    return cpu_time_ns();
+  }}
+
+  embed java {{
+    return cpu_time_ns();
+  }}
+
+  embed android {{
+    return (double)SystemClock.uptimeMillis() * 1.0e-3;
+  }}
+
+  embed cs {{
+    return time_ns();
+  }}
+}
+
+//=====   end of module Libs.SysTime.systime.ty   =====//

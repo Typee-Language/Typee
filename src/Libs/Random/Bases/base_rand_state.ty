@@ -1,0 +1,109 @@
+/***
+Copyright (c) 2019 Philippe Schmouker, schmouk (at) typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+***/
+
+//=============================================================================
+// Built-in library Random
+// Module Bases/base_rand_state.ty
+
+//=============================================================================
+class BaseRandState< RandT, InternT, const uint16 K_SIZE >
+/**
+Definition of the base class for all pseudo-random generators that are based 
+on internal states with more than 1 value.
+
+Those values are of type InternT. K_SIZE is their number. They are stored in
+arrays that are initialized with a pseudo-random generator of type RandT.
+*/
+{
+  :public:
+    
+    //-------------------------------------------------------------------------
+    BaseRandState()
+    /**
+    Constructor.
+    The shuffling of the local current time value is used as the 
+    initial seed.
+    */
+    {
+        me.set_state();
+    }
+    
+    //-------------------------------------------------------------------------
+    BaseRandState( const InternalState seed_state )
+    /**
+    Constructor.
+    seed_state is a valid internal state that has been previously loaded in 
+    memory with get_state().
+    */
+    {
+        me.set_state( seed_state );
+    }
+            
+    //-------------------------------------------------------------------------
+    InternalState get_state()
+    /**
+    Returns an object capturing the current internal state of the generator.
+    This  object can be passed to set_state() to restore the state.  It is a
+    list containing  me.K_LIST_SIZE integers  and an index  pointing in this 
+    list (index value being then in [0:me.K_SIZE).
+    */
+    {
+        return me._state;
+    }
+
+    //-------------------------------------------------------------------------
+    none set_state()
+    /**
+    Initiliazes the internal state series from scratch.
+    */
+    {
+        me._state = InternalState();
+    }
+    
+    //-------------------------------------------------------------------------
+    none set_state( const InternalState seed_state )
+    /**
+    seed_state should have been obtained from a previous call  to 
+    getstate(), and setstate() restores the internal state of the 
+    generator to what it was at the time setstate() was called.
+    */
+    {
+        me._state = seed_state;
+    }
+    
+    //-------------------------------------------------------------------------
+    class InternalState{
+        //-----------------------------------------------------------------
+        InternalState(){
+            RandT rnd = RandT();
+            me._list  = [ InternT( rnd() ) for _ in [:K_SIZE] ];  // got it? Enjoy Typee! ;)
+            me._index = 0;
+        }
+        //-----------------------------------------------------------------
+        uint16                 _index;
+        array<InternT>[K_SIZE] _list;
+    }
+    
+    protected InternalState  _state;
+}
+
+//=====   end of module   Random.Bases.base_rand_state.ty   =====//

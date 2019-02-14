@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -39,11 +39,12 @@ if __name__ == '__main__':
                                                '../FrontEnd',
                                                '../local_tools',
                                                '../Tests',
-                                               '../Utils'] )
+                                               '../Utils',
+                                               '../../Language-specifications'] )
     
-    my_copyright_modifier.modify_files( ['../developmen-framework.md',
-                                         '../LICENSE',
-                                         '../notepad-readme.md',
-                                         '../README.md'] )
+    my_copyright_modifier.modify_files( ['../../development-framework.md',
+                                         '../../LICENSE',
+                                         '../../notepad-readme.md',
+                                         '../../README.md'] )
 
 #=====   end of   local_tools.script_copyright_automated_modification   =====#
