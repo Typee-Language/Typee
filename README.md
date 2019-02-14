@@ -125,6 +125,36 @@ a single code programmed in __Typee__.
 Here we are!
 
 
+###Has this been done before?
+
+Well, it might be that this has already been done before, yes.
+
+[https://haxe.org](Haxe) is en excellent example of _transpilation_ from one formal generic language to many others. "_The __Haxe Foundation__ was created to fund long term Haxe development and provide support to companies using Haxe._" as is said on their related Web site. This creation took place with many commercial partners, after many years of open-source development (which started by 2005).
+
+Meanwhile, _Haxe_ is translated in many languages and for many platforms, with Web development as its first intention.
+
+The Haxe compiler is specified with functionnal programming language OCaml, an [https://www.inria.fr/](Inria) extension of ML:
+
+" _ML is a general-purpose functional programming language developed by Robin Milner and others in the early 1970s_ [first appeared in '73] _at the University of Edinburgh, whose syntax is inspired by ISWIM. It has roots in the Lisp language, and has been characterized as "LISP with types". Historically, ML stands for MetaLanguage: it was conceived to develop proof tactics in the LCF theorem prover (whose language, pplambda, a combination of the first-order predicate calculus and the simply-typed polymorphic lambda calculus, had ML as its metalanguage). It is known for its use of the Hindley–Milner type system, whose type inference algorithm can automatically assign the types of most expressions without requiring explicit type annotations. Additionally, the use of this algorithm ensures type safety—there is a formal proof that a well-typed ML program does not cause runtime type errors._ "
+(source: [https://ipfs.io/ipfs/QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco/wiki/ML_(programming_language).html](https://IPFS.io/ipfs) )
+
+
+See also: [https://ocaml.org/](OCaml.org)
+
+The description of the Haxe compiler is concise and ensures correctness of types checking. That's great.
+_OCaml_ gets also a very good reputation about its computational optimization on time processing.
+
+The global software architecture of __Typee__, while having been specified with no knowledge of the _Haxe_ one, is finally the same as the _Haxe_> compiler. As you will see below, _Haxe_ and __Typee__ both specify a front-end and many back-ends. __Typee__ seems then to be a well designed "compiler".
+
+So, would the work have been already done?
+Well, not exactly as we aim at doing it!
+
+There are still a few concepts that are offered as built-in goodies in __Typee__ that are not in _Haxe_. The main one is the __native code embedding__ which helps generate efficient targeted code for some parts of it. Others are concepts that cnstitue __Typee__ built-in libraries while they have been later added external libraries with _Haxe_.
+
+Finally, noone would re-program the _Haxe_ compiler in _Haxe_. Its (fully correct) _OCaml_ implementation being a functionnal one, this would need reprogrammation from scratch in an imperative language (i.e. _Haxe_). __Typee__ first implementation being done in _Python 3.7_, it will be far easier to later reprogram it in __Typee__ which, then, will be translated in far better time-efficient languages (e.g. C++).
+
+Really so, Here We Are!
+
 
 ## Typee global architecture
 
