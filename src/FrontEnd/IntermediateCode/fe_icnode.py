@@ -40,6 +40,13 @@ class FEICNode:
         self.content = content
 
     #-------------------------------------------------------------------------
+    def set_parent(self, parent:FEICNode):
+        '''
+        Sets the parent of this node.
+        '''
+        self.parent = parent
+
+    #-------------------------------------------------------------------------
     def walk(self):
         '''
         Walks through the list of nodes contained within this block.
