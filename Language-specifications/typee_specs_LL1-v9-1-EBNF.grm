@@ -343,7 +343,17 @@ SOFTWARE.
 <simple statement end>      ::= ';' 
 
 <statements block>          ::= '{' [<statements list>] '}'  |
-                                [<nop statement>] <simple statement end>
+                                (<empty statement>)*  |
+                                <compound statement>  |  <simple statement>
+
+
+<statements block>  ::= '{' <statements list> '}'
+                     |  <empty statement> <statements block>                ###
+                     |  <compound statement>                                ###
+                     |  <simple statement>                                  ###
+##                     |  <nop statement> <simple statement end>            ###
+##                     |  <simple statement end>                            ###
+
 
 <assert statement>          ::= 'assert' <expression> ( ',' <expression>)*
 

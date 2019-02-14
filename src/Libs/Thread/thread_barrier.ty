@@ -59,10 +59,10 @@ using System.Threading.Tasks;
 class ThreadBarrier
 /**
 Typee implementation of the CyclicBarrier Java concept.
-A Barrier is a blocking entity on which threads are waiting. Once their 
-number equals the specified counter for the barrier, all threads are
-awakened and may pass this barrier. Any new thread waiting on this
-barrier passes it then. Barriers may be reseted.
+A Barrier is a blocking entity on which threads are waiting. Once 
+their  number  equals the specified counter for the barrier,  all 
+threads are awakened and may pass this barrier.  Any  new  thread 
+waiting on this barrier passes it then. Barriers may be reseted.
 */
 
 embed py   {{ : threading.Barrier }}

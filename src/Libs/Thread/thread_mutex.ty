@@ -60,9 +60,10 @@ using System.Threading;
 //=============================================================================
 class ThreadMutex
 /**
-Typee implementation of the mutex concept.  Mutual Exclusion is associated 
-with  objects  for  which  access  from threads must be exclusive:  no two
-different threads may simultaneously get access to this object.
+Typee implementation of the mutex concept.
+Mutual Exclusion is associated with  objects for which access from threads 
+must be exclusive:  no two different threads may simultaneously get access 
+to this object.
 This is the class which defines the mutual exclusion between  threads  for
 an object. Classes which inherit form ThreadMutex get this functionnality.
 Notice: not applicable to statement 'with'.
@@ -81,7 +82,7 @@ embed cs   {{ : Mutex }}
     Default constructor.
     */
     embed cpp {{ : std::mutex() }}
-    embed cs {{ : base() }}
+    embed cs  {{ : base() }}
     {
       embed py {{
         super().__init__()
