@@ -40,9 +40,9 @@ import threading
 //=============================================================================
 class DaemonThread : BaseThread
 /**
-Base class for daemon threads in Typee built-in  library  Thread.
-Daemon  threads  are  neither  stoppable nor destroyable threads.
-Once run, the keep on running even after the program that created
+Base class for daemon threads in Typee  built-in  library  Thread.
+Daemon  threads  are  neither  stoppable  nor destroyable threads.
+Once run, they keep on running even after the program that created
 them has terminated.
 Meanwhile,  it is always possible to set a daemonic thread as  no 
 more being so.
