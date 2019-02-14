@@ -52,9 +52,9 @@ class FEICTree:
             self._current = ic_node
 
     #-------------------------------------------------------------------------
-    def up(self):
+    def up_level(self):
         '''
-        Goes back to parent block in IC Tree.
+        Goes one level up in the tree, i.e. back to parent block in the IC Tree.
         '''
         self._current = self._current.parent
 
