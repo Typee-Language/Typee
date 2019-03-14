@@ -29,7 +29,7 @@ from .Bases.base_lcg import BaseLcg;
 from SysTime import systime;
 
 //=============================================================================
-class Rand32 : 
+class Rand63 : 
     BaseLcg<uint64, 9_219_741_426_499_971_445, 1, 0x8000_0000_0000_0000>
         as Lcg63
 /**
@@ -113,8 +113,8 @@ should definitively pass.
     */
     {
         const uint64 t = const uint64( systime.systime() * 1000.0 );
-        me.set_state( ((t & 0xff000000) >>  8) +
-                      ((t & 0x00ff0000) >> 24) +
+        me.set_state( ((t & 0xff000000) >> 24) +
+                      ((t & 0x00ff0000) >>  8) +
                       ((t & 0x0000ff00) << 40) +
                       ((t & 0x000000ff) << 63)   );
     }
