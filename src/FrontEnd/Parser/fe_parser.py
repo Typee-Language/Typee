@@ -3526,18 +3526,6 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_else(self) -> bool:
-        #=======================================================================
-        # <try else> ::= 'otherwise'
-        #=======================================================================
-        if self._current.is_OTHERWISE():
-            self._append_syntaxic_node()
-            self._next_token_node()
-            return True
-        else:
-            return False
-
-    #-------------------------------------------------------------------------
     def _try_except(self) -> bool:
         #=======================================================================
         # <try except> ::= 'except' '(' <try except'> ')'
@@ -3563,22 +3551,38 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _try_except1(self) -> bool:
         #=======================================================================
-        # <try except'> ::= <expression> <try except">
-        #                |  'all'
+        # <try except'> ::= <expression> <try except''> <try except'''>
+        #                |  'all' <try except''>
         #                |  EPS
         #=======================================================================
         if self._expression():
             self._try_except2() ## (notice: always returns True)
+            self._try_except3() ## (notice: always returns True)
         elif self._current.is_ALL():
             self._append_syntaxic_node()
             self._next_token_node()
+            self._try_except2()
         return True
 
     #-------------------------------------------------------------------------
     def _try_except2(self) -> bool:
         #=======================================================================
-        # <try except"> ::= 'as' <identifier>
-        #                |  EPS
+        # <try except''> ::= ',' <expression> <try except''>
+        #                 |  EPS
+        #=======================================================================
+        while self._current.is_COMMA():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._identifier():
+                self._append_error( FESyntaxErrors.TRY_EXCEPT_LIST )
+            self._try_except2()
+        return True
+
+    #-------------------------------------------------------------------------
+    def _try_except3(self) -> bool:
+        #=======================================================================
+        # <try except'''> ::= 'as' <identifier>
+        #                  |  EPS
         #=======================================================================
         if self._current.is_AS():
             self._append_syntaxic_node()
@@ -3600,10 +3604,54 @@ class FEParser:
             return False
 
     #-------------------------------------------------------------------------
+    def _try_otherwise(self) -> bool:
+        #=======================================================================
+        # <try otherwise> ::= 'otherwise' '(' <try otherwise'> ')' 
+        #=======================================================================
+        if self._current.is_OTHERWISE():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if self._current.is_PAROP():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.TRY_OTHER_PAROP )
+            self._try_otherwise()
+            if self._current.is_PARCL():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.TRY_OTHER_PARCL )
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _try_otherwise1(self) -> bool:
+        #===============================================================================
+        # <try otherwise'> ::= 'Exception' 'as' <identifier>
+        #                   |  EPS
+        #===============================================================================
+        if self._current.is_IDENT():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if self._current.is_AS():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.TRY_OTHER_AS )
+            if self._current.is_IDENT():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.TRY_OTHER_IDENT )
+        return True
+
+    #-------------------------------------------------------------------------
     def _try_statement(self) -> bool:
         #=======================================================================
         # <try statement> ::= 'try' <statements block> <try statement excepts>
-        #                         <try statement else> <try statement finally>
+        #                         <try statement otherwise> <try statement finally>
         #=======================================================================
         if self._current.is_TRY():
             self._append_syntaxic_node()
@@ -3612,21 +3660,21 @@ class FEParser:
                 self._append_error( FESyntaxErrors.TRY_BODY )
             if not self._try_statement_excepts():
                 self._append_error( FESyntaxErrors.TRY_EXCEPTS )
-            self._try_statement_else()
+            self._try_statement_otherwise()
             self._try_statement_finally()
             return True
         else:
             return False
 
     #-------------------------------------------------------------------------
-    def _try_statement_else(self) -> bool:
+    def _try_statement_otherwise(self) -> bool:
         #=======================================================================
-        # <try statement else> ::= <try else> <statements block>                                                                   ##
-        #                       |  EPS                                                                                             ##
+        # <try statement otherwise> ::= <try otherwise> <statements block>                                                                   ##
+        #                            |  EPS                                                                                             ##
         #=======================================================================
-        if self._try_else():
+        if self._try_otherwise():
             if not self._statements_block():
-                self._append_error( FESyntaxErrors.TRY_ELSE_BODY )
+                self._append_error( FESyntaxErrors.TRY_OTHER_BODY )
         return True
 
     #-------------------------------------------------------------------------
@@ -4127,4 +4175,5 @@ class FEParser:
     #-------------------------------------------------------------------------
     def __up_to_parent_block(self):
         self._out_syntax_ic.up_level()
+
 #=====   end of   FrontEnd.Parser.parser   =====#
