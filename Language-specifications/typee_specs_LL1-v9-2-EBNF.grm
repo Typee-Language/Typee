@@ -547,7 +547,7 @@ SOFTWARE.
 <target list>               ::= <typed target> ( ',' <typed target> )*
 
 <try otherwise>             ::= 'otherwise' '('                                             ##
-                                    [ 'Exception' 'as' <identifier> ]  ')'                  ##
+                                    [ <identifier> 'as' <identifier> ]  ')'                 ##
 
 <try except>                ::= 'except' '(' 
                                     [ <try expr as> ( ',' <try expr as> )*  |               ##

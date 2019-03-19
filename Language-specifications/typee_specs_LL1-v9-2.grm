@@ -748,7 +748,7 @@ SOFTWARE.
 <try finally>               ::= 'finally'
 
 <try otherwise>             ::= 'otherwise' '(' <try otherwise'> ')'                ##
-<try otherwise'>            ::= 'Exception' 'as' <identifier>                       ##
+<try otherwise'>            ::= <identifier> 'as' <identifier>                      ##
                              |  EPS
 
 <try statement>             ::= 'try' <statements block> <try statement excepts> <try statement otherwise> <try statement finally>      ##
