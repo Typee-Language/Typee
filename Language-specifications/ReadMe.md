@@ -10,7 +10,7 @@ The very first version of these specifications is not numbered. See file
 `typee_specs_LL1.grm`.
 
 Next versions are all numbered: `...-v2.grm`, `...-v3.grm`, ..., 
-`...-v9.grm` and currently `...-v9-1.grm` as the very last version of 
+`...-v9.grm` and currently `...-v9-2.grm` as the very last version of 
 document.
 
 You'll notice that version `v4` is missing. Unfortunately, it has been lost 
