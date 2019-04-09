@@ -17,7 +17,7 @@ You'll notice that version `v4` is missing. Unfortunately, it has been lost
 before being stored here...
 
 Finally, since version `v8`, a second version of the specifications is 
-provided: `...-v8-EBNF.grm`, `...-v9-EBNF.grm` and `...-v9-1-EBNF.grm`. 
+provided: from `...-v8-EBNF.grm` to `...-v9-2-EBNF.grm`. 
 
 Notice that Typee language is specified with a formal, unambiguous, LL(1) 
 grammar.
