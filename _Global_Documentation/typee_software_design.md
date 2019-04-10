@@ -1530,4 +1530,5 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-12 | 0.1.1 | PhHays | Completed section 4. This is the very first draft revision of this document, noted v0.1.1. It is not fully completed but is enough filled to keep on coding Typee code |
 | 2018-08-12 | 0.1.2 | Schmouk | Corrected mispelled intermediate code classes |
 | 2019-02-06 | 0.1.3 | Schmouk | Typo correction in title of section 3. |
+| 2019-04-10 | 0.1.4 | Schmouk | Typo correction in C++ example code. |
 |  |  |  |  |
