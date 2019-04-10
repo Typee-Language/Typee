@@ -1443,32 +1443,32 @@ At construction (or instantiation) time, class `FEParser` instantiates an
 empty _syntaxic intermediate code_ object. This will be its returned data 
 structure after having parsed the input _tokenized intermediate code_.
 
-<_to be completed_ in revision v0.1.1 of this document>
+<_to be completed_ in revision v0.2.1 of this document>
 
 
 ### 5.1.3 Subpackage `FrontEnd.Elaborator`
 
-<_to be completed_ in revision v0.1.1 of this document>
+<_to be completed_ in revision v0.3.1 of this document>
 
 
 ## 5.2 Package `BackEnd`
 
-<_to be completed_ in revision v0.1.1 of this document>
+<_to be completed_ in revision v0.4.1 of this document>
 
 
 ## 5.3 Package `Commons`
 
-<_to be completed_ in revision v0.1.1 of this document>
+<_to be completed_ in revision v0.5.1 of this document>
 
 
 ## 5.4 Package `local_tools`
 
-<_to be completed_>
+<_to be completed_ in revision v0.5.1 of this document>
 
 
 ## 5.5 Package `Tests`
 
-<_to be completed_ in revision v0.1.1 of this document>
+<_to be completed_ in revision v0.6.1 of this document>
 
 
 ## 5.6 Further Work and Conclusion
