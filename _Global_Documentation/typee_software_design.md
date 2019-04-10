@@ -1199,7 +1199,7 @@ class Myclass
       : _val( v )
     {}
     
-    print_vals()
+    void print_vals()
     {
         for ( unsigned short i = 0; i < MyClass._K; ++i )
             printf( "%d ", _val + i );
