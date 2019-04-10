@@ -10,14 +10,14 @@ The very first version of these specifications is not numbered. See file
 `typee_specs_LL1.grm`.
 
 Next versions are all numbered: `...-v2.grm`, `...-v3.grm`, ..., 
-`...-v9.grm` and currently `...-v9-1.grm` as the very last version of 
+`...-v9.grm` and currently `...-v9-3.grm` as the very last version of 
 document.
 
 You'll notice that version `v4` is missing. Unfortunately, it has been lost 
 before being stored here...
 
 Finally, since version `v8`, a second version of the specifications is 
-provided: `...-v8-EBNF.grm`, `...-v9-EBNF.grm` and `...-v9-1-EBNF.grm`. 
+provided: from `...-v8-EBNF.grm` to `...-v9-3-EBNF.grm`. 
 
 Notice that Typee language is specified with a formal, unambiguous, LL(1) 
 grammar.
@@ -135,7 +135,7 @@ Typee, `00` or `01_23_45_67` are legal octal numbers while `0123__4567` is not.
 When reading a `.grm` file on Windows, we recommend you to use Notepad++. We 
 have created a dedicated profile file accessible here:
 [grammars.xml](../Notepad%2B%2BXML-configs/), 
-that you just have to put it in the same directory as executable file 
+that you just have to put in the same directory as executable file 
 `notepad++.exe` on your computer. You will then enjoy syntax coloring when 
 opening `.grm` files with Notepad++ (but with a few limitations when reading 
 EBNF versions of those files - "no one is perfect").
