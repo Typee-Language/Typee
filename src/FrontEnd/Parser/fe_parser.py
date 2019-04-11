@@ -281,7 +281,6 @@ class FEParser:
         #=======================================================================
         # <atom> ::= <decr> <dotted name> <incr or decr>
         #         |  <incr> <dotted name> <incr or decr>
-        #         |  <dotted name> <atom'>
         #         |  <enclosure>
         #         |  <reference>
         #         |  <scalar>
@@ -295,8 +294,6 @@ class FEParser:
             if not self._dotted_name():
                 self._append_error( FESyntaxErrors.INCR_IDENT )
             return self._incr_or_decr()
-        elif self._dotted_name():
-            return self._atom1()
         else:
             return  self._enclosure() or \
                     self._reference() or \
@@ -336,30 +333,30 @@ class FEParser:
 
     #-------------------------------------------------------------------------
     def _atom_element1(self) -> bool:
-        #===============================================================================
-        # <atom element'> ::= <atom element''>
-        #                  |  <dotted name'> <atom element'>
-        #                  |  <function call> <atom element'>
-        #                  |  <subscription or slicing> <atom element'>
-        #                  |  EPS
-        #===============================================================================
-        if self._atom_element2():
-            return True
-        else:
-            while self._dotted_name1() or self._function_call() or self._subscription_or_slicing():
-                continue
-            return True
+        #=======================================================================
+        # <atom element'> ::= <atom'>
+        #                  |  <atom element''>
+        #=======================================================================
+        return self._atom1() or self._atom_element2()
 
     #-------------------------------------------------------------------------
     def _atom_element2(self) -> bool:
         #=======================================================================
-        # <atom element"> ::= <is instance of>
-        #                  |  <scalar type casting>
+        # <atom element''  > ::= <dotted name'> <atom element''>
+        #                     |  <function call> <atom element''>
+        #                     |  <is instance of>
+        #                     |  <scalar type casting>
+        #                     |  <subscription or slicing> <atom element''>
+        #                     |  EPS
         #=======================================================================
+        while self._dotted_name1() or \
+                self._function_call() or \
+                self._subscription_or_slicing():
+            continue
         if self._is_instance_of() or self._scalar_type_casting():
             return True
         else:
-            return False
+            return True
 
     #-------------------------------------------------------------------------
     def _atom_element3(self) -> bool:
