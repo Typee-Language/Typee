@@ -312,6 +312,9 @@ class FEICodeTokenNode:
     def is_LE(self) -> bool:
         return self.tk_ident == FEICodeTokens.TK_LE
     @property
+    def is_LEG(self) -> bool:
+        return self.tk_ident == FEICodeTokens.TK_LEG
+    @property
     def is_LIST(self) -> bool:
         return self.tk_ident == FEICodeTokens.TK_LIST
     @property
@@ -829,6 +832,10 @@ class ICTokenNode_LANGUAGE( FEICodeTokenNode ):
 class ICTokenNode_LE( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='<='):
         super().__init__( scanner, FEICodeTokens.TK_LE, data )
+
+class ICTokenNode_LEG( FEICodeTokenNode ):
+    def __init__(self, scanner=None, data='<=>'):
+        super().__init__( scanner, FEICodeTokens.TK_LEG, data )
 
 class ICTokenNode_LIST( FEICodeTokenNode ):
     def __init__(self, scanner=None, data='list'):

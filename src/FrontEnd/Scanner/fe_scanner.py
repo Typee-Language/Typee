@@ -473,8 +473,15 @@ class FEScanner:
                 self._check_augmented_operator( ICTokenNode_SHIFT0L, ICTokenNode_AUG_SHIFT0L, '<<<' )
             else:
                 self._check_augmented_operator( ICTokenNode_SHIFTL, ICTokenNode_AUG_SHIFTL, '<<', False )
+        elif self._current == '=':
+            self._next_char()
+            if self._current == '>':
+                self._next_char()
+                self._append_node( ICTokenNode_LEG, '<=>' )
+            else:
+                self._append_node( ICTokenNode_LE, '<=' )
         else:
-            self._check_augmented_operator( ICTokenNode_LT, ICTokenNode_LE, '<', False )
+            self._append_node( ICTokenNode_LT, '<' )
     #-------------------------------------------------------------------------
     def _minus(self):
         self._next_char()
