@@ -4,3 +4,4 @@
 .settings
 _config.yml
 __pycache__
+.gitignore
