@@ -31,28 +31,28 @@ SOFTWARE.
 /*****   ATOMS   ****************************************************/
 
 <atom element>      ::= <atom> 
-                     |  <dotted name> <atom element'>                   ###
-                     |  <const qualifier> <atom element'''>             ###
+                     |  <dotted name> <atom element'>                   ##
+                     |  <const qualifier> <atom element'''>             ##
                      |  <atom element'''>
-<atom element'>     ::= <atom'>                                         ###
-                     |  <atom element''>                                ###
-##                     |  <dotted name'> <atom element'>                ###
-##                     |  <function call> <atom element'>               ###
-##                     |  <subscription or slicing> <atom element'>     ###
-##                     |  EPS                                           ###
-<atom element''  >  ::= <dotted name'> <atom element''>                 ###
-                     |  <function call> <atom element''>                ###
-                     |  <is instance of>                                ###
-                     |  <scalar type casting>                           ###
-                     |  <subscription or slicing> <atom element''>      ###
-                     |  EPS                                             ###
-##<atom element'''>   ::= <is instance of>                              ###
-##                     |  <scalar type casting>                         ###
+<atom element'>     ::= <atom'>                                         ##
+                     |  <atom element''>                                ##
+##                     |  <dotted name'> <atom element'>                ##
+##                     |  <function call> <atom element'>               ##
+##                     |  <subscription or slicing> <atom element'>     ##
+##                     |  EPS                                           ##
+<atom element''  >  ::= <dotted name'> <atom element''>                 ##
+                     |  <function call> <atom element''>                ##
+                     |  <is instance of>                                ##
+                     |  <scalar type casting>                           ##
+                     |  <subscription or slicing> <atom element''>      ##
+                     |  EPS                                             ##
+##<atom element'''>   ::= <is instance of>                              ##
+##                     |  <scalar type casting>                         ##
 <atom element'''>   ::= <scalar type> <scalar type casting>
 
 <atom>          ::= <decr> <dotted name> <incr or decr>
                  |  <incr> <dotted name> <incr or decr>
-##                 |  <dotted name> <atom'>                           ###
+##                 |  <dotted name> <atom'>                           	##
                  |  <enclosure>
                  |  <reference>
                  |  <scalar>
@@ -162,7 +162,7 @@ SOFTWARE.
                      |  'in'
                      |  <is operator>
                      |  'not' 'in'
-<comp operator'>    ::=  '<'  |  '>'
+<comp operator'>    ::=  '<'  |  '>'  |  '<=>'									###
 
 <condition or unnamed func> ::= <or test>
                              |  <unnamed func>
@@ -292,7 +292,7 @@ SOFTWARE.
                  |  'in'
                  |  <assign op>
                  |  <cast op>
-<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
+<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'  |  '<=>'			###
 
 <operator declaration>  ::= 'operator' <operator declaration'>
 <operator declaration'> ::= <operator> <template def> <function args declaration>
