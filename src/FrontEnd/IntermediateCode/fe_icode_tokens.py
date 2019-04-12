@@ -94,6 +94,7 @@ class FEICodeTokens:
     TK_NE           = 0
     TK_LT           = 0
     TK_LE           = 0
+    TK_LEG          = 0
 
     TK_OR           = 0
     TK_AND          = 0
@@ -291,6 +292,7 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_NE ]          : '!=',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_LT ]          : '<',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_LE ]          : '<=',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_LEG ]         : '<=>',
     
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OR ]          : 'or',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AND ]         : 'and',
