@@ -13,7 +13,7 @@
             <Keywords name="Numbers, suffix1"></Keywords>
             <Keywords name="Numbers, suffix2"></Keywords>
             <Keywords name="Numbers, range"></Keywords>
-            <Keywords name="Operators1">@ &amp; / ^ : . | ! &gt; &lt; - % + * = &lt;= == != &gt;= -- ++ # ** ^^ @= &amp;= /= ^= |= != -= %= += *= ^^= **= &gt;&gt;&gt; &gt;&gt;&gt;= &lt;&lt;&lt; &lt;&lt;&lt;= &gt;&lt; &gt;&lt;= !! !!= :: ::= ?? ??= &lt;&lt; &lt;&lt;= &gt;&gt; &gt;&gt;=</Keywords>
+            <Keywords name="Operators1">@ &amp; / ^ : . | ! &gt; &lt; - % + * = &lt;= == != &gt;= -- ++ # ** ^^ @= &amp;= /= ^= |= != -= %= += *= ^^= **= &gt;&gt;&gt; &gt;&gt;&gt;= &lt;&lt;&lt; &lt;&lt;&lt;= &gt;&lt; &gt;&lt;= !! !!= :: ::= ?? ??= &lt;&lt; &lt;&lt;= &gt;&gt; &gt;&gt;= &lt;=&gt;</Keywords>
             <Keywords name="Operators2"></Keywords>
             <Keywords name="Folders in code1, open">{</Keywords>
             <Keywords name="Folders in code1, middle"></Keywords>
