@@ -82,6 +82,7 @@ soluce = [ ICTokenNode_COMMENT( None, " Compound tokens -- tokenization test sou
            ICTokenNode_LE(),
            ICTokenNode_AUG_SHIFTL(),
            ICTokenNode_AUG_SHIFT0L(),
+           ICTokenNode_LEG(),
            ICTokenNode_NL(),
            ICTokenNode_MINUS(),
            ICTokenNode_DECR(),
