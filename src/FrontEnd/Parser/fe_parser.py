@@ -748,10 +748,10 @@ class FEParser:
             self._next_token_node()
             if not self._or_test():
                 self._append_error( FESyntaxErrors.IF_COND )
-            if self._current.is_ELSE():
+            if self._current.is_ELSE() or self._current.is_OTHERWISE():
                 self._append_syntaxic_node()
                 self._next_token_node()
-                if not self._self._expression():
+                if not self._expression():
                     self._append_error( FESyntaxErrors.IF_ELSE_EXPR )
                 return True
             else:
@@ -1998,6 +1998,7 @@ class FEParser:
         #                  |  'elif' '(' <expression> ')' <statements block> <if statement'>
         #                  |  'elsif' '(' <expression> ')' <statements block> <if statement'>
         #                  |  'else' <statements block>
+        #                  |  'otherwise' <statements block>
         #                  |  EPS
         #=======================================================================
         while self._current.is_ELIF():
