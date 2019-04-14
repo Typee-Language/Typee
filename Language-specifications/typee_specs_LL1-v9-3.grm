@@ -666,6 +666,7 @@ SOFTWARE.
                              |  'elif' '(' <expression> ')' <statements block> <if statement'>
                              |  'elsif' '(' <expression> ')' <statements block> <if statement'>
                              |  'else' <statements block>
+                             |  'otherwise' <statements block>                                      ##
                              |  EPS
 
 <import as name>            ::= <identifier> <import as name'>

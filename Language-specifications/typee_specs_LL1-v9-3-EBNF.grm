@@ -503,7 +503,7 @@ SOFTWARE.
 <elif statement'>           ::= ( ( 'elseif' | 'elif' | 'elsif' )
                                        <parenthesized expr>
                                        <statements block>   )*  |
-                                'else' <statements block>
+                                ( 'else' | 'otherwise' ) <statements block>
 
 <import as name>            ::= <identifier> [ 'as' <identifier> ]
 
