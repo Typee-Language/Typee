@@ -120,7 +120,7 @@ SOFTWARE.
 <comp operator>     ::= '<='  |  '=='  |  '!='  |  '>='  |
                         'in'  |  'is' [ 'not' ]  |  'not' 'in' 
 
-<comp operator'>    ::=  '<'  |  '>'  |  '<=>'
+<comp operator'>    ::=  '<'  |  '>'  |  '<=>' 
 
 <condition or unnamed func> ::= <or test>  |  <unnamed func>
 
@@ -245,10 +245,10 @@ SOFTWARE.
 
 <any non star char>             ::= u0x0000...u0xFFFF - [ '*' ]
 
-<any string quote char>         ::= u0x0000...u0xFFFF - ["'", "\\", "\n",
-                                                         "\r", "\f", u0x00]
-<any string doublequote char>   ::= u0x0000...u0xFFFF - ['"', '\\', '\n',
-                                                         '\r', '\f', u0x00]
+<any string quote char>         ::= u0x0000...u0xFFFF - [ "'", "\\", "\n",
+                                                         "\r", "\f", u0x00 ]
+<any string doublequote char>   ::= u0x0000...u0xFFFF - [ '"', '\\', '\n',
+                                                         '\r', '\f', u0x00 ]
 
 <binary char>                   ::= '0'  |  '1' 
 
@@ -350,7 +350,7 @@ SOFTWARE.
                                 <compound statement>  |  <simple statement>
 
 
-<statements block>  ::= '{' <statements list> '}'
+<statements block>  ::= '{' <statements list> '}' 
                      |  <empty statement> <statements block>                ###
                      |  <compound statement>                                ###
                      |  <simple statement>                                  ###
@@ -638,7 +638,7 @@ SOFTWARE.
 
 <array type>            ::= 'array' <declared contained type>
 
-<auto type>             ::= '?' ['in' '(' <types list> ')']
+<auto type>             ::= '?' [ 'in' '(' <types list> ')' ]
 
 <const qualifier>       ::= 'const' 
 
