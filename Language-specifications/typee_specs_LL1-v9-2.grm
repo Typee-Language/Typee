@@ -31,28 +31,21 @@ SOFTWARE.
 /*****   ATOMS   ****************************************************/
 
 <atom element>      ::= <atom> 
-                     |  <dotted name> <atom element'>                   ##
-                     |  <const qualifier> <atom element'''>             ##
+                     |  <dotted name> <atom element'>
+                     |  <const qualifier> <atom element'''>
                      |  <atom element'''>
-<atom element'>     ::= <atom'>                                         ##
-                     |  <atom element''>                                ##
-##                     |  <dotted name'> <atom element'>                ##
-##                     |  <function call> <atom element'>               ##
-##                     |  <subscription or slicing> <atom element'>     ##
-##                     |  EPS                                           ##
-<atom element''  >  ::= <dotted name'> <atom element''>                 ##
-                     |  <function call> <atom element''>                ##
-                     |  <is instance of>                                ##
-                     |  <scalar type casting>                           ##
-                     |  <subscription or slicing> <atom element''>      ##
-                     |  EPS                                             ##
-##<atom element'''>   ::= <is instance of>                              ##
-##                     |  <scalar type casting>                         ##
+<atom element'>     ::= <atom element''>
+                     |  <dotted name'> <atom element'>
+                     |  <function call> <atom element'>
+                     |  <subscription or slicing> <atom element'>
+                     |  EPS
+<atom element''>    ::= <is instance of>
+                     |  <scalar type casting>
 <atom element'''>   ::= <scalar type> <scalar type casting>
 
 <atom>          ::= <decr> <dotted name> <incr or decr>
                  |  <incr> <dotted name> <incr or decr>
-##                 |  <dotted name> <atom'>                           	##
+                 |  <dotted name> <atom'>
                  |  <enclosure>
                  |  <reference>
                  |  <scalar>
@@ -162,7 +155,7 @@ SOFTWARE.
                      |  'in'
                      |  <is operator>
                      |  'not' 'in'
-<comp operator'>    ::=  '<'  |  '>'  |  '<=>'									##
+<comp operator'>    ::=  '<'  |  '>'
 
 <condition or unnamed func> ::= <or test>
                              |  <unnamed func>
@@ -292,7 +285,7 @@ SOFTWARE.
                  |  'in'
                  |  <assign op>
                  |  <cast op>
-<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'  |  '<=>'			##
+<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
 
 <operator declaration>  ::= 'operator' <operator declaration'>
 <operator declaration'> ::= <operator> <template def> <function args declaration>
@@ -744,25 +737,25 @@ SOFTWARE.
                              |  EPS
 
 <try except>                ::= 'except' '(' <try except'> ')'
-<try except'>               ::= <expression> <try except''> <try except'''>
-                             |  'all' <try except''>
+<try except'>               ::= <expression> <try except''> <try except'''>         ##
+                             |  'all' <try except''>                                ##
                              |  EPS
-<try except''>              ::= ',' <expression> <try except''>
-                             |  EPS
-<try except'''>             ::= 'as' <identifier>
-                             |  EPS
+<try except''>              ::= ',' <expression> <try except''>                     ##
+                             |  EPS                                                 ##
+<try except'''>             ::= 'as' <identifier>                                   ##
+                             |  EPS                                                 ##
                              
 <try finally>               ::= 'finally'
 
-<try otherwise>             ::= 'otherwise' '(' <try otherwise'> ')'
-<try otherwise'>            ::= 'Exception' 'as' <identifier>
+<try otherwise>             ::= 'otherwise' '(' <try otherwise'> ')'                ##
+<try otherwise'>            ::= <identifier> 'as' <identifier>                      ##
                              |  EPS
 
-<try statement>             ::= 'try' <statements block> <try statement excepts> <try statement otherwise> <try statement finally>
+<try statement>             ::= 'try' <statements block> <try statement excepts> <try statement otherwise> <try statement finally>      ##
 <try statement excepts>     ::= <try except> <statements block> <try statement excepts'>
 <try statement excepts'>    ::= <try except> <statements block> <try statement excepts'>
                              |  EPS
-<try statement otherwise>   ::= <try otherwise> <statements block>
+<try statement otherwise>   ::= <try otherwise> <statements block>                  ##
                              |  EPS
 <try statement finally>     ::= <try finally> <statements block>
                              |  EPS
