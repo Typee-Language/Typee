@@ -638,6 +638,7 @@ class FEScanner:
         'assert':       ICTokenNode_ASSERT,
         'bool':         ICTokenNode_SCALAR_TYPE,
         'break':        ICTokenNode_BREAK,
+        'but':          ICTokenNode_BUT,
         'case':         ICTokenNode_CASE,
         'cast':         ICTokenNode_CAST,
         'char':         ICTokenNode_SCALAR_TYPE,
@@ -722,7 +723,7 @@ class FEScanner:
     }
     
     _LANGUAGE_KWDS = (
-        'cpp', 'ccs', 'csharp', 'java', 'javascript', 'm6809','python', 'py'
+        'cpp', 'ccs', 'csharp', 'java', 'javascript', 'm6809', 'py', 'python'
     )
     
 #=====   end of   FrontEnd.Scanner.fe_scanner   =====#
