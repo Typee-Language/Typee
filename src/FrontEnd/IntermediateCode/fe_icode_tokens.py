@@ -199,6 +199,7 @@ class FEICodeTokens:
     TK_FROM         = 0
     TK_ALL          = 0
     TK_AS           = 0
+    TK_BUT          = 0
     
     TK_EXCLUDE      = 0
     TK_EXIT         = 0
@@ -398,6 +399,7 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_FROM ]        : 'from',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_ALL ]         : 'all',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AS ]          : 'as',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_BUT ]         : 'but',
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_EXCLUDE ]     : 'exclude',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_EXIT ]        : 'exit',

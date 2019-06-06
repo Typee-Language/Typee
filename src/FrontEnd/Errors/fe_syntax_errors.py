@@ -164,6 +164,9 @@ class FESyntaxErrors:
     IF_CONDITION_END            = 'missing ) after condition in if clause, leads to unpaired (',
     IF_ELSE                     = 'missing keyword "else" in inlined if clause',
     IF_ELSE_EXPR                = 'missing expression after keyword "else" in inlined if clause',
+    IF_OTHERWISE_EXPR           = 'missing expression after keyword "otherwise" in inlined if clause',
+    IMPORT_BUT_COMMA_IDENT      = 'missing or badly formed identifier after , in list of identifiers in import-but clause',
+    IMPORT_BUT_IDENT            = 'missing or badly formed identifier in import-but clause',
     IMPORT_IDENT                = 'missing or badly formed identifier after , in list of identifiers in import-as instruction',
     IMPORT_MODULE               = 'missing or badly formed module identifier in import instruction',
     INCR_IDENT                  = 'missing variable name after operator "++"',
@@ -191,6 +194,7 @@ class FESyntaxErrors:
     OPERATOR_OP                 = 'missing or badly formed operator identifier in operator definition',
     OR_EXPR                     = 'missing or badly formed numerical expression after bitwise operator |',
     OR_TEST                     = 'missing or badly formed comparison expression after keyword "or"',
+    OTHERWISE_BODY              = 'missing instruction or block of instructions after keyword "otherwise"',
     
     PARENTH_EXPR                = 'missing or badly formed expression in parenthesis-form clause',
     POWER_EXPR                  = 'missing or badly formed expression after power operator',
@@ -215,10 +219,11 @@ class FESyntaxErrors:
     SUBCSR_SLICE_END            = 'missing ] at end of subscription or slicing specification, leads to unpaired [',
     SWITCH_BODY_BEGIN           = 'missing { after switch clause and before block of case clauses in switch instruction',
     SWITCH_BODY_END             = 'missing } at end of case clauses in switch instruction, leads to unpaired {',
-    SWITCH_ELSE_BODY            = 'missing instruction or instructions block after keyword "otherwise" of switch statement',
+    SWITCH_OTHERWISE_BODY       = 'missing instruction or instructions block after keyword "otherwise" of switch statement',
     SWITCH_EXPR                 = 'missing or badly formed expression after ( in switch instruction',
     SWITCH_EXPR_BEGIN           = 'missing ( after keyword "switch" in switch instruction',
     SWITCH_EXPR_END             = 'missing ) at end of switch clause in switch instruction, leads to unpaired (',
+    SWITCH_OTHERWISE_BODY       = 'missing instruction or instructions block after keyword "otherwise" of switch statement',
     
     TARGET_IDENT                = 'missing or badly formed identifier',
     TARGET_TYPE                 = 'missing or badly formed typed identifier after "," in list of types identifiers',
@@ -273,11 +278,12 @@ class FESyntaxErrors:
     WHILE_COND                  = 'missing or badly formed conditional expression after ( in while clause',
     WHILE_COND_BEGIN            = 'missing ( after keyword "while"',
     WHILE_COND_END              = 'missing ) at end of conditional expression in while clause, leads to unpaired (',
-    WHILE_ELSE_BODY             = 'missing instruction or instructions block after keyword "otherwise" in while instruction',
+    WHILE_OTHERWISE_BODY        = 'missing instruction or instructions block after keyword "otherwise" in while instruction',
     WITH_AS_IDENT               = 'missing or badly formed identifier after keyword "as" in with clause',
     WITH_BODY                   = 'missing instruction or instructions block after with clause in with instruction',
     WITH_EXPR                   = 'missing or badly formed expression after keyword "with"',
     WITH_LIST_COMMA             = 'missing or badly formed with-as clause in list of with-as clauses'  ## notice: we already know that this kind of error will never be detected as such
+    WHILE_OTHERWISE_BODY        = 'missing instruction or instructions block after keyword "otherwise" in while instruction',
 
 #=====   end of   FrontEnd.Errors.fe_syntax_errors   =====#
         
