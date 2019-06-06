@@ -6,7 +6,7 @@ a b c d e f g h i j k l m n o p q r s t u v w x y z
 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
 _ _name __ident__ __ set_num
 qmsli Qbhjken _123 a1 b2 c3d_ abstract1 _const i_uint32
-py python java javascript cpp m6809
+py python java javascript cpp m6809 ccs csharp
 abstract public const uint8 my_abstract_function
 	return ret
 float32 f_num
@@ -20,7 +20,7 @@ elif elsif elseif else if True true False false
 else
 array< uint16 >
 with var as _var
-from import all
+from import all but
 for int8 i in
 forever
 break
