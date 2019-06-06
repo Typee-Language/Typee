@@ -694,9 +694,9 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _comp_operator1(self) -> bool:
         #=======================================================================
-        # <comp operator'> ::= '<'  |  '>'
+        # <comp operator'> ::= '<'  |  '>'  |  '<=>'
         #=======================================================================
-        if self._current.is_LT() or self._current.is_GT():
+        if self._current.is_LT() or self._current.is_GT() or self._current.is_LEG():
             self._append_syntaxic_node()
             self._next_token_node()
             return True
@@ -740,7 +740,7 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _condition1(self) -> bool:
         #=======================================================================
-        # <condition'> ::= 'if' <or test> 'else' <expression>
+        # <condition'> ::= 'if' <or test> <condition">
         #               |  EPS
         #=======================================================================
         if self._current.is_IF():
@@ -748,17 +748,26 @@ class FEParser:
             self._next_token_node()
             if not self._or_test():
                 self._append_error( FESyntaxErrors.IF_COND )
-            if self._current.is_ELSE() or self._current.is_OTHERWISE():
-                self._append_syntaxic_node()
-                self._next_token_node()
-                if not self._expression():
-                    self._append_error( FESyntaxErrors.IF_ELSE_EXPR )
-                return True
-            else:
-                self._append_error( FESyntaxErrors.IF_ELSE )
-                return True
+            return self._condition2()
         else:
             return True                
+
+    #-------------------------------------------------------------------------
+    def _condition2(self) -> bool:
+        #===========================================================================
+        # <condition"> ::= 'else' <expression>
+        #               |  'otherwise' <expression>
+        #===========================================================================
+        if self._current.is_ELSE() or self._current.is_OTHERWISE():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.IF_ELSE_EXPR if self._current.is_ELSE() \
+                                                                else FESyntaxErrors.IF_OTHERWISE_EXPR )
+            return True
+        else:
+            self._append_error( FESyntaxErrors.IF_ELSE )
+            return True
 
     #-------------------------------------------------------------------------
     def _condition_or_unnamed_func(self) -> bool:
@@ -2018,11 +2027,12 @@ class FEParser:
                 self._append_error( FESyntaxErrors.ELIF_CONDITION_END )
             if not self._statements_block():
                 self._append_error( FESyntaxErrors.ELIF_BODY )
-        if self._current.is_ELSE():
+        if self._current.is_ELSE() or self._current.is_OTHERWISE():
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._statements_block():
-                self._append_error( FESyntaxErrors.ELSE_BODY )
+                self._append_error( FESyntaxErrors.ELSE_BODY if self._current.is_ELSE()
+                                                             else FESyntaxErrors.OTHERWISE_BODY )
         return True
 
     #-------------------------------------------------------------------------
@@ -2073,6 +2083,33 @@ class FEParser:
         return True
 
     #-------------------------------------------------------------------------
+    def _import_but(self) -> bool:
+        #===============================================================================
+        # <import but> ::= 'but' <identifier> <import but'>
+        #              |   EPS
+        #===============================================================================
+        if self._current.is_BUT():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._identifier():
+                self._append_error( FESyntaxErrors.IMPORT_BUT_IDENT )
+            return self._import_but1()
+        return True
+
+    #-------------------------------------------------------------------------
+    def _import_but1(self) -> bool:
+        #===============================================================================
+        # <import but'> ::= ',' <identifier> <import but'>
+        #                |  EPS
+        #===============================================================================
+        while self._current.is_COMMA():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._identifier():
+                self._append_error( FESyntaxErrors.IMPORT_BUT_COMMA_IDENT )
+        return True
+
+    #-------------------------------------------------------------------------
     def _import_from(self) -> bool:
         #=======================================================================
         # <import from> ::= 'from' <import from'>
@@ -2115,14 +2152,14 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _import_from3(self) -> bool:
         #=======================================================================
-        # <import from'''> ::= 'all'
+        # <import from'''> ::= 'all' <import but>
         #                   |  '(' <import as names> ')'
         #                   |  <import as names>
         #=======================================================================
         if self._current.is_ALL():
             self._append_syntaxic_node()
             self._next_token_node()
-            return True
+            return self._import_but()
         elif self._current.is_PAROP():
             self._append_syntaxic_node()
             self._next_token_node()
@@ -2575,11 +2612,12 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _operator1(self) -> bool:
         #=======================================================================
-        # <operator'> ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'
+        # <operator'> ::= '<' | '>' | '<<' | '<<<' | '>>' | '>>>' | '<=>'
         #=======================================================================
         if self._current.is_LT()          or self._current.is_GT()      or \
             self._current.is_SHIFTL()     or self._current.is_SHIFT0L() or \
-                self._current.is_SHIFTR() or self._current.is_SHIFT0R():
+                self._current.is_SHIFTR() or self._current.is_SHIFT0R() or \
+                self._current.is_LEG():
             self._append_syntaxic_node()
             self._next_token_node()
             return True
@@ -3260,7 +3298,7 @@ class FEParser:
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._statements_block():
-                self._append_error( FESyntaxErrors.SWITCH_ELSE_BODY )
+                self._append_error( FESyntaxErrors.SWITCH_OTHERWISE_BODY )
         return True
 
     #-------------------------------------------------------------------------
@@ -4069,7 +4107,7 @@ class FEParser:
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._statements_block():
-                self._append_error( FESyntaxErrors.WHILE_ELSE_BODY )
+                self._append_error( FESyntaxErrors.WHILE_OTHERWISE_BODY )
         return True
 
     #-------------------------------------------------------------------------
