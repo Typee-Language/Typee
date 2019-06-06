@@ -677,11 +677,16 @@ SOFTWARE.
 <import as names'>          ::= ',' <import as name> <import as names'>
                              |  EPS
 
+<import but>				::= 'but' <identifier> <import but'>					##
+							 |	EPS													##
+<import but'>				::= ',' <identifier> <import but'>						##
+							 |	EPS													##
+
 <import from>               ::= 'from' <import from'>
 <import from'>              ::= '.' <import from'>
                              |  <import from''>
 <import from''              ::= <dotted name> 'import' <import from'''>
-<import from'''>            ::= 'all'
+<import from'''>            ::= 'all' <import but>									##
                              |  '(' <import as names> ')'
                              |  <import as names>
                      

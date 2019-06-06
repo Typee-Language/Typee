@@ -509,8 +509,10 @@ SOFTWARE.
 
 <import as names>           ::= <import as name> ( ',' <import as name> )*
 
+<import but>				::= 'but' <identifier> ( ',' <identifier> <import but'> )*
+
 <import from>               ::= 'from' ( '.' )* <dotted name> 'import' 
-                                    ( 'all' | 
+                                    ( 'all' [<import but>] |
                                       ( '(' <import as names> '\)' ) |
                                        <import as names> )
 
