@@ -1,7 +1,13 @@
+.gitignore
 .metadata
 .project
 .pydevproject
 .settings
 _config.yml
+*.pyc
 __pycache__
-.gitignore
+* - Copie.grm
+*-new.grm
+* - Copy.grm
+UML*
+*.prefs
