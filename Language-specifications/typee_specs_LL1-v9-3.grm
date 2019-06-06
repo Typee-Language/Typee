@@ -146,8 +146,10 @@ SOFTWARE.
 /*****   CONDITIONS and COMPARISONS   *******************************/
 
 <condition>     ::= <or test> <condition'>
-<condition'>    ::= 'if' <or test> 'else' <expression>
+<condition'>    ::= 'if' <or test> <condition">
                  |  EPS
+<condition">	::= 'else' <expression>
+				 |	'otherwise' <expression>
 
 <and test>      ::= <not test> <and test'>
 <and test'>     ::= 'and' <not test>
@@ -162,7 +164,7 @@ SOFTWARE.
                      |  'in'
                      |  <is operator>
                      |  'not' 'in'
-<comp operator'>    ::=  '<'  |  '>'  |  '<=>'									##
+<comp operator'>    ::=  '<'  |  '>'  |  '<=>'
 
 <condition or unnamed func> ::= <or test>
                              |  <unnamed func>
@@ -292,7 +294,7 @@ SOFTWARE.
                  |  'in'
                  |  <assign op>
                  |  <cast op>
-<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'  |  '<=>'			##
+<operator'>     ::= '<'  |  '>'  |  '<<'  |  '<<<'  |  '>>'  |  '>>>'  |  '<=>'
 
 <operator declaration>  ::= 'operator' <operator declaration'>
 <operator declaration'> ::= <operator> <template def> <function args declaration>
@@ -666,7 +668,7 @@ SOFTWARE.
                              |  'elif' '(' <expression> ')' <statements block> <if statement'>
                              |  'elsif' '(' <expression> ')' <statements block> <if statement'>
                              |  'else' <statements block>
-                             |  'otherwise' <statements block>                                      ##
+                             |  'otherwise' <statements block>
                              |  EPS
 
 <import as name>            ::= <identifier> <import as name'>
@@ -677,16 +679,16 @@ SOFTWARE.
 <import as names'>          ::= ',' <import as name> <import as names'>
                              |  EPS
 
-<import but>				::= 'but' <identifier> <import but'>					##
-							 |	EPS													##
-<import but'>				::= ',' <identifier> <import but'>						##
-							 |	EPS													##
+<import but>				::= 'but' <identifier> <import but'>
+							 |	EPS
+<import but'>				::= ',' <identifier> <import but'>
+							 |	EPS
 
 <import from>               ::= 'from' <import from'>
 <import from'>              ::= '.' <import from'>
                              |  <import from''>
 <import from''              ::= <dotted name> 'import' <import from'''>
-<import from'''>            ::= 'all' <import but>									##
+<import from'''>            ::= 'all' <import but>
                              |  '(' <import as names> ')'
                              |  <import as names>
                      
