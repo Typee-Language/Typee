@@ -2086,7 +2086,7 @@ class FEParser:
     def _import_but(self) -> bool:
         #===============================================================================
         # <import but> ::= 'but' <identifier> <import but'>
-        #              |   EPS
+        #               |  EPS
         #===============================================================================
         if self._current.is_BUT():
             self._append_syntaxic_node()
