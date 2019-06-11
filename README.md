@@ -6,11 +6,11 @@ A new generic object-oriented programming language.
 ## Want to Contribute?
 
 If you wish to contribute, just contact main administrator 
-[Schmouk](mailto:ph.schmouker@yahoo.fr) by e-mail and be patient. You will 
+[Schmouk](mailto:ph.schmouker@gmail.com) by e-mail and be patient. You will 
 eventually get a response and will enthousiastically be added to the 
 contributors list.
 Current developments are in _Python 3.7_, based on _Anaconda 3_, with 
-_Eclipse Photon_ framework and _PyDev_ plug-in. Windows is currently used also 
+_Eclipse 2019-03_ framework and _PyDev_ plug-in. Windows is currently used also 
 for these developments. So, if you get Linux expertise you're welcome!
 
 
@@ -18,6 +18,7 @@ for these developments. So, if you get Linux expertise you're welcome!
 
 __Typee__ is an Object Oriented Programming language. Its syntax is derived 
 from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.7_.
+
 
 ## Typee language characteristics
 
@@ -250,6 +251,14 @@ interpreters and compilers that will do a definitively correct  job.
 The final step for the user is then to run the compiler or the interpretor of 
 the targeted language. Of course, this step can be automated via scripting 
 and __Typee__ project aims at providing such scripts to ease the whole process.
+
+
+## Development policy
+
+Only develop under branch `dev`. Do not hesitate to create your own branches 
+to commit then push your contributions, but start all of them from branch 
+`dev`. Only an administrator may merge new releases of __Typee Translator__ 
+into branch `master`.
 
 
 ## Visit us
