@@ -1,7 +1,7 @@
 .gitignore
 .metadata
-.project
-.pydevproject
+/.project
+/.pydevproject
 .settings
 _config.yml
 *.pyc
