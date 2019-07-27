@@ -1,16 +1,17 @@
-The subdirectories here contain configuration and project files to
-be able to use Visual Studio Code (VSC) as your favorite IDE to work 
-on __Typee__ language project.
+# Using Visual Studio Code IDE as your framework for Typee
 
-This directory is currently empty.
+VSCode allows for the installing of extensions. Here are the few 
+ones we have installed  with our VSC framework:
 
-As soon as we will have started working with VSC, those files will 
-be directly accessible here, according to the different successive 
-versions of VSC we will have used.
+- Anaconda Extension Pack (1.0.1 by the date of this publication)
+- Code Runner (0.9.11 by the date of this publication)
+- Python (2019.6.24221 by the date of this publication)
+- Python Extension Pack (1.6.0 by the date of this publication)
+- Python for VSCode (0.2.3 by the date of this publication)
+- Visual Studio IntelliCode (1.1.8 by the date of this publication)
 
-You will then just have to copy thse files at the root reictory of 
-your local clone of __Typee__ to be able to work with your version 
-of VSC.
+You are free to install any other ones, but these are the ones 
+we are currently using. Furthermore, it might be that some of these 
+extensions are redundant... Well, we have not yet checked.
 
-
-Enjoy!
+Nevertheless, Enjoy!

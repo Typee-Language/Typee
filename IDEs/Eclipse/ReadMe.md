@@ -1,3 +1,5 @@
+# Using eclipse IDE as your framework for Typee
+
 The subdirectories here contain each files
 - `.project` and
 - `.Pydevproject`.
