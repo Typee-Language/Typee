@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
