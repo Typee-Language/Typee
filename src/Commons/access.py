@@ -47,13 +47,13 @@ class AccessStack( list ):
     nested instructions blocks (i.e. levels of braces).
     """
     #--------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._current_level = 0
         self.append( self._DEFAULT )
 
     #-------------------------------------------------------------------------
-    def add_level(self, access_qualif:Access=None):
+    def add_level(self, access_qualif: Access = None):
         self._current_level += 1
         try:
             self[ self._current_level ] = access_qualif or self._DEFAULT
@@ -65,7 +65,7 @@ class AccessStack( list ):
         return self[ self._current_level ]
     
     #-------------------------------------------------------------------------
-    def suppress_level(self):
+    def suppress_level(self) -> None:
         if self._current_level > 0:
             self._current_level -= 1
 

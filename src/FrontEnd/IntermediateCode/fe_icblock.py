@@ -28,7 +28,7 @@ class FEICBlock( FEICNode ):
     """
 
     #-------------------------------------------------------------------------
-    def __init__(self):  ##, parent:FEICNode=None):
+    def __init__(self) -> None:  ##, parent:FEICNode=None):
         '''
         Constructor.
         '''
@@ -36,7 +36,7 @@ class FEICBlock( FEICNode ):
         ##self.parent = parent
 
     #-------------------------------------------------------------------------
-    def __iadd__(self, ic_node:FEICNode):
+    def __iadd__(self, ic_node: FEICNode):
         '''
         Appends a new node into this block.
         '''
@@ -44,7 +44,7 @@ class FEICBlock( FEICNode ):
         return self
 
     #-------------------------------------------------------------------------
-    def walk(self):
+    def walk(self) -> None:
         '''
         Walks through the list of nodes contained within
         this block.

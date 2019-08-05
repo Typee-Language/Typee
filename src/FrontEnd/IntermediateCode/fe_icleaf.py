@@ -31,7 +31,7 @@ class FEICLeaf( FEICNode ):
     Class description.
     """    
     #-------------------------------------------------------------------------
-    def __init__(self, content):
+    def __init__(self, content) -> None:
         '''
         Constructor.
         
@@ -41,7 +41,7 @@ class FEICLeaf( FEICNode ):
         super().__init__( content )
     
     #-------------------------------------------------------------------------
-    def set_parent(self, parent:FEICNode):
+    def set_parent(self, parent: FEICNode):
         '''
         Sets the parent of this node.
         '''

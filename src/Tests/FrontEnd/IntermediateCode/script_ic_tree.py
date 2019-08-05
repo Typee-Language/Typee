@@ -57,7 +57,7 @@ def create_test_tree() -> FEICTree:
 
 
 #-------------------------------------------------------------------------
-def walk_through_tree( ic_tree:FEICTree ) -> int:
+def walk_through_tree( ic_tree: FEICTree ) -> int:
     '''
     '''
     errors_count = 0

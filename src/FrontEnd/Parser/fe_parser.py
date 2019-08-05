@@ -47,7 +47,7 @@ class FEParser:
     """
     
     #-------------------------------------------------------------------------
-    def __init__(self, tokenized_intermediate_code:FETokenizedICode=None):
+    def __init__(self, tokenized_intermediate_code: FETokenizedICode = None) -> None:
         '''
         Constructor.
         
@@ -58,7 +58,7 @@ class FEParser:
         self._tokenizedIC = tokenized_intermediate_code
    
     #-------------------------------------------------------------------------
-    def parse(self, tokenized_intermediate_code:FETokenizedICode=None) -> tuple(FEICTree,int):
+    def parse(self, tokenized_intermediate_code: FETokenizedICode = None) -> tuple(FEICTree,int):
         '''
         Parses some Front-End Intermediate Code and generates the related
         Front-End Syntaxic Code.
@@ -4174,18 +4174,18 @@ class FEParser:
 
     #=========================================================================
     #-------------------------------------------------------------------------
-    def _append_error(self, err_data=None):
+    def _append_error(self, err_data=None) -> None:
         self._errors_count += 1
         err_node = ICTokenNode_UNEXPECTED( data=err_data or self._current.tk_data )
         err_node.num_line = self._current.num_line
         err_node.num_coln = self._current.num_coln
         self._append_syntaxic_node( err_node )
     #-------------------------------------------------------------------------
-    def _append_new_block(self):
+    def _append_new_block(self) -> None:
         self._out_syntax_ic += FEICBlock()
         self._append_syntaxic_node()
     #-------------------------------------------------------------------------
-    def _append_syntaxic_node(self):
+    def _append_syntaxic_node(self) -> bool:
         self._out_syntax_ic += FEICLeaf( self._current )
         return True
     #-------------------------------------------------------------------------
@@ -4208,7 +4208,7 @@ class FEParser:
         return  self._current
     
     #-------------------------------------------------------------------------
-    def __up_to_parent_block(self):
+    def __up_to_parent_block(self) -> None:
         self._out_syntax_ic.up_level()
 
 #=====   end of   FrontEnd.Parser.parser   =====#

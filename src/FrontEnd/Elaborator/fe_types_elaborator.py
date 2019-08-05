@@ -31,7 +31,7 @@ class FETypesElaborator( FEElaborator ):
     Class description.
     """    
     #-------------------------------------------------------------------------
-    def __init__(self, params):
+    def __init__(self, params) -> None:
         '''
         Constructor.
         

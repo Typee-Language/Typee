@@ -413,7 +413,7 @@ class FEICodeTokensData:
 
     #---------------------------------------------------------------------
     @classmethod
-    def get(cls, tk_id:int) -> str:
+    def get(cls, tk_id: int) -> str:
         try:
             return cls._data[ tk_id ]
         except:

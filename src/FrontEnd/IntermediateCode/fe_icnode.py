@@ -28,7 +28,7 @@ class FEICNode:
     """
 
     #-------------------------------------------------------------------------
-    def __init__(self, content=None):
+    def __init__(self, content=None) -> None:
         '''
         Cnstructor.
         
@@ -39,14 +39,14 @@ class FEICNode:
         self.content = content
 
     #-------------------------------------------------------------------------
-    def set_parent(self, parent:FEICNode):
+    def set_parent(self, parent: FEICNode):
         '''
         Sets the parent of this node.
         '''
         self.parent = parent
 
     #-------------------------------------------------------------------------
-    def walk(self):
+    def walk(self) -> None:
         '''
         Walks through the list of nodes contained within this block.
         Walk-through is depth-first implemented.
