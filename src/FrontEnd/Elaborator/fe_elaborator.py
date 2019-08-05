@@ -31,7 +31,7 @@ class FEElaborator:
     Bse class for the Elabioration step of Typee front-End.
     """    
     #-------------------------------------------------------------------------
-    def __init__(self, params):
+    def __init__(self, params) -> None:
         '''
         Constructor.
         

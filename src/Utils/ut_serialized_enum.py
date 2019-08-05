@@ -72,7 +72,7 @@ class UTSerializedEnum( Struct ):
         
     #-------------------------------------------------------------------------
     @classmethod
-    def write(cls, fp, value):
+    def write(cls, fp, value) -> None:
         '''
         '''
         fp.write( cls.pack(value) )

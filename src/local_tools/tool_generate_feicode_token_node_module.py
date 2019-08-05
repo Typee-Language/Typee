@@ -71,7 +71,7 @@ def generate_nodes_classes(fp):
         if tk_nm in protection_classes:
             fp.write( """
 class ICTokenNode_{:s}( FEICodeTokenNodeProtection ):
-    def __init__(self, scanner=None, data='{:s}'):
+    def __init__(self, scanner=None, data='{:s}') -> None:
             super().__init__( scanner, Access.{:s}, FEICodeTokens.{:s}, data )
 """.format( tk_nm[3:], str(FEICodeTokensData.get(tk_nm)), tk_nm[3:], tk_nm) )
         else:
@@ -79,7 +79,7 @@ class ICTokenNode_{:s}( FEICodeTokenNodeProtection ):
                 tk_nm[3:], str(FEICodeTokensData.get(tk_nm)), tk_nm) )
 
 #-------------------------------------------------------------------------
-def generate_protection_class(fp):
+def generate_protection_class(fp) -> None:
     '''
     Generates the definition of the class of protection-mode nodes.
     
@@ -117,7 +117,7 @@ class FEICodeTokenNodeProtection( FEICodeTokenNode ):
         self.tk_protection = protection_mode""")
 
 #-------------------------------------------------------------------------
-def generate_template_header(fp, class_name:str):
+def generate_template_header(fp, class_name: str) -> None:
     '''
     Loads template header for class module and puts it in the
     generated module file.
@@ -132,10 +132,10 @@ def generate_template_header(fp, class_name:str):
         IOError: template file not found or not accessible.
     '''
     #-----------------------------------------------------------------
-    def crc_16( val:int ) -> int:
+    def crc_16( val: int ) -> int:
         return (val // 10) + (val % 10)
     #-----------------------------------------------------------------
-    def milli_sec( micro_sec:int ) -> int:
+    def milli_sec( micro_sec: int ) -> int:
         return (micro_sec + 500) // 1000
     
     #-----------------------------------------------------------------
@@ -168,7 +168,7 @@ class {:s}:
     The class of nodes for the Front End Intermediate Code of the Typee Scanner.
     \"""    
     #-------------------------------------------------------------------------
-    def __init__(self, scanner, tk_id:int, tk_data=None):
+    def __init__(self, scanner, tk_id:int, tk_data=None) -> None:
         '''
         Creates a node of Intermediate Code for the Front-End Typee Scanner.
         

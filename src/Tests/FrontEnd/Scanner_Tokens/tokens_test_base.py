@@ -34,7 +34,9 @@ class TokensTestBase:
     Base class for all tokens tests.
     """    
     #-------------------------------------------------------------------------
-    def __init__(self, test_title:str, test_src_path:str, soluce_path:str):
+    def __init__(self, test_title   : str,
+                       test_src_path: str, 
+                       soluce_path  : str) -> None:
         '''
         Constructor.
         Automatically runs the test.

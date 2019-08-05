@@ -37,7 +37,7 @@ class FEScanner:
     """
     
     #-------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self) -> None:
         '''
         Constructor.
         '''
@@ -47,7 +47,7 @@ class FEScanner:
         
 
     #-------------------------------------------------------------------------
-    def scan_file(self, filepath:str, **parse_args) -> FETokenizedICode:
+    def scan_file(self, filepath: str, **parse_args) -> FETokenizedICode:
         '''
         Runs the Typee scanner on a specified file.
         
@@ -79,7 +79,7 @@ class FEScanner:
 
    
     #-------------------------------------------------------------------------
-    def scan_memory(self, src_code:str, **parse_args) -> FETokenizedICode:
+    def scan_memory(self, src_code: str, **parse_args) -> FETokenizedICode:
         '''
         Scans the source code,  according to some parsing arguments  passed  at
         command line, and returns a reference to the corresponding intermediate
@@ -109,7 +109,7 @@ class FEScanner:
 
     #=========================================================================
     #-------------------------------------------------------------------------
-    def _tokenize(self):
+    def _tokenize(self) -> None:
         if self._current in FEScanner._SIMPLE_TOKEN:
             self._append_node( FEScanner._SIMPLE_TOKEN[self._current], self._current ) 
             self._next_char()
@@ -139,10 +139,13 @@ class FEScanner:
 
     #=========================================================================
     #-------------------------------------------------------------------------
-    def _binary_number(self):
+    def _binary_number(self) -> None:
         self._parse_number( self._BIN_CHARS, True )
     #-------------------------------------------------------------------------
-    def _check_augmented_operator(self, base_class, augmented_class, data, get_next:bool=True):
+    def _check_augmented_operator(self, base_class, 
+                                        augmented_class, 
+                                        data, 
+                                        get_next: bool = True) -> None:
         if get_next:
             self._next_char()
         if self._current == '=':
@@ -154,7 +157,7 @@ class FEScanner:
             else:
                 self._append_node( base_class, data )
     #-------------------------------------------------------------------------
-    def _check_escaped_char(self, count:int, base_chars:str):
+    def _check_escaped_char(self, count: int, base_chars: str) -> None:
         self._next_char()
         for _ in range(count):
             if self._eof:
@@ -167,7 +170,7 @@ class FEScanner:
                 self._append_node( ICTokenNode_UNEXPECTED, self._current )
             self._next_char()
     #-------------------------------------------------------------------------
-    def _comment(self):
+    def _comment(self) -> None:
         start = self.idx + 1
         while not self._eof  and  self._current not in self._ENDLINE:
             self._next_char()
@@ -175,7 +178,7 @@ class FEScanner:
         if not self._eof:
             self._next_line( True )
     #-------------------------------------------------------------------------
-    def _decimal_number(self):
+    def _decimal_number(self) -> None:
         start = self.idx
         if self._decimal_part():
             self._error = False
@@ -224,7 +227,7 @@ class FEScanner:
             self._append_node( ICTokenNode_DOT, '.' )
             return True
     #-------------------------------------------------------------------------
-    def _embedded_code(self):
+    def _embedded_code(self) -> None:
         start = self.idx
         while not self._eof:
             if self._current == '}':
@@ -235,7 +238,7 @@ class FEScanner:
                     break
             self._next_char()
     #-------------------------------------------------------------------------
-    def _escaped_char(self):
+    def _escaped_char(self) -> None:
         self._next_char()
         if self._current in FEScanner._ALPHA_CHARS:
             self._next_char()
@@ -270,10 +273,10 @@ class FEScanner:
         else:
             return False
     #-------------------------------------------------------------------------
-    def _hexadecimal_number(self):
+    def _hexadecimal_number(self) -> None:
         self._parse_number( self._HEXA_CHARS, True )
     #-------------------------------------------------------------------------
-    def _multi_lines_comment(self):
+    def _multi_lines_comment(self) -> None:
         start = self.idx + 1
         while True:
             if self._current in self._ENDLINE:
@@ -292,7 +295,7 @@ class FEScanner:
             else:
                 self._next_char()
     #-------------------------------------------------------------------------
-    def _name(self):
+    def _name(self) -> None:
         start = self.idx
         while self._current in FEScanner._NAME_CHARS:
             self._next_char()
@@ -305,13 +308,13 @@ class FEScanner:
         else:
             self._append_node( ICTokenNode_IDENT, name )
     #-------------------------------------------------------------------------
-    def _number(self):
+    def _number(self) -> None:
         if self._current == '0':
             self._octal_hexa_binary_number()
         else:
             self._decimal_number()
     #-------------------------------------------------------------------------
-    def _octal_hexa_binary_number(self):
+    def _octal_hexa_binary_number(self) -> None:
         self._next_char()
         if self._current in "bB":
             self._next_char()
@@ -324,10 +327,10 @@ class FEScanner:
         else:
             self._append_node( ICTokenNode_INTEGER, '0' )
     #-------------------------------------------------------------------------
-    def _octal_number(self):
+    def _octal_number(self) -> None:
         self._parse_number( self._OCTAL_CHARS )
     #-------------------------------------------------------------------------
-    def _parse_number(self, num_chars, spec_char:bool=False) -> bool:
+    def _parse_number(self, num_chars, spec_char: bool = False) -> bool:
         if self._current in num_chars:
             self._next_char()
             start = self.idx - (3 if spec_char else 2)
@@ -369,7 +372,7 @@ class FEScanner:
         else:
             return False
     #-------------------------------------------------------------------------
-    def _string_content(self, string_marker:str) -> bool:
+    def _string_content(self, string_marker: str) -> bool:
         self._next_char()
         start = self.idx
         error = None
@@ -398,19 +401,19 @@ class FEScanner:
     
     #=========================================================================
     #-------------------------------------------------------------------------
-    def _arobase(self):
+    def _arobase(self) -> None:
         self._check_augmented_operator( ICTokenNode_AROBASE, ICTokenNode_AUG_AROBASE, '@' )
     #-------------------------------------------------------------------------
-    def _assign(self):
+    def _assign(self) -> None:
         self._check_augmented_operator( ICTokenNode_ASSIGN, ICTokenNode_EQ, '=' )
     #-------------------------------------------------------------------------
-    def _bitand(self):
+    def _bitand(self) -> None:
         self._check_augmented_operator( ICTokenNode_BITAND, ICTokenNode_AUG_BITAND, '&' )
     #-------------------------------------------------------------------------
-    def _bitor(self):
+    def _bitor(self) -> None:
         self._check_augmented_operator( ICTokenNode_BITOR, ICTokenNode_AUG_BITOR, '|' )
     #-------------------------------------------------------------------------
-    def _brace_op(self):
+    def _brace_op(self) -> None:
         self._next_char()
         if self._current == '{':
             self._next_char()
@@ -418,21 +421,21 @@ class FEScanner:
         else:
             self._append_node( ICTokenNode_BRACEOP, '{' )
     #-------------------------------------------------------------------------
-    def _caret(self):
+    def _caret(self) -> None:
         self._next_char()
         if self._current == '^':
             self._check_augmented_operator( ICTokenNode_POWER, ICTokenNode_AUG_POWER, '^^' )
         else:
             self._check_augmented_operator( ICTokenNode_BITXOR, ICTokenNode_AUG_BITXOR, '^', False )
     #-------------------------------------------------------------------------
-    def _colon(self):
+    def _colon(self) -> None:
         self._next_char()
         if self._current == ':':
             self._check_augmented_operator( ICTokenNode_OP_2COLN, ICTokenNode_AUG_2COLN, '::' )
         else:
             self._append_node( ICTokenNode_COLON, ':' )
     #-------------------------------------------------------------------------
-    def _div(self):
+    def _div(self) -> None:
         self._next_char()
         if self._current == '/':
             self._comment()
@@ -441,17 +444,17 @@ class FEScanner:
         else:
             self._check_augmented_operator( ICTokenNode_DIV, ICTokenNode_AUG_DIV, '/', False )
     #-------------------------------------------------------------------------
-    def _eq(self):
+    def _eq(self) -> None:
         self._check_augmented_operator( ICTokenNode_ASSIGN, ICTokenNode_EQ, '==' )
     #-------------------------------------------------------------------------
-    def _excl(self):
+    def _excl(self) -> None:
         self._next_char()
         if self._current == '!':
             self._check_augmented_operator( ICTokenNode_OP_2EXCL, ICTokenNode_AUG_2EXCL, '!!' )
         else:
             self._check_augmented_operator( ICTokenNode_EXCL, ICTokenNode_NE, '!', False )
     #-------------------------------------------------------------------------
-    def _greater(self):
+    def _greater(self) -> None:
         self._next_char()
         if self._current == '>':
             self._next_char()
@@ -464,7 +467,7 @@ class FEScanner:
         else:
             self._check_augmented_operator( ICTokenNode_GT, ICTokenNode_GE, '>', False )
     #-------------------------------------------------------------------------
-    def _less(self):
+    def _less(self) -> None:
         self._next_char()
         if self._current == '<':
             self._next_char()
@@ -482,7 +485,7 @@ class FEScanner:
         else:
             self._append_node( ICTokenNode_LT, '<' )
     #-------------------------------------------------------------------------
-    def _minus(self):
+    def _minus(self) -> None:
         self._next_char()
         if self._current == '-':
             self._next_char()
@@ -493,10 +496,10 @@ class FEScanner:
         else:
             self._check_augmented_operator( ICTokenNode_MINUS, ICTokenNode_AUG_MINUS, '-', False )
     #-------------------------------------------------------------------------
-    def _mod(self):
+    def _mod(self) -> None:
         self._check_augmented_operator( ICTokenNode_MOD, ICTokenNode_AUG_MOD, '%' )
     #-------------------------------------------------------------------------
-    def _plus(self):
+    def _plus(self) -> None:
         self._next_char()
         if self._current == '+':
             self._next_char()
@@ -504,7 +507,7 @@ class FEScanner:
         else:
             self._check_augmented_operator( ICTokenNode_PLUS, ICTokenNode_AUG_PLUS, '+', False )
     #-------------------------------------------------------------------------
-    def _quest(self):
+    def _quest(self) -> None:
         self._next_char()
         if self._current == '?':
             self._check_augmented_operator( ICTokenNode_OP_2QUEST, ICTokenNode_AUG_2QUEST, '??' )
@@ -512,7 +515,7 @@ class FEScanner:
             self._append_node( ICTokenNode_ANY_TYPE, '?' ) 
 
     #-------------------------------------------------------------------------
-    def _star(self):
+    def _star(self) -> None:
         self._next_char()
         if self._current == '*':
             self._check_augmented_operator( ICTokenNode_POWER, ICTokenNode_AUG_POWER, '**' )
@@ -522,10 +525,10 @@ class FEScanner:
             
     #=========================================================================
     #-------------------------------------------------------------------------
-    def _append_node(self, node_class, data='None'):
+    def _append_node(self, node_class, data='None') -> None:
         self.intermediate_code.append( node_class(self, data) )
     #-------------------------------------------------------------------------
-    def _check_skip_char(self, checked_car:str, skip:bool=True) -> bool:
+    def _check_skip_char(self, checked_car: str, skip: bool = True) -> bool:
         if self._current == checked_car:
             if skip:
                 self._skip_chars( 1, True )
@@ -533,42 +536,42 @@ class FEScanner:
         else:
             return False
     #-------------------------------------------------------------------------
-    def _check_chars(self, chars:str) -> bool:
+    def _check_chars(self, chars: str) -> bool:
         n = len( chars )
         return  self._get_next( n ) == chars
     #-------------------------------------------------------------------------
-    def _check_kw(self, kw:str) -> bool:
+    def _check_kw(self, kw: str) -> bool:
         n = len( kw )
         return  self._get_next( n ) == kw  and  self._is_sep( n+1 )
     #-------------------------------------------------------------------------
-    def _get_next(self, n:int) -> str:
+    def _get_next(self, n: int) -> str:
         end = min( n+self.idx+1, self.len_code )
         return  self.code[ self.idx+1:end ]
     #-------------------------------------------------------------------------
-    def _is_sep(self, offset:int) -> bool:
+    def _is_sep(self, offset: int) -> bool:
         return self.code[ self.idx + offset ] not in FEScanner._NAME_CHARS
     #-------------------------------------------------------------------------
-    def _next_char(self):
+    def _next_char(self) -> None:
         self.idx += 1
         self.num_coln += 1
     #-------------------------------------------------------------------------
-    def _next_line(self, append_nl:bool=False):
+    def _next_line(self, append_nl: bool = False) -> None:
         self.num_line += 1
         self.num_coln  = 1
         self._next_char()
         if append_nl:
             self._append_node( ICTokenNode_NL, 'new line' )
     #-------------------------------------------------------------------------
-    def _skip_chars(self, n:int, skip_space:bool=True):
+    def _skip_chars(self, n: int, skip_space: bool = True) -> None:
         self.idx += n
         self.num_coln += n
         if skip_space:
             self._skip_space()
     #-------------------------------------------------------------------------
-    def _skip_kw(self, kw:str):
+    def _skip_kw(self, kw: str) -> None:
         self._skip_chars( len(kw) )
     #-------------------------------------------------------------------------
-    def _skip_space(self):
+    def _skip_space(self) -> None:
         while  not self._eof  and  self._current in [ ' ', '\t' ]:
             self.idx += 1
             self.num_coln += 1

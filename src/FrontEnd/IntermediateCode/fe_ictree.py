@@ -33,7 +33,7 @@ class FEICTree:
     """
 
     #-------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self) -> None:
         '''
         Constructor.
         '''
@@ -41,7 +41,7 @@ class FEICTree:
         self._current = self._root
 
     #-------------------------------------------------------------------------
-    def __iadd__(self, ic_node:(FEICBlock,FEICNode)):
+    def __iadd__(self, ic_node: (FEICBlock,FEICNode)):
         '''
         Appends a new node into this block.
         '''
@@ -51,14 +51,14 @@ class FEICTree:
             self._current = ic_node
 
     #-------------------------------------------------------------------------
-    def up_level(self):
+    def up_level(self) -> None:
         '''
         Goes one level up in the tree, i.e. back to parent block in the IC Tree.
         '''
         self._current = self._current.parent
 
     #-------------------------------------------------------------------------
-    def walk(self):
+    def walk(self) -> None:
         '''
         Walks through this Intermediate Code tree.
         Walk-through is depth-first implemented.

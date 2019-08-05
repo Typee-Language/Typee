@@ -33,7 +33,7 @@ class UTNode:
     The class of internal nodes for trees.
     '''
     #---------------------------------------------------------------------
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
         '''Constructor'''
         self._children = []
         self.parent = parent
@@ -48,7 +48,7 @@ class UTNode:
     def __iter__(self):
         return self
     #---------------------------------------------------------------------
-    def __next__(self):
+    def __next__(self) -> None:
         for child in self._children:
             if isinstance( child, UTNode ):
                 next( child )
@@ -65,7 +65,7 @@ class UTLeaf:
     The class of ending nodes (i.e. leaves) for trees.
     '''
     #---------------------------------------------------------------------
-    def __init__(self, data=None):
+    def __init__(self, data=None) -> None:
         '''Constructor'''
         self.data = data
     #---------------------------------------------------------------------
@@ -87,7 +87,7 @@ class UTTree:
     programming. The final deception would only be yours.
     """    
     #-------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self) -> None:
         '''
         Constructor.
         Instantiates an empty tree.
