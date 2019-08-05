@@ -26,7 +26,7 @@ SOFTWARE.
 from Tests.FrontEnd.Scanner_Tokens.tokens_test_base import TokensTestBase
 
 #=============================================================================
-def test_simple_tokens():
+def test_simple_tokens() -> None:
     TokensTestBase( 'Simple Tokens TEST',
                     'Data/tokenization_simple_tokens.ty',
                     'Data/tokenization_simple_solution.py' )

@@ -26,7 +26,7 @@ SOFTWARE.
 from Tests.FrontEnd.Scanner_Tokens.tokens_test_base import TokensTestBase
 
 #=============================================================================
-def test_compound_tokens():
+def test_compound_tokens() -> None:
     TokensTestBase( 'Compound Tokens TEST',
                     'Data/tokenization_compound_tokens.ty',
                     'Data/tokenization_compound_solution.py' )    
