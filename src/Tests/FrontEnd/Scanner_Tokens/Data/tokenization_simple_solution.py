@@ -28,7 +28,6 @@ from FrontEnd.IntermediateCode.fe_icode_token_node import *
 
 #=============================================================================
 soluce = [
-    
     ICTokenNode_COMMENT( None, " Simple tokens -- tokenization test source" ),
     ICTokenNode_NL(),
     ICTokenNode_BRACKETOP(),

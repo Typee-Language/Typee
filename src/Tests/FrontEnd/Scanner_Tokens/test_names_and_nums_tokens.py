@@ -26,7 +26,7 @@ SOFTWARE.
 from Tests.FrontEnd.Scanner_Tokens.tokens_test_base import TokensTestBase
 
 #=============================================================================
-def test_names_and_nums_tokens():
+def test_names_and_nums_tokens() -> None:
     TokensTestBase( 'Names and Nums Tokens TEST',
                     'Data/tokenization_names_and_nums_tokens.ty',
                     'Data/tokenization_names_and_nums_solution.py' )

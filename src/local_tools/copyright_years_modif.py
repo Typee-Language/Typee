@@ -32,7 +32,7 @@ class CopyrightYearsModif:
     notices in directories and in files.
     """    
     #-------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self) -> None:
         '''
         Constructor.
         
@@ -41,7 +41,7 @@ class CopyrightYearsModif:
         self._current_year = date.today().year
 
     #-------------------------------------------------------------------------
-    def modify_file(self, file_path:str):
+    def modify_file(self, file_path: str):
         '''
         Modifies copyright notices in a specified file.
         '''
@@ -83,7 +83,7 @@ class CopyrightYearsModif:
         return self
 
     #-------------------------------------------------------------------------
-    def modify_files(self, files_list:list):
+    def modify_files(self, files_list: list):
         '''
         Modifies copyright notices in every specified files.
         '''
@@ -93,7 +93,7 @@ class CopyrightYearsModif:
         return self
 
     #-------------------------------------------------------------------------
-    def modify_directory(self, rootdir_path:str='.'):
+    def modify_directory(self, rootdir_path: str = '.'):
         '''
         Modifies copyright notices in every file of specified directory.
         '''
@@ -103,7 +103,7 @@ class CopyrightYearsModif:
         return self
 
     #-------------------------------------------------------------------------
-    def modify_directories(self, dirs_list:list):
+    def modify_directories(self, dirs_list: list):
         '''
         Automates the modification of coyright notices in many directories.
         '''
