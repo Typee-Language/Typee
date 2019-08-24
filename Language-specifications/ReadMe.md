@@ -10,14 +10,14 @@ The very first version of these specifications is not numbered. See file
 `typee_specs_LL1.grm`.
 
 Next versions are all numbered: `...-v2.grm`, `...-v3.grm`, ..., 
-`...-v9.grm` and currently `...-v9-3.grm` as the very last version of 
+`...-v9.grm` and currently `...-v10.grm` as the very last version of 
 document.
 
 You'll notice that version `v4` is missing. Unfortunately, it has been lost 
 before being stored here...
 
 Finally, since version `v8`, a second version of the specifications is 
-provided: from `...-v8-EBNF.grm` to `...-v9-3-EBNF.grm`. 
+provided: from `...-v8-EBNF.grm` to `...-v10-EBNF.grm`. 
 
 Notice that Typee language is specified with a formal, unambiguous, LL(1) 
 grammar.
