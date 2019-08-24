@@ -61,6 +61,8 @@ class FEICodeTokens:
     TK_PRE          = 0
     
     TK_OP_GRLE      = 0
+    TK_OP_LEGR      = 0             ##
+    TK_OP_2AROB     = 0             ##
     TK_OP_2EXCL     = 0
     TK_OP_2COLN     = 0
     TK_OP_2QUEST    = 0
@@ -83,6 +85,8 @@ class FEICodeTokens:
     TK_AUG_AROBASE  = 0
     
     TK_AUG_GRLE     = 0
+    TK_AUG_LEGR     = 0             ##
+    TK_AUG_2AROB    = 0             ##
     TK_AUG_2EXCL    = 0
     TK_AUG_2COLN    = 0
     TK_AUG_2QUEST   = 0
@@ -115,6 +119,7 @@ class FEICodeTokens:
     
     TK_INTEGER      = 0
     TK_FLOAT        = 0
+    TK_NUMERIC      = 0             ##
     TK_STRING       = 0
     TK_ANY_TYPE     = 0
     TK_SCALAR_TYPE  = 0
@@ -260,6 +265,8 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_PRE ]         : 'pre',
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_GRLE ]     : '><',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_LEGR ]     : '<>',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_2AROB ]    : '@@',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_2EXCL ]    : '!!',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_2COLN ]    : '::',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_OP_2QUEST ]   : '??',
@@ -282,6 +289,8 @@ class FEICodeTokensData:
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_AROBASE ] : '@=',
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_GRLE ]    : '><=',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_LEGR ]    : '<>=',
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_2AROB ]   : '@@=',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_2EXCL ]   : '!!=',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_2COLN ]   : '::=',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_2QUEST ]  : '??=',
@@ -314,6 +323,7 @@ class FEICodeTokensData:
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_INTEGER ]     : None,
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_FLOAT ]       : None,
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_NUMERIC ]     : None,
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_STRING ]      : None,
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_ANY_TYPE ]    : '?',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_SCALAR_TYPE ] : None,
