@@ -1,0 +1,691 @@
+/*****
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+
+Permission is hereby granted,  free of charge,  to any person obtaining a copy
+of this software and associated documentation files (the "Software"),  to deal
+in the Software without restriction, including  without  limitation the rights
+to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  TORT OR OTHERWISE, ARISING FROM,
+OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*****/
+
+
+/*****   CODE FILE   ************************************************/
+
+<code file>             ::=  [<statements list>] <ENDOFFILE>
+
+
+
+
+/*****   ATOMS   ****************************************************/
+
+<atom element>              ::= <atom>  |
+                                <dotted name> [<atom element'>]  |
+                                [ <const qualifier> ] <scalar type>
+                                    <type casting>
+                            
+<atom element'>             ::= <incr or decr>  |
+                                <for comprehension>  |
+                                '??' <expression>  ( '??' <expression> )*  | 
+                                <atom element''>
+
+<atom element''>            ::= [ ( <function call> <atom element'''>   |
+                                    <subscription or slicing> <atom element'''> )*  |
+                                  <is instance of> ]
+
+<atom element'''>           ::= ( [ '.' <identifier> ] <atom element''> )*
+
+<atom>                      ::= (<decr>|<incr>) <dotted name> [<decr>|<incr>] |
+                                <enclosure>  |  <reference>  |  <scalar>      |
+                                <string>     |  <boolean>
+
+<boolean>                   ::= <TRUE>  |  <FALSE>
+
+<bracket form>              ::= '[' <expression> <list or map form> ']' 
+
+<decr>                      ::= '--' 
+
+<enclosure>                 ::= <bracket form>  |  <parenthesis form>
+
+<incr>                      ::= '++' 
+
+<is instance of>            ::= '->' <dotted name>
+
+<list or comprehension>     ::= [ <expr list'>  |  <for comprehension> ]
+
+<list or map form>          ::= <list form>  |  <map form>
+
+<list form>                 ::= '[' <expression> <list or comprehension> ']' 
+
+<parenthesis form>          ::= '(' <expr list> ')' 
+
+<reference>                 ::= '@' <dotted name>
+
+<slice form>                ::= ':' [<expression>]  [ ':' [<expression>] ]
+
+<subscription or slicing>   ::= '[' <expression>
+                                    ( <expr list'> ']'    |
+                                      <if comprehension>  |
+                                      <slice form> ( ']' | '\)' ) )
+
+<type casting>              ::= '(' <expression> ')' 
+
+
+
+/*****   CLASSES   *******************************************/
+
+<class definition>  ::= 'class' <identifier> [<template def>]
+                            <inheritance> <statements block>
+
+<inheritance>       ::= [ ':' <inheritance item> ( ',' <inheritence item> )* ]
+
+<inheritance item>  ::= [<access qualifier>] <dotted name> [<template args>]
+
+
+
+/*****   COMPREHENSION   ********************************************/
+
+<for comprehension>     ::= 'for' '(' <target list> 'in' <or test>
+                                <iter comprehension> ')' 
+
+<if comprehension>      ::= 'if' '(' <condition or unnamed func> ')' 
+                                <iter comprehension>
+
+<iter comprehension>    ::= [ <for comprehension>  |  <if comprehension> ]
+
+
+
+
+/*****   CONDITIONS and COMPARISONS   *******************************/
+
+<condition>         ::= <or test>  [ 'if' <or test> 'else' <expression> ]
+
+<and test>          ::= <not test>  [ 'and' <not test> ]
+
+<comparison>        ::= <bitor expr>  ( (<comp operator> [<template args>] |
+                                            <comp operator'> 
+                                            [<spaced template args>])
+                                                <bitor expr> )*
+
+<comp operator>     ::= '<='  |  '=='  |  '!='  |  '>='  |
+                        'in'  |  'is' [ 'not' ]  |  'not' 'in' 
+
+<comp operator'>    ::=  '<'  |  '>'  |  '<=>' 
+
+<condition or unnamed func> ::= <or test>  |  <unnamed func>
+
+<not test>          ::= 'not' <not test>  |  <comparison>
+
+<or test>           ::= <and test>  [ 'or' <and test> ]
+
+
+
+/*****   EXPRESSIONS   **********************************************/
+
+<expression>            ::= <condition>  |  <unnamed func>
+
+<parenthesised expr>    ::= '(' <expression> ')' 
+
+<arithmetic expr>       ::= <term>  ( <op_add> [<template args>] <term> )*
+
+<expr list>             ::= <expression>  ( ',' <expression> )*
+
+<factor>                ::= <atom element>
+                                ( <op_power> [<template args>] <unary expr> )*
+
+<identifier>            ::= (<alpha char> | '_' ) (<alpha num char> | '_' )*
+
+<map form>              ::= ':' <expression> <map list or comprehension>
+
+<map item>              ::= <expression> ':' <expression>
+
+<map list>              ::= [ ',' <map item>]*
+             
+<map list or comprehension> ::= [ ',' <map item>]+  |  <for comprehension>
+
+<bitand expr>           ::= <shift expr> 
+                                ( '&' [<template args>] <shift expr> )*
+
+<bitor expr>            ::= <bitxor expr> 
+                                ( '|' [<template args>] <bitxor expr> )*
+
+<bitxor expr>           ::= <bitand expr> 
+                                ( '^' [<template args>] <bitand expr> )*
+
+<shift expr>            ::= <arithmetic expr>
+                                ( ( ( '<<' | '<<<' ) [<spaced template args>]  |
+                                    ( '>>' | '>>>' ) [<template args>] )
+                                    <arithmetic expr> )*
+
+<term>                  ::= <factor> ( ( ((<op_mul> | <op_user>)
+                                              [<template args>]) |
+                                          '><' [<spaced template args>] )
+                                        <factor> )*
+             
+<unary expr>            ::= [ '+' | '-' | '~' | '#' ]  <factor>
+
+
+/*****   FUNCTIONS   ************************************************/
+
+<function declaration>      ::= [<template def>]  <function args declaration>
+
+<function definition>       ::= [<template def>]  <function args declaration>
+                                    [ 'exclude' <languages> ]
+                                    <statements block>
+
+<abstract or final qualif>  ::= 'abstract' | 'final' 
+
+<call operator>             ::= '(' ')' 
+
+<function args declaration> ::= '(' [<typed args list>] ')' 
+
+<function call>             ::= [<template args>] '(' <function call args> ')' 
+
+<function call args>        ::= <expression> <function call args'>  |  EPS
+<function call args'>       ::= ',' <function call args">  |
+                                <for comprehension>  |  EPS
+<function call args">       ::= <expression> <function call args'>  |
+                                <ellipsis> <identifier>
+
+<op_add>                    ::= '+'   |  '-' 
+<op_mul>                    ::= '*'   |  '/'  |  '%' 
+<op_power>                  ::= '**'  |  '^^' 
+<op_user>                   ::= '@@'  |  '><'  |  '<>'  |  '!!'  |  '::' 
+
+<operator>                  ::= '<='  |  '=='  |  '!='  |  '>='  |
+                                '&'   |  '|'   |  '^'  |  '@'  |
+                                '++'  |  '--'  |  '#'  |
+                                'in'  |
+                            <op_add>  |  <op_mul>  |  <op_power>  |
+                            <op_user>  |
+                            <assign op>  |
+                            <cast op>
+<operator'>                 ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>' 
+
+<operator definition>       ::= 'operator' 
+                                    ( ( (<operator> [<template def>] |
+                                         <operator'> [<spaced template def>]) 
+                                      <function args declaration> )  |
+                                      ( <call operator> [<template def>] ) )
+                                    <statements block>
+
+<typed args list>           ::= <TYPE> <identifier> [',' <TYPE> <identifier>]*
+
+<unnamed>                   ::= 'unnamed'  |  'lambda' 
+
+<unnamed func>              ::= <unnamed> [<TYPE>] <function args declaration> 
+                                    <statements block>
+
+
+
+
+
+/*****   MISC   *****************************************************/
+
+<alpha char>                    ::= 'A'...'Z'  |  'a'...'z' 
+
+<alpha num char>                ::= <alpha char>   |  <num char>
+
+<any embedded code char>        ::= u0x0000...u0xFFFF - ['}']
+
+<any escaped char>              ::= '\\' u0x0000...u0xFFFF - ['\n', '\r',
+                                                              '\f', u0x00]
+
+<any non newline char>          ::= u0x0000...u0xFFFF - [ '\n' , '\r' , '\f' ]
+
+<any non star char>             ::= u0x0000...u0xFFFF - [ '*' ]
+
+<any string quote char>         ::= u0x0000...u0xFFFF - [ "'", "\\", "\n",
+                                                         "\r", "\f", u0x00 ]
+<any string doublequote char>   ::= u0x0000...u0xFFFF - [ '"', '\\', '\n',
+                                                         '\r', '\f', u0x00 ]
+
+<binary char>                   ::= '0'  |  '1' 
+
+<ellipsis>                      ::= '...' 
+
+<end line>                      ::= <NEWLINE>  |  <ENDOFFILE>
+
+<ENDOFFILE>                     ::= u0x00
+
+<escaped char>                  ::= '\\' ( <alpha char> |
+                                           '0' <octal or hexa char> )
+
+<octal or hexa char>            ::= <octal char> <octal char> <octal char> | 
+                                    ( 'x' | 'X' ) <hexa char> <hexa char>
+                                        [<hexa char> <hexa char>]
+
+<FALSE>                         ::= 'False'  |  'false' 
+
+<hexa char>                     ::= <num char> | 'A'...'F' | 'a'...'f' 
+
+<ME>                            ::= 'me' 
+
+<NEWLINE>                       ::= '\n'  |  '\r'  |  '\f' 
+
+<NONE>                          ::= 'None'  |  'none' 
+
+<num char>                      ::= '0'...'9' 
+
+<parenth close>                 ::= ')' 
+<parenth open>                  ::= '(' 
+
+<octal char>                    ::= '0'...'7' 
+
+<TRUE>                          ::= 'True'  |  'true' 
+
+
+
+
+/*****   SCALARS   **************************************************/
+
+<scalar>            ::= '0' <octal hexa binary>  |
+                        '1' ... '9' [<decimal part>] 
+                            [<fraction part> [<exponent part>]]
+
+<binary number>     ::= <binary char> (['_'] <binary char>)*
+                     
+<decimal part>      ::= <num_char> (['_'] <num_char>)*
+
+<exponent part>     ::= ( 'e' | 'E' ) [ '+' | '-' ] <decimal part>
+
+<fraction part>     ::= '.' <decimal part>
+
+<hexadecimal number>     ::= <hexa char> ([ '_' ] <hexa char>)*
+
+<integer number>    ::= '1' ... '9' [<decimal part>]  |  '0' <octal hexa binary>
+             
+<octal hexa binary> ::= <octal number>  |
+                            ( 'b' | 'B' ) <binary number>  |
+                            ( 'x' | 'X' ) <hexadecimal number>
+
+<octal number>      ::= <octal char> ([ '_' ] <octal char>)*
+
+
+
+
+/*****   STATEMENTS   ****************************************/
+
+<statements list>           ::= <statement>  ( <statement> )*
+
+<statement>                 ::= <empty statement>   |  <compound statement>  |
+                                <simple statement>  |  <statements block>
+
+<compound statement>        ::= <assign decl def func-call statement>  |
+                                <embed statement>                      |
+                                <exclude statement>                    |
+                                <for statement>                        |
+                                <forever statement>                    |
+                                <if statement>                         |
+                                <repeat statement>                     |
+                                <switch statement>                     |
+                                <try statement>                        |
+                                <while statement>                      |
+                                <with statement>
+
+<empty statement>           ::= <comment>  |  <NEWLINE>
+
+<simple statement>          ::= ( <assert statement> | <del statement>    |
+                                  <ensure statement> | <flow statement>   |
+                                  <file endianness>  | <file flushing>    |
+                                  <import statement> | <nop statement>    |
+                                  <access protection statement> | 
+                                  <raise statement>  | <require statement> )
+                                    <simple statement end>
+
+<simple statement end>      ::= ';' 
+
+<statements block>          ::= '{' [<statements list>] '}'  |
+                                (<empty statement>)*  |
+                                <compound statement>  |  <simple statement>
+
+
+<statements block>  ::= '{' <statements list> '}' 
+                     |  <empty statement> <statements block>
+                     |  <compound statement>
+                     |  <simple statement>
+
+
+<assert statement>          ::= 'assert' <expression> ( ',' <expression>)*
+
+<assign decl def func-call statement>   ::= [<access qualifier>] 
+                                                <decl or def statement>  |
+                                            <dotted name> 
+                                                <assign or func-call statement> 
+                                                <simple statement end>
+
+<access protection statement>  ::= ':' <access qualifier> ':' 
+
+<access qualifier>          ::= 'hidden'  |  'local'  |  'private'  |
+                                'protected'  |  'public' 
+
+<assign op>                 ::= '='  |  <augmented assign op>
+
+<assign or func-call statement> ::= <target list'> <assignment statement>  |
+                                    <function call>
+
+<assignment statement>      ::= <assign op> <expr list>
+
+<augmented assign op>       ::= '+='   |  '-='   |
+                                '*='   |  '/='   |  '%='  |
+                                '&='   |  '|='   |  '^='  |  '@='   |
+                                '<<='  |  '<<<=' |  '>>=' |  '>>>=' |
+                                '**='  |  '^^='  |
+                                '@@='  |  '><='  |  '<>='  |
+                                '!!=' |  '::='  |  '??=' 
+
+<case>                      ::= 'case' <expr list> <statements block>
+
+<cast op>                   ::= 'cast' <identifier>
+
+<comment>                   ::= '//' ( (<any non newline char>)* | 
+                                        <end line> | <ENDOFFILE>  )  |
+                                '/*' <multi lines comment>
+
+<multi lines comment>       ::= (<any non star char> | <NEWLINE>)*  |
+                                '*' ( '/' | <multi lines comment> )
+
+<decl constructor or decl end>  ::= ( '.' <identifier> )* 
+                                        <decl or def statement'''>  |
+                                    <function definition'>
+
+<decl or def statement>     ::= [<static qualifier>] <decl or def statement'>  |  
+                                <class definition>  |
+                                <forward decl>
+
+<decl or def statement'>    ::= <abstract or final qualif> 
+                                    <method or operator definition>  |
+                                <volatile qualifier> <type> <identifier> 
+                                    [<memory address>] <simple statement end>  |
+                                <type alias> <simple statement end>  |
+                                <decl or def statement''>
+
+<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  | 
+                                <enum definition>  |
+                                <identifier> <decl constructor or decl end>
+
+<decl or def statement'''>  ::= <identifier> <decl or def statement''''>  |
+                                <operator definition>
+
+<decl or def statement''''> ::= <function definition>  |  
+                                [<var declaration or assignment>] ';' 
+
+<declaration statement>     ::= ',' <identifier> ['=' <expression>] 
+                                    ( ',' <identifier> [ '=' <expression> ] )*
+
+<del statement>             ::= 'del' <identifiers list>
+                      
+<dotted as name>            ::= <dotted name> [ 'as' <identifier> ]
+
+<dotted as names>           ::= <dotted as name> ( ',' <dotted as name> )*
+
+<dotted name>               ::= <identifier> ( '.' <identifier> )*
+
+<embed statement>           ::= 'embed' <language>
+                                    (<dotted name> <simple statement end>  |
+                                     <embedded language code>)
+
+<embedded language code>    ::= '{{' <embedded language code'>
+<embeded language code'>    ::= <any embedded code char> <embeded language code'>  |
+                                '}' <embedded language code">
+<embedded language code">   ::= <any embedded code char> <embeded language code'>  |
+                                '}' [ 'exit' ]
+
+<ensure statement>          ::= 'ensure' <expression> ( ',' <expression> )*
+
+<enum definition>           ::= <enum type> <identifier> '{' <enum list> '}' 
+
+<enum item>                 ::= <identifier> [ '=' <expression> ]
+
+<enum list>                 ::= <enum item> ( ',' <enum item> )*
+
+<exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}' 
+
+<file endianness>           ::= ( '<' | '>' ) <expression> 
+                                    ( ( '<<' | '>>' | '>>>' ) <expression> )*
+                             
+<file flushing>             ::= '!' <dotted name> [<file flushing'>]
+<file flushing'>            ::= '(' <expression> [<file flushing''>] ')' |
+                                '[' <expression> ']' '=' <expression>    |
+                                '>>' <expression>                        |
+                                '>>>' <expression>
+<file flushing''>           ::= ',' <expression> <file flushing'>
+
+<flow statement>            ::= 'break'  |  'continue'  |
+                                <raise statement>  |  <return statement>
+
+<for statement>             ::= 'for' '(' <target list> 'in' <expr list> ')' 
+                                    <statements block>
+                                    ['otherwise' <statements block>]
+
+<forever statement>         ::= 'forever' '(' ')' <statements block>
+
+<forward>                   ::= 'forward'  |  'fwd' 
+
+<forward decl>              ::= <forward> ( ([<static qualifier>]
+                                                 <forward decl'>) | 
+                                            <fwd class decl> )
+<forward decl'>             ::= <volatile qualifier> <type> <identifier>  |
+                                <fwd type decl>  |
+                                <identifier> <fwd decl constructor>  |
+                                <TYPE'> <forward decl''> 
+                                    ( <operator declaration>  |
+                                      <identifier> (<fwd var decl> | 
+                                                    <function declaration>) )
+
+<fwd class decl>            ::= 'class' <identifier> <template def> 
+                                    [<inheritance>]
+
+<fwd decl constructor>      ::= ( '.' <identifier> )* 
+                                    ( <operator declaration>  |
+                                      <identifier> 
+                                          (<fwd var decl> | 
+                                           <function declaration>) )  |
+                                    <function args declaration>
+
+<fwd var decl>              ::= ( ',' <identifier> )*
+
+<identifiers list>          ::= <dotted name> ( ',' <dotted name> )*
+
+<if statement>              ::= 'if' <parenthesised expr> 
+                                    <statements block> [<elif statement'>]
+<elif statement'>           ::= ( ( 'elseif' | 'elif' | 'elsif' )
+                                       <parenthesized expr>
+                                       <statements block>   )*  |
+                                ( 'else' | 'otherwise' ) <statements block>
+
+<import as name>            ::= <identifier> [ 'as' <identifier> ]
+
+<import as names>           ::= <import as name> ( ',' <import as name> )*
+
+<import but>				::= 'but' <identifier> ( ',' <identifier> <import but'> )*
+
+<import from>               ::= 'from' ( '.' )* <dotted name> 'import' 
+                                    ( 'all' [<import but>] |
+                                      ( '(' <import as names> '\)' ) |
+                                       <import as names> )
+
+<import name>               ::= 'import' <dotted as names>
+
+<import statement>          ::= <import name>  |  <import from>
+
+<language>                  ::= 'cpp'  |  'cs'  |  'csharp'  |
+                                'java'  |  'python'  |  'py' 
+
+<languages>                 ::= <language> ( ',' <language> )*
+
+<memory address>            ::= '@' <integer number>
+
+<method or operator definition> ::= [<TYPE>] (<operator definition> |
+                                    <identifier> <function definition>)                                 
+
+<nop statement>             ::= 'nop'  |  'pass' 
+
+<raise statement>           ::= 'raise' <expression> ['from' <expression>]
+
+<repeat statement>          ::= 'repeat' <statements block> 'until' 
+                                    <parenthesised expr> ';' 
+
+<require statement>         ::= 'require' <expression> [',' <expression>]
+
+<return statement>          ::= ( 'ret' | 'return' ) <expr list>
+
+<switch block>              ::= (<case> [<switch block>])*
+
+<switch statement>          ::= 'switch' <parenthesised expr>
+                                    '{' [<switch block>] '}' 
+                                    ['otherwise' <statements block>]
+
+<target>                    ::= <dotted name> (<subscription or slicing>)*
+
+<target list>               ::= <typed target> ( ',' <typed target> )*
+
+<try otherwise>             ::= 'otherwise' '('                                             ##
+                                    [ 'Exception' 'as' <identifier> ]  ')'                  ##
+
+<try except>                ::= 'except' '(' 
+                                    [ <try expr as> ( ',' <try expr as> )*  |               ##
+                                      'all' [ 'as' <identifier> ] ]    ')'                  ##
+
+<try expr as>               ::= <expression>  [ 'as' <identifier> ]                         ##
+
+<try finally>               ::= 'finally' 
+
+<try statement>             ::= 'try' <statements block> <try except>
+                                    <statements block>
+                                    (<try except> <statements block>)*
+                                    [<try otherwise> <statements block>]                    ##
+                                    [<try finally> <statements block>]
+
+<type alias>                ::= 'type' <TYPE> 'as' <identifier>
+                                    ( ',' <TYPE> 'as' <identifier> )*
+
+<typed target>              ::= <type'> <target>  |
+                                <dotted name> [<dotted name> |
+                                               <templated type spec>]
+                                    (<subscription or slicing>)*
+
+<var declaration or assignment> ::= ['=' <expression>] ',' <identifier> 
+                                        (['=' <expression>] ',' <identifier>)*
+
+<while statement>           ::= 'while' <parenthesised expr> <statements block> 
+                                    ['otherwise' <statements block>]
+
+<with item>                 ::= <expression> ['as' <target>]
+
+<with items list>           ::= <with item> ( ',' <with item> )*
+
+<with statement>            ::= 'with' <with items list> <statements block>
+
+
+
+
+/*****   STRINGS   **************************************************/
+
+<string>        ::= <single string> (<single string>)* 
+                        ( '.' <identifier> <function call> )*
+
+
+<single string> ::= "'" (<any escaped char> | <any string quote char>)* "'"  |
+                    '"' (<any escaped char> | <any string doublequote char>)* '"' 
+
+
+
+
+
+/*****   TEMPLATES   *****************************************/
+
+<spaced template args>      ::= ' <' <template args'> '>' 
+
+<spaced template def>       ::= ' <' <template def'> '>' 
+
+<template args>             ::= '<' [<condition> ( ',' <condition>)* ] '>' 
+
+<template def>              ::= '<' (<identifier> |
+                                     <const qualifier> <template def const name>) 
+                                    ( ',' (<identifier> | 
+                                           <const qualifier>
+                                               <template def const name>) )* '>' 
+
+<template def const name>   ::= <scalar type or dotted name> 
+                                    <identifier> [ '=' <expression> ]
+
+
+
+
+/*****   TYPES   ****************************************************/
+
+<TYPE>                  ::= [<const qualifier>] <type>                
+<TYPE'>                 ::= <const qualifier> <type>  |  <type'>
+
+<type>                  ::= <type'>  |  <templated type> [<dimensions>]
+<type'>                 ::= <auto type>             |
+                            '(' <types list> ')'    |
+                            <container type>        |
+                            <file type>             |
+                            <NONE>                  |
+                            <scalar type> [<dimensions>]
+
+
+<array type>            ::= 'array' <declared contained type>
+
+<auto type>             ::= '?' [ 'in' '(' <types list> ')' ]
+
+<const qualifier>       ::= 'const' 
+
+<contained type>        ::= <declared contained type>
+
+<container type>        ::= <array_type>  |  <enum type>  |
+                            <list type>   |  <map type>   |  <set type>
+
+<declared contained type>   ::= '<' <TYPE> '>' 
+
+<dimensions>            ::= ( '[' <integer number> | <dotted name> ']' )*
+
+
+
+<scalar type or dotted name>    ::= <scalar type>  |  <dotted name>
+
+<enum type>             ::= 'enum' 
+
+<file type>             ::= 'file' [<contained type>]
+
+<list type>             ::= 'list' [<contained type>]
+
+<map type>              ::= 'map' [<contained type>]
+
+<scalar type>           ::= 'bool'    |  'char'    |  'char16' |
+                            'float32' |  'float64' |
+                            'int8'    |  'int16'   |  'int32'  |  'int64'   |
+                            'uint8'   |  'uint16'  |  'uint32' |  'uint64'  |
+                            'slice'   |  'str'     |  'str16' 
+                            '_float_' |  '_int_'   |  '_uint'  |  '_numeric_' 
+
+<set type>              ::= 'set' [<contained type>]
+
+<static qualifier>      ::= 'static' 
+
+<templated type>        ::=  <dotted name> [<templated type spec>]
+<templated type spec>   ::= '<' <types and exprs list> '>' 
+
+<types and exprs list>  ::= (<expression> | 
+                             <templated type>) ( ',' (<expression> |
+                                                      <templated type>) )*
+
+<types list>            ::= <TYPE> ( ',' <TYPE> )*
+
+<volatile qualifier>    ::= 'volatile' 
+
+
+/*==================================================================*/
