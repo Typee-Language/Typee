@@ -402,7 +402,11 @@ class FEScanner:
     #=========================================================================
     #-------------------------------------------------------------------------
     def _arobase(self) -> None:
-        self._check_augmented_operator( ICTokenNode_AROBASE, ICTokenNode_AUG_AROBASE, '@' )
+        self._next_char()
+        if self._current == '@':
+            self._check_augmented_operator( ICTokenNode_OP_2AROB, ICTokenNode_AUG_2AROB, '@@' )
+        else:
+            self._check_augmented_operator( ICTokenNode_AROBASE, ICTokenNode_AUG_AROBASE, '@', False )
     #-------------------------------------------------------------------------
     def _assign(self) -> None:
         self._check_augmented_operator( ICTokenNode_ASSIGN, ICTokenNode_EQ, '=' )
@@ -482,6 +486,8 @@ class FEScanner:
                 self._append_node( ICTokenNode_LEG, '<=>' )
             else:
                 self._append_node( ICTokenNode_LE, '<=' )
+        elif self._current == '>':
+            self._check_augmented_operator( ICTokenNode_OP_LEGR, ICTokenNode_AUG_LEGR, '<>' )
         else:
             self._append_node( ICTokenNode_LT, '<' )
     #-------------------------------------------------------------------------
@@ -632,6 +638,10 @@ class FEScanner:
     }
     
     _KEYWORDS = {
+        '_float_':      ICTokenNode_SCALAR_TYPE,
+        '_int_':        ICTokenNode_SCALAR_TYPE,
+        '_numeric_':    ICTokenNode_SCALAR_TYPE,
+        '_uint_':       ICTokenNode_SCALAR_TYPE,
         'abstract':     ICTokenNode_ABSTRACT,
         'all':          ICTokenNode_ALL,
         'and':          ICTokenNode_AND,
