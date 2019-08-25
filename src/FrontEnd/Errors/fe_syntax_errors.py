@@ -187,6 +187,7 @@ class FESyntaxErrors:
     NOT_COND                    = 'missing or badly formed condition expression after keyword "not"',
     NOT_IN                      = 'missing keyword "in" after keyword "not"',
     
+    OP_2QUEST_EXPR              = 'mising or badly formed expression after keyword "??"',
     OP_IDENT_DECL_DEF           = 'missing keyword operator in definition instruction or badly formed identifier in declaration instruction',
     OPERATOR_ARGS               = 'missing or badly formed arguments specification in operator definition',
     OPERATOR_BODY               = 'missing instruction or block of instructions in operator definition',
