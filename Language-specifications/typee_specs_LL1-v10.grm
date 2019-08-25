@@ -40,8 +40,8 @@ SOFTWARE.
 <atom element''>            ::= <scalar type> <type casting>                        ## modified         
 <atom element'''>           ::= ##<dotted name'> <atom element'''>                  ## suppressed       
                              |  <function call> <atom element''''>                  ## modified         
-                             |  <subscription or slicing> <atom element''''>        ## modified         
                              |  <is instance of>
+                             |  <subscription or slicing> <atom element''''>        ## modified         
                              |  EPS
 <atom element''''>          ::= <dotted name'> <atom element'''>                    ## new              
                              |  <atom element'''>                                   ## new              
