@@ -284,6 +284,7 @@ class FEParser:
         #         |  <reference>
         #         |  <scalar>
         #         |  <string>
+        #         |  <boolean>
         #=======================================================================
         if self._decr():
             if not self._dotted_name():
@@ -305,27 +306,48 @@ class FEParser:
         #=======================================================================
         # <atom'> ::= <incr or decr>
         #          |  <for comprehension>
+        #          |  '??' <expression> <atom''> 
         #=======================================================================
-        return self._for_comprehension() or self._incr_or_decr()
-        ## CAUTION: this order of calls is MANDATORY
-        
+        if self._current.is_OP_2QUEST():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.OP_2QUEST_EXPR )
+            return self._atom2()
+        else:
+            return self._for_comprehension() or self._incr_or_decr()
+            ## CAUTION: this order of calls is MANDATORY
+            
+    #-------------------------------------------------------------------------
+    def atom2(self) -> bool:
+        #=======================================================================
+        # <atom''> ::= '??' <expression> <atom''>
+        #          |  EPS
+        #=======================================================================
+        while self._current.is_OP_2QUEST():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.OP_2QUEST_EXPR )
+        return True
+
     #-------------------------------------------------------------------------
     def _atom_element(self) -> bool:
         #===============================================================================
         # <atom element> ::= <atom> 
         #                 |  <dotted name> <atom element'>
-        #                 |  <const qualifier> <atom element'''>
-        #                 |  <atom element'''>
+        #                 |  <const qualifier> <atom element''>
+        #                 |  <atom element''>
         #===============================================================================
         if self._atom():
             return True
         elif self._dotted_name():
             return self._atom_element1()
         elif self._const_qualifier():
-            if not self._atom_element3():
+            if not self._atom_element2():
                 self._append_error( FESyntaxErrors.SCALAR_TYPE )
             return True
-        elif self._atom_element3():
+        elif self._atom_element2():
             return True
         else:
             return False
@@ -334,40 +356,36 @@ class FEParser:
     def _atom_element1(self) -> bool:
         #=======================================================================
         # <atom element'> ::= <atom'>
-        #                  |  <atom element''>
+        #                  |  <atom element'''>
         #=======================================================================
-        return self._atom1() or self._atom_element2()
+        return self._atom1() or self._atom_element3()
 
     #-------------------------------------------------------------------------
     def _atom_element2(self) -> bool:
         #=======================================================================
-        # <atom element''  > ::= <dotted name'> <atom element''>
-        #                     |  <function call> <atom element''>
-        #                     |  <is instance of>
-        #                     |  <scalar type casting>
-        #                     |  <subscription or slicing> <atom element''>
-        #                     |  EPS
-        #=======================================================================
-        while self._dotted_name1() or \
-                self._function_call() or \
-                self._subscription_or_slicing():
-            continue
-        if self._is_instance_of() or self._scalar_type_casting():
-            return True
-        else:
-            return True
-
-    #-------------------------------------------------------------------------
-    def _atom_element3(self) -> bool:
-        #=======================================================================
-        # <atom element'''> ::= <scalar type> <scalar type casting>
+        # <atom element''> ::= <scalar type> <scalar type casting>
         #=======================================================================
         if self._scalar_type():
-            if not self._scalar_type_casting():
+            if not self._type_casting():
                 self._append_error( FESyntaxErrors.CASTING_PAROP )
             return True
         else:
             return False
+
+    #-------------------------------------------------------------------------
+    def _atom_element3(self) -> bool:
+        #=======================================================================
+        # <atom element'''> ::= <function call> <atom element''''>
+        #                     |  <is instance of>
+        #                     |  <subscription or slicing> <atom element''''>
+        #                     |  EPS
+        #=======================================================================
+        while self._function_call() or self._subscription_or_slicing():
+            continue
+        if self._is_instance_of():
+            return True
+        else:
+            return True
 
     #-------------------------------------------------------------------------
     def _augmented_assign_op(self) -> bool:
@@ -387,29 +405,39 @@ class FEParser:
         #                        |  '**='
         #                        |  '^^='
         #                        |  '@='
+        #                        |  '@@='
         #                        |  '><='
+        #                        |  '<>='
         #                        |  '!!='
         #                        |  '::='
         #                        |  '??='
         #===============================================================================
-        return isinstance( self._current, (ICTokenNode_AUG_2COLN,
-                                           ICTokenNode_AUG_2EXCL, 
-                                           ICTokenNode_AUG_2QUEST, 
-                                           ICTokenNode_AUG_AROBASE,
-                                           ICTokenNode_AUG_BITAND,
-                                           ICTokenNode_AUG_BITOR,
-                                           ICTokenNode_AUG_BITXOR,
-                                           ICTokenNode_AUG_DIV,
-                                           ICTokenNode_AUG_GRLE,
-                                           ICTokenNode_AUG_MINUS,
-                                           ICTokenNode_AUG_MOD,
-                                           ICTokenNode_AUG_MUL,
-                                           ICTokenNode_AUG_PLUS,
-                                           ICTokenNode_AUG_POWER,
-                                           ICTokenNode_AUG_SHIFT0L,
-                                           ICTokenNode_AUG_SHIFT0R,
-                                           ICTokenNode_AUG_SHIFTL,
-                                           ICTokenNode_AUG_SHIFTR) )
+        if isinstance( self._current, (ICTokenNode_AUG_2AROB,
+                                       ICTokenNode_AUG_2COLN,
+                                       ICTokenNode_AUG_2EXCL, 
+                                       ICTokenNode_AUG_2QUEST, 
+                                       ICTokenNode_AUG_AROBASE,
+                                       ICTokenNode_AUG_BITAND,
+                                       ICTokenNode_AUG_BITOR,
+                                       ICTokenNode_AUG_BITXOR,
+                                       ICTokenNode_AUG_DIV,
+                                       ICTokenNode_AUG_GRLE,
+                                       ICTokenNode_AUG_LEGR,
+                                       ICTokenNode_AUG_MINUS,
+                                       ICTokenNode_AUG_MOD,
+                                       ICTokenNode_AUG_MUL,
+                                       ICTokenNode_AUG_PLUS,
+                                       ICTokenNode_AUG_POWER,
+                                       ICTokenNode_AUG_SHIFT0L,
+                                       ICTokenNode_AUG_SHIFT0R,
+                                       ICTokenNode_AUG_SHIFTL,
+                                       ICTokenNode_AUG_SHIFTR) ):
+            self._append_syntaxic_node()
+            self._next_token_node()
+            return True
+        else:
+            return False
+
 
     #-------------------------------------------------------------------------
     def _auto_type(self) -> bool:
@@ -2580,24 +2608,25 @@ class FEParser:
         #=======================================================================
         # <operator> ::= '<='  |  '=='  |  '!='  |  '>='
         #             |  '+'   |  '-'   |  '*'   |  '/'  |  '%'  |  '**'  |  '^^'
-        #             |  '&'   |  '|'   |  '^'
-        #             |  '@'   |  '><'  |  '!!'  |  '::'  |  '??'
+        #             |  '&'   |  '|'   |  '^'   |  '@'
+        #             |  '@@'  |  '><'  |  '<>'  |  '::' |  '!!'
         #             |  '++'  |  '--'  |  '#'
         #             |  'in'
         #             |  <assign op>
         #             |  <cast op>
         #=======================================================================
-        if self._current.is_LE()        or self._current.is_EQ()        or \
-            self._current.is_NE()       or self._current.is_GE()        or \
-            self._current.is_PLUS()     or self._current.is_MINUS()     or \
-            self._current.is_MUL()      or self._current.is_DIV()       or \
-            self._current.is_MOD()      or self._current.is_POWER()     or \
-            self._current.is_BITAND()   or self._current.is_BITOR()     or \
-            self._current.is_BITXOR()   or self._current.is_AROBASE()   or \
-            self._current.is_OP_GRLE()  or self._current.is_OP_2EXCL()  or \
-            self._current.is_OP_2COLN() or self._current.is_OP_2QUEST() or \
-            self._current.is_INCR()     or self._current.is_DECR()      or \
-                self._current.is_HASH() or self._current.is_IN():
+        if isinstance( self._current, (ICTokenNode_LE      , ICTokenNode_EQ      ,
+                                       ICTokenNode_NE      , ICTokenNode_GE      ,
+                                       ICTokenNode_PLUS    , ICTokenNode_MINUS   ,
+                                       ICTokenNode_MUL     , ICTokenNode_DIV     ,
+                                       ICTokenNode_MOD     , ICTokenNode_POWER   ,
+                                       ICTokenNode_BITAND  , ICTokenNode_BITOR   ,
+                                       ICTokenNode_BITXOR  , ICTokenNode_AROBASE ,
+                                       ICTokenNode_OP_2AROB, ICTokenNode_OP_GRLE ,
+                                       ICTokenNode_OP_LEGR , ICTokenNode_OP_2COLN,
+                                       ICTokenNode_OP_2EXCL, ICTokenNode_INCR    ,
+                                       ICTokenNode_DECR    , ICTokenNode_HASH    ,
+                                       ICTokenNode_IN                             ) ):
             self._append_syntaxic_node()
             self._next_token_node()
             return True
@@ -2613,10 +2642,10 @@ class FEParser:
         #=======================================================================
         # <operator'> ::= '<' | '>' | '<<' | '<<<' | '>>' | '>>>' | '<=>'
         #=======================================================================
-        if self._current.is_LT()          or self._current.is_GT()      or \
-            self._current.is_SHIFTL()     or self._current.is_SHIFT0L() or \
-                self._current.is_SHIFTR() or self._current.is_SHIFT0R() or \
-                self._current.is_LEG():
+        if isinstance( self._current, (ICTokenNode_LT    , ICTokenNode_GT     ,
+                                       ICTokenNode_SHIFTL, ICTokenNode_SHIFT0L,
+                                       ICTokenNode_SHIFTR, ICTokenNode_SHIFT0R,
+                                       ICTokenNode_LEG                         ) ):
             self._append_syntaxic_node()
             self._next_token_node()
             return True
@@ -2896,29 +2925,14 @@ class FEParser:
         #                  |  "uint16"
         #                  |  "uint32"
         #                  |  "uint64"
+        #                  |  "_float_"
+        #                  |  "_int_"
+        #                  |  "_numeric_"
+        #                  |  "_uint_"
         #=======================================================================
-        if self._current.is_SCALAR_TYPE(): ## (notice: previously scanned by Scanner)
+        if self._current.is_SCALAR_TYPE(): ## (notice: previously scanned by Front-End Scanner)
             self._append_syntaxic_node()
             self._next_token_node()
-            return True
-        else:
-            return False
-
-    #-------------------------------------------------------------------------
-    def _scalar_type_casting(self) -> bool:
-        #=======================================================================
-        # <scalar type casting> ::= '(' <expression> ')'
-        #=======================================================================
-        if self._current.is_PAROP():
-            self._append_syntaxic_node()
-            self._next_token_node()
-            if not self._expression():
-                self._append_error( FESyntaxErrors.CASTING_EXPR )
-            if self._current.is_PARCL():
-                self._append_syntaxic_node()
-                self._next_token_node()
-            else:
-                self._append_error( FESyntaxErrors.CASTING_PARCL )
             return True
         else:
             return False
@@ -3952,6 +3966,25 @@ class FEParser:
             if not self._identifier():
                 self._append_error( FESyntaxErrors.TYPE_LIST_IDENT )
         return True
+
+    #-------------------------------------------------------------------------
+    def _type_casting(self) -> bool:
+        #=======================================================================
+        # <scalar type casting> ::= '(' <expression> ')'
+        #=======================================================================
+        if self._current.is_PAROP():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._expression():
+                self._append_error( FESyntaxErrors.CASTING_EXPR )
+            if self._current.is_PARCL():
+                self._append_syntaxic_node()
+                self._next_token_node()
+            else:
+                self._append_error( FESyntaxErrors.CASTING_PARCL )
+            return True
+        else:
+            return False
 
     #-------------------------------------------------------------------------
     def _types_list(self) -> bool:
