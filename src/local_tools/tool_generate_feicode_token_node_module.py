@@ -139,7 +139,7 @@ def generate_template_header(fp, class_name: str) -> None:
         return (micro_sec + 500) // 1000
     
     #-----------------------------------------------------------------
-    header_length = 25  # copy only the 25 first lines of template
+    header_length = 24  # copy only the 25 first lines of template
     with open( 'template_class.py', 'r' ) as tfp:
         fp.writelines( tfp.readlines()[:header_length] )
 

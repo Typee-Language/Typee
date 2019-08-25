@@ -119,7 +119,6 @@ class FEICodeTokens:
     
     TK_INTEGER      = 0
     TK_FLOAT        = 0
-    TK_NUMERIC      = 0             ##
     TK_STRING       = 0
     TK_ANY_TYPE     = 0
     TK_SCALAR_TYPE  = 0
@@ -323,7 +322,6 @@ class FEICodeTokensData:
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_INTEGER ]     : None,
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_FLOAT ]       : None,
-        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_NUMERIC ]     : None,
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_STRING ]      : None,
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_ANY_TYPE ]    : '?',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_SCALAR_TYPE ] : None,
