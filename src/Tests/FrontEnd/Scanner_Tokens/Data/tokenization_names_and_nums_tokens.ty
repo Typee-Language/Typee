@@ -35,7 +35,7 @@ try except finally raise
 is me none None
 while repeat until
 embed exclude
-char char16 del float64 int16 int32 int64 str str16 uint32 uint64
+char char16 del float32 float64 int8 int16 int32 int64 str str16 uint8 uint16 uint32 uint64
 _int_ _float_ _uint_ _numeric_
 UInt8 Float32 float double Str string Class
 0 1 2 3 4 5 6 7 8 9 _0 _1 _2 _3 _4 _5 _6 _7 _8 _9

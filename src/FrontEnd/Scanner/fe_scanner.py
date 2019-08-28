@@ -638,10 +638,10 @@ class FEScanner:
     }
     
     _KEYWORDS = {
-        '_float_':      ICTokenNode_SCALAR_TYPE,
-        '_int_':        ICTokenNode_SCALAR_TYPE,
-        '_numeric_':    ICTokenNode_SCALAR_TYPE,
-        '_uint_':       ICTokenNode_SCALAR_TYPE,
+        '_float_':      ICTokenNode_GENERIC_TYPE,
+        '_int_':        ICTokenNode_GENERIC_TYPE,
+        '_numeric_':    ICTokenNode_GENERIC_TYPE,
+        '_uint_':       ICTokenNode_GENERIC_TYPE,
         'abstract':     ICTokenNode_ABSTRACT,
         'all':          ICTokenNode_ALL,
         'and':          ICTokenNode_AND,
