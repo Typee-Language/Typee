@@ -37,7 +37,7 @@ SOFTWARE.
 <atom element'>             ::= <atom'>
                              |  <atom element'''>                                   ## modified         
 ##<atom element'''>           ::= <scalar type> <scalar type casting>               ##                  
-<atom element''>            ::= <scalar type> <type casting>                        ## modified         
+<atom element''>            ::= <scalar type'> <type casting>                       ## modified         
 <atom element'''>           ::= ##<dotted name'> <atom element'''>                  ## suppressed       
                              |  <function call> <atom element''''>                  ## modified         
                              |  <is instance of>
@@ -919,11 +919,17 @@ SOFTWARE.
 
 <file type>                     ::= 'file' <contained type>
 
+<generic scalar type>           ::= '_float_'                                       ## new              
+                                 |  '_int_'                                         ## new              
+                                 |  '_numeric_'                                     ## new              
+                                 |  '_uint_'                                        ## new              
+                                 
 <list type>                     ::= 'list' <contained type>
 
 <map type>                      ::= 'map' <contained type>
 
-<scalar type>                   ::= 'bool'
+<scalar type>                   ::= <scalar type'>  |  <generic scalar type>        ## modified
+<scalar type'>                  ::= 'bool'                                          ## modified
                                  |  'char'
                                  |  'char16'
                                  |  'float32'
@@ -939,10 +945,6 @@ SOFTWARE.
                                  |  'uint16'
                                  |  'uint32'
                                  |  'uint64'
-                                 |  '_float_'                                       ## new              
-                                 |  '_int_'                                         ## new              
-                                 |  '_numeric_'                                     ## new              
-                                 |  '_uint_'                                        ## new              
 
 <set type>                      ::= 'set' <contained type>
 

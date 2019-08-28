@@ -32,7 +32,7 @@ SOFTWARE.
 
 <atom element>              ::= <atom>  |
                                 <dotted name> [<atom element'>]  |
-                                [ <const qualifier> ] <scalar type>
+                                [ <const qualifier> ] <scalar type'>
                                     <type casting>
                             
 <atom element'>             ::= <incr or decr>  |
@@ -41,7 +41,8 @@ SOFTWARE.
                                 <atom element''>
 
 <atom element''>            ::= [ ( <function call> <atom element'''>   |
-                                    <subscription or slicing> <atom element'''> )*  |
+                                    <subscription or slicing>
+                                        <atom element'''> )*  |
                                   <is instance of> ]
 
 <atom element'''>           ::= ( [ '.' <identifier> ] <atom element''> )*
@@ -164,7 +165,7 @@ SOFTWARE.
                                 ( '^' [<template args>] <bitand expr> )*
 
 <shift expr>            ::= <arithmetic expr>
-                                ( ( ( '<<' | '<<<' ) [<spaced template args>]  |
+                                ( ( ( '<<' | '<<<' ) [<spaced template args>] |
                                     ( '>>' | '>>>' ) [<template args>] )
                                     <arithmetic expr> )*
 
@@ -211,7 +212,9 @@ SOFTWARE.
                             <op_user>  |
                             <assign op>  |
                             <cast op>
-<operator'>                 ::= '<'  |  '>'  |  '<<'  |  '>>'  |  '<<<'  |  '>>>' 
+<operator'>                 ::= '<'    |  '>'   |  
+                                '<<'   |  '>>'  |  
+                                '<<<'  |  '>>>' 
 
 <operator definition>       ::= 'operator' 
                                     ( ( (<operator> [<template def>] |
@@ -239,17 +242,17 @@ SOFTWARE.
 
 <any embedded code char>        ::= u0x0000...u0xFFFF - ['}']
 
-<any escaped char>              ::= '\\' u0x0000...u0xFFFF - ['\n', '\r',
-                                                              '\f', u0x00]
+<any escaped char>              ::= '\\' u0x0000...u0xFFFF - [ '\n' , '\r' ,
+                                                               '\f' , u0x00  ]
 
 <any non newline char>          ::= u0x0000...u0xFFFF - [ '\n' , '\r' , '\f' ]
 
 <any non star char>             ::= u0x0000...u0xFFFF - [ '*' ]
 
-<any string quote char>         ::= u0x0000...u0xFFFF - [ "'", "\\", "\n",
-                                                         "\r", "\f", u0x00 ]
-<any string doublequote char>   ::= u0x0000...u0xFFFF - [ '"', '\\', '\n',
-                                                         '\r', '\f', u0x00 ]
+<any string quote char>         ::= u0x0000...u0xFFFF - [ "'"  , "\\" , "\n" ,
+                                                          "\r" , "\f" , u0x00 ]
+<any string doublequote char>   ::= u0x0000...u0xFFFF - [ '"'  , '\\' , '\n' ,
+                                                          '\r' , '\f' , u0x00 ]
 
 <binary char>                   ::= '0'  |  '1' 
 
@@ -304,7 +307,8 @@ SOFTWARE.
 
 <hexadecimal number>     ::= <hexa char> ([ '_' ] <hexa char>)*
 
-<integer number>    ::= '1' ... '9' [<decimal part>]  |  '0' <octal hexa binary>
+<integer number>    ::= '1' ... '9' [<decimal part>]  |
+                        '0' <octal hexa binary>
              
 <octal hexa binary> ::= <octal number>  |
                             ( 'b' | 'B' ) <binary number>  |
@@ -351,10 +355,10 @@ SOFTWARE.
                                 <compound statement>  |  <simple statement>
 
 
-<statements block>  ::= '{' <statements list> '}' 
-                     |  <empty statement> <statements block>
-                     |  <compound statement>
-                     |  <simple statement>
+<statements block>  ::= '{' <statements list> '}'             | 
+                        <empty statement> <statements block>  |
+                        <compound statement>                  |
+                        <simple statement>
 
 
 <assert statement>          ::= 'assert' <expression> ( ',' <expression>)*
@@ -400,14 +404,14 @@ SOFTWARE.
                                         <decl or def statement'''>  |
                                     <function definition'>
 
-<decl or def statement>     ::= [<static qualifier>] <decl or def statement'>  |  
+<decl or def statement>     ::= [<static qualifier>] <decl or def statement'> | 
                                 <class definition>  |
                                 <forward decl>
 
 <decl or def statement'>    ::= <abstract or final qualif> 
                                     <method or operator definition>  |
                                 <volatile qualifier> <type> <identifier> 
-                                    [<memory address>] <simple statement end>  |
+                                    [<memory address>] <simple statement end> |
                                 <type alias> <simple statement end>  |
                                 <decl or def statement''>
 
@@ -437,9 +441,11 @@ SOFTWARE.
                                      <embedded language code>)
 
 <embedded language code>    ::= '{{' <embedded language code'>
-<embeded language code'>    ::= <any embedded code char> <embeded language code'>  |
+<embeded language code'>    ::= <any embedded code char> 
+                                    <embeded language code'>  |
                                 '}' <embedded language code">
-<embedded language code">   ::= <any embedded code char> <embeded language code'>  |
+<embedded language code">   ::= <any embedded code char> 
+                                    <embeded language code'>  |
                                 '}' [ 'exit' ]
 
 <ensure statement>          ::= 'ensure' <expression> ( ',' <expression> )*
@@ -450,7 +456,8 @@ SOFTWARE.
 
 <enum list>                 ::= <enum item> ( ',' <enum item> )*
 
-<exclude statement>         ::= 'exclude' <languages> '{{' <statements list> '}}' 
+<exclude statement>         ::= 'exclude' <languages> 
+                                    '{{' <statements list> '}}' 
 
 <file endianness>           ::= ( '<' | '>' ) <expression> 
                                     ( ( '<<' | '>>' | '>>>' ) <expression> )*
@@ -509,7 +516,8 @@ SOFTWARE.
 
 <import as names>           ::= <import as name> ( ',' <import as name> )*
 
-<import but>				::= 'but' <identifier> ( ',' <identifier> <import but'> )*
+<import but>				::= 'but' <identifier> 
+                                    ( ',' <identifier> <import but'> )*
 
 <import from>               ::= 'from' ( '.' )* <dotted name> 'import' 
                                     ( 'all' [<import but>] |
@@ -551,21 +559,21 @@ SOFTWARE.
 
 <target list>               ::= <typed target> ( ',' <typed target> )*
 
-<try otherwise>             ::= 'otherwise' '('                                             ##
-                                    [ 'Exception' 'as' <identifier> ]  ')'                  ##
+<try otherwise>             ::= 'otherwise' '(' 
+                                    [ 'Exception' 'as' <identifier> ]  ')' 
 
 <try except>                ::= 'except' '(' 
-                                    [ <try expr as> ( ',' <try expr as> )*  |               ##
-                                      'all' [ 'as' <identifier> ] ]    ')'                  ##
+                                    [ <try expr as> ( ',' <try expr as> )*  | 
+                                      'all' [ 'as' <identifier> ] ]    ')' 
 
-<try expr as>               ::= <expression>  [ 'as' <identifier> ]                         ##
+<try expr as>               ::= <expression>  [ 'as' <identifier> ] 
 
 <try finally>               ::= 'finally' 
 
 <try statement>             ::= 'try' <statements block> <try except>
                                     <statements block>
                                     (<try except> <statements block>)*
-                                    [<try otherwise> <statements block>]                    ##
+                                    [<try otherwise> <statements block>] 
                                     [<try finally> <statements block>]
 
 <type alias>                ::= 'type' <TYPE> 'as' <identifier>
@@ -579,7 +587,8 @@ SOFTWARE.
 <var declaration or assignment> ::= ['=' <expression>] ',' <identifier> 
                                         (['=' <expression>] ',' <identifier>)*
 
-<while statement>           ::= 'while' <parenthesised expr> <statements block> 
+<while statement>           ::= 'while' <parenthesised expr> 
+                                    <statements block> 
                                     ['otherwise' <statements block>]
 
 <with item>                 ::= <expression> ['as' <target>]
@@ -597,8 +606,10 @@ SOFTWARE.
                         ( '.' <identifier> <function call> )*
 
 
-<single string> ::= "'" (<any escaped char> | <any string quote char>)* "'"  |
-                    '"' (<any escaped char> | <any string doublequote char>)* '"' 
+<single string> ::= "'" (<any escaped char> | 
+                         <any string quote char>)* "'"  |
+                    '"' (<any escaped char> | 
+                         <any string doublequote char>)* '"' 
 
 
 
@@ -613,10 +624,12 @@ SOFTWARE.
 <template args>             ::= '<' [<condition> ( ',' <condition>)* ] '>' 
 
 <template def>              ::= '<' (<identifier> |
-                                     <const qualifier> <template def const name>) 
+                                     <const qualifier> 
+                                        <template def const name>) 
                                     ( ',' (<identifier> | 
                                            <const qualifier>
-                                               <template def const name>) )* '>' 
+                                               <template def const name>) )* 
+                                 '>' 
 
 <template def const name>   ::= <scalar type or dotted name> 
                                     <identifier> [ '=' <expression> ]
@@ -661,16 +674,19 @@ SOFTWARE.
 
 <file type>             ::= 'file' [<contained type>]
 
+<generic scalar type>   ::= '_float_' |  '_int_'   |  '_uint_'  |  '_numeric_' 
+
 <list type>             ::= 'list' [<contained type>]
 
 <map type>              ::= 'map' [<contained type>]
 
-<scalar type>           ::= 'bool'    |  'char'    |  'char16' |
+<scalar type>           ::= <scalar type'>  |  <generic scalar type>
+<scalar type'>          ::= 'bool'    |  'char'    |  'char16' |
                             'float32' |  'float64' |
                             'int8'    |  'int16'   |  'int32'  |  'int64'   |
                             'uint8'   |  'uint16'  |  'uint32' |  'uint64'  |
                             'slice'   |  'str'     |  'str16' 
-                            '_float_' |  '_int_'   |  '_uint'  |  '_numeric_' 
+                            
 
 <set type>              ::= 'set' [<contained type>]
 
