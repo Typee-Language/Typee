@@ -363,9 +363,9 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _atom_element2(self) -> bool:
         #=======================================================================
-        # <atom element''> ::= <scalar type> <scalar type casting>
+        # <atom element''> ::= <scalar type'> <scalar type casting>
         #=======================================================================
-        if self._scalar_type():
+        if self._scalar_type1():
             if not self._type_casting():
                 self._append_error( FESyntaxErrors.CASTING_PAROP )
             return True
@@ -1936,6 +1936,21 @@ class FEParser:
         return True            
 
     #-------------------------------------------------------------------------
+    def _generic_scalar_type(self) -> bool:
+        #=======================================================================
+        # <generic scalar type> ::= '_float_'              
+        #                        |  '_int_'              
+        #                        |  '_numeric_'              
+        #                        |  '_uint_'              
+        #=======================================================================
+        if self._current.is_GENRIC_SCALAR_TYPE(): ## (notice: previously scanned by Front-End Scanner)
+            self._append_syntaxic_node()
+            self._next_token_node()
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
     def _identifier(self) -> bool:
         #=======================================================================
         # <identifier>  ::= '_' <identifier'>
@@ -2909,7 +2924,14 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _scalar_type(self) -> bool:
         #=======================================================================
-        # <scalar type>   ::= "bool"
+        # <scalar type> ::= <scalar type'>  |  <generic scalar type>
+        #=======================================================================
+        return self._scalar_type1() or self._generic_scalar_type()
+
+    #-------------------------------------------------------------------------
+    def _scalar_type1(self) -> bool:
+        #=======================================================================
+        # <scalar type'>  ::= "bool"
         #                  |  "char"
         #                  |  "char16"
         #                  |  "float32"
