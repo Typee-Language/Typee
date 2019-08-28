@@ -51,7 +51,7 @@ if __name__ == '__main__':
     """
     #-------------------------------------------------------------------------
     translate( '../../Language-specifications/typee_specs_LL1-v10-EBNF.grm',
-               './typee_specs_LL1-v10-EBNF.html' )
+               './tmp_data/typee_specs_LL1-v10-EBNF.html' )
 
     print( '-- done!' )
 
