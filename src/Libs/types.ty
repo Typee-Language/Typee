@@ -23,15 +23,15 @@ SOFTWARE.
 //=============================================================================
 // Built-in Types Aliases
 
-type int8    as byte  ;
-type uint8   as ubyte ;
-type int16   as short ;
-type uint16  as ushort;
-type int32   as int   ;
-type uint32  as uint  ;
-type int64   as long  ;
-type uint64  as ulong ;
-type float32 as float ;
-type float64 as double;
+type int8    as byte   ;
+type uint8   as ubyte  ;
+type int16   as short  ;
+type uint16  as ushort ;
+type int32   as int    ;
+type uint32  as uint   ;
+type int64   as long   ;
+type uint64  as ulong  ;
+type float32 as float  ;
+type float64 as double ;
 
 //=====   end of built-in module   types.ty   =====//
