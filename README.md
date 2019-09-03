@@ -146,14 +146,14 @@ See also: [https://ocaml.org/](OCaml.org)
 The description of the Haxe compiler is concise and ensures correctness of types checking. That's great.
 _OCaml_ gets also a very good reputation about its computational optimization on time processing.
 
-The global software architecture of __Typee__, while having been specified with no knowledge of the _Haxe_ one, is finally the same as the _Haxe_> compiler. As you will see below, _Haxe_ and __Typee__ both specify a front-end and many back-ends. __Typee__ seems then to be a well designed "compiler".
+The global software architecture of __Typee__, while having been specified with no knowledge of the _Haxe_ one, is finally the same as the _Haxe_ compiler. As you will see below, _Haxe_ and __Typee__ both specify a front-end and many back-ends. __Typee__ seems then to be a well designed "compiler".
 
 So, would the work have been already done?
 Well, not exactly as we aim at doing it!
 
-There are still a few concepts that are offered as built-in goodies in __Typee__ that are not in _Haxe_. The main one is the __native code embedding__ which helps generate efficient targeted code for some parts of it. Others are concepts that cnstitue __Typee__ built-in libraries while they have been later added external libraries with _Haxe_.
+There are still a few concepts that are offered as built-in goodies in __Typee__ that are not in _Haxe_. The main one is the __native code embedding__ which helps generate efficient targeted code for some parts of it. Others are concepts that constitue __Typee__ built-in libraries while they have been later added external libraries with _Haxe_.
 
-Finally, noone would re-program the _Haxe_ compiler in _Haxe_. Its (fully correct) _OCaml_ implementation being a functionnal one, this would need reprogrammation from scratch in an imperative language (i.e. _Haxe_). __Typee__ first implementation being done in _Python 3.7_, it will be far easier to later reprogram it in __Typee__ which, then, will be translated in far better time-efficient languages (e.g. C++).
+Finally, nobody would re-program the _Haxe_ compiler in _Haxe_. Its (fully correct) _OCaml_ implementation being a functionnal one, this would need reprogrammation from scratch in an imperative language (i.e. _Haxe_). __Typee__ first implementation being done in _Python 3.7_, it will be far easier to later reprogram it in __Typee__ which, then, will be translated in far better time-efficient languages (e.g. C++).
 
 Really so, Here We Are!
 
@@ -259,7 +259,7 @@ and __Typee__ project aims at providing such scripts to ease the whole process.
 Only develop under branch `dev`. Do not hesitate to create your own branches 
 to commit then push your contributions, but start all of them from branch 
 `dev`. Only an administrator may merge new releases of __Typee Translator__ 
-into branch `master`.
+into branch `master`. Merges will be done only from branch `dev`.
 
 
 ## Visit us
@@ -272,4 +272,3 @@ or follow us at https://twitter.com/TypeeProgrammi1
 ## That's it
 
 Enjoy!
-
