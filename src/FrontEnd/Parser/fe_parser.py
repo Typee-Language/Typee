@@ -4240,8 +4240,8 @@ class FEParser:
         self._out_syntax_ic += FEICBlock()
         self._append_syntaxic_node()
     #-------------------------------------------------------------------------
-    def _append_syntaxic_node(self) -> bool:
-        self._out_syntax_ic += FEICLeaf( self._current )
+    def _append_syntaxic_node(self, s_node: FEICodeTokenNode = None) -> bool:
+        self._out_syntax_ic += FEICLeaf( self._current if s_node is None else s_node )
         return True
     #-------------------------------------------------------------------------
     def _eof(self) -> bool:

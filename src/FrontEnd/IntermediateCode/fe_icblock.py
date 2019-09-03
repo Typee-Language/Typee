@@ -23,7 +23,7 @@ SOFTWARE.
 
 #=============================================================================
 from FrontEnd.IntermediateCode.fe_icnode import FEICNode
-from FrontEnd.IntermediateCode.fe_icleaf import FEICLeaf
+##from FrontEnd.IntermediateCode.fe_icleaf import FEICLeaf
 
 
 #=============================================================================
