@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -22,47 +22,41 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode
+#no imports
 
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
+class FEICNode:
     """
-    Class description.
-    """    
+    Basic interface for all types of nodes in Intermediate Code Trees.
+    This is a virtual item of a mental construction. It might be later suppressed! 
+    """
+
     #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
+    def __init__(self, content=None) -> None:
         '''
-        Constructor.
+        Cnstructor.
         
         Args:
-            content: a reference to the content opf this leaf
+            content:
+                A reference to the content to be associated with this IC node.
         '''
-        super().__init__( content )
-    
+        self.content = content
+
     #-------------------------------------------------------------------------
     def set_parent(self, parent: FEICNode):
         '''
         Sets the parent of this node.
         '''
-        pass
+        self.parent = parent
 
     #-------------------------------------------------------------------------
-    def __iter__(self):
-        return self
-
-    #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
-
-    #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
+    def walk(self) -> None:
         '''
         Walks through the list of nodes contained within this block.
         Walk-through is depth-first implemented.
-        Returns:
-            A reference to the content of this leaf.
+        HAS TO BE IMPLEMENTED IN INHERITING CLASSES.
         '''
-        return self.content
+        raise NotImplementedError()
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+#=====   end of   FrontEnd.IntermediateCode.fe_icnode   =====#

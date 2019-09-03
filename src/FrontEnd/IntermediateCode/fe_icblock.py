@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -23,46 +23,42 @@ SOFTWARE.
 
 #=============================================================================
 from FrontEnd.IntermediateCode.fe_icnode import FEICNode
+from FrontEnd.IntermediateCode.fe_icleaf import FEICLeaf
 
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
+class FEICBlock( FEICNode ):
     """
-    Class description.
-    """    
-    #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
-        '''
-        Constructor.
-        
-        Args:
-            content: a reference to the content opf this leaf
-        '''
-        super().__init__( content )
-    
-    #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
-        '''
-        Sets the parent of this node.
-        '''
-        pass
+    The class of blocks of tokens in Intermediate Code trees.
+    """
 
     #-------------------------------------------------------------------------
-    def __iter__(self):
+    def __init__(self) -> None:  ##, parent:FEICNode=None):
+        '''
+        Constructor.
+        '''
+        super().__init__( [] )  ## content is an empty list (of FEICNode-s)
+        ##self.parent = parent
+
+    #-------------------------------------------------------------------------
+    def __iadd__(self, ic_node: FEICNode):
+        '''
+        Appends a new node into this block.
+        '''
+        self.content.append( ic_node )
         return self
 
     #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
-
-    #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
+    def walk(self) -> None:
         '''
-        Walks through the list of nodes contained within this block.
+        Walks through the list of nodes contained within
+        this block.
         Walk-through is depth-first implemented.
         Returns:
-            A reference to the content of this leaf.
+            every content of the leaves in  this  block,
+            in a depth-first walking through manner.
         '''
-        return self.content
+        for icnode in self.content:
+            yield from icnode.walk()
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+#=====   end of   FrontEnd.IntermediateCode.fe_icblock   =====#
