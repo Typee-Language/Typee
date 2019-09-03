@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -22,47 +22,47 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode
+from Utils.ut_tree import UTTree, UTNode, UTLeaf
 
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
-    """
-    Class description.
-    """    
-    #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
-        '''
-        Constructor.
-        
-        Args:
-            content: a reference to the content opf this leaf
-        '''
-        super().__init__( content )
+
+#-----------------------------------------------------------------------------
+def test_ut_tree() -> int:
+    '''
+    This is the testing of class UTTree.
+    '''
+    errors_count = 0
     
-    #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
-        '''
-        Sets the parent of this node.
-        '''
-        pass
+    my_tree = UTTree()
+    
+    my_tree.append( UTNode() ).append( UTNode() )
+    my_tree += UTLeaf( 'A' )
+    my_tree += UTLeaf( 'B' )
+    my_tree.up()
+    my_tree += UTLeaf( 'C' )
 
-    #-------------------------------------------------------------------------
-    def __iter__(self):
-        return self
+    for node in my_tree:
+        print( node.data )
+    
+    return errors_count
 
-    #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
 
+#=============================================================================
+if __name__ == '__main__':
+    '''
+    Description of this script.
+    '''
+                
     #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
-        '''
-        Walks through the list of nodes contained within this block.
-        Walk-through is depth-first implemented.
-        Returns:
-            A reference to the content of this leaf.
-        '''
-        return self.content
+    print( 'UTTree validation tests' )
+    count = test_ut_tree()
+    if count == 0:
+        print( '  Tests OK')
+    else:
+        print( 'detected {} error{}'.format( count, 's' if count > 1 else '') )        
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+    print( '\n-- done!' )
+
+
+#=====   end of Tests.Utils.script_ut_tree   =====#
