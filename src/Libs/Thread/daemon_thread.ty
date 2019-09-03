@@ -67,7 +67,7 @@ more being so.
     }
 
     //-------------------------------------------------------------------------
-    BaseThread( const ? in (str,str16) name )
+    DaemonThread( const ? in (str,str16) name )
     /**
     Constructor with defined name for this thread.
     */
