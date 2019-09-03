@@ -65,4 +65,4 @@ if __name__ == '__main__':
     print( '\n-- done!' )
 
 
-#=====   end of Tests.Utils.script_utils   =====#
+#=====   end of Tests.Utils.script_ut_tree   =====#
