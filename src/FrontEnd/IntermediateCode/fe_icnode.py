@@ -22,10 +22,6 @@ SOFTWARE.
 """
 
 #=============================================================================
-#no imports
-
-
-#=============================================================================
 class FEICNode:
     """
     Basic interface for all types of nodes in Intermediate Code Trees.
@@ -44,7 +40,7 @@ class FEICNode:
         self.content = content
 
     #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
+    def set_parent(self, parent):
         '''
         Sets the parent of this node.
         '''

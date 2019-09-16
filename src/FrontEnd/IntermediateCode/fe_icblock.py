@@ -38,7 +38,6 @@ class FEICBlock( FEICNode ):
         Constructor.
         '''
         super().__init__( [] )  ## content is an empty list (of FEICNode-s)
-        ##self.parent = parent
 
     #-------------------------------------------------------------------------
     def __iadd__(self, ic_node: FEICNode):

@@ -28,7 +28,7 @@ from FrontEnd.IntermediateCode.fe_icnode import FEICNode
 #=============================================================================
 class FEICLeaf( FEICNode ):
     """
-    Class description.
+    Class of leaves in Intermediate Code trees.
     """    
     #-------------------------------------------------------------------------
     def __init__(self, content) -> None:
@@ -36,7 +36,7 @@ class FEICLeaf( FEICNode ):
         Constructor.
         
         Args:
-            content: a reference to the content opf this leaf
+            content: a reference to the content of this leaf.
         '''
         super().__init__( content )
     
@@ -58,8 +58,8 @@ class FEICLeaf( FEICNode ):
     #-------------------------------------------------------------------------
     def walk(self) -> FEICNode:
         '''
-        Walks through the list of nodes contained within this block.
-        Walk-through is depth-first implemented.
+        Walks over this leaf.
+
         Returns:
             A reference to the content of this leaf.
         '''
