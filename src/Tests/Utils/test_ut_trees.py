@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -22,50 +22,31 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Utils.ut_tree import UTTree, UTNode, UTLeaf
-
-
-#=============================================================================
-
-#-----------------------------------------------------------------------------
-def test_ut_tree() -> int:
-    '''
-    This is the testing of class UTTree.
-    '''
-    errors_count = 0
-    
-    my_tree = UTTree()
-    
-    my_tree.append( UTNode() ).append( UTNode() )
-    my_tree += UTLeaf( 'A' )
-    my_tree += UTLeaf( 'B' )
-    my_tree.up()
-    my_tree += UTLeaf( 'C' )
-
-    for node in my_tree:
-        try:
-            print( node.data )
-        except:
-            pass
-    
-    return errors_count
-
+from Utils.Trees.ut_tree       import UTTree
+from Utils.Trees.ut_tree_leaf  import UTTreeLeaf
+from Utils.Trees.ut_tree_node  import UTTreeNode
 
 #=============================================================================
 if __name__ == '__main__':
-    '''
-    Description of this script.
-    '''
-                
-    #-------------------------------------------------------------------------
-    print( 'UTTree validation tests' )
-    count = test_ut_tree()
-    if count == 0:
-        print( '  Tests OK')
-    else:
-        print( 'detected {} error{}'.format( count, 's' if count > 1 else '') )        
+    my_tree = UTTree()
+    
+    my_tree += UTTreeNode()
+    my_tree += UTTreeNode()
+    my_tree.up_level()
+    my_tree += UTTreeLeaf( 'A' )
+    my_tree += UTTreeLeaf( 'B' )
+    my_tree.up_level()
+    my_tree += UTTreeNode()
+    my_tree += UTTreeLeaf( 'C' )
+    my_tree.up_level()
+    my_tree += UTTreeLeaf( 'D' )
 
-    print( '\n-- done!' )
+    for node in my_tree.walk():
+        if isinstance(node, UTTreeLeaf ):
+            print( 'Leaf:', node.content )
+        else:
+            print( 'Node:', node.content )
 
+    print( '-- done!' )
 
-#=====   end of Tests.Utils.script_ut_tree   =====#
+#=====   end of   Tests.Utils.test_ut_trees   =====#

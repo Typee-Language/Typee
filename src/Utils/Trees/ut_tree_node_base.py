@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -22,50 +22,33 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Utils.ut_tree import UTTree, UTNode, UTLeaf
+class UTTreeNodeBase:
+    """
+    Basic interface for all types of nodes in Trees.
+    """
 
-
-#=============================================================================
-
-#-----------------------------------------------------------------------------
-def test_ut_tree() -> int:
-    '''
-    This is the testing of class UTTree.
-    '''
-    errors_count = 0
-    
-    my_tree = UTTree()
-    
-    my_tree.append( UTNode() ).append( UTNode() )
-    my_tree += UTLeaf( 'A' )
-    my_tree += UTLeaf( 'B' )
-    my_tree.up()
-    my_tree += UTLeaf( 'C' )
-
-    for node in my_tree:
-        try:
-            print( node.data )
-        except:
-            pass
-    
-    return errors_count
-
-
-#=============================================================================
-if __name__ == '__main__':
-    '''
-    Description of this script.
-    '''
-                
     #-------------------------------------------------------------------------
-    print( 'UTTree validation tests' )
-    count = test_ut_tree()
-    if count == 0:
-        print( '  Tests OK')
-    else:
-        print( 'detected {} error{}'.format( count, 's' if count > 1 else '') )        
+    def __init__(self, parent=None, content=None) -> None:
+        '''
+        Constructor.
+        
+        Args:
+            parent:
+                A reference to the parent node in tree.
+            content:
+                A reference to the content to be associated with this tree node.
+        '''
+        self.parent  = parent
+        self.content = content
 
-    print( '\n-- done!' )
+    #-------------------------------------------------------------------------
+    def walk(self) -> None:
+        '''
+        Walks through the tree passing through this node.
+        Walk-through is depth-first implemented.
+        HAS TO BE IMPLEMENTED IN INHERITING CLASSES.
+        See UTTreeNode and UTTreeLeaf to get examples of implementation.
+        '''
+        raise NotImplementedError()
 
-
-#=====   end of Tests.Utils.script_ut_tree   =====#
+#=====   end of   Utils.Trees.ut_tree_node_base   =====#
