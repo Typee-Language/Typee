@@ -1172,9 +1172,15 @@ class FEParser:
         # <empty statement> ::= <comment>
         #                    |  <NEWLINE>
         #=======================================================================
-        if self._current.is_COMMENT() or self._current.is_COMMENT_ML() or self._current.is_NL(): ## (notice: previously scanned by Scanner)
+        if self._current.is_COMMENT() or self._current.is_COMMENT_ML(): ## (notice: previously scanned by Scanner)
             self._append_syntaxic_node()
-            self._new_line()
+            self._next_token_node()
+            if not self._new_line():
+                self._append_error( FESyntaxErrors.COMMENT_NL )
+            return True
+        elif self._current.is_NL():
+            self._append_syntaxic_node()
+            self._next_token_node()
             return True
         else:
             return False

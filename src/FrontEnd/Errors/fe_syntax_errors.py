@@ -68,6 +68,7 @@ class FESyntaxErrors:
     CASTING_PAROP               = 'missing ( in scalar type casting clause',
     CLASS_BODY                  = 'missing class definition after class clause',
     CLASS_NAME                  = 'missing or badly formed class name after keyword class',
+    COMMENT_NL                  = 'missing new line character at end of comment or multi-comment statement',
     COMP_EXPR                   = 'missing or badly formed expression after comparison operator',
     CONST_TYPE                  = 'missing or badly formed type identifier after keyword "const"',
     CONTAINED_TYPE              = 'missing type specification after < in contained type definition',
