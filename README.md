@@ -273,7 +273,7 @@ or follow us at https://twitter.com/TypeeProgrammi1
 ## Last but not least
 
 Let's thank the few (and known) hackers whose action, by August 2019, greatly 
-helped us enhancing the correctness of this repository content. Nice, we fill 
+helped us enhancing the correctness of this repository content. Nice, we feel 
 far more secure now ;-) .
 
 
