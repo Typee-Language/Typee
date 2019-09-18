@@ -51,9 +51,9 @@ class UTNode:
     def __next__(self) -> None:
         for child in self._children:
             if isinstance( child, UTNode ):
-                next( child )
+                yield child
             else:
-                next( child )
+                yield child
         raise StopIteration()
     #---------------------------------------------------------------------
     DBG_Count = 0
@@ -74,6 +74,7 @@ class UTLeaf:
     #---------------------------------------------------------------------
     def __next__(self):
         yield self
+        raise StopIteration()
 
 
 #=============================================================================
@@ -119,7 +120,9 @@ class UTTree:
    
     #-------------------------------------------------------------------------
     def __next__(self):
-        return next( self._root )
+        for node in self._root:
+            yield from node
+        raise StopIteration()
    
     #-------------------------------------------------------------------------
     def up(self):

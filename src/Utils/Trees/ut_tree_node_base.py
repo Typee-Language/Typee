@@ -22,47 +22,33 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode
-
-
-#=============================================================================
-class FEICLeaf( FEICNode ):
+class UTTreeNodeBase:
     """
-    Class of leaves in Intermediate Code trees.
-    """    
+    Basic interface for all types of nodes in Trees.
+    """
+
     #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
+    def __init__(self, parent=None, content=None) -> None:
         '''
         Constructor.
         
         Args:
-            content: a reference to the content of this leaf.
+            parent:
+                A reference to the parent node in tree.
+            content:
+                A reference to the content to be associated with this tree node.
         '''
-        super().__init__( content )
-    
-    #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
-        '''
-        Sets the parent of this node.
-        '''
-        pass
+        self.parent  = parent
+        self.content = content
 
     #-------------------------------------------------------------------------
-    def __iter__(self):
-        return self
-
-    #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
-
-    #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
+    def walk(self) -> None:
         '''
-        Walks over this leaf.
-
-        Returns:
-            A reference to the content of this leaf.
+        Walks through the tree passing through this node.
+        Walk-through is depth-first implemented.
+        HAS TO BE IMPLEMENTED IN INHERITING CLASSES.
+        See UTTreeNode and UTTreeLeaf to get examples of implementation.
         '''
-        return self.content
+        raise NotImplementedError()
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+#=====   end of   Utils.Trees.ut_tree_node_base   =====#

@@ -22,47 +22,57 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode
+from Utils.Trees.ut_tree_leaf      import UTTreeLeaf 
+from Utils.Trees.ut_tree_node      import UTTreeNode 
+from Utils.Trees.ut_tree_node_base import UTTreeNodeBase 
 
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
+class UTTree:
     """
-    Class of leaves in Intermediate Code trees.
-    """    
-    #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
-        '''
-        Constructor.
-        
-        Args:
-            content: a reference to the content of this leaf.
-        '''
-        super().__init__( content )
-    
-    #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
-        '''
-        Sets the parent of this node.
-        '''
-        pass
+    The utility class of Trees.
+    """
 
     #-------------------------------------------------------------------------
-    def __iter__(self):
+    def __init__(self) -> None:
+        '''
+        Constructor.
+        '''
+        self._root = UTTreeNode()
+        self._current = self._root
+
+    #-------------------------------------------------------------------------
+    def __iadd__(self, new_node: UTTreeNodeBase):
+        '''
+        In-place appends a new node or leaf to this tree.
+        If new_node is a tree node (and not a tree leaf), new_node
+        becomes the current node of the tree for next appends.
+        
+        Returns a reference to this tree.
+        '''
+        new_node.parent = self._current
+        
+        self._current += new_node
+        if isinstance( new_node, UTTreeNode ):
+            self._current = new_node
+            
         return self
 
     #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
+    def up_level(self):
+        '''
+        Goes one level up in the tree, i.e. back to parent block in the IC Tree.
+        '''
+        self._current = self._current.parent
+        return self
 
     #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
+    def walk(self):
         '''
-        Walks over this leaf.
-
-        Returns:
-            A reference to the content of this leaf.
+        Walks through this Intermediate Code tree, starting at its root.
+        Walk-through is depth-first implemented.
         '''
-        return self.content
+        if self._root is not None:
+            yield from self._root.walk()
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+#=====   end of   Utils.Trees.ut_tree   =====#

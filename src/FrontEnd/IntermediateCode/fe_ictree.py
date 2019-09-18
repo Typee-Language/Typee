@@ -43,12 +43,15 @@ class FEICTree:
     #-------------------------------------------------------------------------
     def __iadd__(self, ic_node: (FEICBlock,FEICNode)):
         '''
-        Appends a new node into this block.
+        In-place appends a new block or node to this intermediate code tree.
+        
+        Returns a reference to this IC tree.
         '''
         ic_node.set_parent( self._current )
         self._current += ic_node
         if isinstance( ic_node, FEICBlock ):
             self._current = ic_node
+        return self
 
     #-------------------------------------------------------------------------
     def up_level(self) -> None:
@@ -60,7 +63,7 @@ class FEICTree:
     #-------------------------------------------------------------------------
     def walk(self) -> None:
         '''
-        Walks through this Intermediate Code tree.
+        Walks through this Intermediate Code tree, starting at its root.
         Walk-through is depth-first implemented.
         '''
         self._root.walk()

@@ -22,47 +22,31 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode
-
+from Utils.Trees.ut_tree       import UTTree
+from Utils.Trees.ut_tree_leaf  import UTTreeLeaf
+from Utils.Trees.ut_tree_node  import UTTreeNode
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
-    """
-    Class of leaves in Intermediate Code trees.
-    """    
-    #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
-        '''
-        Constructor.
-        
-        Args:
-            content: a reference to the content of this leaf.
-        '''
-        super().__init__( content )
+if __name__ == '__main__':
+    my_tree = UTTree()
     
-    #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
-        '''
-        Sets the parent of this node.
-        '''
-        pass
+    my_tree += UTTreeNode()
+    my_tree += UTTreeNode()
+    my_tree.up_level()
+    my_tree += UTTreeLeaf( 'A' )
+    my_tree += UTTreeLeaf( 'B' )
+    my_tree.up_level()
+    my_tree += UTTreeNode()
+    my_tree += UTTreeLeaf( 'C' )
+    my_tree.up_level()
+    my_tree += UTTreeLeaf( 'D' )
 
-    #-------------------------------------------------------------------------
-    def __iter__(self):
-        return self
+    for node in my_tree.walk():
+        if isinstance(node, UTTreeLeaf ):
+            print( 'Leaf:', node.content )
+        else:
+            print( 'Node:', node.content )
 
-    #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
+    print( '-- done!' )
 
-    #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
-        '''
-        Walks over this leaf.
-
-        Returns:
-            A reference to the content of this leaf.
-        '''
-        return self.content
-
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+#=====   end of   Tests.Utils.test_ut_trees   =====#

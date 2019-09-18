@@ -22,47 +22,43 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode
-
+from Utils.Trees.ut_tree_node_base import UTTreeNodeBase
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
+class UTTreeNode( UTTreeNodeBase ):
     """
-    Class of leaves in Intermediate Code trees.
-    """    
+    The class of internal nodes in Trees.
+    """
+
     #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
+    def __init__(self, parent: UTTreeNodeBase = None, children: list = None) -> None:
         '''
         Constructor.
         
         Args:
-            content: a reference to the content of this leaf.
+            parent:
+                A reference to the parent node in tree.
+                Defaults to None (which means this node is a tree root)
+            children:
+                A reference to the content to be associated with this IC node.
         '''
-        super().__init__( content )
-    
-    #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
-        '''
-        Sets the parent of this node.
-        '''
-        pass
+        super().__init__( parent, children or [] )
 
     #-------------------------------------------------------------------------
-    def __iter__(self):
+    def __iadd__(self, new_child: UTTreeNodeBase) -> UTTreeNodeBase:
+        '''
+        Appends a new child to the list of children of this tree node.
+        '''
+        self.content.append( new_child )
         return self
 
     #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
-
-    #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
+    def walk(self):
         '''
-        Walks over this leaf.
-
-        Returns:
-            A reference to the content of this leaf.
+        Walks through the tree passing through this node.
+        Walk-through is depth-first implemented.
         '''
-        return self.content
+        for child in self.content:
+            yield from child.walk()
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+#=====   end of   Utils.Trees.ut_tree_node   =====#

@@ -22,47 +22,36 @@ SOFTWARE.
 """
 
 #=============================================================================
-from FrontEnd.IntermediateCode.fe_icnode import FEICNode
-
+from Utils.Trees.ut_tree_node_base import UTTreeNodeBase
 
 #=============================================================================
-class FEICLeaf( FEICNode ):
+class UTTreeLeaf( UTTreeNodeBase ):
     """
-    Class of leaves in Intermediate Code trees.
+    The class of leaves in trees.
     """    
+
     #-------------------------------------------------------------------------
-    def __init__(self, content) -> None:
+    def __init__(self, content = None) -> None:
         '''
         Constructor.
         
         Args:
-            content: a reference to the content of this leaf.
+            parent:
+                A reference to the parent node in tree.
+                Defaults to None (which means this node is a tree root)
+            content:
+                A reference to the content to be associated with this tree leaf.
         '''
-        super().__init__( content )
-    
-    #-------------------------------------------------------------------------
-    def set_parent(self, parent: FEICNode):
-        '''
-        Sets the parent of this node.
-        '''
-        pass
+        super().__init__( None, content )
 
     #-------------------------------------------------------------------------
-    def __iter__(self):
-        return self
-
-    #-------------------------------------------------------------------------
-    def __next__(self):
-        return self.content
-
-    #-------------------------------------------------------------------------
-    def walk(self) -> FEICNode:
+    def walk(self):
         '''
         Walks over this leaf.
 
         Returns:
-            A reference to the content of this leaf.
+            A reference to the content of this leaf inserted in a generator.
         '''
-        return self.content
+        return (self, )
 
-#=====   end of   FrontEnd.IntermediateCode.fe_icleaf   =====#
+#=====   end of   Utils.Trees.ut_tree_leaf   =====#

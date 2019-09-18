@@ -22,50 +22,16 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Utils.ut_tree import UTTree, UTNode, UTLeaf
-
-
-#=============================================================================
-
-#-----------------------------------------------------------------------------
-def test_ut_tree() -> int:
+def abstract( method ):
     '''
-    This is the testing of class UTTree.
+    `abstract` decorator definition
     '''
-    errors_count = 0
-    
-    my_tree = UTTree()
-    
-    my_tree.append( UTNode() ).append( UTNode() )
-    my_tree += UTLeaf( 'A' )
-    my_tree += UTLeaf( 'B' )
-    my_tree.up()
-    my_tree += UTLeaf( 'C' )
-
-    for node in my_tree:
+    def abstract_wrapper( *_args, **_kwargs ):
         try:
-            print( node.data )
+            class_name = '.'.join( str(method).split(' ')[1].split('.')[:-1] )
         except:
-            pass
-    
-    return errors_count
+            class_name = '<unknown>'  
+        raise NotImplementedError( "abstract method `{}()` is not implemented in class `{}`.".format(method.__name__, class_name or '') )
+    return abstract_wrapper
 
-
-#=============================================================================
-if __name__ == '__main__':
-    '''
-    Description of this script.
-    '''
-                
-    #-------------------------------------------------------------------------
-    print( 'UTTree validation tests' )
-    count = test_ut_tree()
-    if count == 0:
-        print( '  Tests OK')
-    else:
-        print( 'detected {} error{}'.format( count, 's' if count > 1 else '') )        
-
-    print( '\n-- done!' )
-
-
-#=====   end of Tests.Utils.script_ut_tree   =====#
+#=====   end of   Utils.ut_decorators   =====#
