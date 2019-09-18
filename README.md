@@ -269,6 +269,14 @@ at http://www.typee.ovh and https://typee-language.github.io/Typee/
 or follow us at https://twitter.com/TypeeProgrammi1
 
 
+
+## Last but not least
+
+Let's thank the few (and known) hackers whose action, by August 2019, greatly 
+helped us enhancing the correctness of this repository content. Nice, we fill 
+far more secure now ;-) .
+
+
 ## That's it
 
 Enjoy!
