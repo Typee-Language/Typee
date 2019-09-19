@@ -926,7 +926,12 @@ SOFTWARE.
                                  
 <list type>                     ::= 'list' <contained type>
 
-<map type>                      ::= 'map' <contained type>
+<map contained type>			::= '<' <TYPE> <map contained type'>				## new
+								 |	EPS												## new
+<map contained type'>			::= ',' <declared contained type> '>'				## new
+								 |	'>'												## new
+
+<map type>                      ::= 'map' <map contained type>						## modified
 
 <scalar type>                   ::= <scalar type'>  |  <generic scalar type>        ## modified
 <scalar type'>                  ::= 'bool'                                          ## modified
