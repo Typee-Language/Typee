@@ -179,6 +179,9 @@ class FESyntaxErrors:
     LIST_END                    = 'missing ] at end of list specification, leads to unpaired [',
     LIST_EXPR                   = 'missing or badly formed expression after [ in list specification',
     
+    MAP_CONTAINED_TYPE          = 'missing or badly formed list of types for map contained types (type of contained values or keys)',
+    MAP_CONTAINED_TYPE_END      = 'missing closing '>' at end of list of types for map contained types',
+    MAP_CONTAINED_VALUE_TYPE    = 'missing or badly formed list of types for map contained types after comma (type of contained values)',
     MAP_EXPR                    = 'missing or badly formed expression after : in map-form clause or map item specification',
     MAP_ITEM_SEP                = 'missing : after expression in map item specification',
     MAP_LIST_COMPR              = 'missing "," or missing/badly-formed for-comprehension in map form',
