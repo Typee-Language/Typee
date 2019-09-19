@@ -678,7 +678,9 @@ SOFTWARE.
 
 <list type>             ::= 'list' [<contained type>]
 
-<map type>              ::= 'map' [<contained type>]
+<map contained types>	::= '<' <TYPE> [ ',' <TYPE> ] '>'
+
+<map type>              ::= 'map' [<map contained types>]
 
 <scalar type>           ::= <scalar type'>  |  <generic scalar type>
 <scalar type'>          ::= 'bool'    |  'char'    |  'char16' |

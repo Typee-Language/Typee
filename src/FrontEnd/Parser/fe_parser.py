@@ -2508,14 +2508,47 @@ class FEParser:
             return self._for_comprehension()
 
     #-------------------------------------------------------------------------
+    def _map_contained_types(self) -> bool:
+        #=======================================================================
+        # <map contained types> ::= '<' <TYPE> <map contained types'>
+        #                        |  EPS
+        #=======================================================================
+        if self._current.is_LT():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._TYPE():
+                self._append_error( FESyntaxErrors.MAP_CONTAINED_TYPE )
+            return self._map_contained_types_1()
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _map_contained_types_1(self) -> bool:
+        #=======================================================================
+        # <map contained types'> ::= ',' <TYPE> '>'
+        #                         |  '>'
+        #=======================================================================
+        if self._current.is_COMMA():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            if not self._TYPE():
+                self._append_error( FESyntaxErrors.MAP_CONTAINED_VALUE_TYPE )
+        if self._current.is_GT():
+            self._append_syntaxic_node()
+            self._next_token_node()
+        else:
+            self._append_error( FESyntaxErrors.MAP_CONTAINED_TYPE_END )
+        return True
+
+    #-------------------------------------------------------------------------
     def _map_type(self) -> bool:
         #=======================================================================
-        # <<map type> ::= "map" <contained type>
+        # <<map type> ::= "map" <map contained types>
         #=======================================================================
         if self._current.is_MAP():
             self._append_syntaxic_node()
             self._next_token_node()
-            self._contaioned_type() ## (notice: always returns True)
+            self._map_contained_types() ## (notice: always returns True)
             return True
         else:
             return False
