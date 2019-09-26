@@ -803,8 +803,10 @@ SOFTWARE.
                              |  EPS
 
 <with item>                 ::= <expression> <with item'>
-<with item'>                ::= 'as' <target>
+<with item'>                ::= 'as' <with item">							## modified
                              |  EPS
+<with item">				::= <target>									## new
+							 |  <type'> <target>							## new
 
 <with items list>           ::= <with item> <with items list'>
 <with items list'>          ::= ',' <with item> <with items list'>
