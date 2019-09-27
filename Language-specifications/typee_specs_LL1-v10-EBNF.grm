@@ -591,7 +591,8 @@ SOFTWARE.
                                     <statements block> 
                                     ['otherwise' <statements block>]
 
-<with item>                 ::= <expression> ['as' <target>]
+<with item>                 ::= <expression> ['as' (<target>  |
+														<type'> <target>) ]
 
 <with items list>           ::= <with item> ( ',' <with item> )*
 
