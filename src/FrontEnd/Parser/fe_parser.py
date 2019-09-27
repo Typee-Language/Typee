@@ -4217,15 +4217,30 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _with_item1(self) -> bool:
         #=======================================================================
-        # <with item'> ::= 'as' <target>
+        # <with item'> ::= 'as' <with item">
         #               |  EPS
         #=======================================================================
         if self._current.is_AS():
             self._append_syntaxic_node()
             self._next_token_node()
-            if not self._target():
+            if not self._with_item2():
                 self._append_error( FESyntaxErrors.WITH_AS_IDENT )
         return True
+
+    #-------------------------------------------------------------------------
+    def _with_item2(self) -> bool:
+        #=======================================================================
+        # <with item"> ::= <target>
+        #               |  <type'> <target>
+        #=======================================================================
+        if self._target():
+            return True
+        elif self._type1():
+            if not self._target():
+                self._append_error( FESyntaxErrors.WITH_AS_TYPED_IDENT )
+            return True
+        else:
+            return False
 
     #-------------------------------------------------------------------------
     def _with_items_list(self) -> bool:

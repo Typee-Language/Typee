@@ -284,6 +284,7 @@ class FESyntaxErrors:
     WHILE_COND_END              = 'missing ) at end of conditional expression in while clause, leads to unpaired (',
     WHILE_OTHERWISE_BODY        = 'missing instruction or instructions block after keyword "otherwise" in while instruction',
     WITH_AS_IDENT               = 'missing or badly formed identifier after keyword "as" in with clause',
+    WITH_AS_TYPED_IDENT         = 'missing or badly formed identifier after type declaration in with-as clause',
     WITH_BODY                   = 'missing instruction or instructions block after with clause in with instruction',
     WITH_EXPR                   = 'missing or badly formed expression after keyword "with"',
     WITH_LIST_COMMA             = 'missing or badly formed with-as clause in list of with-as clauses'  ## notice: we already know that this kind of error will never be detected as such
