@@ -24,20 +24,30 @@ SOFTWARE.
 // Built-in library Random
 // Module Bases/base_rand_state.ty
 
+// defined classes
+fwd class BaseRandState< RandT, ValuesT, const uint16 K_SIZE >;
+fwd class InternalState< RandT, ValuesT, const uint16 K_SIZE >;
+
+
 //=============================================================================
-class BaseRandState< RandT, InternT, const uint16 K_SIZE >
+class BaseRandState< RandT, ValuesT, const uint16 K_SIZE >
 /**
 Definition of the base class for all pseudo-random generators that are based 
 on internal states with more than 1 value.
 
-Those values are of type InternT. K_SIZE is their number. They are stored in
+Those values are of type ValuesT. K_SIZE is their number. They are stored in
 arrays that are initialized with a pseudo-random generator of type RandT.
 */
 {
   :public:
     
     //-------------------------------------------------------------------------
-    BaseRandState()
+    // Shortcuts definitions
+    type BaseRandState< RandT, ValuesT, K_SIZE > as BaseRandType;
+    type InternalState< RandT, ValuesT, K_SIZE > as InternStateType;
+    
+    //-------------------------------------------------------------------------
+    BaseRandType()
     /**
     Constructor.
     The shuffling of the local current time value is used as the 
@@ -48,7 +58,7 @@ arrays that are initialized with a pseudo-random generator of type RandT.
     }
     
     //-------------------------------------------------------------------------
-    BaseRandState( const InternalState seed_state )
+    BaseRandType( const InternStateType seed_state )
     /**
     Constructor.
     seed_state is a valid internal state that has been previously loaded in 
@@ -59,7 +69,7 @@ arrays that are initialized with a pseudo-random generator of type RandT.
     }
             
     //-------------------------------------------------------------------------
-    InternalState get_state()
+    InternStateType get_state()
     /**
     Returns an object capturing the current internal state of the generator.
     This  object can be passed to set_state() to restore the state.  It is a
@@ -76,11 +86,11 @@ arrays that are initialized with a pseudo-random generator of type RandT.
     Initiliazes the internal state series from scratch.
     */
     {
-        me._state = InternalState();
+        me._state = InternStateType();
     }
     
     //-------------------------------------------------------------------------
-    none set_state( const InternalState seed_state )
+    none set_state( const InternStateType seed_state )
     /**
     seed_state should have been obtained from a previous call  to 
     getstate(), and setstate() restores the internal state of the 
@@ -91,19 +101,38 @@ arrays that are initialized with a pseudo-random generator of type RandT.
     }
     
     //-------------------------------------------------------------------------
-    class InternalState{
-        //-----------------------------------------------------------------
-        InternalState(){
-            RandT rnd = RandT();
-            me._list  = [ InternT( rnd() ) for _ in [:K_SIZE] ];  // got it? Enjoy Typee! ;)
-            me._index = 0;
-        }
-        //-----------------------------------------------------------------
-        uint16                 _index;
-        array<InternT>[K_SIZE] _list;
+    protected InternStateType  _state;
+}
+
+
+//=============================================================================
+class InternalState< RandT, ValuesT, const uint16 K_SIZE >
+/**
+Definition of the internal state for pseudo-random generators with more than
+one value as their internal states.
+
+Those values are of type ValuesT. K_SIZE is their number. They are stored in
+arrays that are initialized with a pseudo-random generator of type RandT.
+*/
+{
+  :public:
+  
+    //-----------------------------------------------------------------
+    InternalState< RandT, ValuesT, K_SIZE >()
+    /**
+    Constructor.
+    A shuffling of the local current time value is used as the 
+    initial seed.
+    */
+    {
+        RandT rnd = RandT();
+        me._list  = [ ValuesT( rnd() ) for _ in [:K_SIZE] ];  // got it? Enjoy Typee! ;)
+        me._index = 0;
     }
-    
-    protected InternalState  _state;
+
+    //-----------------------------------------------------------------
+    uint16                 _index;
+    array<ValuesT>[K_SIZE] _list;
 }
 
 //=====   end of module   Random.Bases.base_rand_state.ty   =====//
