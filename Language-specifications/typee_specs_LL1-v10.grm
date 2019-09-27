@@ -702,7 +702,7 @@ SOFTWARE.
 <import statement>          ::= <import name>
                              |  <import from>
 
-<language>                  ::= 'cpp'  |  'cs'  |  'csharp'  |  'java'  |  'python'  |  'py'  |  'javascript'  |  'm6809'
+<language>                  ::= 'cpp'  |  'cs'  |  'csharp'  |  'java'  |  'python'  |  'py'  |  'javascript'
 
 <languages>                 ::= <language> <laguages'>
 <languages'>                ::= ',' <languages'>
@@ -928,12 +928,12 @@ SOFTWARE.
                                  
 <list type>                     ::= 'list' <contained type>
 
-<map contained types>            ::= '<' <TYPE> <map contained types'>                ## new
-                                 |    EPS                                                ## new
-<map contained types'>            ::= ',' <TYPE> '>'                                  ## new
-                                 |    '>'                                                ## new
+<map contained types>            ::= '<' <TYPE> <map contained types'>              ## new
+                                 |    EPS                                           ## new
+<map contained types'>            ::= ',' <TYPE> '>'                                ## new
+                                 |    '>'                                           ## new
 
-<map type>                      ::= 'map' <map contained types>                        ## modified
+<map type>                      ::= 'map' <map contained types>                     ## modified
 
 <scalar type>                   ::= <scalar type'>  |  <generic scalar type>        ## modified
 <scalar type'>                  ::= 'bool'                                          ## modified
