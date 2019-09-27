@@ -25,7 +25,7 @@ SOFTWARE.
 // Module rand78.ty
 
 //=============================================================================
-from .Bases.base_lfib64 import BaseLFib64;
+from Random.Bases.base_lfib64 import BaseLFib64;
 
 //=============================================================================
 class Rand78 : BaseLFib64< 5, 17 > as Base78

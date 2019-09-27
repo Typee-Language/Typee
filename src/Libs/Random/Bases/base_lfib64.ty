@@ -25,8 +25,8 @@ SOFTWARE.
 // Module Bases/base_lfib64.ty
 
 //=============================================================================
-from .rand63 import Rand63;
-from .Bases.base_random import BaseRandom;
+from Random.rand63 import Rand63;
+from Random.Bases.base_random import BaseRandom;
 
 //=============================================================================
 class BaseLFib64<const uint16 INDEX,
