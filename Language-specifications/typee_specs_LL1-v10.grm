@@ -150,8 +150,8 @@ SOFTWARE.
 <condition>                 ::= <or test> <condition'>
 <condition'>                ::= 'if' <or test> <condition">
                              |  EPS
-<condition">            	::= 'else' <expression>
-	    		        	 |	'otherwise' <expression>
+<condition">                ::= 'else' <expression>
+                             |    'otherwise' <expression>
 
 <and test>                  ::= <not test> <and test'>
 <and test'>                 ::= 'and' <not test>
@@ -684,10 +684,10 @@ SOFTWARE.
 <import as names'>          ::= ',' <import as name> <import as names'>
                              |  EPS
 
-<import but>				::= 'but' <identifier> <import but'>
-							 |	EPS
-<import but'>				::= ',' <identifier> <import but'>
-							 |	EPS
+<import but>                ::= 'but' <identifier> <import but'>
+                             |    EPS
+<import but'>                ::= ',' <identifier> <import but'>
+                             |    EPS
 
 <import from>               ::= 'from' <import from'>
 <import from'>              ::= '.' <import from'>
@@ -803,10 +803,10 @@ SOFTWARE.
                              |  EPS
 
 <with item>                 ::= <expression> <with item'>
-<with item'>                ::= 'as' <with item">							## modified
+<with item'>                ::= 'as' <with item">                           ## modified
                              |  EPS
-<with item">				::= <target>									## new
-							 |  <type'> <target>							## new
+<with item">                ::= <target>                                    ## new
+                             |  <type'> <target>                            ## new
 
 <with items list>           ::= <with item> <with items list'>
 <with items list'>          ::= ',' <with item> <with items list'>
@@ -928,12 +928,12 @@ SOFTWARE.
                                  
 <list type>                     ::= 'list' <contained type>
 
-<map contained types>			::= '<' <TYPE> <map contained types'>				## new
-								 |	EPS												## new
-<map contained types'>			::= ',' <TYPE> '>'                  			    ## new
-								 |	'>'												## new
+<map contained types>            ::= '<' <TYPE> <map contained types'>                ## new
+                                 |    EPS                                                ## new
+<map contained types'>            ::= ',' <TYPE> '>'                                  ## new
+                                 |    '>'                                                ## new
 
-<map type>                      ::= 'map' <map contained types>					    ## modified
+<map type>                      ::= 'map' <map contained types>                        ## modified
 
 <scalar type>                   ::= <scalar type'>  |  <generic scalar type>        ## modified
 <scalar type'>                  ::= 'bool'                                          ## modified
