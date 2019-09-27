@@ -21,7 +21,7 @@ SOFTWARE.
 ***/
 
 //=============================================================================
-from .Bases.basemrg import BaseMRG
+from Random.Bases.basemrg import BaseMRG;
 
 //=============================================================================
 class Rand1457 : BaseMRG< 47 > as Base1457

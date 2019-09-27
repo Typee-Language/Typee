@@ -25,7 +25,7 @@ SOFTWARE.
 // Module rand287.ty
 
 //=============================================================================
-from .Bases.basemrg import BaseMRG
+from Random.Bases.basemrg import BaseMRG;
 
 //=============================================================================
 class Rand287 : BaseMRG< 256 > as Base287

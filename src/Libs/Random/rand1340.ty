@@ -25,7 +25,7 @@ SOFTWARE.
 // Module rand1340.ty
 
 //=============================================================================
-from .Bases.base_lfib64 import BaseLFib64
+from Random.Bases.base_lfib64 import BaseLFib64;
 
 //=============================================================================
 class Rand1340 : BaseLFib64< 861, 1279 > as Base1340

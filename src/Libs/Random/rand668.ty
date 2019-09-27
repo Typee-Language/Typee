@@ -25,7 +25,7 @@ SOFTWARE.
 // Module rand668.ty
 
 //=============================================================================
-from .Bases.base_lfib64 import BaseLFib64
+from Random.Bases.base_lfib64 import BaseLFib64
 
 //=============================================================================
 class Rand668 : BaseLFib64< 273, 607 > as Base668

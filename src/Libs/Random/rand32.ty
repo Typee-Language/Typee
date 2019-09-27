@@ -25,7 +25,7 @@ SOFTWARE.
 // Module rand32.ty
 
 //=============================================================================
-from .Bases.base_lcg import BaseLcg;
+from Random.Bases.base_lcg import BaseLcg;
 from SysTime import systime;
 
 //=============================================================================

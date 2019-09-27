@@ -25,7 +25,7 @@ SOFTWARE.
 // Module Bases/base_lcg.ty
 
 //=============================================================================
-from .Bases.base_random import BaseRandom;
+from Random.Bases.base_random import BaseRandom;
 
 //=============================================================================
 class BaseLCG< InternT in (uint32,int64),

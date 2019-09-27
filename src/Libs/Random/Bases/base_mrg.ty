@@ -25,8 +25,8 @@ SOFTWARE.
 // Module Bases/base_mrg.ty
 
 //=============================================================================
-from .rand32 import Rand32;
-from .Bases.base_random import BaseRandom;
+from Random.rand32 import Rand32;
+from Random.Bases.base_random import BaseRandom;
 
 //=============================================================================
 class BaseMRG<const uint16 K_SIZE> : BaseRandState< Rand32, uint32, K_SIZE >

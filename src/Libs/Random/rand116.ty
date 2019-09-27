@@ -25,7 +25,7 @@ SOFTWARE.
 // Module rand116.ty
 
 //=============================================================================
-from .Bases.base_lfib64 import BaseLFib64
+from Random.Bases.base_lfib64 import BaseLFib64;
 
 //=============================================================================
 class Rand116 : BaseLFib64< 24, 55 > as Base116
