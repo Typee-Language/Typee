@@ -22,7 +22,7 @@ To modify Typee, you will need to install:
 - and Anaconda 3, a complete Python 3.x environment with the Python interpreter.
 
 
-## Eclipse Photon (4.8)
+## Eclipse 2019-09
 
 [Eclipse](http://www.eclipse.org) is an Open Source development framework from
 Eclipse Foundation. The last released versions of this framework, dedicated to
@@ -30,7 +30,7 @@ your Operating System and the CPU architecture (32- vs. 64-bits) are directly
 available for download here: 
 [http://www.eclipse.org/downloads/](http://www.eclipse.org/downloads/)
 
-The one we use for Typee programmation is Eclipse Photon (4.8 - June 2018).
+The one we use for Typee programmation is Eclipse 2019-09.
 So, this is the recommended version of Eclipse to use. If you do so, you will
 take immediate benefit of the two files `.project` and `.pydevproject` that
 are provided at the root of the Typee repository.
@@ -52,7 +52,7 @@ Installation is really straightforward. You should not encounter any kind of
 issue to install it.
 
 
-## Java 8 (8.192)
+## Java 8 (8.0_221)
 
 Mind this gap. Eclipse framework is developed in Java. You definitively need
 to install a Java Run Time (JRT) on your machine to be able to run Eclipse. If 
