@@ -756,13 +756,15 @@ SOFTWARE.
 <target list'>              ::= ',' <typed target> <target list'>
                              |  EPS
 
-<try except>                ::= 'except' '(' <try except'> ')'
-<try except'>               ::= <expression> <try except''> <try except'''>
-                             |  'all' <try except''>
+<try except>                ::= 'except' <try except'>							## modified	
+<try except'>				::= '(' <try except'> ')'							## new		
+							 |	EPS												## new		
+<try except''>              ::= <expression> <try except'''> <try except''''>	## modified	
+                             |  'all' <try except'''>							## modified	
                              |  EPS
-<try except''>              ::= ',' <expression> <try except''>
+<try except'''>             ::= ',' <expression> <try except'''>				## modified	
                              |  EPS
-<try except'''>             ::= 'as' <identifier>
+<try except''''>            ::= 'as' <identifier>								## modified	
                              |  EPS
                              
 <try finally>               ::= 'finally'
