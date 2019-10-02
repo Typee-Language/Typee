@@ -562,9 +562,9 @@ SOFTWARE.
 <try otherwise>             ::= 'otherwise' '(' 
                                     [ 'Exception' 'as' <identifier> ]  ')' 
 
-<try except>                ::= 'except' '(' 
+<try except>                ::= 'except' [ '(' 
                                     [ <try expr as> ( ',' <try expr as> )*  | 
-                                      'all' [ 'as' <identifier> ] ]    ')' 
+                                      'all' [ 'as' <identifier> ] ] ')' ]
 
 <try expr as>               ::= <expression>  [ 'as' <identifier> ] 
 

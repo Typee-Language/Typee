@@ -30,6 +30,7 @@ from FrontEnd.IntermediateCode.fe_icblock            import FEICBlock
 from FrontEnd.IntermediateCode.fe_icleaf             import FEICLeaf
 from FrontEnd.IntermediateCode.fe_ictree             import FEICTree
 from FrontEnd.Errors.fe_syntax_errors                import FESyntaxErrors
+from builtins import True, False
 
 
 #=============================================================================
@@ -3638,17 +3639,26 @@ class FEParser:
     #-------------------------------------------------------------------------
     def _try_except(self) -> bool:
         #=======================================================================
-        # <try except> ::= 'except' '(' <try except'> ')'
+        # <try except> ::= 'except' <try except'>
         #=======================================================================
         if self._current.is_EXCEPT():
             self._append_syntaxic_node()
             self._next_token_node()
-            if self._current.is_PAROP():
-                self._append_syntaxic_node()
-                self._next_token_node()
-            else:
-                self._append_error( FESyntaxErrors.EXCEPT_EXPR_BEGIN )
-            self._try_except1() ## (notice: always returns True)
+            self._try_except1()
+            return True
+        else:
+            return False
+
+    #-------------------------------------------------------------------------
+    def _try_except1(self) -> bool:
+        #=======================================================================
+        # <try except'> ::= '(' <try except''> ')'
+        #                |  EPS
+        #=======================================================================
+        if self._current.is_PAROP():
+            self._append_syntaxic_node()
+            self._next_token_node()
+            self._try_except2()
             if self._current.is_PARCL():
                 self._append_syntaxic_node()
                 self._next_token_node()
@@ -3659,40 +3669,40 @@ class FEParser:
             return False            
 
     #-------------------------------------------------------------------------
-    def _try_except1(self) -> bool:
+    def _try_except2(self) -> bool:
         #=======================================================================
-        # <try except'> ::= <expression> <try except''> <try except'''>
-        #                |  'all' <try except''>
-        #                |  EPS
+        # <try except''> ::= <expression> <try except'''> <try except''''>
+        #                 |  'all' <try except'''>
+        #                 |  EPS
         #=======================================================================
         if self._expression():
-            self._try_except2() ## (notice: always returns True)
             self._try_except3() ## (notice: always returns True)
+            self._try_except4() ## (notice: always returns True)
         elif self._current.is_ALL():
             self._append_syntaxic_node()
             self._next_token_node()
-            self._try_except2()
+            self._try_except3()
         return True
 
     #-------------------------------------------------------------------------
-    def _try_except2(self) -> bool:
+    def _try_except3(self) -> bool:
         #=======================================================================
-        # <try except''> ::= ',' <expression> <try except''>
-        #                 |  EPS
+        # <try except'''> ::= ',' <expression> <try except'''>
+        #                  |  EPS
         #=======================================================================
         while self._current.is_COMMA():
             self._append_syntaxic_node()
             self._next_token_node()
             if not self._identifier():
                 self._append_error( FESyntaxErrors.TRY_EXCEPT_LIST )
-            self._try_except2()
+            self._try_except3()
         return True
 
     #-------------------------------------------------------------------------
-    def _try_except3(self) -> bool:
+    def _try_except4(self) -> bool:
         #=======================================================================
-        # <try except'''> ::= 'as' <identifier>
-        #                  |  EPS
+        # <try except''''> ::= 'as' <identifier>
+        #                   |  EPS
         #=======================================================================
         if self._current.is_AS():
             self._append_syntaxic_node()
