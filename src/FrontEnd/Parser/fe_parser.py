@@ -3658,7 +3658,7 @@ class FEParser:
         if self._current.is_PAROP():
             self._append_syntaxic_node()
             self._next_token_node()
-            self._try_except2() ## (notice: always returns True)
+            self._try_except2()
             if self._current.is_PARCL():
                 self._append_syntaxic_node()
                 self._next_token_node()
