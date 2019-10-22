@@ -29,7 +29,10 @@ fwd const int64 sec_to_ms( const float32 time );
 
 //=============================================================================
 const int64 sec_to_ms( const float32 time ) {
-    return int64( 1000.0 * time + 0.5 );
+    try
+        return int64( 1000.0 * time + 0.5 );
+    except
+        return 0xffff_ffff_ffff_ffff
 }
 
 //===== end of module   Thread.utils.utils.ty   =====//
