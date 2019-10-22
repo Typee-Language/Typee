@@ -151,7 +151,7 @@ SOFTWARE.
 <condition'>                ::= 'if' <or test> <condition">
                              |  EPS
 <condition">                ::= 'else' <expression>
-                             |    'otherwise' <expression>
+                             |  'otherwise' <expression>
 
 <and test>                  ::= <not test> <and test'>
 <and test'>                 ::= 'and' <not test>
@@ -195,6 +195,18 @@ SOFTWARE.
                              |  '-' <template args> <term> <arithmetic expr'>
                              |  EPS
 
+<bitand expr>               ::= <shift expr> <bitand expr'>
+<bitand expr'>              ::= '&' <template args> <shift expr> <bitand expr'>
+                             |  EPS
+
+<bitor expr>                ::= <bitxor expr> <bitor expr'>
+<bitor expr'>               ::= '|' <template args> <bitxor expr> <bitor expr'>
+                             |  EPS
+             
+<bitxor expr>               ::= <bitand expr> <bitxor expr'>
+<bitxor expr'>              ::= '^' <template args> <bitand expr> <bitxor expr'>
+                             |  EPS
+
 <expr list>                 ::= <expression> <expr list'>
 <expr list'>                ::= ',' <expression> <expr list'>
                              |  EPS
@@ -204,7 +216,7 @@ SOFTWARE.
                              |  '^^' <template args> <unary expr>
                              |  EPS
 
-<identifier>               ::= '_' <identifier'>
+<identifier>                ::= '_' <identifier'>
                              |  <alpha char> <identifier'>
 <identifier'>               ::= <alpha num char> <identifier'>
                              |  '_' <identifier'>
@@ -219,18 +231,6 @@ SOFTWARE.
              
 <map list or comprehension> ::= ',' <map item> <map list>
                              |  <for comprehension>
-
-<bitand expr>               ::= <shift expr> <bitand expr'>
-<bitand expr'>              ::= '&' <template args> <shift expr> <bitand expr'>
-                             |  EPS
-
-<bitor expr>                ::= <bitxor expr> <bitor expr'>
-<bitor expr'>               ::= '|' <template args> <bitxor expr> <bitor expr'>
-                             |  EPS
-             
-<bitxor expr>               ::= <bitand expr> <bitxor expr'>
-<bitxor expr'>              ::= '^' <template args> <bitand expr> <bitxor expr'>
-                             |  EPS
 
 <shift expr>                ::= <arithmetic expr> <shift expr'>
 <shift expr'>               ::= '<<'  <spaced template args> <arithmetic expr> <shift expr'>
@@ -266,8 +266,8 @@ SOFTWARE.
 
 <function definition>       ::= <template def> <function definition'>
                              |  <function definition'>
-<function definition'>      ::= <function args declaration> <function definition"> <statements block>
-<function definition">      ::= 'exclude' <languages>
+<function definition'>      ::= <function args declaration> <function definition''> <statements block>
+<function definition''>     ::= 'exclude' <languages>
                              |  EPS
 
 
@@ -511,10 +511,11 @@ SOFTWARE.
 <assign op> ::= '='
              |  <augmented assign op>
 
-<assign or func-call statement> ::= <target list'> <assignment statement>
+<assign or func-call statement> ::= <assignment statement>                  ### modified    
                                  |  <function call>
 
-<assignment statement>    ::= <assign op> <expr list>
+<assignment statement>    ::= <target list'> <assignment statement'>        ### modified    
+<assignment statement'>   ::= <assign op> <expr list>                       ### new         
 
 <augmented assign op>   ::= '+='
                          |  '-='
@@ -686,7 +687,7 @@ SOFTWARE.
 
 <import but>                ::= 'but' <identifier> <import but'>
                              |    EPS
-<import but'>                ::= ',' <identifier> <import but'>
+<import but'>               ::= ',' <identifier> <import but'>
                              |    EPS
 
 <import from>               ::= 'from' <import from'>
@@ -704,7 +705,7 @@ SOFTWARE.
 
 <language>                  ::= 'cpp'  |  'cs'  |  'csharp'  |  'java'  |  'python'  |  'py'  |  'javascript'
 
-<languages>                 ::= <language> <laguages'>
+<languages>                 ::= <language> <languages'>
 <languages'>                ::= ',' <languages'>
                              |  EPS
 
@@ -757,11 +758,10 @@ SOFTWARE.
                              |  EPS
 
 <try except>                ::= 'except' <try except'>                          ## modified 
-<try except'>               ::= '(' <try except''> ')'                          ## new      
+<try except'>               ::= '(' <try except''> ')' <try except''''>         ## new      
                              |  EPS                                             ## new      
-<try except''>              ::= <expression> <try except'''> <try except''''>   ## modified 
+<try except''>              ::= <expression> <try except'''>                    ## modified 
                              |  'all' <try except'''>                           ## modified 
-                             |  EPS
 <try except'''>             ::= ',' <expression> <try except'''>                ## modified 
                              |  EPS
 <try except''''>            ::= 'as' <identifier>                               ## modified 
@@ -769,9 +769,9 @@ SOFTWARE.
                              
 <try finally>               ::= 'finally'
 
-<try otherwise>             ::= 'otherwise' '(' <try otherwise'> ')'
-<try otherwise'>            ::= 'Exception' 'as' <identifier>
-                             |  EPS
+<try otherwise>             ::= 'otherwise' <try otherwise'>                    ## modified 
+<try otherwise'>            ::= '(' 'Exception' 'as' <identifier> ')'           ## modified 
+                             |  EPS                                             ## new      
 
 <try statement>             ::= 'try' <statements block> <try statement excepts> <try statement otherwise> <try statement finally>
 <try statement excepts>     ::= <try except> <statements block> <try statement excepts'>
@@ -789,6 +789,7 @@ SOFTWARE.
 <type alias">               ::= <TYPE> 'as' <identifier>
 
 <typed target>              ::= <type'> <target>
+                             |  <target>                                    ### new         
                              |  <dotted name> <typed target'>
 <typed target'>             ::= <dotted name> <target'>
                              |  <target'>
@@ -915,10 +916,6 @@ SOFTWARE.
                                  |  EPS
 <dimensions'>                   ::= <integer number>
                                  |  <dotted name>
-
-<scalar type or dotted name>    ::= <scalar type>
-                                 |  <dotted name>
-
 <enum type>                     ::= 'enum'
 
 <file type>                     ::= 'file' <contained type>
@@ -954,6 +951,10 @@ SOFTWARE.
                                  |  'uint16'
                                  |  'uint32'
                                  |  'uint64'
+
+<scalar type or dotted name>    ::= <scalar type>
+                                 |  <dotted name>
+
 
 <set type>                      ::= 'set' <contained type>
 

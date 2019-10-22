@@ -559,14 +559,16 @@ SOFTWARE.
 
 <target list>               ::= <typed target> ( ',' <typed target> )*
 
-<try otherwise>             ::= 'otherwise' '(' 
-                                    [ 'Exception' 'as' <identifier> ]  ')' 
+<try otherwise>             ::= 'otherwise' [ '(' 
+                                    'Exception' 'as' <identifier> ')'  ]
 
 <try except>                ::= 'except' [ '(' 
-                                    [ <try expr as> ( ',' <try expr as> )*  | 
-                                      'all' [ 'as' <identifier> ] ] ')' ]
+                                           ( <try expr> ( ',' <try expr> )*  | 
+                                             'all' )
+                                           [ 'as' <identifier> ]
+                                           ')' ]
 
-<try expr as>               ::= <expression>  [ 'as' <identifier> ] 
+<try expr>                  ::= <expression>
 
 <try finally>               ::= 'finally' 
 
