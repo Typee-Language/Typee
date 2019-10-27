@@ -152,13 +152,17 @@ that are not evaluataed in constructors of this base class RFile.
     FilePermissionException,  FileRWModeException,  FileEOFException, 
     TypeException and FileException in case of related errors.
     Usage example:
-        // reads a float64 value at position 2 of file
+        // reads a float64 value at position 2 (in bytes) of file
         float64 val = my_file[2]
     */
     {
+        ? item; // expected type for `item` is set according to the
+                // expected returned type as set by the  assignment
+                // clause in which this operator call appears.
         me._checked_opened();
         me._file.set_pos( pos );
-        return me ;
+        me._file.read( item );
+        return item;
     }
 
     //-------------------------------------------------------------------------
@@ -312,8 +316,7 @@ See also classes WFile<ItemT> and RWFile<ItemT>.
 
 
 //=============================================================================
-hidden
-class _RFileText<StrT> : BaseFile<StrT>
+hidden class _RFileText<StrT> : BaseFile<StrT>
 /**
 Local base class for all text files with Read access permission.
 See also class _WFileText<StrT>.
