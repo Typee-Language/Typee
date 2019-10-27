@@ -93,7 +93,7 @@ in related inheriting classes: ROFile, WOFile and RWFile.
     Typee.
     */
     {
-        me.file_.big_endian();
+        me._file.big_endian();
         return me;
     }
 
