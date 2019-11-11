@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2019 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -22,32 +21,28 @@ SOFTWARE.
 """
 
 #=============================================================================
-# no import.
+from Utils.Trees.ut_tree_leaf import UTTreeLeaf
+from Utils.Trees.ut_tree_node import UTTreeNode
+from Utils.Trees.ut_tree      import UTTree
 
 
 #=============================================================================
-class FEElaborator:
+class ICAst( UTTree ):
     """
-    Base class for the Elaboration step of Typee front-End.
-    """    
+    The class of Abstract Syntaxic Trees.
+    Those trees are created by the Front-End Parser.
+    They are used by the Front-End Elaborator, when elaborating symbols
+    and types for instance.
+    They are used also by the types checker.
+    FInally, they are used by the Back-End Programming-Language Translators.
+    """   
     #-------------------------------------------------------------------------
-    def __init__(self, params) -> None:
+    def __init__(self) -> None:
         '''
         Constructor.
-        
-        description
-        
-        Args:
-            ...
-        
-        Returns:
-            ...
-        
-        Raises:
-            ...
         '''
-        pass
-   
+        super().__init__()
+
     #-------------------------------------------------------------------------
 
-#=====   end of   FrontEnd.Elaborator.fe_elaborator   =====#
+#=====   end of   IntermediateCode.ic_ast   =====#

@@ -30,7 +30,6 @@ from FrontEnd.IntermediateCode.fe_icblock            import FEICBlock
 from FrontEnd.IntermediateCode.fe_icleaf             import FEICLeaf
 from FrontEnd.IntermediateCode.fe_ictree             import FEICTree
 from FrontEnd.Errors.fe_syntax_errors                import FESyntaxErrors
-from builtins import True, False
 
 
 #=============================================================================
