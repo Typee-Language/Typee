@@ -12,6 +12,7 @@ contributors list.
 Current developments are in _Python 3.7_, based on _Anaconda 3_, with 
 _Eclipse 2019-09_ framework and _PyDev_ plug-in. Windows is currently used also 
 for these developments. So, if you get Linux expertise you're welcome!
+
 Notice: Python 3.8 has been released by October 2019. Meanwhlile, we're not 
 using it right now because many libraries we use are not yet available 
 with this new release. Let's wait a little bit and we'll be able to take
