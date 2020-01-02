@@ -3,7 +3,7 @@
 This document is part of the Open Source project __Typee__. As such, it is
 delivered under the MIT license:
 ```
-Copyright (c) 2018 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2020 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -201,7 +201,8 @@ get when it is starting to parse a new statement.
 The root rule of __Typee__ language reads this way:
 ```
 <code file> ::= <statements list> <ENDOFFILE>
-```
+
+```
 with `<statements list>` specified as:
 ```
 <statements list> ::= <empty statement> <statements list>
