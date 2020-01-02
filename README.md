@@ -13,11 +13,16 @@ Current developments are in _Python 3.7_, based on _Anaconda 3_, with
 _Eclipse 2019-09_ framework and _PyDev_ plug-in. Windows is currently used also 
 for these developments. So, if you get Linux expertise you're welcome!
 
+Notice: Python 3.8 has been released by October 2019. Meanwhlile, we're not 
+using it right now because many libraries we use are not yet available 
+with this new release. Let's wait a little bit and we'll be able to take
+most of the benefits release 3.8 of Python provide.
+
 
 ## What is Typee?
 
 __Typee__ is an Object Oriented Programming language. Its syntax is derived 
-from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.7_. Some 
+from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.8_. Some 
 goodies from other languages are used also (e.g. from _PHP_).
 
 

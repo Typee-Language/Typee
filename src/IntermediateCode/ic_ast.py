@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-
 """
-Copyright (c) 2018-2020 Philippe Schmouker, Typhee project, http://www.typee.ovh
+Copyright (c) 2019-2020 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -23,21 +21,28 @@ SOFTWARE.
 """
 
 #=============================================================================
-from Tests.FrontEnd.Scanner_Tokens.tokens_test_base import TokensTestBase
+from Utils.Trees.ut_tree_leaf import UTTreeLeaf
+from Utils.Trees.ut_tree_node import UTTreeNode
+from Utils.Trees.ut_tree      import UTTree
+
 
 #=============================================================================
-def test_simple_tokens() -> None:
-    TokensTestBase( 'Simple Tokens TEST',
-                    'Data/tokenization_simple_tokens.ty',
-                    'Data/tokenization_simple_solution.py' )
-
-#=============================================================================
-if __name__ == '__main__':
+class ICAst( UTTree ):
     """
-    Simple test for the tokenization of simple tokens.
-    """
+    The class of Abstract Syntaxic Trees.
+    Those trees are created by the Front-End Parser.
+    They are used by the Front-End Elaborator, when elaborating symbols
+    and types for instance.
+    They are used also by the types checker.
+    FInally, they are used by the Back-End Programming-Language Translators.
+    """   
     #-------------------------------------------------------------------------
-    test_simple_tokens()
+    def __init__(self) -> None:
+        '''
+        Constructor.
+        '''
+        super().__init__()
 
-#=====   end of   Tests.test_simple_tokens   =====#
-        
+    #-------------------------------------------------------------------------
+
+#=====   end of   IntermediateCode.ic_ast   =====#

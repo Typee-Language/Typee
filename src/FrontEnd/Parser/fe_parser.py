@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Copyright (c) 2018-2019 Philippe Schmouker, Typee project, http://www.typee.ovh
+Copyright (c) 2018-2020 Philippe Schmouker, Typee project, http://www.typee.ovh
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -30,7 +30,6 @@ from FrontEnd.IntermediateCode.fe_icblock            import FEICBlock
 from FrontEnd.IntermediateCode.fe_icleaf             import FEICLeaf
 from FrontEnd.IntermediateCode.fe_ictree             import FEICTree
 from FrontEnd.Errors.fe_syntax_errors                import FESyntaxErrors
-from builtins import True, False
 
 
 #=============================================================================
