@@ -412,6 +412,8 @@ SOFTWARE.
                                     <method or operator definition>  |
                                 <volatile qualifier> <type> <identifier> 
                                     [<memory address>] <simple statement end> |
+                                <property qualifier> <type> <identifier>
+                                    '=' <statements block>  |
                                 <type alias> <simple statement end>  |
                                 <decl or def statement''>
 
@@ -539,6 +541,8 @@ SOFTWARE.
                                     <identifier> <function definition>)                                 
 
 <nop statement>             ::= 'nop'  |  'pass' 
+
+<property qualifier>        ::= 'property'
 
 <raise statement>           ::= 'raise' <expression> ['from' <expression>]
 
