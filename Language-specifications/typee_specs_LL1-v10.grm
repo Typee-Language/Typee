@@ -789,7 +789,6 @@ SOFTWARE.
 <type alias">               ::= <TYPE> 'as' <identifier>
 
 <typed target>              ::= <type'> <target>
-                             |  <target>                                    ### new         
                              |  <dotted name> <typed target'>
 <typed target'>             ::= <dotted name> <target'>
                              |  <target'>
