@@ -558,7 +558,7 @@ SOFTWARE.
                              |  <forward decl>
 <decl or def statement'>    ::= <abstract or final qualif> <method or operator definition>
                              |  <volatile qualifier> <type> <identifier> <memory address> <simple statement end>
-                             |  <property qualifier> <TYPE> <identifier> '=' <statements block>                     ## new      
+                             |  <property qualifier> <type> <identifier> '=' <statements block>                     ## new      
                              |  <type alias> <simple statement end>
                              |  <decl or def statement''>
 <decl or def statement''>   ::= <TYPE'> <decl or def statement'''>
