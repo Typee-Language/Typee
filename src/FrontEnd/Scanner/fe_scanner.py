@@ -437,7 +437,7 @@ class FEScanner:
         if self._current == ':':
             self._check_augmented_operator( ICTokenNode_OP_2COLN, ICTokenNode_AUG_2COLN, '::' )
         else:
-            self._append_node( ICTokenNode_COLON, ':' )
+            self._check_augmented_operator( ICTokenNode_COLON, ICTokenNode_AUG_COLN, ':', False )
     #-------------------------------------------------------------------------
     def _div(self) -> None:
         self._next_char()

@@ -84,6 +84,7 @@ class FEICodeTokens:
     
     TK_AUG_AROBASE  = 0
     
+    TK_AUG_COLN     = 0
     TK_AUG_GRLE     = 0
     TK_AUG_LEGR     = 0             ##
     TK_AUG_2AROB    = 0             ##
@@ -288,6 +289,7 @@ class FEICodeTokensData:
         
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_AROBASE ] : '@=',
         
+        FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_COLN ]    : ':=',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_GRLE ]    : '><=',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_LEGR ]    : '<>=',
         FEICodeTokens._TOKEN_NAMES[ FEICodeTokens.TK_AUG_2AROB ]   : '@@=',
