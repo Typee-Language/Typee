@@ -57,6 +57,7 @@ SOFTWARE.
 <atom'>                     ::= <incr or decr>
                              |  <for comprehension>
                              |  '??' <expression> <atom''>                          ## new              
+                             |  ':=' <expression>                                   ## new              
 <atom''>                    ::= '??' <expression> <atom''>                          ## new              
                              |  EPS                                                 ## new              
 

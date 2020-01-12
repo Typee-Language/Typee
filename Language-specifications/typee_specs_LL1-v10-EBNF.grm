@@ -38,6 +38,7 @@ SOFTWARE.
 <atom element'>             ::= <incr or decr>  |
                                 <for comprehension>  |
                                 '??' <expression>  ( '??' <expression> )*  | 
+                                ':=' <expression>  |
                                 <atom element''>
 
 <atom element''>            ::= [ ( <function call> <atom element'''>   |
