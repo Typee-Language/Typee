@@ -162,7 +162,7 @@ libraries).
 - For downloading `Anaconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://www.anaconda.com/download/](https://www.anaconda.com/download/) and
-ask for the installation of the latestg version of Python.
+ask for the installation of the latest version of Python.
 - For downloading `Miniconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://conda.io/miniconda.html](https://conda.io/miniconda.html) and
