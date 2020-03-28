@@ -22,7 +22,7 @@ To modify Typee, you will need to install:
 - and Anaconda 3, a complete Python 3.x environment with the Python interpreter.
 
 
-## Eclipse 2019-09
+## Eclipse 2020-03
 
 [Eclipse](http://www.eclipse.org) is an Open Source development framework from
 Eclipse Foundation. The last released versions of this framework, dedicated to
@@ -30,7 +30,7 @@ your Operating System and the CPU architecture (32- vs. 64-bits) are directly
 available for download here: 
 [http://www.eclipse.org/downloads/](http://www.eclipse.org/downloads/)
 
-The one we use for Typee programmation is Eclipse 2019-09.
+The one we use for Typee Translator programmation is Eclipse 2020-03.
 So, this is the recommended version of Eclipse to use. If you do so, you will
 take immediate benefit of the two files `.project` and `.pydevproject` that
 are provided at the root of the Typee repository.
@@ -162,15 +162,11 @@ libraries).
 - For downloading `Anaconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://www.anaconda.com/download/](https://www.anaconda.com/download/) and
-ask for the installation of Python 3.6. This is mandatory to use our Typee
-project since this is the version of Python we are currently using for our
-developments. 
+ask for the installation of the latestg version of Python.
 - For downloading `Miniconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://conda.io/miniconda.html](https://conda.io/miniconda.html) and
-ask for the installation of Python 3.7. This is mandatory to use our Typee
-project since this is the version of Python we are currently using for our
-developments.
+ask for the installation of the latest version od Python.
 
 You will then be able to easily install Anaconda 3 on your machine either by
 running the installer or by processing the explained installation steps.
@@ -184,18 +180,16 @@ This way, you will also be able to state other versions of Python interpreter
 you would have formerly or lately installed.
 
 
-## Why Python 3.7 rather than 3.6?
+## Install Python 3.8
 
-Well, by July 2018 Python 3.7 has been very newly released (Release Date: 
-2018-06-27) and many external libraries do not yet support this new version
-of the interpreter. So, Anaconda 3 does not support yet Python 3.6. We were
-then recommending to use Python 3.6 until all external libraries would have 
-been upgraded. By 2018-10-20, this has been the case. So, we recommend now 
-to use Python 3.7 as we are doing for the development of Typee translator. 
-Please be aware that Anaconda knows about a bug in library NumPy with 
-Python 3.7. First, we do not use NumPy for the coding ofthe Typee 
-translator. Second, Anaconda ensures that they will provide a new release 
-with the corrected version of NumPy as soon as a patch will be available.
+Up today, Python 3.8 is the very last stable release of Python. It has been
+released by Ocvtober 2019. This is the version of the Python interpreter we
+use to develop the Typee translator.
+
+Just donwload it iof not yet available with Anaconda or miniconda. You will
+the be able to set this interpreter as being the one to use, in your
+prefered development framework - which is Eclipse for us, used with the
+plugin PyDev.
 
 
 ## That's it
