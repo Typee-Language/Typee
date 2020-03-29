@@ -37,8 +37,8 @@ are provided at the root of the Typee repository.
 But you may also use an older version of Eclipse (see item __More Downloads__
 for a list of former versions of Eclipse, available here:
 [http://www.eclipse.org/downloads/eclipse-packages/](http://www.eclipse.org/downloads/eclipse-packages/]
-as well as you may use a newer version of Eclipse as should eventually happen
-(Photon is the last stable release of Eclipse by July 2018).
+as well as you may use a newer version of Eclipse 
+(Eclipse 2020-03 is the last stable release of Eclipse by end of March 2020).
 Of course, would you use a version older than Photon, you should create a
 new project by yourself (see below). Meanwhile, should you use a newer version
 of Eclipse, you could then use the two `. ...project` configuration files as-is.
@@ -52,7 +52,7 @@ Installation is really straightforward. You should not encounter any kind of
 issue to install it.
 
 
-## Java 8 (8.0_221)
+## Java 8 (8.0_241)
 
 Mind this gap. Eclipse framework is developed in Java. You definitively need
 to install a Java Run Time (JRT) on your machine to be able to run Eclipse. If 
@@ -66,7 +66,7 @@ your favorite Web browser this site:
 automatically you to the localized version of this page (as 
 https://java.com/__en__/download/ or https://java.com/__fr__/download/ for
 instance).
-By October 2018, last version of Java is Java 8 Update 192 (October 16, 2018).
+By end of March 2020, last version of Java is Java 8.0 Update 241.
 
 Just download it and let it install itself. You should not encounter any
 kind of issue during this process. Java has been installed billions of times
