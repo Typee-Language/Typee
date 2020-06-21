@@ -1,6 +1,6 @@
 # Programming Languages Translation - a State of the Art
 
-This is a short __State of the Art__ document related to _Programming 
+This is a short **State of the Art** document related to _Programming 
 Languages Translation_.
 
 
@@ -27,17 +27,17 @@ one programming language to another one.
 ### 2.1 Signification of _meta_
 
 In computering engineering (or in computering science), we are used to use the 
-term __meta__ to specify either something that relates to itself or something 
-that relates to its own category - for instance, __metadata__ are data that 
+term **meta** to specify either something that relates to itself or something 
+that relates to its own category - for instance, **metadata** are data that 
 refer to or that describe other data.
 
-But __meta__ may also be used for indicating some higher level of abstraction. 
-For instance, in object oriented programming a __metaclass__ is a higher level 
+But **meta** may also be used for indicating some higher level of abstraction. 
+For instance, in object oriented programming a **metaclass** is a higher level 
 of definition of a class. A metaclass is a class for which instances are 
 classes.
 
-Let's talk now about __metalanguage__, __metaprogramming__ and 
-__metacompilers__.
+Let's talk now about **metalanguage**, **metaprogramming** and 
+**metacompilers**.
 
 
 ### 2.2 Metalanguage
@@ -46,20 +46,20 @@ As for a metaclass about classes, a metalanguage is a higher level of
 abstraction that helps specifying the properties of other languages. In 1959, 
 John W. Backus specified a formal metalanguage[1] that he previously used to 
 describe the syntax of some new language, IAL, later renamed ALGOL 58. This 
-metalanguage took the name __BNF__ for _Backus normal form_. Peter Naur having 
+metalanguage took the name **BNF** for _Backus normal form_. Peter Naur having 
 contributed to the specification of ALGOL 60, the next version of programming 
-language ALGOL, Donald E.Knuth later proposed to rename __BNF__ to 
-___Backus-Naur Form___, since BNF was not a true normal form and since Peter 
+language ALGOL, Donald E.Knuth later proposed to rename **BNF** to 
+**_Backus-Naur Form**_, since BNF was not a true normal form and since Peter 
 Naur had proposed some useful changes to the metalanguage descrition. This 
 last name, Backus-Naur Form, is still used today for BNF.
 
-As a _metalanguage_, __BNF__ describes only the syntax of a language not its 
+As a _metalanguage_, **BNF** describes only the syntax of a language not its 
 semantic. BNF is then said to be a _weak_ metalanguage. 
 
 
 ### 2.3 Metaprogramming
 
-__Metaprogramming__ consists in writing a computer program that processes 
+**Metaprogramming** consists in writing a computer program that processes 
 other programs as its data. The _metaprogram_ can so read, analyse, transform 
 or generate other programs by its own. It can also modify itself at run-time. 
 
@@ -82,7 +82,7 @@ Ok, a compiler compiles a programming language into binary code, targeting a
 specified processor, most often for a targeted environment (e.g. an Operating 
 System).
 
-A __metacompiler__ is a software application that constructs compilers, 
+A **metacompiler** is a software application that constructs compilers, 
 interpreters or translators for other programming languages. It is a 
 metaprogram that is either written in its own metalanguage or written in an 
 existing programming language.
@@ -97,7 +97,7 @@ in Java, a metacompiler compiles programs written in a metalanguage.
 ### 2.5 What's up now?
 
 So, what's up with all of this? Once John W. Backus (1924-2007) had specified 
-__BNF__ as a metalanguage to describe programming languages, and to specify 
+**BNF** as a metalanguage to describe programming languages, and to specify 
 ALGOL 58, people started to use it for other projects.
 
 In 1962, Robert S. Ledley and James B. Wilson proposed a method for the 
@@ -113,11 +113,11 @@ Up to '65, defined languages seemed to be of the from LL(_k_). Languages
 defined with a BNF are context-free languages that are read from left to right 
 and for wich derivation of rules executed on the left of the rules. These are 
 grammars that are easy to read for humans, that are easy to program and to 
-debug also. often, _k_ values to __1__ and states the number of non-read 
+debug also. often, _k_ values to **1** and states the number of non-read 
 symbols that need to be anticipated to evaluate the rule to be derived. In 
 1965, Donald E. Knuth proposed in [4] a new approach for deriving rules. In 
 this paper, he defined LR(_k_) grammars and proposed algorithms to decide if 
-a language programming grammar satisfies le LR(_k_) conditions. __LR__ stands 
+a language programming grammar satisfies le LR(_k_) conditions. **LR** stands 
 for Left-to-write read languages and Right derivation of rules, with _k_ again 
 the number of non-read symbols needed to evaluate the derivation. 
 Right-derivation means that the evaluation of applied rules starts from the 
@@ -128,12 +128,12 @@ leaves of the grammar, up to the root.
 
 From there, many programming languages (as well the very well known and 
 largely used ones as the many more confidential ones) have been specified with 
-the __BNF__ concept. The related compilers and interpeters have been designed 
+the **BNF** concept. The related compilers and interpeters have been designed 
 according to the nature of the programming languages they were implementing: 
 LL(_k_) or LR(_k_). For instance, Python syntax is presented in its online 
 documentation with an LL(1) grammar and as such it is an LL(1) language. The 
 main advantages of defining programming languages this way is that those 
-languages are __context-free__ and __unambiguous__.
+languages are **context-free** and **unambiguous**.
 
 In the meantime, it seems that the only translating that was expected from the 
 compilers or from the interpreters was the translating of source codes into 
@@ -158,7 +158,7 @@ useful.
 ### 3.1 Generalities about Programming Languages Translation
 
 Some papers relate only to the topic of translating programming languages from 
-one to another, which is of high interest to us and our __Typee__ project.
+one to another, which is of high interest to us and our **Typee** project.
 
 In [7], Lili Qiu addresses the automated translation from C to C++ and the 
 manually porting of Java programs to C++. The aim of this paper is to help 
@@ -182,9 +182,9 @@ sides of the tree, leaves being created in between the two roots.
 
 The first root starts the parsing of a program written in a first programming 
 language. From this parsing are derived:
-- __nodes__, describing the different grammar rules that relate to the source 
+- **nodes**, describing the different grammar rules that relate to the source 
 code syntax. Those nodes are connected by _branches_.
-- and __leaves__, describing the final __tokens__ as evaluated according to the 
+- and **leaves**, describing the final **tokens** as evaluated according to the 
 grammar.
 
 While scanning the initial source code, they built from the first root a 
@@ -222,7 +222,7 @@ code (1) that results from the previous removal of higher-order functions (2).
 We did not get access to a full description of their translator, but the 
 concept of polymorphism removal sounds similar to the concept of 
 multiple-inheritance removal that we have to implement to get translation 
-of __Typee__ source code (multiple-inheritance compliant) into _Java_ source 
+of **Typee** source code (multiple-inheritance compliant) into _Java_ source 
 code (single-inheritance compliant but with multiple-implementations of 
 interfaces allowed).
 
@@ -242,8 +242,8 @@ This patent does not describe any translation process since this is not the
 topic it addresses. Quite deceptive for us. But, as long as initial source 
 code and initial platform code are not separated or no optimizer is used on 
 those codes before translation, this patent can't apply. Well, this is the 
-case for the __Typee__ translator which does none of both while it allows the 
-embedding of _native_ source code in __Typee__ source code.
+case for the **Typee** translator which does none of both while it allows the 
+embedding of _native_ source code in **Typee** source code.
 
 
 ### 3.5 Translation of Program Source Code to Markup Languages
@@ -309,7 +309,7 @@ computer language to be translated, as well as in another claim, garbage
 collector in expressely cited also.
 
 That's an interesting concept that any programming language translator should 
-implement. For __Typee__ proof of concept of a translator, we will not address 
+implement. For **Typee** proof of concept of a translator, we will not address 
 such functionality and will not implement such tables and emulated APIs.
 
 
@@ -383,13 +383,13 @@ established package by those days (i.e. 1996), `c.fortran.h`, is cited by the
 author as providing "_the desired convenient interface across the C and 
 Fortran programming languages_".
 
-Why do we cite this paper? Well, just because __Typee__ offers also practical, 
+Why do we cite this paper? Well, just because **Typee** offers also practical, 
 easy and robust means to mixing programming languages. This is the role of 
 Typee statement `embed`.
 
-So, the concept of mixing programming language is not new. In __Typee__, it is 
+So, the concept of mixing programming language is not new. In **Typee**, it is 
 directly built in the programming language as a natural concept of programming 
-in __Typee__ and of the use of its automated translator.
+in **Typee** and of the use of its automated translator.
 
 
 

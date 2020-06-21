@@ -1,6 +1,6 @@
 # Typee Software Design
 
-This document is part of the Open Source project __Typee__. As such, it is
+This document is part of the Open Source project **Typee**. As such, it is
 delivered under the MIT license:
 ```
 Copyright (c) 2018-2020 Philippe Schmouker, Typee project, http://www.typee.ovh
@@ -25,139 +25,139 @@ SOFTWARE.
 ```
 
 
-This document describes the global software design of the __Typee__ 
+This document describes the global software design of the **Typee** 
 translator. We first explain how we have decided to design this translator. 
-Since this design has been largely inspired by _compilers_ general design, we 
+Since this design has been largely inspired by *compilers* general design, we 
 explain then how modern compilers are designed. In the third section, we
-explain the derivative way we have used to design the __Typee__ translator.
+explain the derivative way we have used to design the **Typee** translator.
 Finally, we list packages and their roles as well as modules in packages and
 the role of each of them also.
 
-We expect this document to help the reader to understand how the __Typee__ 
-translator has been thought and designed with programming language _Python_, 
+We expect this document to help the reader to understand how the **Typee** 
+translator has been thought and designed with programming language *Python*, 
 and help anyone who would like to contribute to understand what enhancements 
 could be proposed and how they could be designed and implemented.
 
 Most of the text of this document has been copied from or has been duplicated 
-in other documents elsewhere in this __Typee-Language/Typee__ repository.
+in other documents elsewhere in this **Typee-Language/Typee** repository.
 
 
 
 # 1. Typee Design Concepts
 
-__Typee__ is an Object Oriented Programming language. Its syntax is derived 
-from other OOP language such as _C++11_, _Java 8.0_ and _Python 3.6_.
+**Typee** is an Object Oriented Programming language. Its syntax is derived 
+from other OOP language such as *C++11*, *Java 8.0* and *Python 3.8*.
 
 Traditionnal OOP languages are either compiled (e.g. C++) or interpreted (e.g. 
-_Python_ ). They even may be first compiled into an intermediate code which is 
+*Python* ). They even may be first compiled into an intermediate code which is 
 then interpreted (e.g. Java and its Bytecode interpreted by a 
-_Java Virtual Machine_ that has to be implemented on each of the different 
+*Java Virtual Machine* that has to be implemented on each of the different 
 targeted devices).
 
-Meanwhile, __Typee__ language is neither compiled nor interpreted. It is 
-rather translated into other OOP languages, such as _Python_ (which 
-chronologically is the first addressed OOP language from: _Python_, _C++_ and 
-_Java_). During the translation, type infering and checking is done not only 
+Meanwhile, **Typee** language is neither compiled nor interpreted. It is 
+rather translated into other OOP languages, such as *Python* (which 
+chronologically is the first addressed OOP language from: *Python*, *C++* and 
+*Java*). During the translation, type infering and checking is done not only 
 for APIs but also on all the other parts of the code.
 
-So, we got greatly inspired by modern compilers design to design the __Typee__ 
-translator. Our bedside book for a long has been "_Engineering a Compiler_",
+So, we got greatly inspired by modern compilers design to design the **Typee** 
+translator. Our bedside book for a long has been "*Engineering a Compiler*",
 2nd edtition, Keith D.Cooper & Linda Torczon, 2012, Elsevier, ISBN 
 978-0-12-088478-0. and we encourage the reader to read this book.
 
 We have choosen this book because it was newer than the famous Dragoon book 
 "Compilers, principles, techniques, & tools, 2nd ed." from Alfred V. Aho, 
 Monica S. Lam, Ravi Ethi and Jeffrey D. Ullman, Pearson-Addison Wesley, 2007, 
-while this Dragoon book had been used to specify the _Python_ interpretor 
-_CPython_.
+while this Dragoon book had been used to specify the *Python* interpretor 
+*CPython*.
 
 
 
 # 2. Modern Compilers Design
 
 By 2018, modern compilers are designed with three distinct communicating 
-software modules: the _Front-End_, the _Back-End_ and the _Optimizer_. A 
+software modules: the *Front-End*, the *Back-End* and the *Optimizer*. A 
 drawing will be simpler to understand.
 
 ![Three phase compiler design picture](Picts/three-phase-compiler.png)
 
 First, the source code to be compiled is processed by the compiler 
-_Front-End_. During this phase, the source code is _scanned_ to detect key 
-words, numbers, identifiers and the like and _parsed_ to check its syntax 
-correctness. The _Front-End_ transfers to the compiler _Optimizer_ an internal 
-representation of the source code, which is noted __I.C.__ (Intermediate Code) 
+*Front-End*. During this phase, the source code is *scanned* to detect key 
+words, numbers, identifiers and the like and *parsed* to check its syntax 
+correctness. The *Front-End* transfers to the compiler *Optimizer* an internal 
+representation of the source code, which is noted **I.C.** (Intermediate Code) 
 in the above picture.
 
-Second, the I.C. is processed by the _Optimizier_ whose job is to statically 
+Second, the I.C. is processed by the *Optimizier* whose job is to statically 
 optimize the intermediate code. For instance, this consists in the deleting of 
 dead code or in the transforming of never-changing variables content into 
-constant values. Many other optimizations may be generated by the _Optimizer_.
+constant values. Many other optimizations may be generated by the *Optimizer*.
 A new version of the intermediate code, the optimized one, is then passed to 
-the compiler _Back-End_.
+the compiler *Back-End*.
 
-Third, the optimized version of the I.C. is processed by the _Back-End_.
+Third, the optimized version of the I.C. is processed by the *Back-End*.
 There, the final binary code to be ran on the target processor is generated. 
 Final static optimizations may be generated during this phase also, according 
 to the specificities of the target process unit.
 
 Well, this is for the design of three-phase compilers, but two-phase compilers 
-exist also, with no _Optimizer_ phase. See coresponding schema below.
+exist also, with no *Optimizer* phase. See coresponding schema below.
 
 ![Two phase compiler design picture](Picts/two-phase-compiler.png)
 
 To get a little bit more information on those three phases of a modern 
 compiler, see the three next sub-sections. They are short. But to know more, 
 the reader should refer to any book on compilers design. Remember, the one we 
-have used for the design of Typee translator is "_Engineering a Compiler_",
+have used for the design of Typee translator is "*Engineering a Compiler*",
 2nd edtition, Keith D.Cooper & Linda Torczon, 2012, Elsevier, ISBN 
 978-0-12-088478-0.
 
 
-## 2.1 The _Front-End_
+## 2.1 The *Front-End*
 
-The __Front-End__ of a compiler is a three-phase module. See figure below.
+The **Front-End** of a compiler is a three-phase module. See figure below.
 
 ![Front-end design picture](Picts/front-end.png)
 
 Explanations are provided in the next three subsections.
 
 
-### 2.1.1 the _Scanner_
+### 2.1.1 the *Scanner*
 
 ![Front-end scanner picture](Picts/front-end-scanner.png)
 
-The source code to be compiled is first scanned by the _Scanner_. This module 
+The source code to be compiled is first scanned by the *Scanner*. This module 
 transforms the source code to an ordered list of tokens. This phase of the 
-__Front-End__ is named also _tokenizer_.
+**Front-End** is named also *tokenizer*.
 
 What is a token? It is an entity that describes a whole atomic element of the 
 programming language. For instance, there is one token for each of the 
-built-in instructions of the language (e.g. ___for___, ___if___, ___else___ 
-just to name a few, which are associated with resp. to _token_FOR_, _token_IF_ 
-and token_ELSE). Numbers are associated with one token. Identifiers are also, 
+built-in instructions of the language (e.g. **for**, **if**, **else** 
+just to name a few, which are associated with resp. to *token_FOR*, *token_IF* 
+and *token_ELSE*). Numbers are associated with one token. Identifiers are also, 
 whatever they identify: constants, variables, functions, classes or methods, 
 etc. Operators are each associated also with tokens (e.g. '=', '+', '<=', 
 etc.) Each token is a data structure that may contain local information, such 
 as, for instance, the line number and the column index of the corresponding 
 text, and this text itself (e.g. for an identiifer or for a scalar constant).
 
-So, the _Scanner_ takes as input the source code to be scanned and puts as its 
-output some _intermediate code_ (I.C.) which is mainly an ordered list of 
+So, the *Scanner* takes as input the source code to be scanned and puts as its 
+output some *intermediate code* (I.C.) which is mainly an ordered list of 
 detected tokens. This ordered list is then the input of the next phase of the 
-__Front-End__, the _Parser_. Let's call it the _tokenized I.C._
+**Front-End**, the *Parser*. Let's call it the *tokenized I.C*.
 
 
-### 2.1.2 the _Parser_
+### 2.1.2 the *Parser*
 
 ![Front-end parser picture](Picts/front-end-parser.png)
 
-The _tokenized intermediate code_ is passed as input to the _Parser_. This 
+The *tokenized intermediate code* is passed as input to the *Parser*. This 
 module parses this I.C. and checks for its correctness according to the 
 specified syntax of the programming language.
 
-Such a syntax is defined by its _grammar_. The rules defined this grammar 
+Such a syntax is defined by its *grammar*. The rules defined this grammar 
 describes what are the legal successions of tokens for the defined programming 
-language. For instance, in C++, a legal ___if___ instruction is defined to be 
+language. For instance, in C++, a legal **if** instruction is defined to be 
 something like this:
 
 ```java
@@ -168,34 +168,34 @@ else
 ```
 
 Should any token corresponding to the parenthesis be missing after token 
-_token_IF_ in the tokenized I.C, the _Scanner_ would detect some syntax error 
-in the source code. The __Front-End__ may then inform the user of these 
+*token_IF* in the tokenized I.C, the *Scanner* would detect some syntax error 
+in the source code. The **Front-End** may then inform the user of these 
 syntax errors and most often does not try to correct them.
 
-The output of the _Parser_ is another form of _intermediate code_ which still 
+The output of the *Parser* is another form of *intermediate code* which still 
 lists the tokens in the order of their appearing in the source code plus maybe 
 some information about the syntax used and the maybe detected errors in the 
-source code. This _parsed intermediate code_ is then the input of the last 
-phase of the __Front-End__, the _Elaborator_. 
+source code. This *parsed intermediate code* is then the input of the last 
+phase of the **Front-End**, the *Elaborator*. 
 
 
-### 2.1.3 the _Elaborator_
+### 2.1.3 the *Elaborator*
 
 ![Front-end elaborator picture](Picts/front-end-elaborator.png)
 
-The _parsed intermediate code_ gets statically elaborated in the last phase of 
-the __Front-End__, the _Elaborator_. This module finalizes the Front-End 
+The *parsed intermediate code* gets statically elaborated in the last phase of 
+the **Front-End**, the *Elaborator*. This module finalizes the Front-End 
 operations to check for the semantic correctness of the source code.
 
 Among the many elaborations that can take place, we list only two of them just 
-for illustrating the kind of processing the _Elaborator_ runs.
+for illustrating the kind of processing the *Elaborator* runs.
 
 #### Identifiers Checking
 
 The use of identifiers is checked. Is an identifier associated with a constant 
 value? Or is it the name of a function, of a class, of a method or of a 
 variable? According to this information, is it used in a correct way. For 
-instance, by no way should an _Elaborator_ accept the modification of the 
+instance, by no way should an *Elaborator* accept the modification of the 
 value associated with the identifier of a constant value, as long as the 
 programming language allows declarations of constants. Meanwhile, by no way 
 the identifier of a scalar variable should be used as a called function.
@@ -210,45 +210,45 @@ according to the programming language defined policy.
 
 This type checking is of most importance for typed programming languages. When 
 done at compile time, i.e. in a static manner, it allows the static detection 
-of possible errors at run time __before__ running the final binary code. This 
+of possible errors at run time **before** running the final binary code. This 
 way, no type checking, which is costly, has to be implemented at run time.
 
-#### _Elaborator_ output
+#### *Elaborator* output
 
-The _Elaborator_ provides either a list of detected errors or a new form of 
-_Intermediate Code_ that we will call the _elaborated I.C._
+The *Elaborator* provides either a list of detected errors or a new form of 
+*Intermediate Code* that we will call the *elaborated I.C.*
 
-The errors delivered by the _Elaborator_ may have been detected: by the 
-_Scanner_, about badly formed or unknown detected tokens; by the _Parser_, 
-about syntax errors; and by the _Elaborator_, for instance about types usage 
+The errors delivered by the *Elaborator* may have been detected: by the 
+*Scanner*, about badly formed or unknown detected tokens; by the *Parser*, 
+about syntax errors; and by the *Elaborator*, for instance about types usage 
 errors. Whatever the detected errors, they most often are printed on a console 
 or in a log file.
 
-The _elaborated I.C_, if source code has been detected as free of errors by 
-the __Front-End__, is then passed to the second phase of the compiler, which 
-is the _Optimizer_ for three-phase compilers, or the _Back-End_ for two-phase 
+The *elaborated I.C*, if source code has been detected as free of errors by 
+the **Front-End**, is then passed to the second phase of the compiler, which 
+is the *Optimizer* for three-phase compilers, or the *Back-End* for two-phase 
 compilers.
 
 
 
-## 2.2 The _Optimizer_
+## 2.2 The *Optimizer*
 
-Three-phase compilers implement their second phase as a _code Optimizer_. We 
+Three-phase compilers implement their second phase as a *code Optimizer*. We 
 shall not say much about this. The reader is strongly encouraged to see theory 
 and explanations in Compiler Design books. Remember, our bedside book for a 
-while about this has been "_Engineering a Compiler_", 2nd edtition, Keith 
+while about this has been "*Engineering a Compiler*", 2nd edtition, Keith 
 D.Cooper & Linda Torczon, 2012, Elsevier, ISBN 978-0-12-088478-0.
 
 ![Optimizer design picture](Picts/optimizer.png)
 
-The _Optimizer_ takes as input the _elaborated intermediate code_ provided by 
-the compiler __Front-End__ and generates an _optimized intermediate code_ as 
-its output. This _optimized I.C._ is then provided as input to the compiler 
-__Back-End__.
+The *Optimizer* takes as input the *elaborated intermediate code* provided by 
+the compiler **Front-End** and generates an *optimized intermediate code* as 
+its output. This *optimized I.C.* is then provided as input to the compiler 
+**Back-End**.
 
-The _Optimizer_ is generally designed as a succession of different levels of 
-optimization (see figure above). We list here  four of them: __local__ , 
-__regional__, __global__ and __interprocedural__ optimizations.
+The *Optimizer* is generally designed as a succession of different levels of 
+optimization (see figure above). We list here  four of them: **local** , 
+**regional**, **global** and **interprocedural** optimizations.
 
 
 ### 2.2.1 Local optimizations
@@ -259,13 +259,13 @@ instructions and are considered to be very efficient.
 An example of such optimization is the simplification of successive 
 instructions when local values of variables are not modified or when 
 redundancy can be detected in some of these successive instructions. The 
-_Optimizer_ automatically removes or simplifies those instructions in the 
-_Intermdiate Code_.
+*Optimizer* automatically removes or simplifies those instructions in the 
+*Intermdiate Code*.
 
 Another example of such optimization is when parallelization of instructions 
 processing can be detected in successive independent instructions. Such 
-instructions may then be reordered in the _I.C._ by the _Optimizer_ so that 
-the _Back-End_ phase of the compiler can later implement more efficient binary 
+instructions may then be reordered in the *I.C.* by the *Optimizer* so that 
+the *Back-End* phase of the compiler can later implement more efficient binary 
 code if possible.
 
 
@@ -275,12 +275,12 @@ Well, code in a block of instructions may also provide or prepare context for
 usefully  improving the code in another block of instructions. Regional 
 optimizations deal with this.
 
-This way, for instance, the _Optimizer_ can find redundancies and 
+This way, for instance, the *Optimizer* can find redundancies and 
 constant-valued expressions that a strictly local optimization would fail to 
-detect. The _I.C._ can then be smartly modified to take benefit of already 
+detect. The *I.C.* can then be smartly modified to take benefit of already 
 known context.
 
-The technique of _loop unrolling_ is also a regional otpimization. Unrolling 
+The technique of *loop unrolling* is also a regional otpimization. Unrolling 
 loops leads to code duplication within loops. If this is not a memory space 
 optimization, it is a time consuming one since the loop control is processed 
 less times than with no unrolling.
@@ -297,25 +297,25 @@ detection);
 
 Using variables before their initialization should be considered as an error, 
 since this will mostly lead to some unpredictable behavior of the program. The
-detection of such errors before run time can be done by the _Optimizer_ phase 
+detection of such errors before run time can be done by the *Optimizer* phase 
 of a compiler.
 
 The modification of the placement of global code deals with the 
 characteristics of the target processor. For instance, as long as branching 
-cost can be statically evaluated, the _Optimizer_ may exchange the places of 
+cost can be statically evaluated, the *Optimizer* may exchange the places of 
 blocks of instructions just to diminish the time processing of a program.
 
 
 ### 2.2.4 Interprocedural optimizations
 
-This is somewhat the _higher_ level of otpimizations that can be envisaged. 
+This is somewhat the *higher* level of otpimizations that can be envisaged. 
 Those optimizations deal with groups of functions or methods, trying to 
 understand or evaluate their contexts to take benefit of them across functions 
 while this would not be possible with intra-procedural (i.e. global) 
 optimization.
 
 A first, simple, optimization is the modification of the placement of functions 
-code within the final binary image of the program when the _Optimizer_ can 
+code within the final binary image of the program when the *Optimizer* can 
 detect that one function calls another one. Placing them as near as possible 
 of each other in the final code may optimize time processing, for instance 
 when the instructions set of the target processor provides short and long 
@@ -323,11 +323,11 @@ range branching and when short branching is quicker than long branching.
 
 A second, not very more complex, optimization at interprocedural level is the 
 inlining of functions calls. Rather than generating a call to a function, the 
-_Optimizer_ may decide to inline the whole code of a function, in place of its 
+*Optimizer* may decide to inline the whole code of a function, in place of its 
 call, into the code of the calling function.
 
 
-### 2.2.5 _Optimizer_ - conclusion
+### 2.2.5 *Optimizer* - conclusion
 
 Optimizations are an important part of a compiler. Thye may take time to be 
 processed but they provide optimization either on memory space allocation or 
@@ -340,59 +340,59 @@ a two-phase compiler.
 
 
 
-## 2.3 The _Back-End_
+## 2.3 The *Back-End*
 
-The final phase of a compiler is the _Back-End_. It deals with the generation 
+The final phase of a compiler is the *Back-End*. It deals with the generation 
 of the final binary code according to the target processor and the target 
 Operating System. It is mainly a three-phase mmodule.
 
 ![Back-End compiler design figure](Picts/back-end.png)
 
-The _Back-End_ gets as its input the _elaborated intermediate code_, as long 
+The *Back-End* gets as its input the *elaborated intermediate code*, as long 
 as this I.C. has been generated. Should the previous phases of the compiler 
-have detected errors, the _Back-End_ would not be ran.
+have detected errors, the *Back-End* would not be ran.
 
 
 ### 2.3.1 Instruction Selection
 
-The _elaborated I.C._ is first evaluated for the __selection__ of 
-corresponding processor __instructions__. For instance, the assignment of a 
+The *elaborated I.C.* is first evaluated for the **selection** of 
+corresponding processor **instructions**. For instance, the assignment of a 
 scalar value to some variable will involve at least an assembly instruction 
 for the storage of the value into a memory place. But it could be also an 
 assembly instruction dealing with register assignment which is far more 
 efficient on time consuming. Another example would be the selection of a 
 branching assembly instruction according to some test done while implementing 
-an ___if___ instruction. Of course, this step of the _Back-End_ generates an 
-_intermediate assembly code_, maybe associated with additionnal informatin 
+an **if** instruction. Of course, this step of the *Back-End* generates an 
+*intermediate assembly code*, maybe associated with additionnal informatin 
 data to help next step processing.
 
 
 ### 2.3.2 Instruction Scheduling
 
-Then, this _intermediate assembly code_ is processed by a next step of the 
-_Back-End_ : the __instruction scheduling__. This is some kind of optimization 
-that the _Back-End_ may be able to envisage if some assembly instructions are 
+Then, this *intermediate assembly code* is processed by a next step of the 
+*Back-End*: the **instruction scheduling**. This is some kind of optimization 
+that the *Back-End* may be able to envisage if some assembly instructions are 
 available that do time-shorter procesing. For instance, this could be an 
 addition of a register with itself rather than a multiplication by 2 or a 
 left-shift by 1 bit. It may also invert the position of instructions in the 
 flow of the processing to take benefit of some characteristics of the target 
 processor (this may be the case when branching for some RISC processors). the 
-instruction scheduling generates a modified _intermediate assembly code_ which 
-is the input of the final step of the compiler _Back-End_.
+instruction scheduling generates a modified *intermediate assembly code* which 
+is the input of the final step of the compiler *Back-End*.
 
 
 ### 2.3.3 Registers Allocation
 
-This is the final step of the _Back-End_ processing. Processors have a limited 
+This is the final step of the *Back-End* processing. Processors have a limited 
 set of registers. This step aims at using all of them in the best way. The 
-input _intermediate assembly code_ is analyzed here to finally generate a 
+input *intermediate assembly code* is analyzed here to finally generate a 
 binary code with the best use of the target processor registers. This means 
 that direct access to memory may be imposed, should the registers be too few.
 
 
-### 2.3.4 _Back-End_ output
+### 2.3.4 *Back-End* output
 
-The _Back-End_, when called, eventually generates binary assembly code 
+The *Back-End*, when called, eventually generates binary assembly code 
 dedicated to the target processor. This code can be either formatted code 
 with linking information for further linkage with other binary code modules or 
 binary code immediately executable on the processor, associated with the 
@@ -404,24 +404,24 @@ Linux, MacOS, etc.)
 ## 2.4 Modern Compilers Design - Conclusion
 
 Being either three-phase or two-phase designed, a compiler is composed of:
-- a _Front-End_ which mainly parses the source code of a program;
-- a _Back-End_ which mainly generates the binary code to be ran on the target processor;
+- a *Front-End* which mainly parses the source code of a program;
+- a *Back-End* which mainly generates the binary code to be ran on the target processor;
 - and automated optimizations to generate the best final code.
 
 The work done here is a smart translation of a source program easily 
 understandable by humans to a binary optimized representation easily 
 executable by a target processor in a target environment.
 
-This is one of the reasons why the __Typee__ translator may be designed as a 
+This is one of the reasons why the **Typee** translator may be designed as a 
 compiler, since it translates a Typee source program into some other 
-programming language source code, for instance _Python_, _C++_ or _Java_.
+programming language source code, for instance *Python*, *C++* or *Java*.
 
 The main point here is that some of a compiler modules are not needed for the
-__Typee__ translator. For instance, the implementation of optimizations is not 
-necessary if we consider that this step will be deferred to the final _C++_ or 
-_Java_ compiler or to the final _Python_ interpretor.
+**Typee** translator. For instance, the implementation of optimizations is not 
+necessary if we consider that this step will be deferred to the final *C++* or 
+*Java* compiler or to the final *Python* interpretor.
 
-Furthermore, many of the tasks devoted to the _Back-End_ may be either 
+Furthermore, many of the tasks devoted to the *Back-End* may be either 
 simplified or even ignored by Typee translator since it does not generate 
 binary code but source code in some other programming language. 
 
@@ -430,26 +430,26 @@ binary code but source code in some other programming language.
 
 # 3. Typee Translator Design - from Compiler design
 
-As stated in the above conclusion (see subsection 2.4) the __Typee__ design is 
-simpler than the one of a compiler, since __Typee__ is a programming languages 
-__translator__ and not a true compiler.
+As stated in the above conclusion (see subsection 2.4) the **Typee** design is 
+simpler than the one of a compiler, since **Typee** is a programming languages 
+**translator** and not a true compiler.
 
 Why is it simpler? Because, as a translator, Typee neither generates binary
 code nor optimizes source or intermediate code. Its two main acitivities are 
-_static type checking_ and _translation_ from programming language Typee to 
-another programming language such as _Python_, _C++_ or _Java_.
+*static type checking* and *translation* from programming language Typee to 
+another programming language such as *Python*, *C++* or *Java*.
 
 Nevertheless, to envisage the design of Typee translator as would be the 
 design of a modern compiler is staightforward:
 
 ![Typee translator design figure](Picts/typee-design.png)
 
-__Typee__ source code is first processed by Typee _Front-End_. At this phase 
+**Typee** source code is first processed by Typee *Front-End*. At this phase 
 of the translation, Typee source code is scanned, parsed and elaborated. An
-_elaborated intermediate code_ is generetad by the _Front-End_ and transferred 
-to Typee _Back-End_.
+*elaborated intermediate code* is generetad by the *Front-End* and transferred 
+to Typee *Back-End*.
 
-The _elaborated intermediate code_ is then processed by Typee _Back End_. 
+The *elaborated intermediate code* is then processed by Typee *Back End*. 
 There, all the translation work to another programming language is done, as 
 would have been the translating of this intermediate code to some binary 
 target code within a compiler.
@@ -457,48 +457,48 @@ target code within a compiler.
 Meanwhile, many of the tasks done in a compiler are simpler in Typee 
 translator implementation.
 
-Furthermore, the _elaborated intermediate code_ is totally independent of the 
+Furthermore, the *elaborated intermediate code* is totally independent of the 
 target programming language. It only depends on the specifications of Typee 
-language. So, the exactly same interface between Typee _Front-End_ and Typee 
-_Back-End_ will serve the same purpose for any kind of target programming 
-language (i.e. _C++_, _Java_ or _Python_).
+language. So, the exactly same interface between Typee *Front-End* and Typee 
+*Back-End* will serve the same purpose for any kind of target programming 
+language (i.e. *C++*, *Java* or *Python*).
 
-A consequence of this is that a same _interface_ will have to be implemented 
-for each target programming language: a version of the _Back-End_ will 
-translate _elaborated intermdiate code_ to _Python, another version will 
-translate _elaborated I.C._ to _C++_, a third one will translate the same 
-_elaborated I.C._ to _Java_, etc.
+A consequence of this is that a same *interface* will have to be implemented 
+for each target programming language: a version of the *Back-End* will 
+translate *elaborated intermdiate code* to *Pytho*n, another version will 
+translate *elaborated I.C.* to *C++*, a third one will translate the same 
+*elaborated I.C.* to *Java*, etc.
 
 
 ## 3.1 Typee Front-End
 
-__Typee__ _Front-End_ is a three-phase front-end, as is the case for any 
+**Typee** *Front-End* is a three-phase front-end, as is the case for any 
 modern compiler.
 
 ![Typee front-end figure](Picts/front-end.png)
 
 It takes as input the source code of a Typee program or file and generates as 
-its output an _elaborated intermediate code_ that is further processed by the 
-Typee _Back-End_.
+its output an *elaborated intermediate code* that is further processed by the 
+Typee *Back-End*.
 
-We describe the design of each of these three __Typee__ _Front-End_ phases in 
+We describe the design of each of these three **Typee** *Front-End* phases in 
 the next subsections.
 
 
-### 3.1.1 Typee Front-End _Scanner_
+### 3.1.1 Typee Front-End *Scanner*
 
-The _Scanner_ of __Typee__ _Front-End_ deals with tokens. It takes as input some 
-__Typee__ source code, scans it, and generates an ordered list of tokens: 
-the _tokenized intermediate code_ that is provided for input to the __Typee__ 
-_Front-End Parser_.
+The *Scanner* of **Typee** *Front-End* deals with tokens. It takes as input some 
+**Typee** source code, scans it, and generates an ordered list of tokens: 
+the *tokenized intermediate code* that is provided for input to the **Typee** 
+*Front-End Parser*.
 
 ![Typee front-end scanner figure](Picts/front-end-scanner.png)
 
 
 #### 3.1.1.1 What's in a token?
 
-In __Typee__, a token is associated with an ID and a default text. Let's take 
-an example. __Typee__ specifies keywords. Among them are instruction keywords, 
+In **Typee**, a token is associated with an ID and a default text. Let's take 
+an example. **Typee** specifies keywords. Among them are instruction keywords, 
 for instance `if`. A specific token is associated with keyword `if`. 
 It gets a unique ID and the associated default text is "`if`". There are many 
 other kinds of tokens, such as a single token to identify identifiers, tokens 
@@ -509,16 +509,16 @@ Class `FEIcodeTokens` defines all the tokens IDs and the associated default
 texts when this gets meaningfull. For instance, there is no default text 
 associated with the token for identifiers since there is no default text 
 corresponding to any identifier. The related text is rather associated with 
-the _identifier-token_ each time an identifier is discovered in the scanned 
+the *identifier-token* each time an identifier is discovered in the scanned 
 Typee source code.
 
 
 #### 3.1.1.2 Tokens and token nodes
 
 Class `FEICodeTokenNode` finally defines the data structure that is linearly 
-appended to the _tokenized intermediate code_ data. Remember, this is an 
-ordered list of tokens that is generated by the _Scanner_ and that is provided 
-as input to the _Front-End Parser_. This list contains token __nodes__ which 
+appended to the *tokenized intermediate code* data. Remember, this is an 
+ordered list of tokens that is generated by the *Scanner* and that is provided 
+as input to the *Front-End Parser*. This list contains token **nodes** which 
 are defined by class `FEICodeTokenNode`. The attributes of each node are:
 
 - the related token ID;
@@ -527,69 +527,69 @@ are defined by class `FEICodeTokenNode`. The attributes of each node are:
 asociated text with this token.
 
 
-#### 3.1.1.3 The _tokenized intermediate code_
+#### 3.1.1.3 The *tokenized intermediate code*
 
-Finally, class `FETokenizedICode` defines the _intermediate code_ generated by 
-the _Front-End Scanner_. Since it is currently  implemented in _Python_, this 
-is just a wrapper to Python built-in type __list__.
+Finally, class `FETokenizedICode` defines the *intermediate code* generated by 
+the *Front-End Scanner*. Since it is currently  implemented in *Python*, this 
+is just a wrapper to Python built-in type **list**.
 
-The Typee _Front-End Scanner_ runs through the Typee source code, detects 
+The Typee *Front-End Scanner* runs through the Typee source code, detects 
 any Typee keyword, any legal punctuation or separator sign, any valid number 
 or other scalar values (boolean ones, string ones, etc.), any indentifier as 
 separated by spaces, tabs and legal other separators, any legal operator, and 
 maybe any badly formed, unknown or not valid text (such as "`125xyz`" which is 
 neither a correct number nor a correct identifier in Typee).
 
-The _Scanner_ then appends the related token node to the list of the already 
-detected _token nodes_. Remember, this is the _tokenized intermediate code_. 
-Badly formed text is also detected by the _Scanner_ and replaced in this 
-intermediate code by a dedicated token node, the __unexpected token__ node. 
-This is a useful information to pass to the _Parser_. It allows also for the 
-delaying of errors printings after the completion of Typee _Front-End_. This 
+The *Scanner* then appends the related token node to the list of the already 
+detected *token nodes*. Remember, this is the *tokenized intermediate code*. 
+Badly formed text is also detected by the *Scanner* and replaced in this 
+intermediate code by a dedicated token node, the **unexpected token** node. 
+This is a useful information to pass to the *Parser*. It allows also for the 
+delaying of errors printings after the completion of Typee *Front-End*. This 
 way, warnings and errors can be displayed on console or saved in log file in 
 the increasing numer of the Typee source code line they have been detected in.
 
-Finally, the _Scanner_ passes to the _Parser_ the _tokenized intermediate 
-code_ which is an instance of class `FETokenizedICode` and which contains an 
-ordered list of _token nodes_.
+Finally, the *Scanner* passes to the *Parser* the *tokenized intermediate 
+code* which is an instance of class `FETokenizedICode` and which contains an 
+ordered list of *token nodes*.
 
 
 #### 3.1.1.4 The Front-End Scanner implementation
 
-The code of the _Front-End Scanner_ is implemented by class `FEScanner`. This 
+The code of the *Front-End Scanner* is implemented by class `FEScanner`. This 
 class defines two scanning methods: `scan_file()` and `scan_memory()` for 
 which names are self explanatory. `scan_file()` opens a Typee source code file 
 and loads it in memory, then it calls `scan_memory()`. `scan_memory()` 
 directly scans source code loaded in memory. Their output is an instance of 
-class `FETokenizedICode`, i.e. a _Python_ list of _token nodes_ (each of which 
+class `FETokenizedICode`, i.e. a *Python* list of *token nodes* (each of which 
 is an instance of class `FEICodeTokenNode`).
 
 
-### 3.1.2 Typee Front-End _Parser_
+### 3.1.2 Typee Front-End *Parser*
 
-The _Parser_ of __Typee__ _Front-End_ deals with source code syntax 
-correctness. It takes as input the _tokenized intermediate code_ generated 
-by the _Scanner_ and checks the succession of tokens against the __Typee__ 
-language grammar specification. It generates an _intermediate code_ that it 
+The *Parser* of **Typee** *Front-End* deals with source code syntax 
+correctness. It takes as input the *tokenized intermediate code* generated 
+by the *Scanner* and checks the succession of tokens against the **Typee** 
+language grammar specification. It generates an *intermediate code* that it 
 has syntaxically verified, with maybe syntax errors detection flags put in it. 
-This _intermediate code_ is then passed to the _Front-End Elaborator_. We name 
-it the _syntaxic intermediate code_.
+This *intermediate code* is then passed to the *Front-End Elaborator*. We name 
+it the *syntaxic intermediate code*.
 
 ![Typee front-end parser figure](Picts/front-end-parser.png)
 
 
 #### 3.1.2.1 Programming languages and grammar descriptions
 
-__Typee__ grammar is specified according to the _Backus-Naur Form_ (_BNF_). 
-Tis is a very common and easy way to fully specify the _context-free_ grammar 
+**Typee** grammar is specified according to the *Backus-Naur Form* (*BNF*). 
+Tis is a very common and easy way to fully specify the *context-free* grammar 
 of a language. Here is an excellent article about BNF and its extensions: 
 [http://matt.might.net/articles/grammars-bnf-ebnf/](http://matt.might.net/articles/grammars-bnf-ebnf/).
 The curious reader (and all readers should be curious) is strongly encouraged 
-to click on this link and to read this article which "_explains grammars and 
+to click on this link and to read this article which "*explains grammars and 
 common notations for grammars, such as Backus-Naur Form (BNF), Extended 
 Backus-Naur Form (EBNF) and regular extensions to BNF. After reading this 
 article, you will be able to identify and interpret all commonly used 
-notation for grammars._" (extract from Matt Might's article).
+notation for grammars.*" (extract from Matt Might's article).
 
 
 #### 3.1.2.2 A simple example
@@ -607,8 +607,8 @@ for( i in [0:10] )
    print( i );
 ```
 
-The list of tokens as provided by the _Front-End Scanner_, i.e. the 
-_tokenized intermediate code_, would then be something like this (with very 
+The list of tokens as provided by the *Front-End Scanner*, i.e. the 
+*tokenized intermediate code*, would then be something like this (with very 
 symbolic notation):
 ```
 token_FOR
@@ -628,7 +628,7 @@ token_)
 token_;
 ```
 
-The _Front-End Parser_ runs through this list of tokens and checks for the 
+The *Front-End Parser* runs through this list of tokens and checks for the 
 validity of the tokens chain against the related grammar rule. You will 
 easily verify by yourself that this list of tokens is definitively valid, as 
 long as `<range>` is specified as something like `[0:10]` and as long as 
@@ -639,30 +639,30 @@ long as `<range>` is specified as something like `[0:10]` and as long as
 
 Now, should there is any syntax error in previous code, for instance because 
 of a missing parenthesis, a badly formed range definition or a missing `;` by 
-the end of the single statement, the _Front-End Scanner_ will detect it while 
+the end of the single statement, the *Front-End Scanner* will detect it while 
 parsing the source code and checking it against the related grammar rule. 
-Moreover, the _Parser_ is able to get what is syntaxically wrong, either 
+Moreover, the *Parser* is able to get what is syntaxically wrong, either 
 missing or badly formed, and is able to report the related error with the line 
 number in the source code and the column index in this line of the erroneous 
 syntaxic item.
 
-Furthermore, should any syntax error be detected, the _Parser_ is able to skip 
-as little part of the source code as possible. This is __error recovering__. 
-With __Typee__, error recovering is done by searching for the next `;` token, 
+Furthermore, should any syntax error be detected, the *Parser* is able to skip 
+as little part of the source code as possible. This is **error recovering**. 
+With **Typee**, error recovering is done by searching for the next `;` token, 
 which is the end of every statement, or for the next token `}` in the case of 
 an error occuring in a block of instructions and for which no `;` can be 
 found before the `}`.
 
 
-#### 3.1.2.4 The _Parser_ implementation
+#### 3.1.2.4 The *Parser* implementation
 
-__Typee__ programming language is specified according to an LL(1) grammar. 
+**Typee** programming language is specified according to an LL(1) grammar. 
 As such, it is an LL(1) language. This class of grammars have many advantages 
-while developing a _Proof of Concept_ (PoC). They are __context-free__ 
+while developing a *Proof of Concept* (PoC). They are **context-free** 
 grammars, which means that nothing has to be remembered about what has been 
-previously done when parsing source code. They are __fully deterministic__, 
-which means that they definitvely are _unambiguous_ grammars. The code they 
-define is parsed from Left to right and the _Parser_ of LL(1) grammars 
+previously done when parsing source code. They are **fully deterministic**, 
+which means that they definitvely are *unambiguous* grammars. The code they 
+define is parsed from Left to right and the *Parser* of LL(1) grammars 
 constructs Leftmost derivations while parsing the source code.
 
 LL(1) parsers can be implemented with tables as well as with recursive descent 
@@ -670,37 +670,37 @@ functions. They are deterministic, context-free, and intuitive to understand,
 on the contrary of LR(1) parsers which might be more efficient at run-time but 
 which are far more complicated to implement, to debug and to read.
 
-The current implementation of the __Typee__ _Parser_ has been developed in 
-_Python_, as a dedicated class `FEParser` with methods to implement every 
-rules of __Typee__ grammar. This was the easiest and simplest way to develop, 
-debug and maintain a PoC for the validation of __Typee__ concepts.
+The current implementation of the **Typee** *Parser* has been developed in 
+*Python*, as a dedicated class `FEParser` with methods to implement every 
+rules of **Typee** grammar. This was the easiest and simplest way to develop, 
+debug and maintain a PoC for the validation of **Typee** concepts.
 
 Each method of class `FEParser` gets the leading name of one of the grammar 
 rules. It calls other methods according to the rule definition. Atomic methods 
 finally check for expected tokens.
 
-The _Parser_ runs through the _tokenized intermediate code_, gets one _token 
-node_ at a time and checks it against the __Typee__ grammar rules. Every time 
-an error is detected, which happens every time an __unexpected token node__ is 
-read from the _tokenized intermediate code_ or when some token node is read 
-while not expected or is missing while expected, the _Parser_ generates a 
-_syntaxic error_ node in its generated _intermediate code_ and recovers the 
+The *Parser* runs through the *tokenized intermediate code*, gets one *token 
+node* at a time and checks it against the **Typee** grammar rules. Every time 
+an error is detected, which happens every time an **unexpected token node** is 
+read from the *tokenized intermediate code* or when some token node is read 
+while not expected or is missing while expected, the *Parser* generates a 
+*syntaxic error* node in its generated *intermediate code* and recovers the 
 error as smartly as possible (searching for the next `;` or `}` token).
 
-The parsing is ran via method `parse()` which parses the _tokenized 
-intermediate code_ passed at its main argument. Remember, this is a _Python_ 
-list in memory that has been previously generated by the _Front-End Scanner_.
+The parsing is ran via method `parse()` which parses the *tokenized 
+intermediate code* passed at its main argument. Remember, this is a *Python* 
+list in memory that has been previously generated by the *Front-End Scanner*.
 
 
-#### 3.1.2.5 Resulting _intermediate code_
+#### 3.1.2.5 Resulting *intermediate code*
 
-The _Front-End Parser_ generates an _intermediate code_ that embeds the 
-_tokenized intermediate code_ it got as input from the _Scanner_. This _I.C._ 
-contains all the generated _token nodes_, including the _unexpected token_ 
-nodes that had been inserted by the _Scanner_. The _Parser_ adds to these 
-the _syntaxic error_ nodes it generates when encountering such errors.
+The *Front-End Parser* generates an *intermediate code* that embeds the 
+*tokenized intermediate code* it got as input from the *Scanner*. This *I.C.* 
+contains all the generated *token nodes*, including the *unexpected token* 
+nodes that had been inserted by the *Scanner*. The *Parser* adds to these 
+the *syntaxic error* nodes it generates when encountering such errors.
 
-Furthermore, the resulting _intermediate code_ is formatted by the _Parser_ 
+Furthermore, the resulting *intermediate code* is formatted by the *Parser* 
 to reflect the syntaxic nature of the source code. If you go to the last 
 version of Typee grammar specifications - look at all successive versions in 
 [../Language-specifications/](../Language-specifications/) - you will see that 
@@ -747,52 +747,52 @@ and these other statements defined as:
 <statements block>      ::= '{' <statements list> '}'
 ```
 
-According to these grammar rules, each time the _Parser_ starts the parsing of 
-one of these rules it appends to the _syntaxic intermediate code_ a new 
-_statement node_ to which it attaches a list of either _statement nodes_ or 
-_token nodes_. These nodes are the ones related to the currently parsed 
+According to these grammar rules, each time the *Parser* starts the parsing of 
+one of these rules it appends to the *syntaxic intermediate code* a new 
+*statement node* to which it attaches a list of either *statement nodes* or 
+*token nodes*. These nodes are the ones related to the currently parsed 
 statement rule.
 
-The _syntaxic intermediate code_ is then a __tree__ that reflects the exact 
-syntaxic structure of the parsed __Typee__ source code. This design greatly 
-helps the further _semantic analysis_ of the source code that can then take 
+The *syntaxic intermediate code* is then a **tree** that reflects the exact 
+syntaxic structure of the parsed **Typee** source code. This design greatly 
+helps the further *semantic analysis* of the source code that can then take 
 benefit of this structured information.
 
-Let's see now what is this _semantic analysis_ of the generated _syntaxic 
-intermediate code_. This analysis is performed by the third and last phase of 
-the _Front-End_: the _Elaborator_.
+Let's see now what is this *semantic analysis* of the generated *syntaxic 
+intermediate code*. This analysis is performed by the third and last phase of 
+the *Front-End*: the *Elaborator*.
 
 
 
-### 3.1.3 Typee Front-End _Elaborator_
+### 3.1.3 Typee Front-End *Elaborator*
 
-So, this is the third and last phase of the _Front-End_. It gets as input the 
-_syntaxic intermediate code_ generated by the _Front-End Parser_. Remember, 
-this is a __tree__ that reflects the syntaxic structure of the translated 
-__Typee__ source code.
+So, this is the third and last phase of the *Front-End*. It gets as input the 
+*syntaxic intermediate code* generated by the *Front-End Parser*. Remember, 
+this is a **tree** that reflects the syntaxic structure of the translated 
+**Typee** source code.
 
 ![Typee front-end elaborator figure](Picts/front-end-elaborator.png)
 
-The _Elaborator_ semantically analyzes the _syntaxic intermediate code_ and:
+The *Elaborator* semantically analyzes the *syntaxic intermediate code* and:
 - categorizes every detected identifier;
 - infers types;
 - checks for uninitialized identifiers before their use;
 - checks for the correctness of types use.
 
-It either generates a _validated intermediate code_ and tranfers it to the 
-__Typee__ _Back-End_ or provides an errors report if errors have been detected 
-by the _Scanner_ or the _Parser_. This report may be displayed on console 
+It either generates a *validated intermediate code* and tranfers it to the 
+**Typee** *Back-End* or provides an errors report if errors have been detected 
+by the *Scanner* or the *Parser*. This report may be displayed on console 
 and/or saved in log file.
 
 
 #### 3.1.3.1 Categorization of Identifiers
 
-The _Front-End Scanner_ detects identifiers according to dedicated rules or 
-__Typee__ grammar. Well, identifiers in Typee are constructyed the same way 
+The *Front-End Scanner* detects identifiers according to dedicated rules or 
+**Typee** grammar. Well, identifiers in Typee are constructyed the same way 
 as any other programming languages. They can be constituted of letters, digits 
 and underscores. They cannot begin with a digit. They are case-sensitive.
 
-Identifiers are used to identify so many entities in __Typee__:
+Identifiers are used to identify so many entities in **Typee**:
 - classes;
 - methods of classes;
 - attributes of classes;
@@ -801,7 +801,7 @@ Identifiers are used to identify so many entities in __Typee__:
 - constant values;
 - types.
 
-They can also be used for aliasing other entities. For instance, in __Typee__ 
+They can also be used for aliasing other entities. For instance, in **Typee** 
 type names contain the kind of type and its bits length. For instance: 
 `int32` stands for 32-bits signed integers, `uint32` stands for 32-bits 
 unsigned integers. `float32` and `float64` exist also in the same way. Keyword 
@@ -817,11 +817,11 @@ In Typee, `int32`, `float32` and `float64` are built-in types, while in the
 upper code `long`, `float` and `double` are identifiers. They are identifiers 
 of types.
 
-The _Scanner_ generates a specific token for built-in scalar types. It 
+The *Scanner* generates a specific token for built-in scalar types. It 
 generates also a specific token for identifiers, whatever they identify.
 
-It is the activity of the _Elaborator_ to elaborate the kind of entity an 
-identifer identifies. This is __semantic__ analysis of Typee source code. It 
+It is the activity of the *Elaborator* to elaborate the kind of entity an 
+identifer identifies. This is **semantic** analysis of Typee source code. It 
 is based on the running through grammar rules to get what kind of Typee entity 
 the identifier is associated with. For example, in next Typee code `MyClass` 
 identifies a class, `f` identifies a class method, `val` identifies a class 
@@ -856,11 +856,11 @@ declaring functions, methods, attributes, variables, type aliasing, etc. From
 these rules, it is easy also to unambiguously get the kind of entity an 
 identifier identifies.
 
-Maybe you can understand now that, while the _Parser_ just linearly runs 
+Maybe you can understand now that, while the *Parser* just linearly runs 
 grammar rules to check for the correctness of the syntax of a Typee program, 
-the _Elaborator_ gets a little bit farer, linearly running the same grammar 
-rules but running also small portions of elaborating code to add __semantic__ 
-information to the nodes of the _syntaxic intermediate code_.
+the *Elaborator* gets a little bit farer, linearly running the same grammar 
+rules but running also small portions of elaborating code to add **semantic** 
+information to the nodes of the *syntaxic intermediate code*.
 
 Identifiers nodes in this I.C. are then augmented with information about the 
 kind of entity (class, method, attribute, function, variable, const value, 
@@ -870,7 +870,7 @@ type, ...) they are relating to.
 #### 3.1.3.2 Identifiers use checking
 
 Well, it might be that some identifiers will have been detected by the 
-_Scanner_ then evaluated by the _Parser_ as correctly placed in statements and 
+*Scanner* then evaluated by the *Parser* as correctly placed in statements and 
 in the meantime that they are semantically not correctly used.
 
 For instance, the use a not yet declared identifier should lead to some crash 
@@ -902,23 +902,23 @@ is also a misuse of an identifier.
 
 There are no rules specified in Typee grammar to detect such errors. 
 Identifiers have to be elaborated before those checkings can be done. It is 
-the role of the _Elaborator_ to elaborate misuses of identifiers.
+the role of the *Elaborator* to elaborate misuses of identifiers.
 
-Should any misuse of identifiers be detected by the _Elaborator_, errors nodes 
-would be added into the _validated intermediate code_ that the _Elaborator_ 
+Should any misuse of identifiers be detected by the *Elaborator*, errors nodes 
+would be added into the *validated intermediate code* that the *Elaborator* 
 provides as its output. This way, errors reporting can be delayed until the 
-end of the _Front-End_ processing and errors can then be reported in the 
+end of the *Front-End* processing and errors can then be reported in the 
 increasing order of the lines numbers they appear in.
 
 Notice that these misuses of variables are detected at "translation"-time in a 
 static way. Eventually, some complex situations cannot be statically 
-elaborated and will only be appearing at run-time. __Typee__ _Elaborator_ 
+elaborated and will only be appearing at run-time. **Typee** *Elaborator* 
 cannot deal with such cases.
 
 
 #### 3.1.3.3 Types Inferring
 
-__Type inferring__ is the elaboration of the type of any typed entity. Here 
+**Type inferring** is the elaboration of the type of any typed entity. Here 
 again there is no grammar rule to express the type of an entity. This can only 
 be elaborated by running through the source code.
 
@@ -928,16 +928,16 @@ aliases, constant values;
 - the expressions that embed identifiers.
 
 Inferring the type of an identifier is quite easy while running through the 
-_syntaxic intermediate code_, since each of its nodes unambiguously relates to 
-a Typee grammar rule. The _Elaborator_ elaborates this when it categorizes 
+*syntaxic intermediate code*, since each of its nodes unambiguously relates to 
+a Typee grammar rule. The *Elaborator* elaborates this when it categorizes 
 identifiers (see above related sub-section 3.1.3.1).
 
 Grammar numerous complicated rules specify the valid syntax for Typee 
 expressions. Well, these are mainly the same as for any OOP language (for 
-_Object Oriented Programming_). Experienced developers should not get in 
-trouble with them. But neither the _Scanner_, evaluating tokens, nor the 
-_Parser_, checking syntax correctness of a Typee source code, can evaluate the 
-type of an expression. Only the _Elaborator_ can, after having categorized 
+*Object Oriented Programming*). Experienced developers should not get in 
+trouble with them. But neither the *Scanner*, evaluating tokens, nor the 
+*Parser*, checking syntax correctness of a Typee source code, can evaluate the 
+type of an expression. Only the *Elaborator* can, after having categorized 
 all identifiers.
 
 When adding, multiplying, subtracting or dividing scalar values or variables, 
@@ -946,14 +946,14 @@ even a table. Those rules are very generic, as usual: multiplying an integer
 by a float will result in a float; adding an 8-bits integer and a 64-bits one 
 will result in a 64-bits integer; etc.
 
-Static types inferring is possible while running throuh the _syntaxic 
-intermediate code_ just because the related grammar rules for expressions are 
+Static types inferring is possible while running throuh the *syntaxic 
+intermediate code* just because the related grammar rules for expressions are 
 unambiguous, but as long as the types of every used entities are known at 
 static elaboration-time.
 
-You will see, learning __Typee__, that some identifiers may be of one type 
+You will see, learning **Typee**, that some identifiers may be of one type 
 among many and that the type they get may be known at run-time only. The 
-_Elaborator_ can know this due to Typee grammar rules and take benefit of this 
+*Elaborator* can know this due to Typee grammar rules and take benefit of this 
 knowledge while checking types uses. See next sub-section.
 
 
@@ -961,20 +961,20 @@ knowledge while checking types uses. See next sub-section.
 #### 3.1.3.4 Types Checking
 
 Once types have been inferred for every entities and expressions detected in 
-the Typee source code, __type checking__ can take place. This is the final 
-phase of the _Front-End Elaborator_.
+the Typee source code, **type checking** can take place. This is the final 
+phase of the *Front-End Elaborator*.
 
 Here, the consistency of types is elaborated within expressions as well as in 
-assignments. For instance, in __Typee__ there is no `+` operator defined 
+assignments. For instance, in **Typee** there is no `+` operator defined 
 between entities of type boolean and integer. There is no comparison operator 
 that jointly uses these types. The assignment of a boolean entity with a 
 string value is not allowed also. These are examples of types errors.
 
 The instructions `if`, `while` or `repeat` for instance check boolean 
 expresions for evaluating the branching. No other type than boolean is 
-allowed to be checked there with __Typee__.
+allowed to be checked there with **Typee**.
 
-The _Elaborator_ checks for such consistencies between types in expressions 
+The *Elaborator* checks for such consistencies between types in expressions 
 and statements. This involves the elaboration of types consistency. For 
 instance, integer and float types are consistent. Rules for their 
 transformations into one another are simple to code. They may be put in tables 
@@ -1001,12 +1001,12 @@ const uint32 K = 0x789abcde;
 int16 some_variable = K;     // warning here!
 ```
 
-There, the _Elaborator_ can easily evaluate statically that a 32-bits value is 
+There, the *Elaborator* can easily evaluate statically that a 32-bits value is 
 assigned to an 8-bits one. Types are "consistent" according to their 
 respective clusters but assigning 8 bits with 32 bits leads to a loss of 
 information. Most programming languages will assign `some_variable` with the 
 8 lower bits of `K`, i.e. `0xde` in this case. But this might be an error of 
-the coder. The _Elaborator_ cannot state about this. In __Typee__, this will 
+the coder. The *Elaborator* cannot state about this. In **Typee**, this will 
 raise a warning report rather than an error one.
 
 
@@ -1042,82 +1042,82 @@ an assignment. The same is true also for types A2 and Abase. So, object
 object `instance_of_A2` is also type-consistent with object 
 `instance_of_Abase`. 
 
-This special, unusual, next line is typical of __Typee__ syntax:
+This special, unusual, next line is typical of **Typee** syntax:
 ```
 ? in (A1, A2) some_instance;
 ```
 It declares a new variable, `some_instance`, which can be either of type A1 or 
 of type A2 while this is not known at declaration time. The three next 
 assignments after this line in the code example are all legal. `some_instance` 
-may be assigned type `A1` instances __(1)__ as well as `A2` instances __(2)__ 
+may be assigned type `A1` instances **(1)** as well as `A2` instances **(2)** 
 and since `A1` and `A2` types both inherit from class `Abase`, 
-`some_instance` may also be assigned an `Abase` instance __(3)__.
+`some_instance` may also be assigned an `Abase` instance **(3)**.
 
-The _Elaborator_ is able to statically elaborate those consistencies and is 
+The *Elaborator* is able to statically elaborate those consistencies and is 
 able to validate these three assignment statements.
 
 Finally, type aliases can also be statically checked for consistency with 
 built-in types, since they just are aliases that can be grouped into the 
 type cluster of the type they are aliasing.
 
-Should inconsistencies be detected by the _Elaborator_, corresponding _error 
-nodes_ are generated by the _Elaborator_ in the __errors report__ it 
+Should inconsistencies be detected by the *Elaborator*, corresponding *error 
+nodes* are generated by the *Elaborator* in the **errors report** it 
 generates. See next sub-section.
 
 
 #### 3.1.3.5 Validated Intermediate Code & Errors Report
 
-At its instantiation time, the _Front-End Elaborator_ initializes an empty 
-__Error Report__. This is a list of error nodes, ordered on the line 
+At its instantiation time, the *Front-End Elaborator* initializes an empty 
+**Error Report**. This is a list of error nodes, ordered on the line 
 increasing number where the errors occurred (this information is inserted in 
-the _intermediate codes_ nodes by the _Scanner_ and the _Parser_).
+the *intermediate codes* nodes by the *Scanner* and the *Parser*).
 
-The _Elaborator_ elaborates then identifiers categorization, infers types and 
+The *Elaborator* elaborates then identifiers categorization, infers types and 
 checks for their consistencies as much as possible. For this, it runs through 
-the _syntaxic intermediate code_ generated by the _Parser_.
+the *syntaxic intermediate code* generated by the *Parser*.
 
-Remember, this syntaxic I.C. gets a __tree__ structure. The _Elaborator_ runs 
+Remember, this syntaxic I.C. gets a **tree** structure. The *Elaborator* runs 
 through it via a left-most descent walk, I.C. node after I.C. node. It 
-eventually get token nodes and maybe will traverse _error nodes_. These are 
-either _unexpected token_ errors generated by the _Scanner_ or _syntaxic_ 
-errors detected by the _Parser_. Every time an _error node_ is passed through 
-by the _Elaborator_ in the _syntaxic intermediate code_, the _Elaborator_ 
-appends this _error node_ to its __Error Report__ list.
+eventually get token nodes and maybe will traverse *error nodes*. These are 
+either *unexpected token* errors generated by the *Scanner* or *syntaxic* 
+errors detected by the *Parser*. Every time an *error node* is passed through 
+by the *Elaborator* in the *syntaxic intermediate code*, the *Elaborator* 
+appends this *error node* to its **Error Report** list.
 
-Meanwhile, if any types inconsistency is detected by the _Elaborator_, an 
-_error node_ integrating this inconsistency is appended to the 
-__Error Report__.
+Meanwhile, if any types inconsistency is detected by the *Elaborator*, an 
+*error node* integrating this inconsistency is appended to the 
+**Error Report**.
 
-Once the _Elaborator_ completes, it provides the _syntaxic intermediate code_ 
-and prints the __Error Report__. When the error report is empty, the provided 
-I.C. gets the status of ___validated intermediate code___.
+Once the *Elaborator* completes, it provides the *syntaxic intermediate code* 
+and prints the **Error Report**. When the error report is empty, the provided 
+I.C. gets the status of **validated intermediate code**.
 
-This _validated intermediate code_ is passed then to the __Typee__ _Back-End_ 
+This *validated intermediate code* is passed then to the **Typee** *Back-End* 
 for its translation into the targeted programming language (that is, for 
-instance, _C++_, _Java_ or _Python_). But if the __Error Report__ is __not__ 
-empty, the erroneous _syntaxic intermediate code_ is not passed to the 
-_Back-End_ which is not called by the main module of the __Typee__ Translator.
+instance, *C++*, *Java* or *Python*). But if the **Error Report** is **not** 
+empty, the erroneous *syntaxic intermediate code* is not passed to the 
+*Back-End* which is not called by the main module of the **Typee** Translator.
 
-__Important Note__: It is the role of the _Elaborator_ to print the __Error 
-Report__ either on the console or in a log file. This way, nothing has to be 
-transferred back from the _Front-End_ about errors.
+**Important Note**: It is the role of the *Elaborator* to print the **Error 
+Report** either on the console or in a log file. This way, nothing has to be 
+transferred back from the *Front-End* about errors.
 
 
 ## 3.2 Typee Back-End
 
-The __Typee__ _Back-End_ is not design exactly as would be a back-end of a 
-modern compiler. While it translates some _intermediate code_ into a final 
+The **Typee** *Back-End* is not design exactly as would be a back-end of a 
+modern compiler. While it translates some *intermediate code* into a final 
 representation of the initial source code, it only does a translation from a 
-programming language, __Typee__, into another programming language, _Python_, 
-_C++_ or _Java_ for instance. __Typee__ _Back-End_ does __not__ generate some 
+programming language, **Typee**, into another programming language, *Python*, 
+*C++* or *Java* for instance. **Typee** *Back-End* does **not** generate some 
 optimized binary code that will be run with a targetted processor. No. 
-__Typee__ _Back-End_ rather translates an initial source code into a targetted 
+**Typee** *Back-End* rather translates an initial source code into a targetted 
 source code.
 
-Many of the _traditional_ processing of a modern compiler back-end have 
-neither to be implemented nor to be designed for __Typee__ _Back-End_.
+Many of the *traditional* processing of a modern compiler back-end have 
+neither to be implemented nor to be designed for **Typee** *Back-End*.
 
-Meanwhile, we aim to implement different translators from __Typee__ to other 
+Meanwhile, we aim to implement different translators from **Typee** to other 
 programming languages. These translators will, for sure, share common 
 functionnalities. But, for sure also, they will not deliver similar source 
 codes since these will have to conform to the targeted language syntax.
@@ -1138,9 +1138,9 @@ targeted language it is translating to.
 
 ### 3.2.2 Translators callee
 
-Translators are called by the main module of the __Typee__ Translator. Notice 
-that no translator will be called if the _Front-End_ finally displayed or 
-logged an errors report. Any erroneous __Typee__ source code will __not__ be 
+Translators are called by the main module of the **Typee** Translator. Notice 
+that no translator will be called if the *Front-End* finally displayed or 
+logged an errors report. Any erroneous **Typee** source code will **not** be 
 translated to targeted programming language. Corrections have to take place 
 before, under the sole responsability of the coder.
 
@@ -1149,12 +1149,12 @@ before, under the sole responsability of the coder.
 
 So, at its instantiation time (i.e. at construction time), the translator 
 version related to the targeted programming language initializes an empty 
-_targeted source code_. The translator may put in it any starting comments, 
+*targeted source code*. The translator may put in it any starting comments, 
 for instance copyright and/or license notices passed to it, as well as other 
-mandatory notices (as is the case for _Python_ running under _Linux_).
+mandatory notices (as is the case for *Python* running under *Linux*).
 
-The translator runs then through the _validated intermediate code_ that has 
-been validated by the _Front-End_. Remember, this is a tree structure. 
+The translator runs then through the *validated intermediate code* that has 
+been validated by the *Front-End*. Remember, this is a tree structure. 
 Translators run through this structure according to a most-left recursive 
 walk. Every time they encounter a new statement, they translate it to a 
 corresponding statement in the targeted programming language.
@@ -1162,7 +1162,7 @@ corresponding statement in the targeted programming language.
 
 ### 3.2.4 An exemple
 
-Let's have an example. Here is below some not much useful __Typee__ code.
+Let's have an example. Here is below some not much useful **Typee** code.
 
 ```
 class MyClass
@@ -1186,7 +1186,7 @@ class MyClass
 }
 ```
 
-__C++__ translated code will be:
+**C++** translated code will be:
 
 ```cpp
 class Myclass
@@ -1211,34 +1211,34 @@ class Myclass
 }
 ```
 
-while __Python__ translated code will be:
+while **Python** translated code will be:
 
 ```python
 class MyClass:
-    def __init__(self, v:int=0):
+    def **init**(self, v:int=0):
         self._val = v
     
     def print_vals(self):
-        for i in range(MyClass.__K):
+        for i in range(MyClass.**K):
             print( self._val + i, end=' ' )
     
-    __K = 10
+    **K = 10
 ```
 
 Translation here is not a context-free processing, for instance since it 
 might be that the
 translation of many methods will have to be grouped in a 
-single one. For instance, have a look at the _Python_ translation of the 
-__Typee__ class constructors. So, it might be that not every source code 
+single one. For instance, have a look at the *Python* translation of the 
+**Typee** class constructors. So, it might be that not every source code 
 will be translatable in an automated way.
 
 It is the role of the translators to envisage correct translation in as many 
-different situations as possible. The unambiguous syntax of __Typee__ as 
+different situations as possible. The unambiguous syntax of **Typee** as 
 well as the unambiguous syntaxes of the first targeted programming languages 
 should greatly help.
 
 The experienced coder will be able to evaluate here the difficulty of the 
-task, while the original code was quite simple. The __Typee__ PoC aims at 
+task, while the original code was quite simple. The **Typee** PoC aims at 
 prooving that source code can be translated from one unambiguous programming 
 language to another non ambiguous programming language, or not.
 
@@ -1247,27 +1247,27 @@ language to another non ambiguous programming language, or not.
 # 4. The Typee Translator Main Module
 
 In the two previous long sections, we have discussed the two main packages of 
-__Typee__ translator software: the `FrontEnd` ad the `BackEnd` ones.
+**Typee** translator software: the `FrontEnd` ad the `BackEnd` ones.
 
 In the next section, we will discuss other packages that contain utilities and 
-tools developed in the frame of __Typee__ PoC.
+tools developed in the frame of **Typee** PoC.
 
-But the whole mechanism of the __Typee__ translator has to be controled by a 
-main application. This application is a _Python_ module. It is a _Python_ 
+But the whole mechanism of the **Typee** translator has to be controled by a 
+main application. This application is a *Python* module. It is a *Python* 
 script. It parses the command line to get the translation options and the 
 path(s) to the Typee source code that is to be translated (which may be 
 multiple source files). Then, it successively calls the different modules of 
-the _Front-End_: the _Scanner_ first, then the _Parser_ and finally the 
-_Elaborator_. It checks for the validity of the final _intermediate code_ 
-produced by the _Front-End_ and passes it to the required _language 
-translators_ as specified in the command line options.
+the *Front-End*: the *Scanner* first, then the *Parser* and finally the 
+*Elaborator*. It checks for the validity of the final *intermediate code* 
+produced by the *Front-End* and passes it to the required *language 
+translators* as specified in the command line options.
 
 
 ## 4.1 The Typee Translator Main Application
 
 This main application is named `typee.py` and can be found at the sources root 
-directory of the project: `src/`. Since the first implementation of __Typee__ 
-translator is a Proof of Concept developed in _Python_, it has to be run with 
+directory of the project: `src/`. Since the first implementation of **Typee** 
+translator is a Proof of Concept developed in *Python*, it has to be run with 
 command:
 
 ```
@@ -1292,32 +1292,32 @@ The Translator script first instantiates `FEScanner`, then it calls its
 method 
 `scan_file()`. The path of the current Typee source file is provided 
 as the 
-argument of this method. It gets back a reference to the _tokenized 
-intermediate code_ generated by the _Front-End Scanner_.
+argument of this method. It gets back a reference to the *tokenized 
+intermediate code* generated by the *Front-End Scanner*.
 
 The script instantiates then `FEParser` and calls its method `parse()` to 
-parse the _tokenized intermediate code_ that is passed to it as an argument. 
+parse the *tokenized intermediate code* that is passed to it as an argument. 
 This method evaluates the syntaxic correctness of the parsed source code and 
-generates as output a reference to a _syntaxic intermediate code_.
+generates as output a reference to a *syntaxic intermediate code*.
 
-This _syntaxic intermediate code_ is then passed as an argument to the 
-_Elaborator_. This one is first instantiated and the script calls its method 
+This *syntaxic intermediate code* is then passed as an argument to the 
+*Elaborator*. This one is first instantiated and the script calls its method 
 `elaborate()`. There, the semantic correctness of the source code is 
 evaluated
 . For this, as seen before, types of identifiers and types of 
 expressions are elaborated and the correctness of types uses is evaluated. 
 
-The _Elaborator_ may print an __errors report__, should any error having 
-been detected in the previous phases of the _Front-End_. In such a case, the 
-_Translator_ script is considered as being completed and it stops with an 
+The *Elaborator* may print an **errors report**, should any error having 
+been detected in the previous phases of the *Front-End*. In such a case, the 
+*Translator* script is considered as being completed and it stops with an 
 error notice on console (at least, total number of detected errors plus a 
 reminder of the path to get access to the log file if the errors report was 
 asked to be logged in the options of the command line).
 
 ### 4.2.2 Back-End processing
 
-If no error has been detected by the previous phases of the _Front-End_, the 
-main script instantiates every _Back-End translators_, one different for each 
+If no error has been detected by the previous phases of the *Front-End*, the 
+main script instantiates every *Back-End translators*, one different for each 
 of the specified targeted programming languages.
 
 Those dedicated translators generate as many source code files as necessary, 
@@ -1330,65 +1330,65 @@ is highly subject to change.
 ## 4.3 Main Application - Conclusion
 
 Once either the translation main script has stopped due the detection of any 
-kind of error or this script completes with final trnslation of __Typee__ 
+kind of error or this script completes with final trnslation of **Typee** 
 source code into the targeted programming languages, the user gets
-- either a full __errors report__ with errors printed or logged in the 
+- either a full **errors report** with errors printed or logged in the 
 increasing order of the line numbers that have been detected;
 - or a full set of translated files into dedicated sub-directories for each 
-__Typee__ source file that will have been translated.
+**Typee** source file that will have been translated.
 
 It might be that, among many source files to be translated, some of them will 
 have been translated while the others will have failed their translation due 
 to some coding error (syntaxic or semantic detected errors). When asking again 
-for the translation of the source files, the __Typee__ Translator script 
-compares the last dates of modification for every __Typee__ source files and 
+for the translation of the source files, the **Typee** Translator script 
+compares the last dates of modification for every **Typee** source files and 
 their respective translated source files. If the resulting files of the 
-translation are _younger_ than the __Typee__ source files, then the 
-translation process is __not__ run again.
+translation are *younger* than the **Typee** source files, then the 
+translation process is **not** run again.
 
 
 
 # 5. Typee Implementation - Packages and Modules
 
-The first implementation of __Typee__ translator aims at proving the concept 
+The first implementation of **Typee** translator aims at proving the concept 
 of programming languages translations and at understanding the issues this 
-raises and how to solve them. This is a PoC, or _Proof of Concept_.
+raises and how to solve them. This is a PoC, or *Proof of Concept*.
 
-_Python_ has been chosen for the development of this PoC, for the ease of 
-prototyping this programming language offers. In _Python_, we design 
-_packages_ and _modules_. A _Python module_ is a file containing _Python_ 
-source code. A _Python package_ is a directory that contains modules plus a 
-special module named `__init__.py` that may be empty but which is mandatory.
+*Python* has been chosen for the development of this PoC, for the ease of 
+prototyping this programming language offers. In *Python*, we design 
+*packages* and *modules*. A *Python module* is a file containing *Python* 
+source code. A *Python package* is a directory that contains modules plus a 
+special module named `**init**.py` that may be empty but which is mandatory.
 
 It is straightforward to envisage the creation of a package for the 
-_Front-End_ code (named `FrontEnd`) and another one for the _Back-End_ code 
+*Front-End* code (named `FrontEnd`) and another one for the *Back-End* code 
 (named `BackEnd`). These packages may embed sub-packages also. We will see in 
-the related sub-section below that this is the case for the _Front-End_. There 
+the related sub-section below that this is the case for the *Front-End*. There 
 must be common code, developed in modules, that is used by many other modules 
 maybe in different packages. So, we design a package named `Commons`. We have 
-put in there two _Python_ module templates also, that we use to create new 
-_Python_ modules while developing __Typee__ PoC. We may need also some S/W 
-tools that we will have to develop for the creation of the __Typee__ PoC. A 
+put in there two *Python* module templates also, that we use to create new 
+*Python* modules while developing **Typee** PoC. We may need also some S/W 
+tools that we will have to develop for the creation of the **Typee** PoC. A 
 package named `local_tools` is dedicated to this. Finally, we will eventually 
-test the developed _Python_ code of the __Typee__ PoC. A package `Tests` 
+test the developed *Python* code of the **Typee** PoC. A package `Tests` 
 embeds all these tests, with sub-packages also.
 
-We specify in next subsections every _Python_ package created for the 
-development of the __Typee__ PoC. In each of these subsections, we specify the 
-different _Python_ modules those packages contain.
+We specify in next subsections every *Python* package created for the 
+development of the **Typee** PoC. In each of these subsections, we specify the 
+different *Python* modules those packages contain.
 
-Notice: while developping a _Proof of Concept_ of __Typee__ translator, we do 
+Notice: while developping a *Proof of Concept* of **Typee** translator, we do 
 not deal with optmizations, neither on used memory space nor on processing 
-time. We accept the _Python_ developed code to be sometimes very naive as 
+time. We accept the *Python* developed code to be sometimes very naive as 
 long as this eases its reading, its understanding and moreover its debugging. 
-Optimizations could happen then, once the __Typee__ PoC developed.  See last 
-section 5.6 below (_further work and conclusion_) to get more on this.
+Optimizations could happen then, once the **Typee** PoC developed.  See last 
+section 5.6 below (*further work and conclusion*) to get more on this.
 
 
 ## 5.1 Package `FrontEnd`
 
-As specified in above sections, the __Typee__ _Front-End_ is composed of 
-three connected componenets: the _Scanner_, the _Parser_ and the _Elaborator_. 
+As specified in above sections, the **Typee** *Front-End* is composed of 
+three connected componenets: the *Scanner*, the *Parser* and the *Elaborator*. 
 
 Package `FrontEnd` in Typee translator contains then three sub-packages: 
 `Scanner`, `Parser`, and `Elaborator`. We describ their designs in the next 
@@ -1400,25 +1400,25 @@ three subsections.
 Contained modules:
 - `fe_scanner.py`.
 
-So, there is only one contained _Python_ module in this package. In there, 
-class `FEScanner` is defined. This is the implementation of the _Front-End 
-Scanner_ of __Typee__ PoC (_Proof of Concept_).
+So, there is only one contained *Python* module in this package. In there, 
+class `FEScanner` is defined. This is the implementation of the 
+*Front-End Scanner* of **Typee** PoC (*Proof of Concept*).
 
 At construction (or instantiation) time, class `FEScanner` instantiates an 
-empty _tokenized intermediate code_ object and initializes line number and 
+empty *tokenized intermediate code* object and initializes line number and 
 column index in line, prior to scanning.
 
 Class `FEScanner` defines two public methods, `scan_file()` and 
 `scan_memory()` that can be called by an external callee (this is, for the 
-__Typee__ PoC, the main module of the __Typee Translator__).
+**Typee** PoC, the main module of the **Typee Translator**).
 
-Method `scan_file()` opens the file containing __Typee__ sopurce code to be 
+Method `scan_file()` opens the file containing **Typee** sopurce code to be 
 translated, loads its whole content in memory and calls then method 
 `scan_memory()`.
 
-Method `scan_memory()` scans the __Typee__ source code in memory, _tokenizes_ 
+Method `scan_memory()` scans the **Typee** source code in memory, *tokenizes* 
 it until the end of the source code and gives back a reference to its internal 
-_tokenized intermediate code_. The _tokenization_ of the source code is 
+*tokenized intermediate code*. The *tokenization* of the source code is 
 processed by private method `_tokenize()`. 
 
 Private method `_tokenize()` checks for types of read tokens and internally 
@@ -1435,45 +1435,45 @@ Few private methods are defined also to factorize often run Python code.
 Contained modules:
 - `fe_parser.py`.
 
-Here again, there is only one _Python_ module in this package. In there, class 
-`FEParser` is defined. This is the implementation of the _Front-End Parser_ of 
-__Typee__ PoC.
+Here again, there is only one *Python* module in this package. In there, class 
+`FEParser` is defined. This is the implementation of the *Front-End Parser* of 
+**Typee** PoC.
 
 At construction (or instantiation) time, class `FEParser` instantiates an 
-empty _syntaxic intermediate code_ object. This will be its returned data 
-structure after having parsed the input _tokenized intermediate code_.
+empty *syntaxic intermediate code* object. This will be its returned data 
+structure after having parsed the input *tokenized intermediate code*.
 
-<_to be completed_ in revision v0.2.1 of this document>
+<*to be completed* in revision v0.2.1 of this document>
 
 
 ### 5.1.3 Subpackage `FrontEnd.Elaborator`
 
-<_to be completed_ in revision v0.3.1 of this document>
+<*to be completed* in revision v0.3.1 of this document>
 
 
 ## 5.2 Package `BackEnd`
 
-<_to be completed_ in revision v0.4.1 of this document>
+<*to be completed* in revision v0.4.1 of this document>
 
 
 ## 5.3 Package `Commons`
 
-<_to be completed_ in revision v0.5.1 of this document>
+<*to be completed* in revision v0.5.1 of this document>
 
 
 ## 5.4 Package `local_tools`
 
-<_to be completed_ in revision v0.5.1 of this document>
+<*to be completed* in revision v0.5.1 of this document>
 
 
 ## 5.5 Package `Tests`
 
-<_to be completed_ in revision v0.6.1 of this document>
+<*to be completed* in revision v0.6.1 of this document>
 
 
 ## 5.6 Further Work and Conclusion
 
-Ok, so we are developping a __Typee__ Proof of Concept, using _Python_ as the 
+Ok, so we are developping a **Typee** Proof of Concept, using *Python* as the 
 programming language for this development project. This code might not be much 
 optimized as long as this helps the developed code to be easy to read, easy 
 to understand, easy to maintain and more over, easy to debug.
@@ -1481,35 +1481,35 @@ to understand, easy to maintain and more over, easy to debug.
 
 ### 5.6.1 Further Work
 
-Once the __Typee__ PoC developed, we will be able to translate __Typee__ 
-source code in _Python_ first, then in _Java_ and/or in _C++_ (once the 
-related _Back-Ends_ will have been developed also).
+Once the **Typee** PoC developed, we will be able to translate **Typee** 
+source code in *Python* first, then in *Java* and/or in *C++* (once the 
+related *Back-Ends* will have been developed also).
 
-So, further work should be the development of __Typee__ Translator in... 
-__Typee__! And of course, we should develop it with optimizations. We will 
-then be able to translate the deveopped Typee code in _Java_ or in _C++_ once 
-the related _Back-Ends_ will have been developed. This means that we will get 
-__Typee__ translators that will be far faster, running on many different 
+So, further work should be the development of **Typee** Translator in... 
+**Typee**! And of course, we should develop it with optimizations. We will 
+then be able to translate the deveopped Typee code in *Java* or in *C++* once 
+the related *Back-Ends* will have been developed. This means that we will get 
+**Typee** translators that will be far faster, running on many different 
 platforms and under many different environments (well, which is already the 
-case with the first PoC developed in _Python_).
+case with the first PoC developed in *Python*).
 
 
 ### 5.6.2 Conclusion
 
-Meanwhile, we can't conclude yet since the __Typee__ PoC is not already 
+Meanwhile, we can't conclude yet since the **Typee** PoC is not already 
 available. We are totally confident in the result we will obtain: the 
-__Typee__ Proof of Concept will be working, first translating __Typee__ 
-source code into _Python_ source code, then translating it to _C++_ and 
-_Java_ source codes.
+**Typee** Proof of Concept will be working, first translating **Typee** 
+source code into *Python* source code, then translating it to *C++* and 
+*Java* source codes.
 
 But we have not yet proved this and still have to develop the PoC. This 
 document currently explains the design of the PoC with programming language 
-_Python_. As soon as this PoC will have been developed (or failed to), we will 
+*Python*. As soon as this PoC will have been developed (or failed to), we will 
 be able to propose some conclusion here.
 
 Should the conclusion finally be positive (and we trust it will), we will 
 provide new releases of this document. They will explain the design of further 
-developments, in __Typee__ language. Won't this be amazing?
+developments, in **Typee** language. Won't this be amazing?
 
 
 
@@ -1531,4 +1531,5 @@ developments, in __Typee__ language. Won't this be amazing?
 | 2018-08-12 | 0.1.2 | Schmouk | Corrected mispelled intermediate code classes |
 | 2019-02-06 | 0.1.3 | Schmouk | Typo correction in title of section 3. |
 | 2019-04-10 | 0.1.4 | Schmouk | Typo correction in C++ example code. |
+| 2020-06-21 | 0.1.5 | Schmouk | Replaced '_' with '*' as marks for text formatting. |
 |  |  |  |  |

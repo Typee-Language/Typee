@@ -5,8 +5,8 @@ access and modify code files by their own, here are the few recommendations we
 make and a detailed description of how-to install the recommended development
 framework.
 
-Please notice that the use of the recommended development environment is _not_
-mandatory to use or to modify __Typee__. This Open Source project, provided
+Please notice that the use of the recommended development environment is *not*
+mandatory to use or to modify **Typee**. This Open Source project, provided
 with the MIT license, may be used or modified with many other environments.
 
 Finally, the next text is for Windows and Linux users only. If you develop
@@ -34,7 +34,7 @@ The one we use for Typee Translator programmation is Eclipse 2020-03.
 So, this is the recommended version of Eclipse to use. If you do so, you will
 take immediate benefit of the two files `.project` and `.pydevproject` that
 are provided at the root of the Typee repository.
-But you may also use an older version of Eclipse (see item __More Downloads__
+But you may also use an older version of Eclipse (see item **More Downloads**
 for a list of former versions of Eclipse, available here:
 [http://www.eclipse.org/downloads/eclipse-packages/](http://www.eclipse.org/downloads/eclipse-packages/]
 as well as you may use a newer version of Eclipse 
@@ -79,12 +79,12 @@ Once Eclipse has been installed, in its Java framework version, you cannot yet
 program in Python. Sob: this is the language we are using to develop the very
 first version of the Typee translator.
 
-_PyDev_ is a dedicated plug-in that allows Python programming with Eclipse. You
+*PyDev* is a dedicated plug-in that allows Python programming with Eclipse. You
 do not have to download and install it by yourself. You rather have to ask for
 its installation via Eclipse. This is the reason why you first have to install
 Java and Eclipse.
 
-To install _PyDev_ plug-in go to Eclipse, click `Help` (sic!) in the menu bar
+To install *PyDev* plug-in go to Eclipse, click `Help` (sic!) in the menu bar
 and click on the `Install New Software` item:
 
 ![screen copy image](./Pictures/1-install-new-software.png)
@@ -101,9 +101,9 @@ something like "PyDev Updates";
 
 ![screen copy image](./Pictures/3-add.png)
 
-Then, you're nearly done. The previous modal window named "_Install_" gets
+Then, you're nearly done. The previous modal window named "*Install*" gets
 active again. Click on the `PyDev`check-box to ask for the installation of
-_PyDev_. You may ask also for the installation of `PyDev Mylin integration`
+*PyDev*. You may ask also for the installation of `PyDev Mylin integration`
 but this is optional and not needed four our needs.
 The `Next >` and `Finsih` buttons will then become active. You just have to
 click `Finish` to get your checked options installed.
@@ -116,7 +116,7 @@ You will eventually have to accept its license agreement. Nothing bad in it, che
 the acceptation box and validate.
 
 Last but not least, at the top right corner of Eclipse window, you can see the
-currently available perspectives. You should normally have the only a _Java_
+currently available perspectives. You should normally have the only a *Java*
 perspective shown there:
 
 ![screen copy image](./Pictures/5-perspectives.png)
@@ -150,7 +150,7 @@ or to run any Python module unless you have previously installed a Python
 interpreter.
 
 Whatever is your current Python processing environment, or should you have none
-yet, we __strongly__ recommend you to install _Anaconda 3_. This is an Open
+yet, we **strongly** recommend you to install *Anaconda 3*. This is an Open
 Source package management from [https://conda.io/](https://conda.io/). It is
 available for many different Operating Systems. Downloads can be done, for
 Python programming, from there: 
