@@ -53,7 +53,7 @@ class AccessStack( list ):
         self.append( self._DEFAULT )
 
     #-------------------------------------------------------------------------
-    def add_level(self, access_qualif: Access = None):
+    def add_level(self, access_qualif: Access = None) -> None:
         self._current_level += 1
         try:
             self[ self._current_level ] = access_qualif or self._DEFAULT

@@ -45,15 +45,25 @@ class UTTreeNode( UTTreeNodeBase ):
         super().__init__( parent, children or [] )
 
     #-------------------------------------------------------------------------
-    def __iadd__(self, new_child: UTTreeNodeBase) -> UTTreeNodeBase:
+    def __add__(self, new_child: UTTreeNodeBase) -> UTTreeNodeBase:
         '''
         Appends a new child to the list of children of this tree node.
+        Implementation of operator '+'.
         '''
         self.content.append( new_child )
         return self
 
     #-------------------------------------------------------------------------
-    def walk(self):
+    def __iadd__(self, new_child: UTTreeNodeBase) -> UTTreeNodeBase:
+        '''
+        Appends a new child to the list of children of this tree node.
+        Implementation of operator '+='.
+        '''
+        self.content.append( new_child )
+        return self
+
+    #-------------------------------------------------------------------------
+    def walk(self) -> UTTreeNodeBase:
         '''
         Walks through the tree passing through this node.
         Walk-through is depth-first implemented.

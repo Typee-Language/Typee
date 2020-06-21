@@ -31,10 +31,10 @@ class ICAst( UTTree ):
     """
     The class of Abstract Syntaxic Trees.
     Those trees are created by the Front-End Parser.
-    They are used by the Front-End Elaborator, when elaborating symbols
-    and types for instance.
-    They are used also by the types checker.
-    FInally, they are used by the Back-End Programming-Language Translators.
+    They are used by the Front-End Elaborator,  when elaborating symbols and 
+    types for instance.
+    They are used also by the types checker - i.e. the Elaborator.
+    Finally, they are used by the Back-End Programming-Language Translators.
     """   
     #-------------------------------------------------------------------------
     def __init__(self) -> None:
