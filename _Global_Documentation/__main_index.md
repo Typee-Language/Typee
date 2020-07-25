@@ -1,6 +1,6 @@
 # Software Global Documentation - Index for all documents
 
-This document is part of the Open Source project __Typee__. As such, it is
+This document is part of the Open Source project **Typee**. As such, it is
 delivered under the MIT license:
 ```
 Copyright (c) 2018-2020 Philippe Schmouker, Typee project, http://www.typee.ovh
@@ -25,10 +25,10 @@ SOFTWARE.
 ```
 
 This document is the index of all documents provided for the description or 
-the specification of __Typee__ software architecture, modules and files.
+the specification of **Typee** software architecture, modules and files.
 
-It is part of the overall documentation of __Typee__ and could be used for
-the feeding of the related __http://www.typee.ovh__ web site, placed at pages
+It is part of the overall documentation of **Typee** and could be used for
+the feeding of the related **http://www.typee.ovh** web site, placed at pages
 dedicated to developers.
 
 
@@ -36,13 +36,13 @@ dedicated to developers.
 
 | Name & direct link  | Topic(s)  | Place  | Comments  |
 |---|:---:|---|---|
-| [README.md](../README.md) | General Documentation | reporitory root  | General description of __Typee__ project and language |
-| [README.md](Typee_Software_HTML_Documentation/README.md) | S/W documentation | \_Global\_Documentation/ Typee_Software\_ HTML_Documentation / | Usage of automated script to generate the whole __Typee__ S/W documentation |
+| [README.md](../README.md) | General Documentation | reporitory root  | General description of **Typee** project and language |
+| [README.md](Typee_Software_HTML_Documentation/README.md) | S/W documentation | \_Global\_Documentation/ Typee_Software\_ HTML_Documentation / | Usage of automated script to generate the whole **Typee** S/W documentation |
 | [scanner_tokenization_tests.md](../src/Tests/Documentation-README/scanner_tokenization_tests.md) | Tests  | src/ Tests/ Documentation-README/  | Explanations on how to test the Front-End Scanner and how to modify related tests files  |
-| [typee_front_end_parser_ documentation.md](typee_front_end_parser_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the role and the architecture of the Front-End __Parser__ of __Typee__ translator |
-| [typee_front_end_scanner_ sw_documentation.md](typee_front_end_scanner_sw_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the software architecture and data structures of the Front-End __Scanner__ of __Typee__ translator |
-| [typee_software_doesign.html](typee_software_design.html) | S/W documentation | \_Global\_Documentation/ | Design document of the __Typee__ translator |
-| [typee_software_doc.html](Typee_Software_HTML_Dcumentation/typee_software_doc.html) | S/W documentation | \_Global\_Documentation/ Typee_Software\_ HTML_Documentation | HTML documentation of __all__ packages, modules and classes of the whole __Typee__ software |
+| [typee_front_end_parser_ documentation.md](typee_front_end_parser_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the role and the architecture of the Front-End **Parser** of **Typee** translator |
+| [typee_front_end_scanner_ sw_documentation.md](typee_front_end_scanner_sw_documentation.md) | S/W architecture | \_Global\_Documentation/ | Complete description of the software architecture and data structures of the Front-End **Scanner** of **Typee** translator |
+| [typee_software_doesign.html](typee_software_design.html) | S/W documentation | \_Global\_Documentation/ | Design document of the **Typee** translator |
+| [typee_software_doc.html](Typee_Software_HTML_Dcumentation/typee_software_doc.html) | S/W documentation | \_Global\_Documentation/ Typee_Software\_ HTML_Documentation | HTML documentation of **all** packages, modules and classes of the whole **Typee** software |
 |  |  |  |  |
 
 
@@ -58,11 +58,11 @@ same document could be appearing in multiple topics_)
 | Date  | Rev.  | Author(s)  | Comments  |
 |---|---|---|---|
 | 2018-07-14 | 0.0.1 | Schmouk | Very first creation |
-| 2018-07-15 | 0.0.2 | Schmouk | Minor typo correction; modified ordering of documents; added column __Topic__ |
+| 2018-07-15 | 0.0.2 | Schmouk | Minor typo correction; modified ordering of documents; added column **Topic** |
 | 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and index to the Front-End Parser documentation |
 | 2018-07-23 | 0.0.4 | Schmouk | Added reference to the Front-End Scanner S/W architecture documentation |
-| 2018-07-24 | 0.0.5 | Schmouk | Added ref to the usage of the script that automates the generation of __Typee__ S/W documentation |
+| 2018-07-24 | 0.0.5 | Schmouk | Added ref to the usage of the script that automates the generation of **Typee** S/W documentation |
 | 2018-07-24 | 0.0.6 | Schmouk | Added links to the reference table, then corrected the few erroneous ones |
-| 2018-07-25 | 0.0.7 | Schmouk | Modified directory name for __Typee__ HTML automated documentation; added reference to the HTML documentation of the whole software |
+| 2018-07-25 | 0.0.7 | Schmouk | Modified directory name for **Typee** HTML automated documentation; added reference to the HTML documentation of the whole software |
 | 2018-08-12 | 0.0.8 | Schmouk | Added design document of Typee translator |
 |  |  |  |  |

@@ -39,7 +39,12 @@ class UTTreeNodeBase:
                 A reference to the content to be associated with this tree node.
         '''
         self.parent  = parent
-        self.content = content
+        if content is None:
+            self.content = []
+        elif isinstance( content, list ):
+            self.content = content
+        else:
+            self.content = [ content ]
 
     #-------------------------------------------------------------------------
     def walk(self) -> None:

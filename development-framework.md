@@ -5,8 +5,8 @@ access and modify code files by their own, here are the few recommendations we
 make and a detailed description of how-to install the recommended development
 framework.
 
-Please notice that the use of the recommended development environment is _not_
-mandatory to use or to modify __Typee__. This Open Source project, provided
+Please notice that the use of the recommended development environment is *not*
+mandatory to use or to modify **Typee**. This Open Source project, provided
 with the MIT license, may be used or modified with many other environments.
 
 Finally, the next text is for Windows and Linux users only. If you develop
@@ -22,7 +22,7 @@ To modify Typee, you will need to install:
 - and Anaconda 3, a complete Python 3.x environment with the Python interpreter.
 
 
-## Eclipse 2019-09
+## Eclipse 2020-03
 
 [Eclipse](http://www.eclipse.org) is an Open Source development framework from
 Eclipse Foundation. The last released versions of this framework, dedicated to
@@ -30,15 +30,15 @@ your Operating System and the CPU architecture (32- vs. 64-bits) are directly
 available for download here: 
 [http://www.eclipse.org/downloads/](http://www.eclipse.org/downloads/)
 
-The one we use for Typee programmation is Eclipse 2019-09.
+The one we use for Typee Translator programmation is Eclipse 2020-03.
 So, this is the recommended version of Eclipse to use. If you do so, you will
 take immediate benefit of the two files `.project` and `.pydevproject` that
 are provided at the root of the Typee repository.
-But you may also use an older version of Eclipse (see item __More Downloads__
+But you may also use an older version of Eclipse (see item **More Downloads**
 for a list of former versions of Eclipse, available here:
 [http://www.eclipse.org/downloads/eclipse-packages/](http://www.eclipse.org/downloads/eclipse-packages/]
-as well as you may use a newer version of Eclipse as should eventually happen
-(Photon is the last stable release of Eclipse by July 2018).
+as well as you may use a newer version of Eclipse 
+(Eclipse 2020-03 is the last stable release of Eclipse by end of March 2020).
 Of course, would you use a version older than Photon, you should create a
 new project by yourself (see below). Meanwhile, should you use a newer version
 of Eclipse, you could then use the two `. ...project` configuration files as-is.
@@ -52,7 +52,7 @@ Installation is really straightforward. You should not encounter any kind of
 issue to install it.
 
 
-## Java 8 (8.0_221)
+## Java 8 (8.0_241)
 
 Mind this gap. Eclipse framework is developed in Java. You definitively need
 to install a Java Run Time (JRT) on your machine to be able to run Eclipse. If 
@@ -66,7 +66,7 @@ your favorite Web browser this site:
 automatically you to the localized version of this page (as 
 https://java.com/__en__/download/ or https://java.com/__fr__/download/ for
 instance).
-By October 2018, last version of Java is Java 8 Update 192 (October 16, 2018).
+By end of March 2020, last version of Java is Java 8.0 Update 241.
 
 Just download it and let it install itself. You should not encounter any
 kind of issue during this process. Java has been installed billions of times
@@ -79,12 +79,12 @@ Once Eclipse has been installed, in its Java framework version, you cannot yet
 program in Python. Sob: this is the language we are using to develop the very
 first version of the Typee translator.
 
-_PyDev_ is a dedicated plug-in that allows Python programming with Eclipse. You
+*PyDev* is a dedicated plug-in that allows Python programming with Eclipse. You
 do not have to download and install it by yourself. You rather have to ask for
 its installation via Eclipse. This is the reason why you first have to install
 Java and Eclipse.
 
-To install _PyDev_ plug-in go to Eclipse, click `Help` (sic!) in the menu bar
+To install *PyDev* plug-in go to Eclipse, click `Help` (sic!) in the menu bar
 and click on the `Install New Software` item:
 
 ![screen copy image](./Pictures/1-install-new-software.png)
@@ -101,9 +101,9 @@ something like "PyDev Updates";
 
 ![screen copy image](./Pictures/3-add.png)
 
-Then, you're nearly done. The previous modal window named "_Install_" gets
+Then, you're nearly done. The previous modal window named "*Install*" gets
 active again. Click on the `PyDev`check-box to ask for the installation of
-_PyDev_. You may ask also for the installation of `PyDev Mylin integration`
+*PyDev*. You may ask also for the installation of `PyDev Mylin integration`
 but this is optional and not needed four our needs.
 The `Next >` and `Finsih` buttons will then become active. You just have to
 click `Finish` to get your checked options installed.
@@ -116,7 +116,7 @@ You will eventually have to accept its license agreement. Nothing bad in it, che
 the acceptation box and validate.
 
 Last but not least, at the top right corner of Eclipse window, you can see the
-currently available perspectives. You should normally have the only a _Java_
+currently available perspectives. You should normally have the only a *Java*
 perspective shown there:
 
 ![screen copy image](./Pictures/5-perspectives.png)
@@ -150,7 +150,7 @@ or to run any Python module unless you have previously installed a Python
 interpreter.
 
 Whatever is your current Python processing environment, or should you have none
-yet, we __strongly__ recommend you to install _Anaconda 3_. This is an Open
+yet, we **strongly** recommend you to install *Anaconda 3*. This is an Open
 Source package management from [https://conda.io/](https://conda.io/). It is
 available for many different Operating Systems. Downloads can be done, for
 Python programming, from there: 
@@ -162,15 +162,11 @@ libraries).
 - For downloading `Anaconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://www.anaconda.com/download/](https://www.anaconda.com/download/) and
-ask for the installation of Python 3.6. This is mandatory to use our Typee
-project since this is the version of Python we are currently using for our
-developments. 
+ask for the installation of the latest version of Python.
 - For downloading `Miniconda` according to your Operating System and your
 CPU architecture, just go there:
 [https://conda.io/miniconda.html](https://conda.io/miniconda.html) and
-ask for the installation of Python 3.7. This is mandatory to use our Typee
-project since this is the version of Python we are currently using for our
-developments.
+ask for the installation of the latest version od Python.
 
 You will then be able to easily install Anaconda 3 on your machine either by
 running the installer or by processing the explained installation steps.
@@ -184,18 +180,16 @@ This way, you will also be able to state other versions of Python interpreter
 you would have formerly or lately installed.
 
 
-## Why Python 3.7 rather than 3.6?
+## Install Python 3.8
 
-Well, by July 2018 Python 3.7 has been very newly released (Release Date: 
-2018-06-27) and many external libraries do not yet support this new version
-of the interpreter. So, Anaconda 3 does not support yet Python 3.6. We were
-then recommending to use Python 3.6 until all external libraries would have 
-been upgraded. By 2018-10-20, this has been the case. So, we recommend now 
-to use Python 3.7 as we are doing for the development of Typee translator. 
-Please be aware that Anaconda knows about a bug in library NumPy with 
-Python 3.7. First, we do not use NumPy for the coding ofthe Typee 
-translator. Second, Anaconda ensures that they will provide a new release 
-with the corrected version of NumPy as soon as a patch will be available.
+Up today, Python 3.8 is the very last stable release of Python. It has been
+released by Ocvtober 2019. This is the version of the Python interpreter we
+use to develop the Typee translator.
+
+Just donwload it iof not yet available with Anaconda or miniconda. You will
+the be able to set this interpreter as being the one to use, in your
+prefered development framework - which is Eclipse for us, used with the
+plugin PyDev.
 
 
 ## That's it

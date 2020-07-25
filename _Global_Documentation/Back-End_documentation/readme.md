@@ -1,4 +1,4 @@
 This directory, in _Global_Documentation, relates with the documentation of 
-the __Back-End__ of translator __Typee__.
+the **Back-End** of translator **Typee**.
 
 It contains all related documentation in an MarkDown form.
