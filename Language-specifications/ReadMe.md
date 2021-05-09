@@ -6,6 +6,28 @@ put here.
 
 ## Versionning
 
+### Since 2021
+
+The Typee language grammar is specified according to the formal, unambiguous 
+and easy to read PEG format (stands for *Processing Expression Grammar*).
+
+Processing Expression Grammars have been first specified by Bryan Ford (MIT)
+by 2004 in his famous paper "Parsing Expression Grammars: A Recognition-Based 
+Syntactic Foundation". This article has been published at the POPL’04 
+conference that had been  held by January 14–16, 2004 at Venice, Italy. Its a 
+copyrighted document of ACM with number 1-58113-729-X/04/0001 and it can be 
+easily found on the Net.
+
+So, now on, all versions of Typee grammar specifications are numbered and 
+named as `typee_sppecs_PEG_v<XX>.grm`, where `<XX>` belongs in 
+interval 01 up to 99.
+
+
+### Before 2021
+
+Notice that Typee language wass specified with a formal, unambiguous, LL(1) 
+grammar.
+
 The very first version of these specifications is not numbered. See file 
 `typee_specs_LL1.grm`.
 
@@ -14,18 +36,33 @@ Next versions are all numbered: `...-v2.grm`, `...-v3.grm`, ...,
 document.
 
 You'll notice that version `v4` is missing. Unfortunately, it has been lost 
-before being stored here...
+before being stored here.
 
-Finally, since version `v8`, a second version of the specifications is 
+Since version `v8`, a second version of the specifications is 
 provided: from `...-v8-EBNF.grm` to `...-v10-EBNF.grm`. 
 
-Notice that Typee language is specified with a formal, unambiguous, LL(1) 
-grammar.
 
 
 ## Specification format
 
-### Formal classical description
+### Since 2021
+
+The used syntax to describe the grammar rules is the original PEG one. So, 
+we use notations `<-` and `/` for instance, while newer papers use `::=` 
+or `|` instead as it is usual in CFGs (*Context Free Grammars*, which what 
+LL(1) grammars are).
+
+We strongly encourage the reader to get access to the initial article from 
+Bryan Ford. Section 2 of this paper fully explains the syntax of PEGrammars:
+"*Parsing Expression Grammars: A Recognition-Based Syntactic Foundation*",
+ACM 1-58113-729-X/04/0001, POPL’04, January 14–16, 2004, Venice, Italy. It
+can easily be accessed on Internet with these references. We shall not copy 
+here anything from it without permission.
+
+
+### Before 2021
+
+#### Formal classical description - LL(1)
 
 The used syntax to describe the grammar rules is very classical.
 Rules are named between angle brackets: `<rule name>`. Those names may 
@@ -67,7 +104,7 @@ group together successive rule names between parenthesis. Next specifications
 are unambiguous:
 
     <single string>  ::= "'" <single string'> "'"
-                      |  '"' <ingle string"> '"'
+                      |  '"' <single string"> '"'
 
     <single string'> ::= <any escaped char> <single string'>
                       |  <any string quote char> <single string'>
@@ -82,7 +119,7 @@ this rule may be not derived. In the above rules, it states that empty strings
 formed as `''` or `""` are legal in Typee.
 
 
-### Extended Backus-Naur Form (EBNF) description
+#### Extended Backus-Naur Form (EBNF) description
 
 This is a simplified and more easy to read format for grammar rules 
 specifications. We have been providing them since version `v8` of Typee 
@@ -106,12 +143,12 @@ underscore, i.e. `'_'`, preceding any series of alphanumerical character and
 undercores, i.e. any character from group `['0'...'9', 'A'...'Z', 'a'...'z', '_']`.
 
 Parenthesis are also used jointly with an ending character star `'*'`. There, 
-they men that the derivations rules the group together may be derived from 0 
-to many times (with no limitations):
+they mean that the derivations rules that they group together may be derived 
+from 0 to many times (with no limitations):
 
     <identifier> ::= ( <alpha char> | '_' ) ( <alpha num char> | '_' )*
 
-You can get here that this kind of factorization helps easying the reading of 
+You can get here that this kind of factorization helps easing the reading of 
 grammars specifications as well as it helps reducing their specifications 
 sizes.
 
