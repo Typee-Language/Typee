@@ -52,6 +52,12 @@ we use notations `<-` and `/` for instance, while newer papers use `::=`
 or `|` instead as it is usual in CFGs (*Context Free Grammars*, which what 
 LL(1) grammars are).
 
+Notice that we use notation '##' as the starting point for comments, while
+Bryan Floyd was using '#' in his original paper. This is a commodity we use 
+to get colored syntax in Notepad++. Notioce also that Comments are one line 
+comments only in the very first description of PEG grammars. The PEG
+specification of **Typee** conforms to this.
+
 We strongly encourage the reader to get access to the initial article from 
 Bryan Ford. Section 2 of this paper fully explains the syntax of PEGrammars:
 "*Parsing Expression Grammars: A Recognition-Based Syntactic Foundation*",
