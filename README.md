@@ -171,9 +171,9 @@ The final step for the user is then to run the compiler or the interpretor of th
 
 ## Development policy
 
-In the initial and earliest configuration of **typee environment** any developemnt had to be done in speciic branches created from branch `dev`. Only an administrator could merge new releases of **Typee Translator** into branch `main`.
+In the initial and earliest configuration of **typee environment** any developemnt had to be done in speciic branches created from branch `dev`. Only an administrator could merge new releases of **Typee Translator** into branch `master`.
 
-A new policy is now in action. Only administrators can still merge new releases of **Typee environment** into branch `main`, but developments are now done into release branches, each one created under branch `main`. The naming of release branches is in the form "release-*x*-*y*" where *x* is the major version and *y* the minor version of the release. A patch version may be finally added to the release tag, at release time.
+A new policy is now in action. Only administrators can still merge new releases of **Typee environment** into branch `master`, but developments are now done into release branches, each one created under branch `master`. The naming of release branches is in the form "release-*x*-*y*" where *x* is the major version and *y* the minor version of the release. A patch version may be finally added to the release tag, at release time.
 
 
 
