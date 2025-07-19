@@ -19,7 +19,7 @@ copyrighted document of ACM with number 1-58113-729-X/04/0001 and it can be
 easily found on the Net.
 
 So, now on, all versions of Typee grammar specifications are numbered and 
-named as `typee_sppecs_PEG_v<XX>.grm`, where `<XX>` belongs in 
+named as `typee_specs_PEG_v<XX>.grm`, where `<XX>` belongs in 
 interval 01 up to 99.
 
 
@@ -54,7 +54,7 @@ LL(1) grammars are).
 
 Notice that we use notation '##' as the starting point for comments, while
 Bryan Floyd was using '#' in his original paper. This is a commodity we use 
-to get colored syntax in Notepad++. Notioce also that Comments are one line 
+to get colored syntax in Notepad++. Notice also that Comments are one line 
 comments only in the very first description of PEG grammars. The PEG
 specification of **Typee** conforms to this.
 
