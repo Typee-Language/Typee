@@ -522,4 +522,4 @@ VolatileQualifier           <- "volatile"
                                      |  ',' <identifier> <var declaration or assignment>    
                                      |  EPS                                                    
 <var declaration or assignment'>    ::= ',' <identifier> <var declaration or assignment>    
-                                     |  EPS                                                    
+                                     |  EPS     
