@@ -45,8 +45,8 @@ Comment         <- '//' (!NewLine .)* NewLine
 
 Ellipsis        <- '...'
 
-EscapedChar     <- '\0x' HexDigit HexDigit HexDigit HexDigit
-                 / '\0x' HexDigit HexDigit HexDigit
+EscapedChar     <- '\0x' HexDigit HexDigit HexDigit HexDigit    ## ADD unicode \u + 6 hex digits (up to 10ffff)
+                 / '\0x' HexDigit HexDigit HexDigit             ## CHK escaped chars - see LL1-v10
                  / '\0x' HexDigit HexDigit
                  / '\0x' HexDigit
                  / '\0X' HexDigit HexDigit HexDigit HexDigit
@@ -58,17 +58,17 @@ EscapedChar     <- '\0x' HexDigit HexDigit HexDigit HexDigit
                  / '\0'  OctDigit
                  / '\'   AlphaChar
 
-Identifier      <- [_0-9a-zA-Z]+
+Identifier      <- [_0-9a-zA-Z]+                                ## FIX first char not a digit
 
 DottedName      <- Identifier ('.' Identifier)*
 
 IdentifiersList <- DottedName (',' DottedName)*
 
-NewLine         <- '\r\n'
+NewLine         <- '\r\n'                                       ## FIX add other new line chars
                  / '\n'
                  / '\r'
 
-Spacing         <- (' ' / '\t' / Comment / NewLine)*
+Spacing         <- (' ' / '\t' / Comment / NewLine)*            ## CHK may newline be a spacing?
                  / ENDMARKER
                  
 False           <- 'false'
@@ -90,7 +90,7 @@ None            <- 'none'
 Scalar              <- BinaryNumber
                      / HexadecimalNumber
                      / OctalNumber
-                     / '0' FractionalValue
+                     / '0' FractionalValue                      ## FIX should be "FractionalPart ExponentPart?"
                      / DecimalNumber FractionalValue?
 
 
@@ -121,7 +121,7 @@ ExponentPart        <- 'E+' DecimalPart
                      / 'e+' DecimalPart
                      / 'e-' DecimalPart
                      / 'e'  DecimalPart
-DecimalPart         <- (DecDigit+ '_'?)+
+DecimalPart         <- (DecDigit+ '_'?)+                        ## FIX should be "DecDigit ('_'? DecDigit+)*" not to get any trailing underscore
 
 
 DecimalNumber       <- [1-9] ('_'? DecDigit+)*
@@ -132,15 +132,15 @@ DecimalNumber       <- [1-9] ('_'? DecDigit+)*
 #####   STATEMENTS   #################################################
 
 StatementsList      <- (EmptyStatement
-                        / SimpleStatement
+                        / SimpleStatement                       ## FIX SimpleStatementEnd should be added here (see below)
                         / CompoundStatement
                         / StatementsBlock)*
 
 
-EmptyStatement      <- Comment / NewLine
+EmptyStatement      <- Comment / NewLine                        ## FIX Spacing should be allowed before NewLine
 
 
-SimpleStatement     <- AssertStatement SimpleStatementEnd
+SimpleStatement     <- AssertStatement SimpleStatementEnd       ## FIX SimpleStatementEnd should be added above
                      / DelStatement SimpleStatementEnd
                      / EnsureStatement SimpleStatementEnd
                      / FileEndianness SimpleStatementEnd
@@ -152,10 +152,10 @@ SimpleStatement     <- AssertStatement SimpleStatementEnd
                      / RaiseStatement SimpleStatementEnd
                      / RequireStatement SimpleStatementEnd
 
-SimpleStatementEnd  <- ';'
+SimpleStatementEnd  <- ';'                                      ## CHK Should Spacing be added before ';'?
 
 
-CompoundStatement   <- AssignDeclDefFunccallStatement
+CompoundStatement   <- AssignDeclDefFunccallStatement           ## CHK wouldn't a StatementEnd token be useful after some of these rules?
                      / EmbedStatement
                      / ExcludeStatement
                      / ForStatement
@@ -168,8 +168,8 @@ CompoundStatement   <- AssignDeclDefFunccallStatement
                      / WithStatement
 
 
-StatementsBlock     <- EmptyStatement* ( '{' StatementsList '}'
-                                        / SimpleStatement
+StatementsBlock     <- EmptyStatement* ( '{' StatementsList '}' ## CHK-1 placing Spacing might be useful, ain't it?
+                                        / SimpleStatement       ## CHK-2 can't this rule be written another way? 
                                         / CompoundStatement )
 
 
@@ -228,7 +228,7 @@ FlowStatement       <- "break"
                      / ReturnStatement
 
 
-ImportStatement     <- ImportName / ImportFrom
+ImportStatement     <- ImportName / ImportFrom                  ## ADD ExportStatement!
 
 ImportName          <- "import" ImportAsNames
 
@@ -250,7 +250,7 @@ RaiseStatement      <- "raise" Expression ("from" Expression)?
 
 
 ReturnStatement     <- "return" ExprList?
-                     / "ret" ExprList?
+                     / "ret" ExprList?                          ## CHK do we keep this alternative?
 
 
 RequireStatement    <- "require" Condition (',' String)?
@@ -279,9 +279,9 @@ ExcludeStatement    <- "exclude" Languages '{{' StatementsList '}}'
 
 Languages           <- Language (',' Language)*
 
-Language            <- "cpp"
-                     / "csharp"
-                     / "cs"
+Language            <- "cpp"                                    ## ADD other targeted languages (e.g. typescript rather than javascript, Kotlin, c, ...
+                     / "csharp"                                 ## CHK maybe multiple naming for a same language should be avoided
+                     / "cs"                                     ## ADD standard version (as optionnal)
                      / "c#"
                      / "javascript"
                      / "java"
@@ -295,7 +295,7 @@ ForStatement        <- "for" '(' TargetList "in" ExprList ')' StatementsBlock ("
 ForeverStatement    <- "forever" '(' ')' StatementsBlock
 
 
-IfStatement         <- "if" '(' Condition ')' StatementsBlock IfStatement1?
+IfStatement         <- "if" '(' Condition ')' StatementsBlock IfStatement1? ## FIX rewrite this rule according to PEG principles (priority on previous rules for operator /)
 
 IfStatement1        <- (ElseIf '(' Condition ')' StatementsBlock)+
                      / "else" StatementsBlock
@@ -381,11 +381,54 @@ MemoryAddress       <- '@' IntegerNumber
 TypeAlias           <- "type" Type11 "as" Identifier (',' Type11 "as" Identifier)*  ## <TYPE>
 
 
+## Notice: next lines have to do with STATEMENTS
+---------------------------------------------------------------
+<assign op> ::= '='
+             |  <augmented assign op>
+
+<assignment statement>    ::= <target list'> <assignment statement'>                ### modified    
+<assignment statement'>   ::= <assign op> <expr list>                               ### new         
+
+<augmented assign op>   ::= '+='
+                         |  '-='
+                         |  '*='
+                         |  '/='
+                         |  '%='
+                         |  '&='
+                         |  '|='
+                         |  '^='
+                         |  '<<='
+                         |  '<<<='
+                         |  '>>='
+                         |  '>>>='
+                         |  '**='
+                         |  '^^='
+                         |  '@='
+                         |  '@@='                                                   ## new              
+                         |  '><='
+                         |  '<>='                                                   ## new              
+                         |  '!!='
+                         |  '::='
+                         |  '??='
+
+
+<method or operator definition>     ::= <returned type> <method or operator definition'>
+<method or operator definition'>    ::= <operator definition>                                                
+                                     |  <identifier> <function definition>                                    
+
+
+<var declaration or assignment>     ::= '=' <expression> <var declaration or assignment'>    
+                                     |  ',' <identifier> <var declaration or assignment>    
+                                     |  EPS                                                    
+<var declaration or assignment'>    ::= ',' <identifier> <var declaration or assignment>    
+                                     |  EPS     
+## End of notice
+
 
 
 #####   TYPES   #################################################
 
-Type                        <- ConstQualifier? SimpleType
+Type                        <- ConstQualifier? SimpleType       ## ADD type renaming with keyword 'as'
                              / ConstQualifier? TemplatedType
                              / None
 
@@ -475,51 +518,12 @@ VolatileQualifier           <- "volatile"
 
 
 
-
-
-
-
-
-
-
-
----------------------------------------------------------------
-<assign op> ::= '='
-             |  <augmented assign op>
-
-<assignment statement>    ::= <target list'> <assignment statement'>                ### modified    
-<assignment statement'>   ::= <assign op> <expr list>                               ### new         
-
-<augmented assign op>   ::= '+='
-                         |  '-='
-                         |  '*='
-                         |  '/='
-                         |  '%='
-                         |  '&='
-                         |  '|='
-                         |  '^='
-                         |  '<<='
-                         |  '<<<='
-                         |  '>>='
-                         |  '>>>='
-                         |  '**='
-                         |  '^^='
-                         |  '@='
-                         |  '@@='                                                   ## new              
-                         |  '><='
-                         |  '<>='                                                   ## new              
-                         |  '!!='
-                         |  '::='
-                         |  '??='
-
-
-<method or operator definition>     ::= <returned type> <method or operator definition'>
-<method or operator definition'>    ::= <operator definition>                                                
-                                     |  <identifier> <function definition>                                    
-
-
-<var declaration or assignment>     ::= '=' <expression> <var declaration or assignment'>    
-                                     |  ',' <identifier> <var declaration or assignment>    
-                                     |  EPS                                                    
-<var declaration or assignment'>    ::= ',' <identifier> <var declaration or assignment>    
-                                     |  EPS     
+## ADD missing CLASSES rules - see LL1-v10  ## NEW only one inheritance allowed
+## ADD interface rules (NEW). Notice: allow many implementations of Interfaces; no interface may inherit from anything.
+## ADD missing COMPREHENSION rules - see LL1-v10
+## ADD missing CONDITIONS and COMPARISONS rules - see LL1-v10  ## ADD also boolean assignment operators (REM not that easy to specify)
+## ADD missing EXPRESSIONS rules - see LL1-v10
+## ADD missing FUNCTIONS rules - see LL1-v10
+## ADD missing STRINGS rules - see LL1-v10
+## ADD missing TEMPLATES rules - see LL1-v10
+## ADD parallel programming (NEW)
