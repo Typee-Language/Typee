@@ -1,17 +1,8 @@
-.gitignore
-.metadata
-/.project
-/.pydevproject
-.settings
-_config.yml
-*.pyc
-__pycache__
-* - Copie.grm
-*-new.grm
-* - Copy.grm
-UML*
-*.prefs
-tmp_data
-src/Utils/desktop.ini
-*.epf
-Scripts
+# Typee specifics
+archive
+
+# Visual Studio specifics
+.vs
+x64
+Debug
+Release
