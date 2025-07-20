@@ -169,12 +169,28 @@ According to this, the *Back-End* of **Typee** contains as many generators as ta
 The final step for the user is then to run the compiler or the interpretor of the targeted languages. Of course, this step can be automated via scripting and **Typee environment** aims at providing such scripts to ease the whole process.
 
 
-## Development policy
+## Documentation
 
-In the initial and earliest configuration of **typee environment** any developemnt had to be done in speciic branches created from branch `dev`. Only an administrator could merge new releases of **Typee Translator** into branch `master`.
+Directory `documentation/` contains great content, notably:
+* a state of the art on the translation between programming languages  
+see [programming-languages-translation-State-of-the-Art.md](documentation/programming-languages-translation-State-of-the-Art.md)
+* a description of the design of **Typee** software  
+see [typee_software_design.md](documentation/typee_software_design.md)
+* a description of the **Typee Back-End**  
+see directory [Back-End_documentation/](Back-End_documentation)
+* a description of the **Typee Front-End**  
+see directory [Front-End_documentation/](Front-End_documentation)
 
-A new policy is now in action. Only administrators can still merge new releases of **Typee environment** into branch `master`, but developments are now done into release branches, each one created under branch `master`. The naming of release branches is in the form "release-*x*-*y*" where *x* is the major version and *y* the minor version of the release. A patch version may be finally added to the release tag, at release time.
+Notice: the documentation writing is an in-progress process and is subject to continuous changes on releases branches while code development is progressing. Documentation is in stable status as soon as the related release has been delivered.
 
+
+## Development and Release policies
+
+While in the initial and earliest version of **Typee environment** code was developped in Python, preferably using IDE Eclipse and PyDev perspective, since July 2025 developments are done under Visual Studio 2022 and in c++23 (except for those c++23 features that are not already available in this IDE).  
+Visual Studio c++ projects are provided, already configured for 32- and 64-bits architectures, in Debug and in Release configurations.
+
+In the initial and earliest configuration of **typee environment** any developemnt had to be done in specific branches created from branch `dev`. Only an administrator could merge new releases of **Typee Translator** into branch `master`.  
+A new release policy is now in action. Only administrators can still merge new releases of **Typee environment** into branch `master`, but developments are now done into release branches, each one created under branch `master`. The naming of release branches is in the form "release-*x*-*y*" where *x* is the major version and *y* the minor version of the release. A patch version may be finally added to the release tag, at release time, by the administrator in charge of the delivering of the release.
 
 
 ## Visit us
@@ -182,6 +198,8 @@ A new policy is now in action. Only administrators can still merge new releases 
 at http://www.typee.ovh,  
 at https://github.com/Typee-Language/Typee/ and  
 at https://typee-language.github.io/Typee/
+
+Notice: things there are in progress. No stable version of documentation or software is currently available. You'll nevertheless find there great information about project **Typee**.
 
 
 
