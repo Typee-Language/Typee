@@ -1,7 +1,6 @@
 #  Notepad++ recommendations
 
-The directory `Typee/Notepad++XML-configs` contains three `.xml` files:
-- desktop.ini
+twoThe directory `Typee/Notepad++XML-configs` contains two `.xml` files:
 - grammars.xml
 - typhon.xml
 
