@@ -3,7 +3,7 @@ MIT License
 
 Copyright (c) 2025 Philippe Schmouker, ph (dot) schmouker (at) gmail (dot) com
 
-This file is part of Google Tests applied to Typee framework.
+This file is part of Google Tests applied to Typee framework - dedicated to Typee language.
 
 Permission is hereby granted,  free of charge,  to any person obtaining a copy
 of this software and associated documentation files (the "Software"),  to deal
@@ -28,6 +28,9 @@ SOFTWARE.
 //===========================================================================
 #include "gtest/gtest.h"
 
+
+//===========================================================================
+// waiting for first implementation
 TEST(TestCaseName, TestName) {
     EXPECT_EQ(1, 1);
     EXPECT_TRUE(true);
