@@ -447,9 +447,9 @@ See Annex A for references to papers and patents discussed in this document.
 
 | Date  | Rev.  | Author(s)  | Comments  |
 |:---:|:---:|---|---|
-| 2018-08-17 | 0.0.1 | Schmouk | Created from scratch; Instered first version of bibliography (just links to) |
+| 2018-08-17 | 0.0.1 | schmouk | Created from scratch; Inserted first version of bibliography (just links to) |
 | 2018-08-18 | 0.0.2 | PhHays | Completed sections 1. and 2.; Put bibliography on correct form |
 | 2018-08-18 | 0.0.3 | PhHays | Augmented section 3. with subsections 3.1 to 3.6 and 3.9 (temporary numbering) |
 | 2018-08-19 | 0.1.0 | PhHays | Completed section 3.; Added section 4.; Document needs now reviewing |
-| 2018-10-29 | 1.0.0 | Schmouk | Final reviewing. One typo correction. First Release validation. |
+| 2018-10-29 | 1.0.0 | schmouk | Final reviewing. One typo correction. First Release validation. |
 |  |  |  |  |
