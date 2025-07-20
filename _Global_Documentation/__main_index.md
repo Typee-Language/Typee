@@ -57,12 +57,12 @@ same document could be appearing in multiple topics_)
 
 | Date  | Rev.  | Author(s)  | Comments  |
 |---|---|---|---|
-| 2018-07-14 | 0.0.1 | Schmouk | Very first creation |
-| 2018-07-15 | 0.0.2 | Schmouk | Minor typo correction; modified ordering of documents; added column **Topic** |
-| 2018-07-20 | 0.0.3 | Schmouk | Added copyright, license text and index to the Front-End Parser documentation |
-| 2018-07-23 | 0.0.4 | Schmouk | Added reference to the Front-End Scanner S/W architecture documentation |
-| 2018-07-24 | 0.0.5 | Schmouk | Added ref to the usage of the script that automates the generation of **Typee** S/W documentation |
-| 2018-07-24 | 0.0.6 | Schmouk | Added links to the reference table, then corrected the few erroneous ones |
-| 2018-07-25 | 0.0.7 | Schmouk | Modified directory name for **Typee** HTML automated documentation; added reference to the HTML documentation of the whole software |
-| 2018-08-12 | 0.0.8 | Schmouk | Added design document of Typee translator |
+| 2018-07-14 | 0.0.1 | schmouk | Very first creation |
+| 2018-07-15 | 0.0.2 | schmouk | Minor typo correction; modified ordering of documents; added column **Topic** |
+| 2018-07-20 | 0.0.3 | schmouk | Added copyright, license text and index to the Front-End Parser documentation |
+| 2018-07-23 | 0.0.4 | schmouk | Added reference to the Front-End Scanner S/W architecture documentation |
+| 2018-07-24 | 0.0.5 | schmouk | Added ref to the usage of the script that automates the generation of **Typee** S/W documentation |
+| 2018-07-24 | 0.0.6 | schmouk | Added links to the reference table, then corrected the few erroneous ones |
+| 2018-07-25 | 0.0.7 | schmouk | Modified directory name for **Typee** HTML automated documentation; added reference to the HTML documentation of the whole software |
+| 2018-08-12 | 0.0.8 | schmouk | Added design document of Typee translator |
 |  |  |  |  |
