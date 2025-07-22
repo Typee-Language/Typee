@@ -1,0 +1,432 @@
+## MIT License
+## 
+## Copyright (c) 2025 Philippe Schmouker, Typee project, http://www.typee.ovh    
+## 
+## This file is part the Typee framework.  It specifies the grammar of the  Typee
+## programming language "T".
+## 
+## Permission is hereby granted,  free of charge,  to any person obtaining a copy
+## of this software and associated documentation files (the "Software"),  to deal
+## in the Software without restriction,  including without limitation the  rights
+## to use,  copy,  modify,  merge,  publish,  distribute, sublicense, and/or sell
+## copies of the Software,  and  to  permit  persons  to  whom  the  Software  is
+## furnished to do so, subject to the following conditions:
+## 
+## The above copyright notice and this permission notice shall be included in all
+## copies or substantial portions of the Software.
+## 
+## THE SOFTWARE IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY  KIND,  EXPRESS  OR
+## IMPLIED,  INCLUDING  BUT  NOT  LIMITED  TO  THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT  SHALL  THE
+## AUTHORS  OR  COPYRIGHT  HOLDERS  BE  LIABLE  FOR  ANY CLAIM,  DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM,
+## OUT  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+## SOFTWARE.
+
+
+#####   CODE MODULE   #################################################
+
+TCodeModule <- StatementsList ENDMARKER
+
+ENDMARKER  <- !.
+
+
+
+#####   STATEMENTS   #################################################
+
+StatementsList      <- (EmptyStatement
+                        / SimpleStatement                       ## FIX SimpleStatementEnd should be added here (see below)
+                        / CompoundStatement
+                        / StatementsBlock)*
+
+
+EmptyStatement      <- Comment / NewLine                        ## FIX Spacing should be allowed before NewLine
+                                                                ## ADD missing Comment - see LL1-v10
+
+SimpleStatement     <- AssertStatement SimpleStatementEnd       ## FIX SimpleStatementEnd should be added above
+                     / DelStatement SimpleStatementEnd
+                     / EnsureStatement SimpleStatementEnd
+                     / FileEndianness SimpleStatementEnd
+                     / FileFlushing SimpleStatementEnd
+                     / FlowStatement SimpleStatementEnd
+                     / ImportStatement SimpleStatementEnd
+                     / NopStatement SimpleStatementEnd
+                     / AccessProtectionStatement SimpleStatementEnd
+                     / RaiseStatement SimpleStatementEnd
+                     / RequireStatement SimpleStatementEnd
+
+SimpleStatementEnd  <- ';'                                      ## CHK Should Spacing be added before ';'?
+
+
+CompoundStatement   <- AssignDeclDefFunccallStatement           ## CHK wouldn't a StatementEnd token be useful after some of these rules?
+                     / EmbedStatement
+                     / ExcludeStatement
+                     / ForStatement
+                     / ForeverStatement
+                     / IfStatement
+                     / RepeatStatement
+                     / SwitchStatement
+                     / TryStatement
+                     / WhileStatement
+                     / WithStatement
+
+
+StatementsBlock     <- EmptyStatement* ( '{' StatementsList '}' ## CHK-1 placing Spacing might be useful, ain't it?
+                                        / SimpleStatement       ## CHK-2 can't this rule be written another way? 
+                                        / CompoundStatement )
+
+
+AssertStatement     <- "assert" Condition (',' String)?
+
+
+DeclOrDefStatement  <- StaticQualifier DeclOrDefStatement1
+                     / ClassDefinition
+                     / DeclOrDefStatement1
+                     / ForwardDecl
+
+DeclOrDefStatement1 <- AbstractQualifier (MethodDefinition / OperatorDefinition)
+                     / FinalQualifier (MethodDefinition / OperatorDefinition)
+                     / PropertyQualifier Type Identifier '=' StatementsBlock
+                     / VolatileQualifier Type Identifier MemoryAddress? SimpleStatementEnd  ## <type>
+                     / MethodDefinition
+                     / OperatorDefinition
+                     / Type Identifier '=' StatementsBlock
+                     / TypeAlias SimpleStatementEnd
+                     / Type02 DeclOrDefStatement2  ## <TYPE'>
+                     / EnumDefinition
+                     / Identifier DeclConstructorOrDeclEnd
+
+DeclOrDefStatement2 <- Identifier (FunctionDefinition / (VarDeclarationOrAssignment SimpleStatementEnd))
+                     / OperatorDefinition
+
+
+DeclConstructorOrDeclEnd    <- ('.' Identifier)* DeclOrDefStatement2
+                             / FunctionDefinition1
+
+
+DelStatement        <- "del" IdentifiersList
+
+
+EnsureStatement     <- "ensure" condition (',' string)?
+
+
+FileEndianness      <- '<' Expression FileEndianness1
+                     / '>' Expression FileEndianness1
+
+FileEndianness1     <- ('<<' Expression
+                        / '>>>' Expression
+                        / '>>'  Expression)*
+
+
+FileFlushing        <- '!' DottedName FileFlushing1?
+
+FileFlushing1       <- '(' Expression (',' FileFlushing1)* ')'
+                     / '[' Expression ']' Spacing '=' Expression
+                     / '>>>' Expression
+                     / '>>'  Expression
+
+FlowStatement       <- "break"
+                     / "continue"
+                     / RaiseStatement
+                     / ReturnStatement
+
+
+ImportStatement     <- ImportName / ImportFrom                  ## ADD ExportStatement!
+
+ImportName          <- "import" ImportAsNames
+
+ImportAsNames       <- ImportAsName (',' ImportAsName)*
+ImportAsName        <- DottedName ("as" Identifier)?
+
+ImportFrom          <- "from" '.'* DottedName "import" ImportFrom1
+ImportFrom1         <- "all" ImportBut
+                     / '(' ImportAsNames ')'
+                     / ImportAsNames
+
+ImportBut           <- "but" Identifier (',' Identifier)*
+
+
+NopStatement        <- "nop" / "pass" / "NOP"
+
+
+RaiseStatement      <- "raise" Expression ("from" Expression)?
+
+
+ReturnStatement     <- "return" ExprList?
+                     / "ret" ExprList?                          ## CHK do we keep this alternative?
+
+
+RequireStatement    <- "require" Condition (',' String)?
+
+
+AssignDeclDefFunccallStatement  <- AccessQualifier DeclOrDefStatement
+                                 / DeclOrDefStatement
+                                 / DottedName (AssignmentStatement / FunctionCall) SimpleStatementEnd
+
+
+AccessProtectionStatement   <- ':'? AccessQualifiers ':'
+AccesQualifiers     <- "hidden"
+                     / "local"
+                     / "private"
+                     / "protected"
+                     / "public"
+
+
+EmbedStatement      <- "embed" Language EmbedStatement1
+
+EmbedStatement1     <- DottedName SimpleStatementEnd
+                     / "{{" (!"}}" .) "}}" Spacing "exit"?
+
+
+ExcludeStatement    <- "exclude" Languages '{{' StatementsList '}}'
+
+Languages           <- Language (',' Language)*
+
+Language            <- "cpp"                                    ## ADD other targeted languages (e.g. typescript rather than javascript, Kotlin, c, ...
+                     / "csharp"                                 ## CHK maybe multiple naming for a same language should be avoided
+                     / "cs"                                     ## ADD standard version (as optionnal)
+                     / "c#"
+                     / "javascript"
+                     / "java"
+                     / "python"
+                     / "py"
+
+
+ForStatement        <- "for" '(' TargetList "in" ExprList ')' StatementsBlock ("otherwise" StatementsBlock)?
+
+
+ForeverStatement    <- "forever" '(' ')' StatementsBlock
+
+
+IfStatement         <- "if" '(' Condition ')' StatementsBlock IfStatement1? ## FIX rewrite this rule according to PEG principles (priority on previous rules for operator /)
+
+IfStatement1        <- (ElseIf '(' Condition ')' StatementsBlock)+
+                     / "else" StatementsBlock
+                     / "otherwise" StatementsBlock
+
+ElseIf              <- "elseif" / "elif" / "elsif"
+
+
+RepeatStatement     <- "repeat" StatementsBlock "until" '(' Condition ')' SimpleStatementEnd
+
+
+SwitchStatement     <- "switch" '(' Expression ')' '{' SwitchBlock '}' ("otherwise" StatementsBlock)?
+
+SwitchBlock         <- ("case" ExprList StatementsBlock)*
+
+
+TryStatement        <- "try" StatementsBlock TryStatementExcept+ TryStatementOtherwise? TryStatementFinally?
+                     / "try" StatementsBlock TryStatementFinally
+
+TryStatementExcept  <- TryExcept StatementsBlock
+
+TryExcept           <- "except" '(' Expression ("as" Identifier)?) (',' Expression ("as" Identifier)?)* ')'
+                     / "except" "all" ("as" Identifier)?
+
+TryStatementOtherwise   <- "otherwise" ('(' "Exception" "as" Identifier ')')* StatementsBlock
+
+TryStatementFinally <- "finally" StatementBlock
+
+                             
+WhileStatement      <- "while" '(' Condition ')' StatementsBlock ("otherwise" StatementsBloc)?
+
+
+WithStatement       <- "with" '(' WithItem (',' WithItem)* ')' StatementsBlock
+
+WithItem            <- Expression ("as" Type12? Target)  ## <type'>
+
+
+Target              <- DottedName SubscriptionOrSlicing*
+
+TypedTarget         <- Type12 Target  ## <type'>
+                     / DottedName (DottedName SubscriptionOrSlicing*
+                                    / SubscriptionOrSlicing*
+                                    / TemplatedType SubscriptionOrSlicing*)
+
+TargetList          <- TypedTarget (',' TypedTarget)*
+
+
+CastOp              <- "cast" Identifier
+
+
+EnumDefinition      <- "enum" Identifier '{' EnumItem (',' EnumItem)* '}'
+
+EnumItem            <- Identifier '=' Expression
+
+
+ForwardDecl         <- Forward (StaticQualfier? ForwardDecl1
+                                / FwdClassDecl)
+
+ForwardDecl1        <- VolatileQualifier Type Identifier
+                     / FwdTypeDecl
+                     / ForwardDecl2
+
+ForwardDecl2        <- SimpleType (Identifier ForwardDecl3
+                                    / OperatorDeclaration)
+                     / Identifier FwdeDeclConstructor
+
+ForwardDecl3        <- FunctionDeclaration
+                     / (',' Identifier)*
+                     
+Forward             <- "forward"
+                     / "fwd"
+
+FwdClassDecl        <- "class" Identifier TemplateDef Inheritance?
+
+FwdDeclConstructor  <- ('.' Identifier)+ (Identifier ForwardDecl3
+                                          / OperatorDeclaration)
+                     / FunctionArgsDeclaration
+
+
+MemoryAddress       <- '@' IntegerNumber
+
+
+TypeAlias           <- "type" Type11 "as" Identifier (',' Type11 "as" Identifier)*  ## <TYPE>
+
+
+## Notice: next lines have to do with STATEMENTS
+---------------------------------------------------------------
+<assign op> ::= '='
+             |  <augmented assign op>
+
+<assignment statement>    ::= <target list'> <assignment statement'>                ### modified    
+<assignment statement'>   ::= <assign op> <expr list>                               ### new         
+
+<augmented assign op>   ::= '+='
+                         |  '-='
+                         |  '*='
+                         |  '/='
+                         |  '%='
+                         |  '&='
+                         |  '|='
+                         |  '^='
+                         |  '<<='
+                         |  '<<<='
+                         |  '>>='
+                         |  '>>>='
+                         |  '**='
+                         |  '^^='
+                         |  '@='
+                         |  '@@='                                                   ## new              
+                         |  '><='
+                         |  '<>='                                                   ## new              
+                         |  '!!='
+                         |  '::='
+                         |  '??='
+
+
+<method or operator definition>     ::= <returned type> <method or operator definition'>
+<method or operator definition'>    ::= <operator definition>                                                
+                                     |  <identifier> <function definition>                                    
+
+
+<var declaration or assignment>     ::= '=' <expression> <var declaration or assignment'>    
+                                     |  ',' <identifier> <var declaration or assignment>    
+                                     |  EPS                                                    
+<var declaration or assignment'>    ::= ',' <identifier> <var declaration or assignment>    
+                                     |  EPS     
+## End of notice
+
+
+
+#####   TYPES   #################################################
+
+Type                        <- ConstQualifier? SimpleType       ## ADD type renaming with keyword 'as'
+                             / ConstQualifier? TemplatedType
+                             / None
+
+SimpleType                  <-  AutoType
+                             / '(' TypesList ')'
+                             / ContainerType
+                             / EnumType
+                             / FileType
+                             / ScalarType FixedDimensions?
+
+
+TemplatedType               <- DottedName ('<' TypesAndExprsList '>')? FixedDimensions?
+
+
+AutoType                    <- '?' ("in" '(' TypesList ')')?
+
+
+ContainerType               <- ArrayType
+                             / ListType
+                             / MapType
+                             / SetType
+
+
+EnumType                    <- "enum"
+
+
+FileType                    <-  "file" ContainedType
+
+
+ScalarType                  <- "bool"
+                             / "char"
+                             / "char16"
+                             / "float32"
+                             / "float64"
+                             / "int8"
+                             / "int16"
+                             / "int64"
+                             / "slice"
+                             / "str"
+                             / "str16"
+                             / "uint8"
+                             / "uint16"
+                             / "uint32"
+                             / "uint64"
+                             / GenericScalarType
+
+GenericScalarType           <- "_float_"
+                             / "_int_"
+                             / "_numeric_"
+                             / "_uint_"
+
+
+FixedDimensions             <- ('[' (IntetgerNumber / DottedName) ']')+
+
+
+TypesAndExprsList           <- (Expression / Type) (',' (Expression / Type))*
+
+
+TypesList                   <- Type (',' Type)*
+
+
+ArrayType                   <- "array" ContainedType
+
+ListType                    <- "list" ContainedType?
+
+MapType                     <- "map" MapContainedTypes
+
+SetType                     <- "set" ContainedType?
+
+
+ContainedType               <- '<' Type '>'
+
+MapContainedType            <- '<' Type (',' Type)? '>'
+
+
+AbtractQualifier            <- "abstract"
+
+ConstQualifier              <- "const"
+
+FinalQualifier              <- "final"
+
+PropertyQualifier           <- "property"
+
+StaticQualifier             <- "static"
+
+VolatileQualifier           <- "volatile"
+
+
+
+## ADD missing CLASSES rules - see LL1-v10  ## NEW only one inheritance allowed
+## ADD interface rules (NEW). Notice: allow many implementations of Interfaces; no interface may inherit from anything.
+## ADD missing COMPREHENSION rules - see LL1-v10
+## ADD missing CONDITIONS and COMPARISONS rules - see LL1-v10  ## ADD also boolean assignment operators (REM not that easy to specify)
+## ADD missing EXPRESSIONS rules - see LL1-v10
+## ADD missing FUNCTIONS rules - see LL1-v10
+## ADD missing STRINGS rules - see LL1-v10
+## ADD missing TEMPLATES rules - see LL1-v10
+## ADD parallel programming (NEW)

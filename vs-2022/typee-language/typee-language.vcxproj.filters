@@ -18,9 +18,15 @@
     <ClInclude Include="typee_lang.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\typee-language\cpp\front_end\peg_parser\fe_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="typee_lang.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\typee-language\cpp\front_end\peg_parser\fe_parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -105,7 +105,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language\cpp;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>true</EnableModules>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -126,7 +126,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language\cpp;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>true</EnableModules>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -145,7 +145,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language\cpp;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>true</EnableModules>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -164,7 +164,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language\cpp;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>true</EnableModules>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -185,7 +185,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language\cpp;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>true</EnableModules>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -206,7 +206,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Typee-language\cpp;$(SolutionDir)..\externals\PEGTL-3.2.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableModules>true</EnableModules>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -218,9 +218,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\typee-language\cpp\front_end\peg_parser\fe_parser.h" />
     <ClInclude Include="typee_lang.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\typee-language\cpp\front_end\peg_parser\fe_parser.cpp" />
     <ClCompile Include="typee_lang.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
