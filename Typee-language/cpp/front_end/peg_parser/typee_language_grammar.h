@@ -33,7 +33,7 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 
 //===========================================================================
-namespace ty_fe  //!< the Typee Front-End namespace
+namespace ty_fe::ty_grm  //!< the Typee language grammar namespace
 {
     //=======================================================================
     // Forward declarations
@@ -54,13 +54,13 @@ namespace ty_fe  //!< the Typee Front-End namespace
     // The Typee language rules definitions
 
     //---   TCodeModule   ---------------------------------------------------
-    /** \brief The 'entry' rule of the grammar, specifying T code modules. */
+    /** \brief The 'entry' rule of the Typee language grammar, specifying what are modules of T code. */
     struct t_code_module : pegtl::seq<statements_list, ENDMARKER> {};
 
 
     //---   StatementsList   ------------------------------------------------
     /** \brief Defines lists of T statements. */
-    struct statements_list : pegtl::until<pegtl::eof, pegtl::any> {};  // Notice: very temporary 'empty' definition!
+    struct statements_list : pegtl::until<pegtl::eof, pegtl::any> {};  // Notice: this is a very temporary 'empty' definition!
 
 
 }  // end of namespace ty_fe
