@@ -95,6 +95,16 @@ namespace ty_fe  //!< the Typee Front-End namespace
 
 
     //-------------------------------------------------------------------
+    /** The parsing operation of T code and associated IC generation from strings. */
+    const bool FEParser::parse(const std::string& module_str, FEIntermediateCode& out_ic)
+    {
+        pegtl::memory_input parsed_str(module_str, "");
+        // CAUTION: next call is INCOMPLETE
+        return pegtl::parse< ty_grm::t_code_module >(parsed_str);
+    }
+
+
+    //-------------------------------------------------------------------
     /** \brief Loads the module content into memory space.
     * Sets last exception in case of any error while loading the
     * module content into memory.

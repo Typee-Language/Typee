@@ -27,6 +27,9 @@
     <ClInclude Include="..\..\typee-language\cpp\front_end\fe_exceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\typee-language\cpp\front_end\fe_intermediate_code.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="typee_lang.cpp">

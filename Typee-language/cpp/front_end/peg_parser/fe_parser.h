@@ -35,6 +35,7 @@ SOFTWARE.
 namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 #include "../fe_exceptions.h"
+#include "../fe_intermediate_code.h"
 
 
 //===========================================================================
@@ -80,17 +81,6 @@ namespace ty_fe  //!< the Typee Front-End namespace
 
         //===   Accessors / Mutators   ======================================
         //-------------------------------------------------------------------
-        /** \brief Gets a reference to the last exception set for this parser.
-        * \return a reference to the last set exception.
-        * \see set_exception.
-        */
-        [[nodiscard]]
-        inline const FEBaseException& get_last_exception() const noexcept
-        {
-            return _last_exception;
-        }
-
-        //-------------------------------------------------------------------
         /** \brief Returns fail status of the parser.
         * \return true if parser has failed, or false otherwise.
         * \sa is_ok.
@@ -99,6 +89,27 @@ namespace ty_fe  //!< the Typee Front-End namespace
         inline constexpr bool failed() const noexcept
         {
             return !is_ok();
+        }
+
+        //-------------------------------------------------------------------
+        /** \brief Returns a const reference to the internally created intermediate code structure.
+        * \return a reference to the internal IC structure.
+        */
+        [[nodiscard]]
+        inline constexpr FEIntermediateCode& get_ic() noexcept
+        {
+            return _ic;
+        }
+
+        //-------------------------------------------------------------------
+        /** \brief Gets a reference to the last exception set for this parser.
+        * \return a reference to the last set exception.
+        * \see set_exception.
+        */
+        [[nodiscard]]
+        inline const FEBaseException& get_last_exception() const noexcept
+        {
+            return _last_exception;
         }
 
         //-------------------------------------------------------------------
@@ -160,12 +171,21 @@ namespace ty_fe  //!< the Typee Front-End namespace
         *
         * Static method. Operates the parsing operation of T code from string.
         *
+        * \param module_str a string containing T code to parse.
         * \return true if parsing was ok, or false otherwise.
-        *
-        * NOTE: a  currently missing parameter is the reference to the IC
-        * structure that will be initialized on the fly.
         */
         static const bool parse(const std::string& module_str);
+
+        //-------------------------------------------------------------------
+        /** \brief The parsing operation of T code and IC generation applied to strings.
+        *
+        * Static method. Operates the parsing operation of T code from string.
+        * Generates Internmediate Code.
+        *
+        * \param module_str a string containing T code to parse.
+        * \return true if parsing was ok, or false otherwise.
+        */
+        static const bool parse(const std::string& module_str, FEIntermediateCode& out_ic);
 
         //-------------------------------------------------------------------
         /** \brief Throws the last set exception if the parser status is not ok.
@@ -177,10 +197,12 @@ namespace ty_fe  //!< the Typee Front-End namespace
                 throw _last_exception;
         }
 
+
     private:
-        FEBaseException _last_exception{};  //!< the last exception associated with the parser. Only set if _is_ok is false.
-        std::string     _module_content{};  //!< the internal content of the module.
-        bool            _is_ok{ true };     //!< the error status: true if 'ok', false otherwise.
+        FEBaseException    _last_exception{};   //!< the last exception associated with the parser. Only set if _is_ok is false.
+        FEIntermediateCode _ic{};               //!< the intermediate code structure generated while parsing.
+        std::string        _module_content{};   //!< the internal content of the module.
+        bool               _is_ok{ true };      //!< the error status: true if 'ok', false otherwise.
 
         //-------------------------------------------------------------------
         /** \brief Loads the module content into memory space.
