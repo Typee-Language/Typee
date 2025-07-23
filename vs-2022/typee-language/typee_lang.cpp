@@ -29,11 +29,32 @@ SOFTWARE.
 #include "typee_lang.h"
 
 
+// for local tests purposes
+#include <cassert>
+#include <filesystem>
+#include <string>
+
+#include "front_end/peg_parser/fe_parser.h"
+
+
 //===========================================================================
 /** \brief Currently, for compilation purpose only
 */
 int main()
 {
+    // ok, let'suse this for very first tests
+    {
+        assert(ty_fe::FEParser::parse(""));
+    }
+    {
+        assert(ty_fe::FEParser::parse("..."));
+    }
+    {
+        ty_fe::FEParser test_parser("E:/GitHub/Typee/Typee-language/python/Libs/SysTime/systime.ty");
+        assert(test_parser);
+        assert(test_parser.parse());
+    }
+
     // currently left so simple
     return 0;
 }

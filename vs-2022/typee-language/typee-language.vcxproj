@@ -218,7 +218,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\typee-language\cpp\front_end\fe_exceptions.h" />
     <ClInclude Include="..\..\typee-language\cpp\front_end\peg_parser\fe_parser.h" />
+    <ClInclude Include="..\..\typee-language\cpp\front_end\peg_parser\typee_language_grammar.h" />
     <ClInclude Include="typee_lang.h" />
   </ItemGroup>
   <ItemGroup>
