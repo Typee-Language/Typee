@@ -506,6 +506,25 @@ StringLiteral       <- "'"  (AnyEscapedChar / AnyStringQuoteChar)* "'"
 
 
 
+#####   TEMPLATES   ##################################################
+
+SpacedTemplateArgs  <- ForcedSpacing  TemplateArgs                      ## NOTE ForcedSpacing must be defined
+
+
+SpacedTemplateDef   <- ForcedSpacing  TemplateDef
+
+
+TemplateArgs        <- '<'  ( Condition  (',' Condition)* )?  '>'
+
+
+TemplateDefs        <- '<'  TemplateSubDef  (',' TempalteSubDef)*  '>'
+
+TempalteSubDef      <- Identifier
+                     / ConstQualifier  ScalarTypeOrDottedName  Identifier  ('=' Expression)?
+
+
+
+
 ## Notice: next lines have to do with STATEMENTS
 ---------------------------------------------------------------
 <assign op> ::= '='
