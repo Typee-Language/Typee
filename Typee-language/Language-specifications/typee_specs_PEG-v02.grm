@@ -146,7 +146,7 @@ Term                    <- Factor  FactorsSeq*
 UnaryExpr               <- '+'  Factor
                          / '-'  Factor
                          / '~'  Factor
-                         / '#'  Factor
+                         / '#'  Factor                                  ## NOTE maybe suppressed in first released version of grammar specs
                          / Factor
 
 
@@ -494,6 +494,16 @@ MemoryAddress       <- '@' IntegerNumber
 
 
 TypeAlias           <- "type" Type11 "as" Identifier (',' Type11 "as" Identifier)*  ## <TYPE>
+
+
+
+#####   STRINGS   ####################################################
+
+String              <- StringLiteral+  ('.'  Identifer  FunctionCall)*
+
+StringLiteral       <- "'"  (AnyEscapedChar / AnyStringQuoteChar)* "'"
+                     / '"'  (AnyEscapedChar / AnyStringQuoteChar)* '"'
+
 
 
 ## Notice: next lines have to do with STATEMENTS
