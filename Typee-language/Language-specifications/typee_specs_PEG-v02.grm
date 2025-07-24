@@ -32,6 +32,23 @@ ENDMARKER  <- !.
 
 
 
+#####   CLASSES   ####################################################
+
+ClassDefinition     <- "class" Identifer TemplateDef? Inheritance? StatementsBlock
+
+
+Inheritance         <- ':' InterfaceItem  (',' InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
+                     / ':' InheritanceItem  (',' InterfaceItem)*
+
+
+InheritanceItem     <- AccessQualifier?  DottedName  TemplateArgs?
+
+
+InterfaceItem       <- "implements"  AccessQualifier?  DottedName  TemplateArgs?
+                     / "implements"  '(' AccessQualifier?  DottedName  TemplateArgs?  (',' AccessQualifier?  DottedName  TemplateArgs?)*  ')'
+
+
+
 #####   STATEMENTS   #################################################
 
 StatementsList      <- (EmptyStatement
@@ -421,7 +438,6 @@ VolatileQualifier           <- "volatile"
 
 
 
-## ADD missing ATOMS rules - see LL1-v10  ## CHK correction of LL1 rules
 ## ADD missing CLASSES rules - see LL1-v10  ## NEW only one inheritance allowed
 ## ADD interface rules (NEW). Notice: allow many implementations of Interfaces; no interface may inherit from anything.
 ## ADD missing COMPREHENSION rules - see LL1-v10
@@ -431,4 +447,5 @@ VolatileQualifier           <- "volatile"
 ## ADD missing STRINGS rules - see LL1-v10
 ## ADD missing TEMPLATES rules - see LL1-v10  ## ADD missing template specialization
 ## ADD parallel programming (NEW)
+## ADD missing ATOMS rules - see LL1-v10  ## CHK correction of LL1 rules
 ## ADD namespace rules (NEW)
