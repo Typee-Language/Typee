@@ -1,5 +1,6 @@
 # Typee specifics
 archive
+default.cfg
 
 # Visual Studio specifics
 .vs
