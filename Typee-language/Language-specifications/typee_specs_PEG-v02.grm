@@ -147,6 +147,71 @@ UnaryExpr               <- '+'  Factor
                          / '-'  Factor
                          / '~'  Factor
                          / '#'  Factor
+                         / Factor
+
+
+
+#####   FUNCTIONS   ##################################################
+
+FunctionDeclaration         <- TemplateDef? FunctionParamsDeclaration
+
+
+FunctionDefinition          <- TemplateDef?  FunctionParamsDeclaration  ("exclude" Languages)?  StatementsBlock
+
+
+CallOperator                <- '('  Spacing  ')'                        ## NOTE Spacing needs 1. to be defined and 2. to be used in every useful place
+
+
+FunctionParamsDeclaration   <- '('  TypedParamsList*  ')'
+
+
+FunctionCall                <- TemplateArgs*  '('  FunctionCallArgs?  ')'
+
+FunctionCallArgs            <- Expression  FunctionCallArgsList*
+
+FunctionCallArgsList        <- (',' Expression)*  (','  Ellipsis  Identifier)?
+                             / ForComprehension
+
+
+TypedParamsList             <- Type Identifier (','  Type Identifier)*
+
+
+Unnamed                     <- "unnamed"
+                             / "lambda"
+
+
+UnnamedFunc                 <- Unnamed  Type?  FunctionArgsDeclaration  StatementBlock
+
+
+
+
+
+
+<op_add>                    ::= '+'   |  '-' 
+<op_mul>                    ::= '*'   |  '/'  |  '%' 
+<op_power>                  ::= '**'  |  '^^' 
+<op_user>                   ::= '@@'  |  '><'  |  '<>'  |  '!!'  |  '::' 
+
+<operator>                  ::= '<='  |  '=='  |  '!='  |  '>='  |
+                                '&'   |  '|'   |  '^'  |  '@'  |
+                                '++'  |  '--'  |  '#'  |
+                                'in'  |
+                            <op_add>  |  <op_mul>  |  <op_power>  |
+                            <op_user>  |
+                            <assign op>  |
+                            <cast op>
+<operator'>                 ::= '<'    |  '>'   |  
+                                '<<'   |  '>>'  |  
+                                '<<<'  |  '>>>' 
+
+<operator definition>       ::= 'operator' 
+                                    ( ( (<operator> [<template def>] |
+                                         <operator'> [<spaced template def>]) 
+                                      <function params declaration> )  |
+                                      ( <call operator> [<template def>] ) )
+                                    <statements block>
+
+
 
 
 
@@ -346,7 +411,7 @@ TryStatementOtherwise   <- "otherwise" ('(' "Exception" "as" Identifier ')')* St
 TryStatementFinally <- "finally" StatementBlock
 
                              
-WhileStatement      <- "while" '(' Condition ')' StatementsBlock ("otherwise" StatementsBloc)?
+WhileStatement      <- "while" '(' Condition ')' StatementsBlock ("otherwise" StatementsBlock)?
 
 
 WithStatement       <- "with" '(' WithItem (',' WithItem)* ')' StatementsBlock
@@ -525,7 +590,7 @@ ContainedType               <- '<' Type '>'
 MapContainedType            <- '<' Type (',' Type)? '>'
 
 
-AbtractQualifier            <- "abstract"
+AbstractQualifier           <- "abstract"
 
 ConstQualifier              <- "const"
 
