@@ -88,8 +88,65 @@ AndTest             <- NotTest ("and"  NotTest)?
 
 NotTest             <- "not"?  Comparison
 
-CompTest            <- AndTest  ("or" AndTest)                          ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
+CompTest            <- AndTest  ("or" AndTest)                              ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
 
+
+
+#####   EXPRESSIONS   ################################################
+
+Expression              <- Condition
+                        / UnnamedFunction
+
+
+ArithmeticExpr          <- Term  (OpAdd TemplateArgs? Term)*                ## NOTE for a first implementation Templated operators should be abandonned
+
+
+BitAndExpr              <- ShiftedExpr  ('&'  TemplateArgs?  ShiftedExpr)*  ## NOTE for a first implementation Templated operators should be abandonned
+
+BitOrExpr               <- BitXorExpr  ('|'  TemplateArgs?  BitXorExpr)*    ## NOTE for a first implementation Templated operators should be abandonned
+
+BitXorExpr              <- BitAndExpr  ('^'  TemplateArgs?  BitAndExpr)*    ## NOTE for a first implementation Templated operators should be abandonned
+
+
+ExprList                <- Expression  (',' Expression)*
+
+
+Factor                  <- AtomElement  (OpPower TemplateArgs?  UnaryExpr)* ## NOTE for a first implementation Templated operators should be abandonned
+                                                                            ## NOTE could AtomElement be preceeded by a unary operator?
+FactorsSeq              <- (OpMul  TemplateArgs?  Factor)*                  ## NOTE for a first implementation Templated operators should be abandonned
+
+
+identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*
+
+
+MapForm                 <- ':'  Expression  MapListOrComprehension
+
+MapItem                 <- Expression  ':'  Expression
+
+MapList                 <- (','  MapItem)*
+
+MapListOrComprehension  <- (','  MapItem)+
+                         / ForComprehension                             ## NOTE mandatory pairing syntax might be specified here - complex?
+
+
+ParenthesisedExpr       <- '('  Expression  ')'
+
+
+ShiftedExpr             <- ArithmeticExpr  ShiftExpr*
+
+ShiftExpr               <- "<<<"  SpacedTemplateArgs?  ArithmeticExpr   ## NOTE for a first implementation Templated operators should be abandonned
+                         / "<<"   SpacedTemplateArgs?  ArithmeticExpr
+                         / ">>>"  TemplateArgs?  ArithmeticExpr
+                         / ">>"   TemplateArgs?  ArithmeticExpr
+
+
+Term                    <- Factor  FactorsSeq*
+
+
+UnaryExpr               <- '+'  Factor
+                         / '-'  Factor
+                         / '~'  Factor
+                         / '#'  Factor
 
 
 
