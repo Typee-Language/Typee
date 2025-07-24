@@ -180,9 +180,9 @@ SOFTWARE.
 
 /*****   FUNCTIONS   ************************************************/
 
-<function declaration>      ::= [<template def>]  <function args declaration>
+<function declaration>      ::= [<template def>]  <function params declaration>
 
-<function definition>       ::= [<template def>]  <function args declaration>
+<function definition>       ::= [<template def>]  <function params declaration>
                                     [ 'exclude' <languages> ]
                                     <statements block>
 
