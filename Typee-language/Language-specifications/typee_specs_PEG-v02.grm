@@ -49,6 +49,50 @@ InterfaceItem       <- "implements"  AccessQualifier?  DottedName  TemplateArgs?
 
 
 
+#####   COMPREHENSIONS   #############################################
+
+ForComprehension    <- "for"  '('  TargetList  "in"  OrTest  IterComprehension  ')'
+
+
+IfComprehension     <- "if"  '('  ConditionOrUnnamedFunc  ')'  IterComprehension
+
+
+IterComprehension   <- (ForComprehension  /  IfComprehension)?
+
+
+
+#####   CONDITION   ##################################################
+
+Condition           <- OrTest  ("if"  CompTest  "else"  Expression)
+
+
+
+#####   COMPARISONS   ################################################
+
+Comparison          <- BitorExpr  (CompOperator  BitorEpxr)*            ## NOTE see LL1-v10 for spec of templated comparison operators
+
+
+CompOperator        <- "<=>"
+                     / "<="
+                     / "<"
+                     / "=="
+                     / "!="
+                     / ">="
+                     / ">"
+                     / "in"
+                     / "is" "not"?
+                     / "not" "in"
+
+
+AndTest             <- NotTest ("and"  NotTest)?
+
+NotTest             <- "not"?  Comparison
+
+CompTest            <- AndTest  ("or" AndTest)                          ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
+
+
+
+
 #####   STATEMENTS   #################################################
 
 StatementsList      <- (EmptyStatement
@@ -182,7 +226,7 @@ AssignDeclDefFunccallStatement  <- AccessQualifier DeclOrDefStatement
 
 
 AccessProtectionStatement   <- ':'? AccessQualifiers ':'
-AccesQualifiers     <- "hidden"
+AccessQualifiers    <- "hidden"
                      / "local"
                      / "private"
                      / "protected"
