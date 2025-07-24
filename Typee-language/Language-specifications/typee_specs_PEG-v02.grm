@@ -180,40 +180,69 @@ Unnamed                     <- "unnamed"
                              / "lambda"
 
 
-UnnamedFunc                 <- Unnamed  Type?  FunctionArgsDeclaration  StatementBlock
+UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  StatementBlock
 
 
 
+#####   OPERATORS   ##################################################
+
+OpAdd                   <- '+'
+                         / '-'
+                         
+OpMul                   <- '*'
+                         / '/'
+                         / '%'
+
+OpPower                 <- '**'
+                         / '^^' 
+
+OpUser                  <- "@@"
+                         / "><"
+                         / "<>"
+                         / "!!"
+                         / "::"
+                         / "##"                                         ## NOTE added
 
 
+Operator                <- AssignOp
+                         / CastOp
+                         / "++"
+                         / "--"
+                         / OpAdd
+                         / OpPower
+                         / OpMul
+                         / OpUser
+                         / "<="
+                         / ">="
+                         / "=="
+                         / "!="
+                         / '&'
+                         / '|'
+                         / '^'
+                         / '@'
+                         / '#'
+                         / "in"
 
-<op_add>                    ::= '+'   |  '-' 
-<op_mul>                    ::= '*'   |  '/'  |  '%' 
-<op_power>                  ::= '**'  |  '^^' 
-<op_user>                   ::= '@@'  |  '><'  |  '<>'  |  '!!'  |  '::' 
-
-<operator>                  ::= '<='  |  '=='  |  '!='  |  '>='  |
-                                '&'   |  '|'   |  '^'  |  '@'  |
-                                '++'  |  '--'  |  '#'  |
-                                'in'  |
-                            <op_add>  |  <op_mul>  |  <op_power>  |
-                            <op_user>  |
-                            <assign op>  |
-                            <cast op>
-<operator'>                 ::= '<'    |  '>'   |  
-                                '<<'   |  '>>'  |  
-                                '<<<'  |  '>>>' 
-
-<operator definition>       ::= 'operator' 
-                                    ( ( (<operator> [<template def>] |
-                                         <operator'> [<spaced template def>]) 
-                                      <function params declaration> )  |
-                                      ( <call operator> [<template def>] ) )
-                                    <statements block>
+OperatorAngle           <- ">>>"
+                         / ">>"
+                         / '>'
+                         / "<<<"
+                         / "<<"
+                         / '<'
 
 
+OperatorCallDef         <- CallOperator  TemplateDef?
 
 
+OperatorDefinition      <- "operator"  OperatorSubdef  StatementsBlock
+
+OperatorSubdef          <- OperatorTemplatedDef  FunctionParamsDeclaration
+                         / OperatorCallDef
+
+OperatorTemplatedDef    <- Operator TemplatedDef?
+                         / OperatorAngle  SpacedTemplateArgs?
+                         
+                         
 
 #####   STATEMENTS   #################################################
 
@@ -458,7 +487,7 @@ FwdClassDecl        <- "class" Identifier TemplateDef Inheritance?
 
 FwdDeclConstructor  <- ('.' Identifier)+ (Identifier ForwardDecl3
                                           / OperatorDeclaration)
-                     / FunctionArgsDeclaration
+                     / FunctionParamsDeclaration
 
 
 MemoryAddress       <- '@' IntegerNumber
