@@ -190,7 +190,7 @@ SOFTWARE.
 
 <call operator>             ::= '(' ')' 
 
-<function args declaration> ::= '(' [<typed args list>] ')' 
+<function params declaration> ::= '(' [<typed params list>] ')' 
 
 <function call>             ::= [<template args>] '(' <function call args> ')' 
 
@@ -220,15 +220,15 @@ SOFTWARE.
 <operator definition>       ::= 'operator' 
                                     ( ( (<operator> [<template def>] |
                                          <operator'> [<spaced template def>]) 
-                                      <function args declaration> )  |
+                                      <function params declaration> )  |
                                       ( <call operator> [<template def>] ) )
                                     <statements block>
 
-<typed args list>           ::= <TYPE> <identifier> [',' <TYPE> <identifier>]*
+<typed params list>         ::= <TYPE> <identifier> [',' <TYPE> <identifier>]*
 
 <unnamed>                   ::= 'unnamed'  |  'lambda' 
 
-<unnamed func>              ::= <unnamed> [<TYPE>] <function args declaration> 
+<unnamed func>              ::= <unnamed> [<TYPE>] <function params declaration> 
                                     <statements block>
 
 
