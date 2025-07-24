@@ -349,7 +349,7 @@ TemplatedType               <- DottedName ('<' TypesAndExprsList '>')? FixedDime
 AutoType                    <- '?' ("in" '(' TypesList ')')?
 
 
-ContainerType               <- ArrayType
+ContainerType               <- ArrayType                        ## ADD VectorType
                              / ListType
                              / MapType
                              / SetType
@@ -361,7 +361,7 @@ EnumType                    <- "enum"
 FileType                    <-  "file" ContainedType
 
 
-ScalarType                  <- "bool"
+ScalarType                  <- "bool"                           ## ADD int128 uin128 float128
                              / "char"
                              / "char16"
                              / "float32"
@@ -384,7 +384,7 @@ GenericScalarType           <- "_float_"
                              / "_uint_"
 
 
-FixedDimensions             <- ('[' (IntetgerNumber / DottedName) ']')+
+FixedDimensions             <- ('[' (IntegerNumber / DottedName) ']')+
 
 
 TypesAndExprsList           <- (Expression / Type) (',' (Expression / Type))*
@@ -421,6 +421,7 @@ VolatileQualifier           <- "volatile"
 
 
 
+## ADD missing ATOMS rules - see LL1-v10  ## CHK correction of LL1 rules
 ## ADD missing CLASSES rules - see LL1-v10  ## NEW only one inheritance allowed
 ## ADD interface rules (NEW). Notice: allow many implementations of Interfaces; no interface may inherit from anything.
 ## ADD missing COMPREHENSION rules - see LL1-v10
@@ -428,5 +429,6 @@ VolatileQualifier           <- "volatile"
 ## ADD missing EXPRESSIONS rules - see LL1-v10
 ## ADD missing FUNCTIONS rules - see LL1-v10
 ## ADD missing STRINGS rules - see LL1-v10
-## ADD missing TEMPLATES rules - see LL1-v10
+## ADD missing TEMPLATES rules - see LL1-v10  ## ADD missing template specialization
 ## ADD parallel programming (NEW)
+## ADD namespace rules (NEW)

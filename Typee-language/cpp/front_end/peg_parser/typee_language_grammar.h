@@ -33,7 +33,9 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 
 //===========================================================================
-namespace ty_fe::ty_grm  //!< the Typee language grammar namespace
+namespace ty_fe
+{
+namespace ty_grm  //!< the Typee language grammar namespace
 {
     //=======================================================================
     // Forward declarations
@@ -63,4 +65,5 @@ namespace ty_fe::ty_grm  //!< the Typee language grammar namespace
     struct statements_list : pegtl::until<pegtl::eof, pegtl::any> {};  // Notice: this is a very temporary 'empty' definition!
 
 
+}  // end of namespace ty_fe::grm 
 }  // end of namespace ty_fe
