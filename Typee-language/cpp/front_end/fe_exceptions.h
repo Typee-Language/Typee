@@ -143,7 +143,7 @@ namespace ty_fe  //!< the Typee Front-End namespace
         {}
 
         /** \brief Valued constructor.
-        * \param filepath the path string to the faulty file stream.
+        * \param size the faulty size that cannot be allocated in mmory.
         */
         inline FEMemoryAllocationException(const std::size_t size)
             : _COMPL{ size > 1 ? "s" : "" }
@@ -197,6 +197,8 @@ namespace ty_fe  //!< the Typee Front-End namespace
     public:
         /** The empty constructor.
         * Should be used on faulty modules already put in strings.
+        * \param module_size the size of the string that contained the module code.
+        * \param max_size the max size allowed for strings.
         */
         inline FETooBigModuleCodeException(const std::size_t module_size, const std::size_t max_size)
             : FEBaseException(
@@ -209,6 +211,8 @@ namespace ty_fe  //!< the Typee Front-End namespace
 
         /** \brief Valued constructor.
         * \param module_path the path on disk to the module that is too big to load in memory space.
+        * \param module_size the size of the module code.
+        * \param max_size the max size allowed for strings (code is loaded in strings before its parsing).
         */
         inline FETooBigModuleCodeException(const std::string& module_path, const std::size_t module_size, const std::size_t max_size)
             : FEBaseException(

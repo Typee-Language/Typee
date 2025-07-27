@@ -34,36 +34,37 @@ ENDMARKER  <- !.
 
 #####   CLASSES   ####################################################
 
-ClassDefinition     <- "class" Identifer TemplateDef? Inheritance? StatementsBlock
+ClassDefinition     <- "class"  Identifer  TemplateDef?  Inheritance?  StatementsBlock
 
 
-Inheritance         <- ':' InterfaceItem  (',' InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
-                     / ':' InheritanceItem  (',' InterfaceItem)*
+Inheritance         <- ':'  InterfaceItem   (','  InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
+                     / ':'  InheritanceItem   (',' InterfaceItem)*
 
 
 InheritanceItem     <- AccessQualifier?  DottedName  TemplateArgs?
 
 
 InterfaceItem       <- "implements"  AccessQualifier?  DottedName  TemplateArgs?
-                     / "implements"  '(' AccessQualifier?  DottedName  TemplateArgs?  (',' AccessQualifier?  DottedName  TemplateArgs?)*  ')'
+                     / "implements"  '(' AccessQualifier?  DottedName  TemplateArgs?  (','  AccessQualifier?  DottedName  TemplateArgs?)*  ')'
 
 
 
 #####   COMPREHENSIONS   #############################################
 
-ForComprehension    <- "for"  '('  TargetList  "in"  OrTest  IterComprehension  ')'
+ForComprehension    <- "for"  '('  TargetList  "in"  CompTest  IterComprehension?  ')'
 
 
-IfComprehension     <- "if"  '('  ConditionOrUnnamedFunc  ')'  IterComprehension
+IfComprehension     <- "if"  '('  ConditionOrUnnamedFunc  ')'  IterComprehension?
 
 
-IterComprehension   <- (ForComprehension  /  IfComprehension)?
+IterComprehension   <- ForComprehension
+                     / IfComprehension
 
 
 
 #####   CONDITION   ##################################################
 
-Condition           <- OrTest  ("if"  CompTest  "else"  Expression)
+Condition           <- CompTest  ("if"  CompTest  "else"  Expression)
 
 
 
@@ -116,7 +117,7 @@ Factor                  <- AtomElement  (OpPower TemplateArgs?  UnaryExpr)* ## N
 FactorsSeq              <- (OpMul  TemplateArgs?  Factor)*                  ## NOTE for a first implementation Templated operators should be abandonned
 
 
-identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*
+FileExpression          <- DottedName  FunctionCall*                        ## NOTE DottedName is either the identifier of a file or the identifier of a method of a file (in which case a function call is mandatory)
 
 
 MapForm                 <- ':'  Expression  MapListOrComprehension
@@ -126,7 +127,7 @@ MapItem                 <- Expression  ':'  Expression
 MapList                 <- (','  MapItem)*
 
 MapListOrComprehension  <- (','  MapItem)+
-                         / ForComprehension                             ## NOTE mandatory pairing syntax might be specified here - complex?
+                         / ForComprehension                                 ## NOTE mandatory pairing syntax might be specified here - complex?
 
 
 ParenthesisedExpr       <- '('  Expression  ')'
@@ -134,7 +135,7 @@ ParenthesisedExpr       <- '('  Expression  ')'
 
 ShiftedExpr             <- ArithmeticExpr  ShiftExpr*
 
-ShiftExpr               <- "<<<"  SpacedTemplateArgs?  ArithmeticExpr   ## NOTE for a first implementation Templated operators should be abandonned
+ShiftExpr               <- "<<<"  SpacedTemplateArgs?  ArithmeticExpr       ## NOTE for a first implementation Templated operators should be abandonned
                          / "<<"   SpacedTemplateArgs?  ArithmeticExpr
                          / ">>>"  TemplateArgs?  ArithmeticExpr
                          / ">>"   TemplateArgs?  ArithmeticExpr
@@ -146,7 +147,7 @@ Term                    <- Factor  FactorsSeq*
 UnaryExpr               <- '+'  Factor
                          / '-'  Factor
                          / '~'  Factor
-                         / '#'  Factor                                  ## NOTE maybe suppressed in first released version of grammar specs
+                         / '#'  Factor                                      ## NOTE maybe suppressed in first released version of grammar specs
                          / Factor
 
 
@@ -181,6 +182,32 @@ Unnamed                     <- "unnamed"
 
 
 UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  StatementBlock
+
+
+
+#####   MISC   #######################################################
+
+COMMA                   <- ';'
+
+ENDOFLINE               <- "\r\n"
+                         / '\n'
+                         / '\r'
+
+
+DottedName              <- Identifier  ('.'  Identifier)*
+
+
+ForcedSpace             <- ' '
+                         \ '\t'
+                         \ ENDOFLINE
+                         \ '\v'
+                         \ '\f'
+
+
+Identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*
+
+
+Spacing                 <- ForcedSpace*
 
 
 
@@ -230,9 +257,34 @@ OperatorAngle           <- ">>>"
                          / "<<"
                          / '<'
 
+AssignOp                <- '='
+                         / AugmentedAssignOp
+
+AugmentedAssignOp       <- "+="
+                         / "-="
+                         / "**="
+                         / "*="
+                         / "/="
+                         / "%="
+                         / "&="
+                         / "|="
+                         / "^^="
+                         / "^="
+                         / "@@="
+                         / "@="
+                         / "<<<="
+                         / "<<="
+                         / "<>="
+                         / ">>>="
+                         / ">>="
+                         / "><="
+                         / "!!="
+                         / "::="
+                         / "??="
+                         / "##="
+
 
 OperatorCallDef         <- CallOperator  TemplateDef?
-
 
 OperatorDefinition      <- "operator"  OperatorSubdef  StatementsBlock
 
@@ -246,31 +298,35 @@ OperatorTemplatedDef    <- Operator TemplatedDef?
 
 #####   STATEMENTS   #################################################
 
-StatementsList      <- (EmptyStatement
-                        / SimpleStatement                       ## FIX SimpleStatementEnd should be added here (see below)
-                        / CompoundStatement
-                        / StatementsBlock)*
+StatementsList      <- ( EmptyStatement Spacing                     ##-- OK All checked --
+                        ##/ (SimpleStatement Spacing SimpleStatementEnd Spacing)    ## NOTE finally doublon w. StatementsBlock
+                        ##/ CompoundStatement Spacing                               ## NOTE finally doublon w. StatementsBlock
+                        / StatementsBlock Spacing )*
 
 
-EmptyStatement      <- Comment / NewLine                        ## FIX Spacing should be allowed before NewLine
-                                                                ## ADD missing Comment - see LL1-v10
-
-SimpleStatement     <- AssertStatement SimpleStatementEnd       ## FIX SimpleStatementEnd should be added above
-                     / DelStatement SimpleStatementEnd
-                     / EnsureStatement SimpleStatementEnd
-                     / FileEndianness SimpleStatementEnd
-                     / FileFlushing SimpleStatementEnd
-                     / FlowStatement SimpleStatementEnd
-                     / ImportStatement SimpleStatementEnd
-                     / NopStatement SimpleStatementEnd
-                     / AccessProtectionStatement SimpleStatementEnd
-                     / RaiseStatement SimpleStatementEnd
-                     / RequireStatement SimpleStatementEnd
-
-SimpleStatementEnd  <- ';'                                      ## CHK Should Spacing be added before ';'?
+EmptyStatement      <- Comment                                      ##-- OK All checked --
+                     / ForcedSpace
 
 
-CompoundStatement   <- AssignDeclDefFunccallStatement           ## CHK wouldn't a StatementEnd token be useful after some of these rules?
+SimpleStatement     <- AssertStatement                              ##-- OK All checked --
+                     / DelStatement
+                     / EnsureStatement
+                     / FileEndianness
+                     / FileFlushing
+                     / FlowStatement
+                     / ImportStatement
+                     / NopStatement
+                     / AccessProtectionStatement
+                     / RaiseStatement
+                     / RequireStatement
+
+
+SimpleStatementEnd  <- COMMA                                        ##-- OK All checked --
+
+
+CompoundStatement   <- AccessQualifier  DeclOrDefStatement                                      ## CHK to be checked
+                     / DeclOrDefStatement                                                       ## CHK to be checked
+                     / DottedName  (AssignmentStatement / FunctionCall)  SimpleStatementEnd     ## CHK to be checked
                      / EmbedStatement
                      / ExcludeStatement
                      / ForStatement
@@ -283,59 +339,61 @@ CompoundStatement   <- AssignDeclDefFunccallStatement           ## CHK wouldn't 
                      / WithStatement
 
 
-StatementsBlock     <- EmptyStatement* ( '{' StatementsList '}' ## CHK-1 placing Spacing might be useful, ain't it?
-                                        / SimpleStatement       ## CHK-2 can't this rule be written another way? 
-                                        / CompoundStatement )
+StatementsBlock     <- '{'  StatementsList  '}'                     ##-- OK All checked --
+                     / SimpleStatement Spacing SimpleStatementEnd Spacing
+                     / CompoundStatement Spacing
 
 
-AssertStatement     <- "assert" Condition (',' String)?
+AssertStatement     <- "assert"  Condition  (',' String)?           
 
 
-DeclOrDefStatement  <- StaticQualifier DeclOrDefStatement1
+DeclOrDefStatement  <- StaticQualifier  DeclOrDefStatement1
                      / ClassDefinition
                      / DeclOrDefStatement1
                      / ForwardDecl
 
-DeclOrDefStatement1 <- AbstractQualifier (MethodDefinition / OperatorDefinition)
-                     / FinalQualifier (MethodDefinition / OperatorDefinition)
-                     / PropertyQualifier Type Identifier '=' StatementsBlock
-                     / VolatileQualifier Type Identifier MemoryAddress? SimpleStatementEnd  ## <type>
+DeclOrDefStatement1 <- AbstractQualifier  (MethodDefinition / OperatorDefinition)
+                     / FinalQualifier  (MethodDefinition / OperatorDefinition)
+                     / PropertyQualifier  Type  Identifier  '='  StatementsBlock
+                     / VolatileQualifier  Type  Identifier  MemoryAddress?  SimpleStatementEnd
                      / MethodDefinition
                      / OperatorDefinition
-                     / Type Identifier '=' StatementsBlock
-                     / TypeAlias SimpleStatementEnd
-                     / Type02 DeclOrDefStatement2  ## <TYPE'>
+                     / Type  Identifier  '='  StatementsBlock
+                     / TypeAlias  SimpleStatementEnd
+                     / Type02  DeclOrDefStatement2  ## <TYPE'>
                      / EnumDefinition
-                     / Identifier DeclConstructorOrDeclEnd
+                     / Identifier  DeclConstructorOrDeclEnd
 
-DeclOrDefStatement2 <- Identifier (FunctionDefinition / (VarDeclarationOrAssignment SimpleStatementEnd))
+DeclOrDefStatement2 <- Identifier  (FunctionDefinition / (VarDeclarationOrAssignment  SimpleStatementEnd))
                      / OperatorDefinition
 
 
-DeclConstructorOrDeclEnd    <- ('.' Identifier)* DeclOrDefStatement2
+DeclConstructorOrDeclEnd    <- ('.'  Identifier)*  DeclOrDefStatement2
                              / FunctionDefinition1
 
 
-DelStatement        <- "del" IdentifiersList
+DelStatement        <- "del"  IdentifiersList
 
 
-EnsureStatement     <- "ensure" condition (',' string)?
+EnsureStatement     <- "ensure"  condition  (',' string)?
 
 
-FileEndianness      <- '<' Expression FileEndianness1
-                     / '>' Expression FileEndianness1
-
-FileEndianness1     <- ('<<' Expression
-                        / '>>>' Expression
-                        / '>>'  Expression)*
+FileEndianness      <- '<'  FileExpression  FileRWOperation
+                     / '>'  FileExpression  FileRWOperation
 
 
-FileFlushing        <- '!' DottedName FileFlushing1?
+FileRWOperation     <- (  "<<<"  (Expression / '!')
+                        / "<<"   (Expression / '!') 
+                        / ">>>"  (Expression) 
+                        / ">>"   (Expression) )*
 
-FileFlushing1       <- '(' Expression (',' FileFlushing1)* ')'
-                     / '[' Expression ']' Spacing '=' Expression
-                     / '>>>' Expression
-                     / '>>'  Expression
+
+FileFlushing        <- '!'  FileExpression  FileFlushingOperation
+
+FileFlushingOperation   <- '[' Expression  ']'  '='  Expression
+                         / ( '<<<' Expression
+                            / '<<' Expression )*
+
 
 FlowStatement       <- "break"
                      / "continue"
@@ -343,157 +401,184 @@ FlowStatement       <- "break"
                      / ReturnStatement
 
 
-ImportStatement     <- ImportName / ImportFrom                  ## ADD ExportStatement!
+IdentifiersList     <- DottedName  (',' DottedName)*
 
-ImportName          <- "import" ImportAsNames
 
-ImportAsNames       <- ImportAsName (',' ImportAsName)*
-ImportAsName        <- DottedName ("as" Identifier)?
+ImportStatement     <- ImportName
+                     / ImportFrom
 
-ImportFrom          <- "from" '.'* DottedName "import" ImportFrom1
-ImportFrom1         <- "all" ImportBut
-                     / '(' ImportAsNames ')'
+ImportName          <- "import"  ImportAsNames
+
+ImportAsNames       <- ImportAsName  (',' ImportAsName)*
+ImportAsName        <- DottedName  ("as" Identifier)?
+
+ImportFrom          <- "from"  '.'*  DottedName  "import"  ImportFromList
+ImportFromList      <- "all"  ImportBut
+                     / '('  ImportAsNames  ')'                      ## NOTE could be finally removed from specs
                      / ImportAsNames
 
-ImportBut           <- "but" Identifier (',' Identifier)*
+ImportBut           <- "but"  DottedName  (','  DottedName)*
 
 
-NopStatement        <- "nop" / "pass" / "NOP"
+NopStatement        <- "nop"                                        ## NOTE one single definition could be specified in final specs
+                     / "pass"
+                     / "NOP"
 
 
-RaiseStatement      <- "raise" Expression ("from" Expression)?
+RaiseStatement      <- "raise"  Expression  ("from"  Expression)?
 
 
-ReturnStatement     <- "return" ExprList?
-                     / "ret" ExprList?                          ## CHK do we keep this alternative?
+ReturnStatement     <- "return"  ExprList?
+                     / "ret"  ExprList?                             ## CHK do we keep this alternative?
 
 
-RequireStatement    <- "require" Condition (',' String)?
+RequireStatement    <- "require"  Condition  (',' String)?
 
 
-AssignDeclDefFunccallStatement  <- AccessQualifier DeclOrDefStatement
+AssignDeclDefFunccallStatement  <- AccessQualifier  DeclOrDefStatement
                                  / DeclOrDefStatement
-                                 / DottedName (AssignmentStatement / FunctionCall) SimpleStatementEnd
+                                 / DottedName  (AssignmentStatement / FunctionCall)  SimpleStatementEnd
 
 
-AccessProtectionStatement   <- ':'? AccessQualifiers ':'
-AccessQualifiers    <- "hidden"
-                     / "local"
-                     / "private"
-                     / "protected"
-                     / "public"
+
+#####
+<access protection statement>  ::= ':' <access qualifier> ':' 
+
+<access qualifier>          ::= 'hidden'  |  'local'  |  'private'  |
+                                'protected'  |  'public' 
+
+<assign or func-call statement> ::= <target list1> <assignment statement>  |
+                                    <function call>
+
+<assignment statement>      ::= <assign op> <expr list>
+
+<case>                      ::= 'case' <expr list> <statements block>
+
+#####
 
 
-EmbedStatement      <- "embed" Language EmbedStatement1
 
-EmbedStatement1     <- DottedName SimpleStatementEnd
-                     / "{{" (!"}}" .) "}}" Spacing "exit"?
+AccessProtectionStatement   <- ':'?  AccessQualifiers  ':'
 
-
-ExcludeStatement    <- "exclude" Languages '{{' StatementsList '}}'
-
-Languages           <- Language (',' Language)*
-
-Language            <- "cpp"                                    ## ADD other targeted languages (e.g. typescript rather than javascript, Kotlin, c, ...
-                     / "csharp"                                 ## CHK maybe multiple naming for a same language should be avoided
-                     / "cs"                                     ## ADD standard version (as optionnal)
-                     / "c#"
-                     / "javascript"
-                     / "java"
-                     / "python"
-                     / "py"
+AccessQualifiers    <- "hidden" Spacing                             ## NOTE hidden could be removed and local retained in final specs
+                     / "local" Spacing
+                     / "private" Spacing
+                     / "protected" Spacing
+                     / "public" Spacing
 
 
-ForStatement        <- "for" '(' TargetList "in" ExprList ')' StatementsBlock ("otherwise" StatementsBlock)?
+EmbedStatement      <- "embed"  Language  EmbeddedCode
+
+EmbeddedCode        <- DottedName  SimpleStatementEnd
+                     / "{{"  (!"}}" .)  "}}"  Spacing  ("exit"  SimpleStatementEnd)?
 
 
-ForeverStatement    <- "forever" '(' ')' StatementsBlock
+ExcludeStatement    <- "exclude"  Languages                         ## NOTE removed end of rule:  '{{'  StatementsList  '}}'
+
+Languages           <- Language  (','  Language)*
+
+Language            <- "android"  LanguageVersion?
+                    / "cpp"  LanguageVersion?                       ## ADD other targeted languages (e.g. typescript rather than javascript, Kotlin, c, ...
+                    / "csharp"                                      ## CHK maybe multiple naming for a same language should be avoided
+                    / "c#"                                          ## ADD standard version (as optionnal)
+                    / "c"  LanguageVersion?
+                    / "java"
+                    / "kotlin"
+                    / "python"  LanguageVersion?
+                    / "py"  LanguageVersion?
+                    / "rust"
+                    / "typescript"
+
+LanguageVersion     <- IntegerNumber  ('.'  [09]+)*
 
 
-IfStatement         <- "if" '(' Condition ')' StatementsBlock IfStatement1? ## FIX rewrite this rule according to PEG principles (priority on previous rules for operator /)
-
-IfStatement1        <- (ElseIf '(' Condition ')' StatementsBlock)+
-                     / "else" StatementsBlock
-                     / "otherwise" StatementsBlock
-
-ElseIf              <- "elseif" / "elif" / "elsif"
+ForStatement        <- "for"  '('  TargetList  "in"  ExprList  ')'  StatementsList  ("otherwise" StatementsList)?   ## ok, but TargetList must be checked again
 
 
-RepeatStatement     <- "repeat" StatementsBlock "until" '(' Condition ')' SimpleStatementEnd
+ForeverStatement    <- "forever"  '('  ')'  StatementsList
 
 
-SwitchStatement     <- "switch" '(' Expression ')' '{' SwitchBlock '}' ("otherwise" StatementsBlock)?
+IfStatement         <- "if"  '('  Condition  ')'  StatementsList  (ElseIf  '('  Condition  ')'  StatementsList)*  (("else" / "otherwise")  StatementsList)?
 
-SwitchBlock         <- ("case" ExprList StatementsBlock)*
+ElseIf              <- "elseif"
+                     / "elif"
+                     / "elsif"
 
 
-TryStatement        <- "try" StatementsBlock TryStatementExcept+ TryStatementOtherwise? TryStatementFinally?
-                     / "try" StatementsBlock TryStatementFinally
+RepeatStatement     <- "repeat"  StatementsList  "until"  '('  Condition  ')'  SimpleStatementEnd
 
-TryStatementExcept  <- TryExcept StatementsBlock
 
-TryExcept           <- "except" '(' Expression ("as" Identifier)?) (',' Expression ("as" Identifier)?)* ')'
-                     / "except" "all" ("as" Identifier)?
+SwitchStatement     <- "switch"  '('  Expression  ')'  SwitchBlock  ("otherwise"  ':'  StatementsList)?
 
-TryStatementOtherwise   <- "otherwise" ('(' "Exception" "as" Identifier ')')* StatementsBlock
+SwitchBlock         <- '{'  CaseStatement*  '}'
 
-TryStatementFinally <- "finally" StatementBlock
+CaseStatement       <- "case"  ExprList  ':'  StatementsList
+
+
+TryStatement        <- "try"  '{'  StatementsList  '}'  TryStatementExcept  TryStatementOtherwise?  TryStatementFinally?
+                     / "try"  '{'  StatementsList  '}'  TryStatementFinally
+
+TryStatementExcept  <- TryExcept  '{'  StatementsList  '}'
+
+TryExcept           <- "except"  '('  Expression  ("as"  Identifier)?  (',' Expression ("as" Identifier)?)*  ')'
+                     / "except"  "all"  ("as"  Identifier)?
+
+TryStatementOtherwise   <- "otherwise"  ('('  "Exception"  "as"  Identifier  ')')*  '{'  StatementsList  '}'
+
+TryStatementFinally <- "finally"  '{'  StatementsList  '}'
 
                              
-WhileStatement      <- "while" '(' Condition ')' StatementsBlock ("otherwise" StatementsBlock)?
+WhileStatement      <- "while"  '('  Condition  ')'  StatementsList  ("otherwise" StatementsList)?
 
 
-WithStatement       <- "with" '(' WithItem (',' WithItem)* ')' StatementsBlock
+WithStatement       <- "with"  '('  WithItem  (',' WithItem)*  ')'  StatementsList
 
-WithItem            <- Expression ("as" Type12? Target)  ## <type'>
-
-
-Target              <- DottedName SubscriptionOrSlicing*
-
-TypedTarget         <- Type12 Target  ## <type'>
-                     / DottedName (DottedName SubscriptionOrSlicing*
-                                    / SubscriptionOrSlicing*
-                                    / TemplatedType SubscriptionOrSlicing*)
-
-TargetList          <- TypedTarget (',' TypedTarget)*
+WithItem            <- Expression  ("as" TypedTarget)                       ## NOTE initally was `Expression  ("as"  SimpleType?  Target)`
 
 
-CastOp              <- "cast" Identifier
+Target              <- DottedName  SubscriptionOrSlicing*
+
+TypedTarget         <- SimpleType  Target
+                     / TemplatedType  Target 
+                     / DottedName  Target                                   ## NOTE DottedName is a type name
+                     / Target                                               ## NOTE DottedName is an identifier of a variable for which type is known
+
+TargetList          <- TypedTarget  (',' TypedTarget)*
 
 
-EnumDefinition      <- "enum" Identifier '{' EnumItem (',' EnumItem)* '}'
-
-EnumItem            <- Identifier '=' Expression
+CastOp              <- "cast"  Identifier
 
 
-ForwardDecl         <- Forward (StaticQualfier? ForwardDecl1
-                                / FwdClassDecl)
+EnumDefinition      <- "enum"  Identifier  '{'  EnumItem  (',' EnumItem)*  '}'
+
+EnumItem            <- Identifier  '='  Expression
+
+
+ForwardDecl         <- Forward ((StaticQualfier? ForwardDecl1) / FwdClassDecl)
 
 ForwardDecl1        <- VolatileQualifier Type Identifier
                      / FwdTypeDecl
                      / ForwardDecl2
 
-ForwardDecl2        <- SimpleType (Identifier ForwardDecl3
-                                    / OperatorDeclaration)
-                     / Identifier FwdeDeclConstructor
+ForwardDecl2        <- SimpleType  ((Identifier  ForwardDecl3) / OperatorDeclaration)
+                     / Identifier  FwdeDeclConstructor
 
 ForwardDecl3        <- FunctionDeclaration
-                     / (',' Identifier)*
+                     / (','  Identifier)*
                      
 Forward             <- "forward"
                      / "fwd"
 
-FwdClassDecl        <- "class" Identifier TemplateDef Inheritance?
+FwdClassDecl        <- "class"  Identifier  TemplateDef  Inheritance?
 
-FwdDeclConstructor  <- ('.' Identifier)+ (Identifier ForwardDecl3
-                                          / OperatorDeclaration)
+FwdDeclConstructor  <- ('.'  Identifier)+  ((Identifier  ForwardDecl3) / OperatorDeclaration)
                      / FunctionParamsDeclaration
 
 
-MemoryAddress       <- '@' IntegerNumber
+MemoryAddress       <- '@'  IntegerNumber
 
 
-TypeAlias           <- "type" Type11 "as" Identifier (',' Type11 "as" Identifier)*  ## <TYPE>
+TypeAlias           <- "type"  Type  "as"  Identifier  (','  Type  "as"  Identifier)*
 
 
 
@@ -524,55 +609,9 @@ TempalteSubDef      <- Identifier
 
 
 
-
-## Notice: next lines have to do with STATEMENTS
----------------------------------------------------------------
-<assign op> ::= '='
-             |  <augmented assign op>
-
-<assignment statement>    ::= <target list'> <assignment statement'>                ### modified    
-<assignment statement'>   ::= <assign op> <expr list>                               ### new         
-
-<augmented assign op>   ::= '+='
-                         |  '-='
-                         |  '*='
-                         |  '/='
-                         |  '%='
-                         |  '&='
-                         |  '|='
-                         |  '^='
-                         |  '<<='
-                         |  '<<<='
-                         |  '>>='
-                         |  '>>>='
-                         |  '**='
-                         |  '^^='
-                         |  '@='
-                         |  '@@='                                                   ## new              
-                         |  '><='
-                         |  '<>='                                                   ## new              
-                         |  '!!='
-                         |  '::='
-                         |  '??='
-
-
-<method or operator definition>     ::= <returned type> <method or operator definition'>
-<method or operator definition'>    ::= <operator definition>                                                
-                                     |  <identifier> <function definition>                                    
-
-
-<var declaration or assignment>     ::= '=' <expression> <var declaration or assignment'>    
-                                     |  ',' <identifier> <var declaration or assignment>    
-                                     |  EPS                                                    
-<var declaration or assignment'>    ::= ',' <identifier> <var declaration or assignment>    
-                                     |  EPS     
-## End of notice
-
-
-
 #####   TYPES   #################################################
 
-Type                        <- ConstQualifier? SimpleType       ## ADD type renaming with keyword 'as'
+Type                        <- ConstQualifier? SimpleType
                              / ConstQualifier? TemplatedType
                              / None
 
@@ -582,9 +621,9 @@ SimpleType                  <-  AutoType
                              / EnumType
                              / FileType
                              / ScalarType FixedDimensions?
+                             
 
-
-TemplatedType               <- DottedName ('<' TypesAndExprsList '>')? FixedDimensions?
+TemplatedType               <- DottedName  ('<' TypesAndExprsList '>')?  FixedDimensions?
 
 
 AutoType                    <- '?' ("in" '(' TypesList ')')?
@@ -672,4 +711,6 @@ VolatileQualifier           <- "volatile"
 ## ADD missing TEMPLATES rules - see LL1-v10  ## ADD missing template specialization
 ## ADD parallel programming (NEW)
 ## ADD missing ATOMS rules - see LL1-v10  ## CHK correction of LL1 rules
+## ADD missing MISC rules - see LL1-v10  ## CHK correction of LL1 rules
+## ADD missing SCALARS rules - see LL1-v10  ## CHK correction of LL1 rules
 ## ADD namespace rules (NEW)

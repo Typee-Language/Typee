@@ -183,6 +183,7 @@ namespace ty_fe  //!< the Typee Front-End namespace
         * Generates Internmediate Code.
         *
         * \param module_str a string containing T code to parse.
+        * \param out_ic a reference to the Intermediate Code structure to be generated.
         * \return true if parsing was ok, or false otherwise.
         */
         static const bool parse(const std::string& module_str, FEIntermediateCode& out_ic);
