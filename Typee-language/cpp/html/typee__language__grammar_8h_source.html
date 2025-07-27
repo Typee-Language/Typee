@@ -126,41 +126,37 @@ $(function(){initNavTree('typee__language__grammar_8h_source.html','',''); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">//===========================================================================</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacety__fe.html">ty_fe</a></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="namespacety__fe_1_1ty__grm.html">   38</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacety__fe_1_1ty__grm.html">ty_grm</a>  </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">namespace </span>ty_grm  </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">//=======================================================================</span></div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Forward declarations</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">//--- tokens</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structty__fe_1_1ty__grm_1_1_e_n_d_m_a_r_k_e_r.html">ENDMARKER</a>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">struct </span>ENDMARKER;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="comment">//--- rules</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structty__fe_1_1ty__grm_1_1statements__list.html">statements_list</a>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">struct </span><a class="code hl_struct" href="structty__fe_1_1ty__grm_1_1t__code__module.html">t_code_module</a>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">struct </span>statements_list;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">struct </span>t_code_module;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">//=======================================================================</span></div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// Tokens definitions</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="structty__fe_1_1ty__grm_1_1_e_n_d_m_a_r_k_e_r.html">   52</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structty__fe_1_1ty__grm_1_1_e_n_d_m_a_r_k_e_r.html">ENDMARKER</a> : pegtl::eof {};  </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">struct </span>ENDMARKER : pegtl::eof {};  </div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">//=======================================================================</span></div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// The Typee language rules definitions</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">//---   TCodeModule   ---------------------------------------------------</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="structty__fe_1_1ty__grm_1_1t__code__module.html">   60</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structty__fe_1_1ty__grm_1_1t__code__module.html">t_code_module</a> : pegtl::seq&lt;statements_list, ENDMARKER&gt; {};</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">struct </span>t_code_module : pegtl::seq&lt;statements_list, ENDMARKER&gt; {};</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">//---   StatementsList   ------------------------------------------------</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="structty__fe_1_1ty__grm_1_1statements__list.html">   65</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structty__fe_1_1ty__grm_1_1statements__list.html">statements_list</a> : pegtl::until&lt;pegtl::eof, pegtl::any&gt; {};  <span class="comment">// Notice: this is a very temporary &#39;empty&#39; definition!</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">struct </span>statements_list : pegtl::until&lt;pegtl::eof, pegtl::any&gt; {};  <span class="comment">// Notice: this is a very temporary &#39;empty&#39; definition!</span></div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}  <span class="comment">// end of namespace ty_fe::grm </span></div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}  <span class="comment">// end of namespace ty_fe</span></div>
-<div class="ttc" id="anamespacety__fe_1_1ty__grm_html"><div class="ttname"><a href="namespacety__fe_1_1ty__grm.html">ty_fe::ty_grm</a></div><div class="ttdoc">&lt; the Typee language grammar namespace</div><div class="ttdef"><b>Definition</b> typee_language_grammar.h:39</div></div>
 <div class="ttc" id="anamespacety__fe_html"><div class="ttname"><a href="namespacety__fe.html">ty_fe</a></div><div class="ttdoc">&lt; the Typee Front-End namespace</div><div class="ttdef"><b>Definition</b> fe_exceptions.h:41</div></div>
-<div class="ttc" id="astructty__fe_1_1ty__grm_1_1_e_n_d_m_a_r_k_e_r_html"><div class="ttname"><a href="structty__fe_1_1ty__grm_1_1_e_n_d_m_a_r_k_e_r.html">ty_fe::ty_grm::ENDMARKER</a></div><div class="ttdoc">The end-of-file marker.</div><div class="ttdef"><b>Definition</b> typee_language_grammar.h:52</div></div>
-<div class="ttc" id="astructty__fe_1_1ty__grm_1_1statements__list_html"><div class="ttname"><a href="structty__fe_1_1ty__grm_1_1statements__list.html">ty_fe::ty_grm::statements_list</a></div><div class="ttdoc">Defines lists of T statements.</div><div class="ttdef"><b>Definition</b> typee_language_grammar.h:65</div></div>
-<div class="ttc" id="astructty__fe_1_1ty__grm_1_1t__code__module_html"><div class="ttname"><a href="structty__fe_1_1ty__grm_1_1t__code__module.html">ty_fe::ty_grm::t_code_module</a></div><div class="ttdoc">The &#39;entry&#39; rule of the Typee language grammar, specifying what are modules of T code.</div><div class="ttdef"><b>Definition</b> typee_language_grammar.h:60</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

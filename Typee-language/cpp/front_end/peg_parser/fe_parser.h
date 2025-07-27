@@ -39,9 +39,9 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 
 //===========================================================================
-/// \defgroup TypeeFrontEnd The Typee Language Front-End
+/// \addtogroup TypeeFrontEnd The Typee Language Front-End
 /// {
-namespace ty_fe  //!< the Typee Front-End namespace
+namespace ty_fe  //! the Typee Front-End namespace
 {
     //=======================================================================
     /** \brief The Front-End parser of Typee-language "T".

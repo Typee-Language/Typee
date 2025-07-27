@@ -1,8 +1,5 @@
 var hierarchy =
 [
-    [ "pegtl::eof", null, [
-      [ "ty_fe::ty_grm::ENDMARKER", "structty__fe_1_1ty__grm_1_1_e_n_d_m_a_r_k_e_r.html", null ]
-    ] ],
     [ "std::exception", null, [
       [ "ty_fe::FEBaseException", "classty__fe_1_1_f_e_base_exception.html", [
         [ "ty_fe::FEDataStreamErrorException", "classty__fe_1_1_f_e_data_stream_error_exception.html", null ],
@@ -14,11 +11,5 @@ var hierarchy =
       ] ]
     ] ],
     [ "ty_fe::FEIntermediateCode", "classty__fe_1_1_f_e_intermediate_code.html", null ],
-    [ "ty_fe::FEParser", "classty__fe_1_1_f_e_parser.html", null ],
-    [ "pegtl::seq", null, [
-      [ "ty_fe::ty_grm::t_code_module", "structty__fe_1_1ty__grm_1_1t__code__module.html", null ]
-    ] ],
-    [ "pegtl::until", null, [
-      [ "ty_fe::ty_grm::statements_list", "structty__fe_1_1ty__grm_1_1statements__list.html", null ]
-    ] ]
+    [ "ty_fe::FEParser", "classty__fe_1_1_f_e_parser.html", null ]
 ];
