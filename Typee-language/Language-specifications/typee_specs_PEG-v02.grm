@@ -377,6 +377,20 @@ Declaration             <- MethodConstDeclaration
                          / VolatilesDeclaration
 
 
+Forward                 <- "forward"
+                         / "fwd"
+
+ForwardDeclaration      <- VolatileQualifier    VolatileItem  (','  VolatileItem)*
+                         / TypeDeclaration
+                         / ClassDeclaration
+                         / PropertyDeclaration
+                         / MethodConstDeclaration
+                         / FunctionDeclaration
+                         / OperatorDeclaration
+                         / Type  Identifier  (',' Identifier)*
+                         / Type  OperatorDeclaration
+
+
 FunctionDeclaration     <- Type  Identifier  FunctionParamsDeclaration
 
 
@@ -387,27 +401,8 @@ VariablesDeclList       <- VariableDecl  (','  VariableDecl)*  SimpleStatementEn
 VariableDecl            <- Identifier  ('=' Expression)?
 
 
-VolatilesDeclaration    <- VolatileQualifier  VolatileDecl  (','  VolatileDecl)*  SimpleStatementEnd
+VolatilesDeclaration    <- VolatileQualifier  NotConstType  Identifier  (','  Idengtifier)*  SimpleStatementEnd
 
-VolatileDecl            <- VolatileItem  MemoryAddress
-
-VolatileItem            <- NotConstType  Identifier
-
-MemoryAddress           <- '@'  IntegerNumber
-
-
-Forward                 <- "forward"
-                         / "fwd"
-
-ForwardDeclaration      <- VolatileQualifier    VolatileItem  (','  VolatileItem)*
-                         / TypeDeclaration
-                         / ClassDeclaration
-                         / PropertyDeclaration
-                         / MethodConstDeclaration
-                         / FunctionDeclaration
-                         / OoperatorDeclaration
-                         / Type  Identifier  (',' Identifier)*
-                         / Type  OperatorDeclaration
 
 ClassDeclaration        <- CLASS_TK  Identifier  TemplateDef?  Inheritance?
 
@@ -434,6 +429,9 @@ Definition              <- AbstractQualifier  MethodDefinition          ## NOTE 
                          / Type  Identifier  FunctionDefinition
                          / Type  OperatorDefinition  
 
+VolatilesDefinition     <- VolatileQualifier  NotConstType  Identifier  MemoryAddress  (','  Identifier  MemoryAddress)*  SimpleStatementEnd
+
+MemoryAddress           <- '@'  IntegerNumber
 
 
 
