@@ -455,9 +455,6 @@ FileWriteOperation      <- '['  IndexingExpression  ']'  '='  Expression
                          / ( "<<<" Expression / "<<" Expression )*
 
 
-#####################################################################################################################
-
-
 FlowStatement           <- BREAK_TK
                          / CONTINUE_TK
                          / RaiseStatement
@@ -473,17 +470,20 @@ ImportStatement         <- ImportName
 ImportName              <- IMPORT_TK  ImportAsNames
 
 ImportAsNames           <- ImportAsName  (',' ImportAsName)*
+
 ImportAsName            <- DottedName  (AS_TK Identifier)?
 
-ImportFrom              <- FROM_TK  '.'*  DottedName  IMPORT_TK  ImportFromList
+ImportFrom              <- FROM_TK  ModulePath  IMPORT_TK  ImportFromList
+
 ImportFromList          <- ALL_TK  ImportBut
-                         / '('  ImportAsNames  ')'                      ## NOTE could be finally removed from specs
                          / ImportAsNames
 
 ImportBut               <- BUT_TK  DottedName  (','  DottedName)*
 
+ModulePath              <- '.'*  DottedName                             ## NOTE a module path should not contain the ".ty" suffix of its related filepath
 
-RaiseStatement          <- RAISE_TK  Expression  (FROM_TK  Expression)?
+
+RaiseStatement          <- RAISE_TK  Expression  (FROM_TK  Expression)? ## NOTE not all expressions are vaild after "from" - only exception naming expressions are
 
 
 ReturnStatement         <- RETURN_TK  ExprList?
@@ -501,13 +501,15 @@ AccessQualifiers        <- HIDDEN_TK                                    ## NOTE 
                          / PUBLIC_TK
 
 
-EmbedStatement          <- EMBED_TK  Language  EmbeddedCode
+EmbedStatement          <- EMBED_TK  Language  Spacing*  EmbeddedCode
 
-EmbeddedCode            <- DottedName  SimpleStatementEnd
+EmbeddedCode            <- FilePath  SimpleStatementEnd
                          / "{{"  (!"}}" .)  "}}"  Spacing*  (EXIT_TK  SimpleStatementEnd)?
 
 
 ExcludeStatement        <- EXCLUDE_TK  Languages
+
+FilePath                <- '.'*  DottedName                             ## NOTE a file path may be suffixed according to the targetted language conventions
 
 Languages               <- Language  (','  Language)*
 
@@ -526,7 +528,7 @@ Language                <- "android"  LanguageVersion?                  ## NOTE 
 LanguageVersion         <- Spacing+  IntegerNumber  ('.'  [09]+)*
 
 
-ForStatement            <- FOR_TK  '('  TargetList  IN_TK  ExprList  ')'  StatementsList  (OTHERWISE_TK  StatementsList)?    ## ok, but TargetList must be checked
+ForStatement            <- FOR_TK  '('  TargetList  IN_TK  ExprList  ')'  StatementsList  (OTHERWISE_TK  StatementsList)?
 
 
 ForeverStatement        <- FOREVER_TK  '('  Spacing*  ')'  StatementsList
@@ -535,7 +537,7 @@ ForeverStatement        <- FOREVER_TK  '('  Spacing*  ')'  StatementsList
 IfStatement             <- IF_TK  '('  Condition  ')'  StatementsList  (ELSEIF_TK  '('  Condition  ')'  StatementsList)*  ((ELSE_TK / OTHERWISE_TK)  StatementsList)?
 
 
-RepeatStatement         <- REPEAT_TK  StatementsList  UNTIL_TK  '('  Condition  ')'  SimpleStatementEnd
+RepeatStatement         <- REPEAT_TK  StatementsList  UNTIL_TK  '('  Condition  ')'  SimpleStatementEnd  (OTHERWISE_TK  StatementsList)?
 
 
 SwitchStatement         <- SWITCH_TK  '('  Expression  ')'  SwitchBlock  (OTHERWISE_TK  ':'  StatementsList)?
@@ -550,10 +552,10 @@ TryStatement            <- TRY_TK  '{'  StatementsList*  '}'  TryStatementExcept
 
 TryStatementExcept      <- TryExcept  '{'  StatementsList*  '}'
 
-TryExcept               <- EXCEPT_TK  '('  Expression  (AS_TK  Identifier)?  (',' Expression (AS_TK Identifier)?)*  ')'
-                         / EXCEPT_TK  ALL_TK  (AS_TK  Identifier)?
+TryExcept               <- EXCEPT_TK  Spacing*  '('  Expression  (AS_TK  Identifier)?  (',' Spacing* Expression (AS_TK Identifier)?)*  ')'
+                         / EXCEPT_TK  Spacing+  ALL_TK  (AS_TK  Identifier)?
 
-TryStatementOtherwise   <- OTHERWISE_TK  ('('  EXCEPTION_TK  AS_TK  Identifier  ')')*  '{'  StatementsList*  '}'
+TryStatementOtherwise   <- OTHERWISE_TK  ('(' EXCEPTION_TK AS_TK Identifier ')')*  '{'  StatementsList*  '}'
 
 TryStatementFinally     <- FINALLY_TK  '{'  StatementsList*  '}'
 
@@ -563,25 +565,25 @@ WhileStatement          <- WHILE_TK  '('  Condition  ')'  StatementsList  (OTHER
 
 WithStatement           <- WITH_TK  '('  WithItem  (',' WithItem)*  ')'  StatementsList
 
-WithItem                <- Expression  (AS_TK TypedTarget)
+WithItem                <- Expression  (AS_TK TypedTarget)?
 
-
-Target                  <- DottedName  SubscriptionOrSlicing*
-
-TypedTarget             <- SimpleType  Target
+TypedTarget             <- SimpleType     Target
                          / TemplatedType  Target 
-                         / DottedName  Target                                   ## NOTE DottedName is a type name
-                         / Target                                               ## NOTE DottedName is an identifier of a variable for which type is known
+                         / DottedName     Target                        ## NOTE DottedName is a type name
+                         / Target                                       ## NOTE DottedName is an identifier of a variable for which type is known
+
+Target                  <- DottedName  Spacing*  SubscriptionOrSlicing+  Spacing*   ## NOTE SubscriptionOrSlicing still must be defined
+                         / DottedName  Spacing*
 
 TargetList              <- TypedTarget  (',' TypedTarget)*
 
 
-CastOp                  <- CAST_TK  Identifier
+CastOp                  <- CAST_TK  Identifier                          ## NOTE use of CastOp is still to be specified...
 
 
 EnumDeclaration         <- ENUM_TK  Identifier
 
-EnumDefinition          <-  EnumDeclaration '{'  EnumItem  (',' EnumItem)*  '}'
+EnumDefinition          <-  EnumDeclaration  Spacing*  '{'  Spacing*  EnumItem  Spacing*  (','  Spacing*  EnumItem)*  Spacing*  '}'
 
 EnumExpression          <- IntegerNumber
                          / Identifier  '+'  IntegerNumber               ## NOTE identifer must be a known enum value identifier
@@ -592,7 +594,7 @@ EnumItem                <- Identifier  '+='  IntegerNumber              ## NOTE 
                          / Identifier
 
 
-TypeAlias               <- TYPE_TK  Type  AS_TK  Identifier  (','  Type  AS_TK  Identifier)*
+TypeAlias               <- TYPE_TK  Type  Spacing+  AS_TK  Identifier  Spacing*  (','  Spacing*  Type  Spacing+  AS_TK  Identifier  Spacing*)*
 
 
 
@@ -635,7 +637,7 @@ TempalteSubDef      <- Identifier
 
 ABSTRACT_TK         <- "abstract"           Spacing+
 
-ALL_TK              <- "all"                Spacing*
+ALL_TK              <- "all"                Spacing+
 
 AND_TK              <- "and"                Spacing*
 
@@ -665,13 +667,13 @@ ELSEIF_TK           <- ("elseif" / "elsif" / "elif")  Spacing*
 
 ELSE_TK             <- "else"               Spacing*
 
-EMBED_TK            <- "embed"              Spacing*
+EMBED_TK            <- "embed"              Spacing+
 
 ENSURE_TK           <- "ensure"             Spacing+
 
 ENUM_TK             <- "enum"               Spacing*
 
-EXCEPT_TK           <- "except"             Spacing*
+EXCEPT_TK           <- "except"
 
 EXCEPTION_TK        <- "exception"          Spacing*
 
