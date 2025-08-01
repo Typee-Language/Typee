@@ -34,10 +34,7 @@ ENDMARKER  <- !.
 
 #####   CLASSES   ####################################################
 
-ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  StatementsBlock
-
-
-CLASS_TK            <- "class"
+ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  DefinitionBlock
 
 
 Inheritance         <- ':'  InterfaceItem   (','  InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
@@ -47,17 +44,17 @@ Inheritance         <- ':'  InterfaceItem   (','  InterfaceItem)*  (','  Inherit
 InheritanceItem     <- AccessQualifier?  DottedName  TemplateArgs?
 
 
-InterfaceItem       <- "implements"  AccessQualifier?  DottedName  TemplateArgs?
-                     / "implements"  '(' AccessQualifier?  DottedName  TemplateArgs?  (','  AccessQualifier?  DottedName  TemplateArgs?)*  ')'
+InterfaceItem       <- IMPLEMENTS_TK  AccessQualifier?  DottedName  TemplateArgs?
+                     / IMPLEMENTS_TK  '('  AccessQualifier?  DottedName  TemplateArgs?  (','  AccessQualifier?  DottedName  TemplateArgs?)*  ')'
 
 
 
 #####   COMPREHENSIONS   #############################################
 
-ForComprehension    <- "for"  '('  TargetList  "in"  CompTest  IterComprehension?  ')'
+ForComprehension    <- FOR_TK  '('  TargetList  IN_TK  CompTest  IterComprehension?  ')'
 
 
-IfComprehension     <- "if"  '('  ConditionOrUnnamedFunc  ')'  IterComprehension?
+IfComprehension     <- IF_TK  '('  ConditionOrUnnamedFunc  ')'  IterComprehension?
 
 
 IterComprehension   <- ForComprehension
@@ -67,7 +64,7 @@ IterComprehension   <- ForComprehension
 
 #####   CONDITIONS   #################################################
 
-Condition           <- CompTest  ("if"  CompTest  "else"  Expression)
+Condition           <- CompTest  (IF_TK  '('  CompTest  ')'  ELSE_TK  Expression)
 
 
 
@@ -78,21 +75,21 @@ Comparison          <- BitorExpr  (CompOperator  BitorEpxr)*            ## NOTE 
 
 CompOperator        <- "<=>"
                      / "<="
-                     / "<"
+                     / '<'
                      / "=="
                      / "!="
                      / ">="
-                     / ">"
-                     / "in"
-                     / "is" "not"?
-                     / "not" "in"
+                     / '>'
+                     / IN_TK
+                     / IS_TK   NOT_TK?
+                     / NOT_TK IN_TK
 
 
-AndTest             <- NotTest ("and"  NotTest)?
+AndTest             <- NotTest (AND_TK  NotTest)?
 
-NotTest             <- "not"?  Comparison
+NotTest             <- NOT_TK?  Comparison
 
-CompTest            <- AndTest  ("or" AndTest)                              ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
+CompTest            <- AndTest  (OR_TK  AndTest)                              ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
 
 
 
@@ -100,6 +97,9 @@ CompTest            <- AndTest  ("or" AndTest)                              ## N
 
 Expression              <- Condition
                         / UnnamedFunction
+
+
+IndexingExpression      <- Expression                                       ## NOTE indexing expressions must be integer
 
 
 ArithmeticExpr          <- Term  (OpAdd TemplateArgs? Term)*                ## NOTE for a first implementation Templated operators should be abandonned
@@ -138,7 +138,7 @@ ParenthesisedExpr       <- '('  Expression  ')'
 
 ShiftedExpr             <- ArithmeticExpr  ShiftExpr*
 
-ShiftExpr               <- "<<<"  SpacedTemplateArgs?  ArithmeticExpr       ## NOTE for a first implementation Templated operators should be abandonned
+ShiftExpr               <- "<<<"  SpacedTemplateArgs?  ArithmeticExpr       ## NOTE for a first implementation Templated operators should be delayed
                          / "<<"   SpacedTemplateArgs?  ArithmeticExpr
                          / ">>>"  TemplateArgs?  ArithmeticExpr
                          / ">>"   TemplateArgs?  ArithmeticExpr
@@ -160,7 +160,7 @@ UnaryExpr               <- '+'  Factor
 FunctionDeclaration         <- Type  Identifier  TemplateDef?  FunctionParamsDeclaration  ExcludeStatement?
 
 
-FunctionDefinition          <- FunctionDeclaration  StatementsBlock
+FunctionDefinition          <- FunctionDeclaration  DefinitionBlock
 
 
 CallOperator                <- '('  Spacing*  ')'
@@ -169,7 +169,7 @@ CallOperator                <- '('  Spacing*  ')'
 FunctionParamsDeclaration   <- '('  TypedParamsList*  ')'
 
 
-FunctionCall                <- TemplateArgs*  '('  FunctionCallArgs?  ')'
+FunctionCall                <- TemplateArgs*  '('  FunctionCallArgs?  ')'  Spacing*
 
 FunctionCallArgs            <- Expression  FunctionCallArgsList*
 
@@ -180,11 +180,11 @@ FunctionCallArgsList        <- (',' Expression)*  (','  Ellipsis  Identifier)?
 TypedParamsList             <- Type Identifier (','  Type Identifier)*
 
 
-Unnamed                     <- "unnamed"
-                             / "lambda"
+Unnamed                     <- UNNAMED_TK
+                             / LAMBDA_TK
 
 
-UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  StatementBlock
+UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  DefinitionBlock
 
 
 
@@ -199,10 +199,10 @@ ENDOFLINE               <- "\r\n"
                          / '\f'             ## NOTE 0x0c
 
 
-DottedName              <- Identifier  ('.'  Identifier)*
+DottedName              <- Identifier  ('.'  Identifier)*  Spacing*
 
 
-Identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*
+Identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*
 
 
 Spacing                 <- ' '
@@ -249,7 +249,7 @@ Operator                <- AssignOp
                          / '^'
                          / '@'
                          / '#'
-                         / "in"
+                         / IN_TK
 
 OperatorAngle           <- ">>>"
                          / ">>"
@@ -288,9 +288,9 @@ AugmentedAssignOp       <- "+="                                         ## NOTE 
 
 OperatorCallDef         <- CallOperator  TemplateDef?
 
-OperatorDeclaration     <- "operator"  OperatorSubdef
+OperatorDeclaration     <- OPERATOR_TK  OperatorSubdef
 
-OperatorDefinition      <- OperatorDeclaration  StatementsBlock
+OperatorDefinition      <- OperatorDeclaration  DefinitionBlock
 
 OperatorSubdef          <- OperatorTemplatedDef  FunctionParamsDeclaration
                          / OperatorCallDef
@@ -302,43 +302,35 @@ OperatorTemplatedDef    <- Operator TemplatedDef?
 
 #####   STATEMENTS   #################################################
 
-StatementsList          <- EmptyStatement                               ##-- OK All checked --
-                         / StatementsBlock Spacing*
-
-
-StatementsBlock         <- '{'  StatementsList*  '}'                    ##-- OK All checked --
-                         / SimpleStatement Spacing* SimpleStatementEnd Spacing*
+StatementsList          <- DefinitionBlock  Spacing*
+                         / SimpleStatement Spacing*
                          / CompoundStatement Spacing*
 
 
-EmptyStatement          <- Comment                                      ##-- OK All checked --
-                         / Spacing+
-
-
-SimpleStatement         <- AssertStatement                              ##-- OK All checked --
-                         / DelStatement
-                         / EnsureStatement
-                         / FileEndianness
-                         / FileFlushing
-                         / FlowStatement
-                         / ImportStatement
-                         / NopStatement
-                         / AccessProtectionStatement
-                         / RaiseStatement
-                         / RequireStatement
-
-
-SimpleStatementEnd      <- COMMA                                        ##-- OK All checked --
-
-
-CompoundStatement       <- DeclarationStatement  SimpleStatementEnd     ## NOTE may not be allowed everywhere
-                         / DefinitionStatement                          ## NOTE may not be allowed everywhere
+SimpleStatement         <- AssertStatement           SimpleStatementEnd
+                         / Comment
+                         / DeclarationStatement      SimpleStatementEnd     ## NOTE may not be allowed everywhere
+                         / DeleteStatement           SimpleStatementEnd
                          / DottedName  FunctionCall  SimpleStatementEnd
                          / DottedName  TargetList  AssignmentStatement  SimpleStatementEnd
+                         / EnsureStatement           SimpleStatementEnd
+                         / FileEndianness
+                         / FileFlushing              SimpleStatementEnd
+                         / FlowStatement             SimpleStatementEnd
+                         / ImportStatement           SimpleStatementEnd
+                         / NOP_TK                    SimpleStatementEnd
+                         / AccessProtectionStatement
+                         / RaiseStatement            SimpleStatementEnd
+                         / RequireStatement          SimpleStatementEnd
+
+
+SimpleStatementEnd      <- COMMA
+
+
+CompoundStatement       <- DefinitionStatement                          ## NOTE may not be allowed everywhere
                          / EmbedStatement
-                         / ExcludeStatement                             ## NOTE may not be allowed everywhere
-                         / ForStatement
                          / ForeverStatement
+                         / ForStatement
                          / IfStatement
                          / RepeatStatement
                          / SwitchStatement
@@ -347,28 +339,26 @@ CompoundStatement       <- DeclarationStatement  SimpleStatementEnd     ## NOTE 
                          / WithStatement
 
 
-AssertStatement         <- "assert"  Condition  (',' String)?           
+AssertStatement         <- ASSERT_TK  Condition  (',' String)?  Spacing*
 
 
 AssignmentStatement     <- AssignOp  ExprList
 
 
-Comment                 <- "//"  (!ENDOFLINE .)*
-                         / MultiLinesComment
+Comment                 <- "//"  (!ENDOFLINE .)*  Spacing*
+                         / MultiLinesComment  Spacing*
 
 MultiLinesComment       <- "/*"  (MultiLinesComment  /  !"*/" .)*  "*/"
 
 
-
-#####################################################################################################################
-DeclarationStatement    <- Forward  AccessQualifier  StaticQualifier  ForwardDeclaration
-                         / Forward  AccessQualifier  ForwardDeclaration
-                         / Forward  StaticQualifier  ForwardDeclaration
-                         / Forward  ForwardDeclaration
-                         / AccessQualifier  StaticQualifier  Declaration
-                         / AccessQualifier  Declaration
-                         / StaticQualifier  Declaration
-                         / Declaration
+DeclarationStatement    <- FORWARD_TK  AccessQualifier  STATIC_TK  ForwardDeclaration  Spacing*
+                         / FORWARD_TK  AccessQualifier  ForwardDeclaration  Spacing*
+                         / FORWARD_TK  STATIC_TK  ForwardDeclaration  Spacing*
+                         / FORWARD_TK  ForwardDeclaration  Spacing*
+                         / AccessQualifier  STATIC_TK  Declaration  Spacing*
+                         / AccessQualifier  Declaration  Spacing*
+                         / STATIC_TK  Declaration  Spacing*
+                         / Declaration  Spacing*
 
 
 Declaration             <- MethodConstDeclaration                          
@@ -377,10 +367,7 @@ Declaration             <- MethodConstDeclaration
                          / VolatilesDeclaration
 
 
-Forward                 <- "forward"
-                         / "fwd"
-
-ForwardDeclaration      <- VolatileQualifier    VolatileItem  (','  VolatileItem)*
+ForwardDeclaration      <- VOLATILE_TK    VolatileItem  (','  VolatileItem)*
                          / TypeDeclaration
                          / ClassDeclaration
                          / PropertyDeclaration
@@ -401,99 +388,78 @@ VariablesDeclList       <- VariableDecl  (','  VariableDecl)*  SimpleStatementEn
 VariableDecl            <- Identifier  ('=' Expression)?
 
 
-VolatilesDeclaration    <- VolatileQualifier  NotConstType  Identifier  (','  Idengtifier)*  SimpleStatementEnd
+VolatilesDeclaration    <- VOLATILE_TK  NotConstType  Identifier  (','  Idengtifier)*  SimpleStatementEnd
 
 
 ClassDeclaration        <- CLASS_TK  Identifier  TemplateDef?  Inheritance?
 
-MethodConstDeclaration  <- FunctionDeclaration  ConstQualifier          ## NOTE ending const qualifier is only authorized for class methods
+MethodConstDeclaration  <- FunctionDeclaration  CONST_TK          ## NOTE ending const qualifier is only authorized for class methods
 
-PropertyDeclaration     <- PropertyQualifier    Type  Identifier
+PropertyDeclaration     <- PROPERTY_TK    Type  Identifier
 
 TypeDeclaration         <- TYPE_TK   Identifier
 
 
 
-DefinitionStatement     <- ClassDefinition
-                         / StaticQualifier?   Definition
+DefinitionStatement     <- AccessQualifier  STATIC_TK  Definition
+                         / AccessQualifier  ClassDefinition
+                         / AccessQualifier  Definition
+                         / STATIC_TK  Definition
+                         / ClassDefinition
+                         / Definition
 
-Definition              <- AbstractQualifier  MethodDefinition          ## NOTE MethodDefinition must be defined
-                         / AbstractQualifier  OperatorDefinition
-                         / FinalQualifier     MethodDefinition
-                         / FinalQualifier     OperatorDefinition
+
+Definition              <- ABSTRACT_TK  MethodDefinition
+                         / ABSTRACT_TK  OperatorDefinition
+                         / FINAL_TK     MethodDefinition
+                         / FINAL_TK     OperatorDefinition
                          / MethodDefinition
                          / OperatorDefinition
-                         / PropertyDeclaration  '='  StatementsBlock    ## NOTE '=' may be suppressed from the rule spec
-                         / TypeAlias          SimpleStatementEnd
+                         / PropertyDeclaration  '='  DefintionBlock    ## NOTE '=' may be suppressed from the rule spec
+                         / TypeAlias  SimpleStatementEnd
                          / EnumDefinition
                          / Type  Identifier  FunctionDefinition
-                         / Type  OperatorDefinition  
+                         / Type  OperatorDefinition
+                         / VolatileDefinition
 
-VolatilesDefinition     <- VolatileQualifier  NotConstType  Identifier  MemoryAddress  (','  Identifier  MemoryAddress)*  SimpleStatementEnd
+
+DefinitionBlock         <-  '{'  StatementsList*  '}'
+
+
+MethodDefinition        <- FunctionDeclaration  CONST_TK?  DefinitionBlock        ## NOTE ending const qualifier is only authorized for class methods
+
+VolatilesDefinition     <- VOLATILE_TK  NotConstType  Identifier  MemoryAddress  (','  Identifier  MemoryAddress)*  SimpleStatementEnd
 
 MemoryAddress           <- '@'  IntegerNumber
 
 
+DeleteStatement         <- DELETE_TK  IdentifiersList
 
 
-
-<decl constructor or decl end>  ::= ( '.' <identifier> )* 
-                                        <decl or def statement'''>  |
-                                    <function definition'>
-
-<decl or def statement'>    ::= <abstract or final qualif> 
-                                    <method or operator definition>  |
-                                <volatile qualifier> <type> <identifier> 
-                                    [<memory address>] <simple statement end> |
-                                <property qualifier> <type> <identifier>
-                                    '=' <statements block>  |
-                                <type alias> <simple statement end>  |
-                                <decl or def statement''>
-
-<decl or def statement''>   ::= <TYPE'> <decl or def statement'''>  | 
-                                <enum definition>  |
-                                <identifier> <decl constructor or decl end>
-
-<decl or def statement'''>  ::= <identifier> <decl or def statement''''>  |
-                                <operator definition>
-
-<decl or def statement''''> ::= <function definition>  |  
-                                [<var declaration or assignment>] ';' 
-
-<declaration statement>     ::= ',' <identifier> ['=' <expression>] 
-                                    ( ',' <identifier> [ '=' <expression> ] )*
+EnsureStatement         <- ENSURE_TK  condition  (',' string)?
 
 
+FileEndianness          <- '<'  FileExpression  FileRWOperation
+                         / '>'  FileExpression  FileRWOperation
+
+
+FileFlushing            <- '!'  FileExpression  FileWriteOperation?
+
+FileReaOperation        <- ">>>"  (Expression) 
+                         / ">>"   (Expression)
+
+FileRWOperation         <- FileReadOperation
+                         / FileWriteOperation 
+                         
+FileWriteOperation      <- '['  IndexingExpression  ']'  '='  Expression
+                         / ( "<<<" Expression / "<<" Expression )*
 
 
 #####################################################################################################################
 
 
-DelStatement            <- "del"  IdentifiersList
-
-
-EnsureStatement         <- "ensure"  condition  (',' string)?
-
-
-FileEndianness          <- '<'  FileExpression  FileRWOperation*
-                         / '>'  FileExpression  FileRWOperation*
-
-
-FileRWOperation         <- "<<<"  (Expression / '!')
-                           "<<"   (Expression / '!') 
-                           ">>>"  (Expression) 
-                           ">>"   (Expression)
-
-
-FileFlushing            <- '!'  FileExpression  FileFlushingOperation
-
-FileFlushingOperation   <- '[' Expression  ']'  '='  Expression
-                         / ( '<<<' Expression
-                            / '<<' Expression )*
-
-
-FlowStatement           <- "break"
-                         / "continue"
+FlowStatement           <- BREAK_TK
+                         / CONTINUE_TK
                          / RaiseStatement
                          / ReturnStatement
 
@@ -502,112 +468,102 @@ IdentifiersList         <- DottedName  (',' DottedName)*
 
 
 ImportStatement         <- ImportName
-                        / ImportFrom
+                         / ImportFrom
 
-ImportName              <- "import"  ImportAsNames
+ImportName              <- IMPORT_TK  ImportAsNames
 
 ImportAsNames           <- ImportAsName  (',' ImportAsName)*
-ImportAsName            <- DottedName  ("as" Identifier)?
+ImportAsName            <- DottedName  (AS_TK Identifier)?
 
-ImportFrom              <- "from"  '.'*  DottedName  "import"  ImportFromList
-ImportFromList          <- "all"  ImportBut
+ImportFrom              <- FROM_TK  '.'*  DottedName  IMPORT_TK  ImportFromList
+ImportFromList          <- ALL_TK  ImportBut
                          / '('  ImportAsNames  ')'                      ## NOTE could be finally removed from specs
                          / ImportAsNames
 
-ImportBut               <- "but"  DottedName  (','  DottedName)*
+ImportBut               <- BUT_TK  DottedName  (','  DottedName)*
 
 
-NopStatement            <- "nop"                                        ## NOTE one single definition could be specified in final specs
-                         / "pass"
-                         / "NOP"
+RaiseStatement          <- RAISE_TK  Expression  (FROM_TK  Expression)?
 
 
-RaiseStatement          <- "raise"  Expression  ("from"  Expression)?
+ReturnStatement         <- RETURN_TK  ExprList?
 
 
-ReturnStatement         <- "return"  ExprList?
-                         / "ret"  ExprList?                             ## CHK do we keep this alternative?
-
-
-RequireStatement        <- "require"  Condition  (',' String)?
+RequireStatement        <- REQUIRE_TK  Condition  (',' String)?
 
 
 AccessProtectionStatement   <- ':'?  AccessQualifiers  ':'
 
-AccessQualifiers        <- "hidden" Spacing+                            ## NOTE hidden could be removed and local retained in final specs
-                         / "local" Spacing+
-                         / "private" Spacing+
-                         / "protected" Spacing+
-                         / "public" Spacing+
+AccessQualifiers        <- HIDDEN_TK                                    ## NOTE hidden could be removed and local retained in final specs
+                         / LOCAL_TK
+                         / PRIVATE_TK
+                         / PROTECTED_TK
+                         / PUBLIC_TK
 
 
-EmbedStatement          <- "embed"  Language  EmbeddedCode
+EmbedStatement          <- EMBED_TK  Language  EmbeddedCode
 
 EmbeddedCode            <- DottedName  SimpleStatementEnd
-                         / "{{"  (!"}}" .)  "}}"  Spacing*  ("exit"  SimpleStatementEnd)?
+                         / "{{"  (!"}}" .)  "}}"  Spacing*  (EXIT_TK  SimpleStatementEnd)?
 
 
-ExcludeStatement        <- "exclude"  Languages
+ExcludeStatement        <- EXCLUDE_TK  Languages
 
 Languages               <- Language  (','  Language)*
 
 Language                <- "android"  LanguageVersion?                  ## NOTE should be replaced with kotlin
-                         / "cpp"  LanguageVersion?                       ## ADD other targeted languages (e.g. typescript rather than javascript, Kotlin, c, ...
+                         / "cpp"  LanguageVersion?                      ## ADD other targeted languages (e.g. typescript rather than javascript, Kotlin, c, ...
                          / "csharp"
-                         / "c"  LanguageVersion?                         ## ADD standard version (as optionnal)
+                         / "c"  LanguageVersion?                        ## ADD standard version (as optionnal)
                          / "fortran"  LanguageVersion?
                          / "java"
                          / "kotlin"
                          / "python"  LanguageVersion?
-                         / "py"  LanguageVersion?                        ## CHK maybe multiple naming for a same language should be avoided
+                         / "py"  LanguageVersion?                       ## CHK maybe multiple naming for a same language should be avoided
                          / "rust"
                          / "typescript"
 
-LanguageVersion         <- IntegerNumber  ('.'  [09]+)*
+LanguageVersion         <- Spacing+  IntegerNumber  ('.'  [09]+)*
 
 
-ForStatement            <- "for"  '('  TargetList  "in"  ExprList  ')'  StatementsList  ("otherwise" StatementsList)?   ## ok, but TargetList must be checked again
+ForStatement            <- FOR_TK  '('  TargetList  IN_TK  ExprList  ')'  StatementsList  (OTHERWISE_TK  StatementsList)?    ## ok, but TargetList must be checked
 
 
-ForeverStatement        <- "forever"  '('  ')'  StatementsList
+ForeverStatement        <- FOREVER_TK  '('  Spacing*  ')'  StatementsList
 
 
-IfStatement             <- "if"  '('  Condition  ')'  StatementsList  (ElseIf  '('  Condition  ')'  StatementsList)*  (("else" / "otherwise")  StatementsList)?
-
-ElseIf                  <- "elseif"
-                         / "elif"
-                         / "elsif"
+IfStatement             <- IF_TK  '('  Condition  ')'  StatementsList  (ELSEIF_TK  '('  Condition  ')'  StatementsList)*  ((ELSE_TK / OTHERWISE_TK)  StatementsList)?
 
 
-RepeatStatement         <- "repeat"  StatementsList  "until"  '('  Condition  ')'  SimpleStatementEnd
+RepeatStatement         <- REPEAT_TK  StatementsList  UNTIL_TK  '('  Condition  ')'  SimpleStatementEnd
 
 
-SwitchStatement         <- "switch"  '('  Expression  ')'  SwitchBlock  ("otherwise"  ':'  StatementsList)?
+SwitchStatement         <- SWITCH_TK  '('  Expression  ')'  SwitchBlock  (OTHERWISE_TK  ':'  StatementsList)?
 
 SwitchBlock             <- '{'  CaseStatement*  '}'
 
-CaseStatement           <- "case"  ExprList  ':'  StatementsList*  ("break" Spacing* SimpleStatementEnd)?
+CaseStatement           <- CASE_TK  ExprList  ':'  StatementsList*  (BREAK_TK SimpleStatementEnd)?
 
 
-TryStatement            <- "try"  '{'  StatementsList*  '}'  TryStatementExcept  TryStatementOtherwise?  TryStatementFinally?
-                         / "try"  '{'  StatementsList*  '}'  TryStatementFinally
+TryStatement            <- TRY_TK  '{'  StatementsList*  '}'  TryStatementExcept  TryStatementOtherwise?  TryStatementFinally?
+                         / TRY_TK  '{'  StatementsList*  '}'  TryStatementFinally
 
 TryStatementExcept      <- TryExcept  '{'  StatementsList*  '}'
 
-TryExcept               <- "except"  '('  Expression  ("as"  Identifier)?  (',' Expression ("as" Identifier)?)*  ')'
-                         / "except"  "all"  ("as"  Identifier)?
+TryExcept               <- EXCEPT_TK  '('  Expression  (AS_TK  Identifier)?  (',' Expression (AS_TK Identifier)?)*  ')'
+                         / EXCEPT_TK  ALL_TK  (AS_TK  Identifier)?
 
-TryStatementOtherwise   <- "otherwise"  ('('  "Exception"  "as"  Identifier  ')')*  '{'  StatementsList*  '}'
+TryStatementOtherwise   <- OTHERWISE_TK  ('('  EXCEPTION_TK  AS_TK  Identifier  ')')*  '{'  StatementsList*  '}'
 
-TryStatementFinally     <- "finally"  '{'  StatementsList*  '}'
+TryStatementFinally     <- FINALLY_TK  '{'  StatementsList*  '}'
 
                              
-WhileStatement          <- "while"  '('  Condition  ')'  StatementsList  ("otherwise" StatementsList)?
+WhileStatement          <- WHILE_TK  '('  Condition  ')'  StatementsList  (OTHERWISE_TK StatementsList)?
 
 
-WithStatement           <- "with"  '('  WithItem  (',' WithItem)*  ')'  StatementsList
+WithStatement           <- WITH_TK  '('  WithItem  (',' WithItem)*  ')'  StatementsList
 
-WithItem                <- Expression  ("as" TypedTarget)                       ## NOTE initally was `Expression  ("as"  SimpleType?  Target)`
+WithItem                <- Expression  (AS_TK TypedTarget)
 
 
 Target                  <- DottedName  SubscriptionOrSlicing*
@@ -620,22 +576,23 @@ TypedTarget             <- SimpleType  Target
 TargetList              <- TypedTarget  (',' TypedTarget)*
 
 
-CastOp                  <- "cast"  Identifier
+CastOp                  <- CAST_TK  Identifier
 
 
-EnumDeclaration         <- "enum"  Identifier
+EnumDeclaration         <- ENUM_TK  Identifier
 
 EnumDefinition          <-  EnumDeclaration '{'  EnumItem  (',' EnumItem)*  '}'
 
 EnumExpression          <- IntegerNumber
                          / Identifier  '+'  IntegerNumber               ## NOTE identifer must be a known enum value identifier
+                         / IntegerNumber  '+'  Identifier               ## NOTE identifer must be a known enum value identifier
 
 EnumItem                <- Identifier  '+='  IntegerNumber              ## NOTE adds the integer number to the previous enum value
                          / Identifier  '='  EnumExpression
                          / Identifier
 
 
-TypeAlias               <- TYPE_TK  Type  "as"  Identifier  (','  Type  "as"  Identifier)*
+TypeAlias               <- TYPE_TK  Type  AS_TK  Identifier  (','  Type  AS_TK  Identifier)*
 
 
 
@@ -669,14 +626,143 @@ TemplateArgs        <- '<'  ( Condition  (',' Condition)* )?  '>'
 TemplateDefs        <- '<'  TemplateSubDef  (',' TempalteSubDef)*  '>'
 
 TempalteSubDef      <- Identifier
-                     / ConstQualifier  ScalarTypeOrDottedName  Identifier  ('=' Expression)?
+                     / CONST_TK  ScalarTypeOrDottedName  Identifier  ('=' Expression)?
+
+
+
+#####   TOKENS   ################################################
+
+
+ABSTRACT_TK         <- "abstract"           Spacing+
+
+ALL_TK              <- "all"                Spacing*
+
+AND_TK              <- "and"                Spacing*
+
+ARRAY_TK            <- "array"              Spacing*
+
+AS_TK               <- "as"                 Spacing+
+
+ASSERT_TK           <- "assert"             Spacing+
+
+BREAK_TK            <- "break"              Spacing*
+
+BUT_TK              <- "but"                Spacing+
+
+CASE_TK             <- "case"               Spacing+
+
+CAST_TK             <- "cast"               Spacing+
+
+CLASS_TK            <- "class"              Spacing+
+
+CONST_TK            <- "const"              Spacing+
+
+CONTINUE_TK         <- "continue"           Spacing*
+
+DELETE_TK           <- "del"                Spacing+
+
+ELSEIF_TK           <- ("elseif" / "elsif" / "elif")  Spacing*
+
+ELSE_TK             <- "else"               Spacing*
+
+EMBED_TK            <- "embed"              Spacing*
+
+ENSURE_TK           <- "ensure"             Spacing+
+
+ENUM_TK             <- "enum"               Spacing*
+
+EXCEPT_TK           <- "except"             Spacing*
+
+EXCEPTION_TK        <- "exception"          Spacing*
+
+EXCLUDE_TK          <- "exclude"            Spacing+
+   
+EXIT_TK             <- "exit"               Spacing*
+
+FINAL_TK            <- "final"              Spacing+
+
+FINALLY_TK          <- "finally"            Spacing*
+
+FOR_TK              <- "for"                Spacing*
+
+FOREVER_TK          <- "forever"            Spacing*
+
+FORWARD_TK          <- ("forward" / "fwd")  Spacing+                    ## CHK do we keep this alternative?
+
+FROM_TK             <- "from"               Spacing+
+
+HIDDEN_TK           <- "hidden"             Spacing+                   ## NOTE hidden could be removed and local retained in final specs
+
+IF_TK               <- "if"                 Spacing*
+
+IMPLEMENTS_TK       <- "implements"         Spacing+
+
+IMPORT_TK           <- "import"             Spacing+
+
+IN_TK               <- "in"                 Spacing*
+
+IS_TK               <- "is"                 Spacing+
+
+LAMBDA_TK           <- "lambda"             Spacing+
+
+LIST_TK             <- "list"               Spacing*
+
+LOCAL_TK            <- "local"              Spacing+                   ## NOTE hidden could be removed and local retained in final specs
+
+MAP_TK              <- "map"                Spacing*
+
+NOP_TK              <- ("nop" / "pass")     Spacing*
+
+NOT_TK              <- "not"                Spacing*
+
+OPERATOR_TK         <- "operator"           Spacing*
+
+OR_TK               <- "or"                 Spacing*
+
+OTHERWISE_TK        <- "otherwise"          Spacing*
+
+PRIVATE_TK          <- "private"            Spacing*
+
+PROPERTY_TK         <- "property"           Spacing+
+
+PROTECTED_TK        <- "protected"          Spacing*
+
+PUBLIC_TK           <- "public"             Spacing*
+
+RAISE_TK            <- "raise"              Spacing+
+
+REPEAT_TK           <- "repeat"             Spacing*
+
+REQUIRE_TK          <- "require"            Spacing+
+
+RETURN_TK           <- ("return" / "ret")   Spacing*                    ## CHK do we keep this alternative?
+
+SET_TK              <- "set"                Spacing*
+
+STATIC_TK           <- "static"             Spacing+
+
+SWITCH_TK           <- "switch"             Spacing*
+
+TRY_TK              <- "try"                Spacing*
+
+TYPE_TK             <- "type"               Spacing+
+
+UNNAMED_TK          <- "unnamed"            Spacing*
+
+UNTIL_TK            <- "until"              Spacing*
+
+VOLATILE_TK         <- "volatile"           Spacing+
+
+WHILE_TK            <- "while"              Spacing*
+
+WITH_TK             <- "with"                Spacing*
 
 
 
 #####   TYPES   #################################################
 
-Type                        <- ConstQualifier? SimpleType
-                             / ConstQualifier? TemplatedType
+Type                        <- CONST_TK? SimpleType
+                             / CONST_TK? TemplatedType
                              / None
 
 SimpleType                  <-  AutoType
@@ -695,7 +781,7 @@ NotConstType                <- SimpleType
 TemplatedType               <- DottedName  ('<' TypesAndExprsList '>')?  FixedDimensions?
 
 
-AutoType                    <- '?' ("in" '(' TypesList ')')?
+AutoType                    <- '?' (IN_TK '(' TypesList ')')?
 
 
 ContainerType               <- ArrayType                        ## ADD VectorType
@@ -704,7 +790,7 @@ ContainerType               <- ArrayType                        ## ADD VectorTyp
                              / SetType
 
 
-EnumType                    <- "enum"
+EnumType                    <- ENUM_TK
 
 
 FileType                    <-  "file" ContainedType
@@ -729,6 +815,7 @@ ScalarType                  <- "bool"
                              / "char"
                              / "float32"
                              / "float64"
+                             / "float128"
                              / "int8"
                              / "int16"
                              / "int64"
@@ -747,40 +834,25 @@ StringType                  <- "str16"
                              / "str"
 
 
-TYPE_TK                     <- "type"
-
-
 TypesAndExprsList           <- (Expression / Type) (',' (Expression / Type))*
 
 
 TypesList                   <- Type (',' Type)*
 
 
-ArrayType                   <- "array" ContainedType
+ArrayType                   <- ARRAY_TK ContainedType
 
-ListType                    <- "list" ContainedType?
+ListType                    <- LIST_TK ContainedType?
 
-MapType                     <- "map" MapContainedTypes
+MapType                     <- MAP_TK MapContainedTypes
 
-SetType                     <- "set" ContainedType?
+SetType                     <- SET_TK ContainedType?
 
 
 ContainedType               <- '<' Type '>'
 
 MapContainedType            <- '<' Type (',' Type)? '>'
 
-
-AbstractQualifier           <- "abstract"
-
-ConstQualifier              <- "const"
-
-FinalQualifier              <- "final"
-
-PropertyQualifier           <- "property"
-
-StaticQualifier             <- "static"
-
-VolatileQualifier           <- "volatile"
 
 
 
