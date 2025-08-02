@@ -681,6 +681,8 @@ EXCLUDE_TK          <- "exclude"            Spacing+
    
 EXIT_TK             <- "exit"               Spacing*
 
+FILE_TK             <- "file"               Spacing+
+
 FINAL_TK            <- "final"              Spacing+
 
 FINALLY_TK          <- "finally"            Spacing*
@@ -713,6 +715,8 @@ LOCAL_TK            <- "local"              Spacing+                   ## NOTE h
 
 MAP_TK              <- "map"                Spacing*
 
+NONE_TK             <- ("none" / "None" / "NONE")   Spacing*
+
 NOP_TK              <- ("nop" / "pass")     Spacing*
 
 NOT_TK              <- "not"                Spacing*
@@ -722,6 +726,8 @@ OPERATOR_TK         <- "operator"           Spacing*
 OR_TK               <- "or"                 Spacing*
 
 OTHERWISE_TK        <- "otherwise"          Spacing*
+
+PRINT_TK            <- "print"              Spacing*
 
 PRIVATE_TK          <- "private"            Spacing*
 
@@ -763,42 +769,40 @@ WITH_TK             <- "with"                Spacing*
 
 #####   TYPES   #################################################
 
-Type                        <- CONST_TK? SimpleType
-                             / CONST_TK? TemplatedType
-                             / None
+Type                        <- CONST_TK? TemplatedType
+                             / CONST_TK? SimpleType
+                             / NONE_TK
 
 SimpleType                  <-  AutoType
-                             / '(' TypesList ')'
+                             / '('  Spacing*  TypesList ')' Spacing*
                              / ContainerType
-                             / EnumType
+                             / ENUM_TK
                              / FileType
-                             / ScalarType FixedDimensions?
+                             / ScalarType  FixedDimensions?
                            
 
-NotConstType                <- SimpleType
-                             / TemplatedType
-                             / None
+NotConstType                <- TemplatedType
+                             / SimpleType
+                             / NONE_TK
 
 
-TemplatedType               <- DottedName  ('<' TypesAndExprsList '>')?  FixedDimensions?
+TemplatedType               <- DottedName  ('<' Spacing* TypesAndExprsList Spacing* '>')?  FixedDimensions?
 
 
-AutoType                    <- '?' (IN_TK '(' TypesList ')')?
+AutoType                    <- '?'  Spacing+  (IN_TK Spacing* '(' Spacing* TypesList ')')?  Spacing*
 
 
-ContainerType               <- ArrayType                        ## ADD VectorType
+ContainerType               <- ArrayType
                              / ListType
                              / MapType
                              / SetType
+                             / VectorType                       ## ADD to be defined!  ## NOTE may be suppressed, to be decided
 
 
-EnumType                    <- ENUM_TK
+FileType                    <-  FILE_TK  ContainedType
 
 
-FileType                    <-  "file" ContainedType
-
-
-FixedDimensions             <- ('[' (IntegerNumber / DottedName) ']')+
+FixedDimensions             <- ( '[' Spacing* (IntegerNumber / DottedName) Spacing* ']' Spacing* )+
 
 
 GenericContainerType        <- "_container_"
@@ -830,30 +834,31 @@ ScalarType                  <- "bool"
                              / "uint128"
                              / "bigint"
                              / StringType
-                             / GenericScalarType
+
 
 StringType                  <- "str16"
                              / "str"
 
 
-TypesAndExprsList           <- (Expression / Type) (',' (Expression / Type))*
+TypesAndExprsList           <- (Expression / Type)  Spacing*  (',' Spacing* (Expression / Type) Spacing*)*
 
 
-TypesList                   <- Type (',' Type)*
+TypesList                   <- Type  Spacing*  (',' Spacing* Type Spacing*)*
 
 
-ArrayType                   <- ARRAY_TK ContainedType
+ArrayType                   <- ARRAY_TK  ContainedType
 
-ListType                    <- LIST_TK ContainedType?
+ListType                    <- LIST_TK  ContainedType?
 
-MapType                     <- MAP_TK MapContainedTypes
+MapType                     <- MAP_TK  MapContainedTypes
 
-SetType                     <- SET_TK ContainedType?
+SetType                     <- SET_TK  ContainedType?
 
 
-ContainedType               <- '<' Type '>'
+ContainedType               <- '<'  Spacing*  Type  Spacing*  '>'  Spacing*
 
-MapContainedType            <- '<' Type (',' Type)? '>'
+
+MapContainedType            <- '<'  Spacing*  Type  Spacing*  ','  Spacing*  Type  Spacing*  '>'
 
 
 
