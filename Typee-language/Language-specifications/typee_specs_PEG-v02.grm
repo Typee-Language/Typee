@@ -298,6 +298,40 @@ OperatorSubdef          <- OperatorTemplatedDef  FunctionParamsDeclaration
 OperatorTemplatedDef    <- Operator TemplatedDef?
                          / OperatorAngle  SpacedTemplateArgs?
                          
+
+
+#####   SCALARS   ####################################################
+
+scalar                  <- FloatNumber    Spacing*
+                         / IntegerNumber  Spacing*
+
+
+FloatNumber             <- [19]  DecimalPart?  FractionPart  ExponentPart?
+
+
+IntegerNumber           <- '0'  OctalNumber
+                         / '0'  ('b' / 'B')  BinaryNumber
+                         / '0'  ('x' / 'X')  HexadecimalNumber
+                         / [19]  DecimalPart
+
+
+BinaryNumber            <- [01]  ('_'?  [01])*
+
+
+DecimalPart             <- [09]  ('_'?  [09])*
+
+ExponentPart            <- ('e' / 'E')  ('+' / '-')?   DecimalPart
+
+FractionPart            <- '.'  DecimalPart?
+
+
+HexadecimalNumber       <- HexDigit  ('_'?  HexDigit)*
+
+HexDigit                <- [09AFaf]
+
+
+OctalNumber             <- [07]  ('_'?  [07])*
+
                          
 
 #####   STATEMENTS   #################################################
