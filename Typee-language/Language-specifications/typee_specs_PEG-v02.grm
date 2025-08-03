@@ -92,67 +92,6 @@ SubscriptionOrSlicing   <- '['  SliceForm  (']' / ')')
 
 
 
-/*****   ATOMS   ****************************************************/
-<slice form>                ::= ':' [<expression>]  [ ':' [<expression>] ]
-
-<subscription or slicing>   ::= '[' <expression>
-                                    ( <expr list'> ']'    |
-                                      <if comprehension>  |
-                                      <slice form> ( ']' | '\)' ) )
-
-<type casting>              ::= '(' <expression> ')' 
-
-
-
-
-<atom element>              ::= <atom>  |                               ## NOTE now named AtomItem
-                                <dotted name> [<atom element'>]  |
-                                [ <const qualifier> ] <scalar type'>
-                                    <type casting>
-                            
-<atom element'>             ::= <incr or decr>  |
-                                <for comprehension>  |
-                                '??' <expression>  ( '??' <expression> )*  | 
-                                ':=' <expression>  |
-                                <atom element''>
-
-<atom element''>            ::= [ ( <function call> <atom element'''>   |
-                                    <subscription or slicing>
-                                        <atom element'''> )*  |
-                                  <is instance of> ]
-
-<atom element'''>           ::= ( [ '.' <identifier> ] <atom element''> )*
-
-<atom>                      ::= (<decr>|<incr>) <dotted name> [<decr>|<incr>] |
-                                <enclosure>  |  <reference>  |  <scalar>      |
-                                <string>     |  <boolean>
-
-<boolean>                   ::= <TRUE>  |  <FALSE>
-
-<bracket form>              ::= '[' <expression> <list or map form> ']' 
-
-<decr>                      ::= '--' 
-
-<enclosure>                 ::= <bracket form>  |  <parenthesis form>
-
-<incr>                      ::= '++' 
-
-<is instance of>            ::= '->' <dotted name>
-
-<list or comprehension>     ::= [ <expr list'>  |  <for comprehension> ]
-
-<list or map form>          ::= <list form>  |  <map form>
-
-<list form>                 ::= '[' <expression> <list or comprehension> ']' 
-
-<parenthesis form>          ::= '(' <expr list> ')' 
-
-<reference>                 ::= '@' <dotted name>
-
-
-/********************************/
-
-
 #####   CLASSES   ####################################################
 
 ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  DefinitionBlock
@@ -291,7 +230,7 @@ FunctionCall                <- TemplateArgs*  '('  FunctionCallArgs?  ')'  Spaci
 
 FunctionCallArgs            <- Expression  FunctionCallArgsList*
 
-FunctionCallArgsList        <- (',' Expression)*  (','  Ellipsis  Identifier)?
+FunctionCallArgsList        <- (',' Expression)*  (','  ELLIPSIS_TK  Identifier)?
                              / ForComprehension
 
 
@@ -306,11 +245,15 @@ UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  Defini
 
 
 
-#####   MISC   #######################################################
+#####   MISCELANEOUS   ###############################################
 
-COMMA                   <- ';'
+AlphaChar               <- [A-Za-z]
 
-ENDOFLINE               <- "\r\n"
+
+AlphaNumChar            <- [0-9A-Za-z]
+
+
+EndOfLine               <- "\r\n"
                          / '\n'             ## NOTE 0x0a
                          / '\r'             ## NOTE 0x0d
                          / '\v'             ## NOTE 0x0b
@@ -325,7 +268,7 @@ Identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*
 
 Spacing                 <- ' '
                          / '\t'
-                         / ENDOFLINE
+                         / EndOfLine
 
 
 
@@ -428,19 +371,19 @@ Scalar                  <- FloatNumber    Spacing*
                          / IntegerNumber  Spacing*
 
 
-FloatNumber             <- [19]  DecimalPart?  FractionPart  ExponentPart?
+FloatNumber             <- [1-9]  DecimalPart?  FractionPart  ExponentPart?
 
 
 IntegerNumber           <- '0'  OctalNumber
                          / '0'  ('b' / 'B')  BinaryNumber
                          / '0'  ('x' / 'X')  HexadecimalNumber
-                         / [19]  DecimalPart
+                         / [1-9]  DecimalPart
 
 
 BinaryNumber            <- [01]  ('_'?  [01])*
 
 
-DecimalPart             <- [09]  ('_'?  [09])*
+DecimalPart             <- [0-9]  ('_'?  [0-9])*
 
 ExponentPart            <- ('e' / 'E')  ('+' / '-')?   DecimalPart
 
@@ -452,7 +395,7 @@ HexadecimalNumber       <- HexDigit  ('_'?  HexDigit)*
 HexDigit                <- [09AFaf]
 
 
-OctalNumber             <- [07]  ('_'?  [07])*
+OctalNumber             <- [0-7]  ('_'?  [0-7])*
 
                          
 
@@ -480,7 +423,7 @@ SimpleStatement         <- AssertStatement           SimpleStatementEnd
                          / RequireStatement          SimpleStatementEnd
 
 
-SimpleStatementEnd      <- COMMA
+SimpleStatementEnd      <- COMMA_TK
 
 
 CompoundStatement       <- DefinitionStatement                          ## NOTE may not be allowed everywhere
@@ -501,7 +444,7 @@ AssertStatement         <- ASSERT_TK  Condition  (',' String)?  Spacing*
 AssignmentStatement     <- AssignOp  ExprList
 
 
-Comment                 <- "//"  (!ENDOFLINE .)*  Spacing*
+Comment                 <- "//"  (!EndOfLine .)*  Spacing*
                          / MultiLinesComment  Spacing*
 
 MultiLinesComment       <- "/*"  (MultiLinesComment  /  !"*/" .)*  "*/"
@@ -681,7 +624,7 @@ Language                <- "android"  LanguageVersion?                  ## NOTE 
                          / "rust"
                          / "typescript"
 
-LanguageVersion         <- Spacing+  IntegerNumber  ('.'  [09]+)*
+LanguageVersion         <- Spacing+  IntegerNumber  ('.'  [0-9]+)*
 
 
 ForStatement            <- FOR_TK  '('  TargetList  IN_TK  ExprList  ')'  StatementsList  (OTHERWISE_TK  StatementsList)?
@@ -756,7 +699,7 @@ TypeAlias               <- TYPE_TK  Type  Spacing+  AS_TK  Identifier  Spacing* 
 
 #####   STRINGS   ####################################################
 
-String              <- StringLiteral+  ('.'  Identifier  FunctionCall)*
+String              <- StringLiteral   ('.'  Identifier  FunctionCall)*
                      / StringInstance  ('.'  Identifier  FunctionCall)*
 
 
@@ -765,8 +708,8 @@ StringInstance      <- DottedName
                      / StringType  '('  ')'  ('.'  Identifier  FunctionCall)*
                      
                      
-StringLiteral       <- "'"  (AnyEscapedChar / AnyStringQuoteChar)* "'"
-                     / '"'  (AnyEscapedChar / AnyStringQuoteChar)* '"'
+StringLiteral       <- "'"  (!"'" .)* "'"
+                     / '"'  (!'"' .)* '"'
 
 
 
@@ -813,11 +756,15 @@ CAST_TK             <- "cast"               Spacing+
 
 CLASS_TK            <- "class"              Spacing+
 
+COMMA_TK            <- ';'                  Spacing*
+
 CONST_TK            <- "const"              Spacing+
 
 CONTINUE_TK         <- "continue"           Spacing*
 
 DELETE_TK           <- "del"                Spacing+
+
+ELLIPSIS_TK         <- "..."                Spacing*
 
 ELSEIF_TK           <- ("elseif" / "elsif" / "elif")  Spacing*
 
@@ -872,6 +819,8 @@ LIST_TK             <- "list"               Spacing*
 LOCAL_TK            <- "local"              Spacing+                   ## NOTE hidden could be removed and local retained in final specs
 
 MAP_TK              <- "map"                Spacing*
+
+ME_TK               <- "me"                 Spacing*
 
 NONE_TK             <- ("none" / "None" / "NONE")   Spacing*
 
@@ -1037,7 +986,8 @@ MapContainedType            <- '<'  Spacing*  Type  Spacing*  ','  Spacing*  Typ
 ## OK -- ADD missing STRINGS rules - see LL1-v10
 ## OK -- ADD missing TEMPLATES rules - see LL1-v10  ## ADD missing template specialization
 ## ADD parallel programming (NEW)
-## ADD missing ATOMS rules - see LL1-v10  ## CHK correction of LL1 rules
+## OK -- ADD missing ATOMS rules - see LL1-v10  ## CHK correction of LL1 rules
 ## ADD missing MISC rules - see LL1-v10  ## CHK correction of LL1 rules
-## ADD missing SCALARS rules - see LL1-v10  ## CHK correction of LL1 rules
+## OK -- ADD missing SCALARS rules - see LL1-v10  ## CHK correction of LL1 rules
 ## ADD namespace rules (NEW)
+## ADD printing rules (NEW)
