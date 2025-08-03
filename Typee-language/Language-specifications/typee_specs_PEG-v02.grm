@@ -32,6 +32,127 @@ ENDMARKER  <- !.
 
 
 
+#####   ATOMS   ######################################################
+
+AtomItem                <- Atom
+                         / DottedName  AtomItem1?
+                         / '-'  DottedName  AtomItem2*
+                         / CONST_TK?  ScalarType  TypeCasting           ## NOTE TO BE CHECKED!!!  Is type casting ok here?!?
+
+AtomItem1               <- OpDecr
+                         / OpIncr
+                         / ForComprehension
+                         / ("??"  Expression)+
+                         / IsInstanceOf                                 ## NOTE TO BE CHECKED!!!  Is it ok here?!? Maybe better placed in conditions
+                         / AtomItem2*
+
+AtomItem2               <- FunctionCall  (('.' Identifier)?  AtomItem2)*
+                         / SubscriptionOrSlicing  (('.' Identifier)?  AtomItem2)*
+
+
+Atom                    <- (OpDecr / OpIncr)  DottedName  (OpDecr / OpIncr)?
+                         / '-'?  Scalar
+                         / AtomEnclosure
+                         / Reference
+                         / String
+                         / FALSE_TK
+                         / TRUE_TK
+
+
+AtomEnclosure           <- BracketForm
+                         / ParenthesisForm
+
+
+BracketForm             <- '['  Expression  (ListForm / MapForm)  ']'
+
+
+IsInstanceOf            <- "->"  Spacing*  DottedName                   ## NOTE dotted name must be the name of a class
+                        <- "isinstanceof"  Spacing+  DottedName
+
+
+ListForm                <- '['  Expression  ( (',' Expression)+ / ForComprehension )?  ']'
+
+
+MapForm                 <- ':'  Expression  MapListOrComprehension
+
+
+ParenthesisForm         <- '('  ExprList  ')'
+
+
+Reference               <- '@'  DottedName                              ## NOTE which one would better fit?
+                         / '&'  DottedName
+
+
+SliceForm               <- Expression  ':'  Expression?  (':'  Expression?)?
+
+
+SubscriptionOrSlicing   <- '['  SliceForm  (']' / ')')
+                         / '['  Expression  ExprList*  ']'              ## NOTE do we allow expr-list here?
+                         / '['  Expression  IfComprehension  ']'
+
+
+
+/*****   ATOMS   ****************************************************/
+<slice form>                ::= ':' [<expression>]  [ ':' [<expression>] ]
+
+<subscription or slicing>   ::= '[' <expression>
+                                    ( <expr list'> ']'    |
+                                      <if comprehension>  |
+                                      <slice form> ( ']' | '\)' ) )
+
+<type casting>              ::= '(' <expression> ')' 
+
+
+
+
+<atom element>              ::= <atom>  |                               ## NOTE now named AtomItem
+                                <dotted name> [<atom element'>]  |
+                                [ <const qualifier> ] <scalar type'>
+                                    <type casting>
+                            
+<atom element'>             ::= <incr or decr>  |
+                                <for comprehension>  |
+                                '??' <expression>  ( '??' <expression> )*  | 
+                                ':=' <expression>  |
+                                <atom element''>
+
+<atom element''>            ::= [ ( <function call> <atom element'''>   |
+                                    <subscription or slicing>
+                                        <atom element'''> )*  |
+                                  <is instance of> ]
+
+<atom element'''>           ::= ( [ '.' <identifier> ] <atom element''> )*
+
+<atom>                      ::= (<decr>|<incr>) <dotted name> [<decr>|<incr>] |
+                                <enclosure>  |  <reference>  |  <scalar>      |
+                                <string>     |  <boolean>
+
+<boolean>                   ::= <TRUE>  |  <FALSE>
+
+<bracket form>              ::= '[' <expression> <list or map form> ']' 
+
+<decr>                      ::= '--' 
+
+<enclosure>                 ::= <bracket form>  |  <parenthesis form>
+
+<incr>                      ::= '++' 
+
+<is instance of>            ::= '->' <dotted name>
+
+<list or comprehension>     ::= [ <expr list'>  |  <for comprehension> ]
+
+<list or map form>          ::= <list form>  |  <map form>
+
+<list form>                 ::= '[' <expression> <list or comprehension> ']' 
+
+<parenthesis form>          ::= '(' <expr list> ')' 
+
+<reference>                 ::= '@' <dotted name>
+
+
+/********************************/
+
+
 #####   CLASSES   ####################################################
 
 ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  DefinitionBlock
@@ -115,15 +236,12 @@ BitXorExpr              <- BitAndExpr  ('^'  TemplateArgs?  BitAndExpr)*    ## N
 ExprList                <- Expression  (',' Expression)*
 
 
-Factor                  <- AtomElement  (OpPower TemplateArgs?  UnaryExpr)* ## NOTE for a first implementation Templated operators should be abandonned
+Factor                  <- AtomItem  (OpPower TemplateArgs?  UnaryExpr)*    ## NOTE for a first implementation Templated operators might be abandonned
                                                                             ## NOTE could AtomElement be preceeded by a unary operator?
 FactorsSeq              <- (OpMul  TemplateArgs?  Factor)*                  ## NOTE for a first implementation Templated operators should be abandonned
 
 
 FileExpression          <- DottedName  FunctionCall*                        ## NOTE DottedName is either the identifier of a file or the identifier of a method of a file (in which case a function call is mandatory)
-
-
-MapForm                 <- ':'  Expression  MapListOrComprehension
 
 MapItem                 <- Expression  ':'  Expression
 
@@ -215,7 +333,11 @@ Spacing                 <- ' '
 
 OpAdd                   <- '+'
                          / '-'
-                         
+
+OpDecr                  <- "--"
+
+OpIncr                  <- "++"
+
 OpMul                   <- '*'
                          / '/'
                          / '%'
@@ -234,8 +356,8 @@ OpUser                  <- "@@"
 
 Operator                <- AssignOp
                          / CastOp
-                         / "++"
-                         / "--"
+                         / OpDecr
+                         / OpIncr
                          / OpAdd
                          / OpPower
                          / OpMul
@@ -302,7 +424,7 @@ OperatorTemplatedDef    <- Operator TemplatedDef?
 
 #####   SCALARS   ####################################################
 
-scalar                  <- FloatNumber    Spacing*
+Scalar                  <- FloatNumber    Spacing*
                          / IntegerNumber  Spacing*
 
 
@@ -715,6 +837,8 @@ EXCLUDE_TK          <- "exclude"            Spacing+
    
 EXIT_TK             <- "exit"               Spacing*
 
+FALSE_TK            <- ("false" / "False")  Spacing*
+
 FILE_TK             <- "file"               Spacing+
 
 FINAL_TK            <- "final"              Spacing+
@@ -785,6 +909,8 @@ STATIC_TK           <- "static"             Spacing+
 
 SWITCH_TK           <- "switch"             Spacing*
 
+TRUE_TK             <- ("true" / "True")    Spacing*
+
 TRY_TK              <- "try"                Spacing*
 
 TYPE_TK             <- "type"               Spacing+
@@ -806,6 +932,7 @@ WITH_TK             <- "with"                Spacing*
 Type                        <- CONST_TK? TemplatedType
                              / CONST_TK? SimpleType
                              / NONE_TK
+
 
 SimpleType                  <-  AutoType
                              / '('  Spacing*  TypesList ')' Spacing*
@@ -873,6 +1000,10 @@ ScalarType                  <- "bool"
 StringType                  <- "str16"
                              / "str"
 
+
+TypeCasting                 <- '('  ScalarType  ')'  Spacing*
+                             / '('  DottedName  ')'  Spacing*       ## NOTE dotted name must be an alias to a scalar type
+                             
 
 TypesAndExprsList           <- (Expression / Type)  Spacing*  (',' Spacing* (Expression / Type) Spacing*)*
 
