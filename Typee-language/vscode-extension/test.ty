@@ -67,3 +67,15 @@ if (x > 0 and y < 10 or not flag) {
 
 // Constants
 const int MAX_SIZE = 100;
+
+
+record Person {
+    str name;
+    int age;
+};
+
+Person p = {"Alice", 30};
+
+print(p.name, p.age);
+
+

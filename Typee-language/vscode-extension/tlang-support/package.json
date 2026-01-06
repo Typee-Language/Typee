@@ -13,7 +13,7 @@
   "contributes": {
     "languages": [
       {
-        "id": "Tlanguage",
+        "id": "tlang",
         "aliases": ["T Language", "Typee Language"],
         "extensions": [".t", ".ty", ".tl"],
         "configuration": "./language-configuration.json"

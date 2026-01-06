@@ -77,7 +77,7 @@
       "patterns": [
         {
           "name": "storage.type.builtin.tlang",
-          "match": "\\b(bool|char|float|int|uint|str|none)\\b"
+          "match": "\\b(bool|char|float|int|uint|str|none|record)\\b"
         },
         {
           "name": "storage.modifier.tlang",
@@ -112,7 +112,7 @@
           "match": "\\b0[bB][01_]+\\b"
         },
         {
-          "name": "constant.numeric.octal.tmlang",
+          "name": "constant.numeric.octal.tlang",
           "match": "\\b0[0-7_]+\\b"
         },
         {
