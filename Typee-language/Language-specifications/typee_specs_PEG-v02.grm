@@ -522,7 +522,7 @@ Definition              <- ABSTRACT_TK  MethodDefinition
                          / VolatileDefinition
 
 
-DefinitionBlock         <-  '{'  StatementsList*  '}'
+DefinitionBlock         <-  '{'  StatementsList*  '}'                           ## NOTE shouldn't it be '{' Definition* '}' instead?
 
 
 MethodDefinition        <- FunctionDeclaration  CONST_TK?  DefinitionBlock        ## NOTE ending const qualifier is only authorized for class methods
@@ -733,7 +733,6 @@ TempalteSubDef      <- Identifier
 
 #####   TOKENS   ################################################
 
-
 ABSTRACT_TK         <- "abstract"           Spacing+
 
 ALL_TK              <- "all"                Spacing+
@@ -858,6 +857,8 @@ STATIC_TK           <- "static"             Spacing+
 
 SWITCH_TK           <- "switch"             Spacing*
 
+TODO_TK             <- "todo"               Spacing*
+
 TRUE_TK             <- ("true" / "True")    Spacing*
 
 TRY_TK              <- "try"                Spacing*
@@ -870,9 +871,11 @@ UNTIL_TK            <- "until"              Spacing*
 
 VOLATILE_TK         <- "volatile"           Spacing+
 
+WHEN_TK             <- "when"               Spacing*
+
 WHILE_TK            <- "while"              Spacing*
 
-WITH_TK             <- "with"                Spacing*
+WITH_TK             <- "with"               Spacing*
 
 
 

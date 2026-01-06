@@ -37,7 +37,7 @@ from Thread.utils.utils import sec_to_ms as ut_sec_to_ms;
 
 //=============================================================================
 // targeted languages specifics
-embed py {{
+embed python {{
 import threading
 import time
 }}
@@ -51,7 +51,7 @@ embed cpp {{
 #include <std::thread>
 }}
 
-embed cs {{
+embed csharp {{
 using System;
 using System.Threading;
 }}
@@ -67,7 +67,7 @@ Notice: no priorities are managed for threads.  They  all
 get the same, medium, priority in Typee.
 */
 
-embed py   {{ : threading.Thread }}
+embed python   {{ : threading.Thread }}
 embed java {{ extends Thread }}
 
 {
@@ -93,7 +93,7 @@ embed java {{ extends Thread }}
     */
     embed cpp {{ : _c_name(""), _c_thread(NULL) }}
     {
-      embed py {{
+      embed python {{
         super().__init__()
       }}
       
@@ -102,7 +102,7 @@ embed java {{ extends Thread }}
         setDaemon( false );
       }}
       
-      embed cs {{
+      embed csharp {{
         _cs_name = "";
         _cs_thread = null ;
       }}
@@ -114,9 +114,9 @@ embed java {{ extends Thread }}
     Constructor with defined name for this thread.
     */
     embed cpp {{ : _c_name(name), _c_thread(NULL) }}
-    embed cs  {{ : _cs_name("unnamed-thread") }}
+    embed csharp  {{ : _cs_name("unnamed-thread") }}
     {
-      embed py {{
+      embed python {{
         super().__init__( name=name )
       }}
       
@@ -125,14 +125,14 @@ embed java {{ extends Thread }}
         setDaemon( false );
       }}
       
-      embed cs {{
+      embed csharp {{
         _cs_name = name;
         _cs_thread = null ;
       }}
     }
   
     //-------------------------------------------------------------------------
-    none destroy ()  exclude py, java
+    none destroy ()  exclude python, java
     /**
     Destructor for this base class.
     Caution:
@@ -148,7 +148,7 @@ embed java {{ extends Thread }}
         }
       }} exit
       
-      embed cs {{
+      embed csharp {{
         if ( _cs_thread != null )
         {
             _threads_mutex.lock();
@@ -166,7 +166,7 @@ embed java {{ extends Thread }}
     Returns none if not available on targeted platform.
     */
     {
-      embed py {{
+      embed python {{
         return threading.current_thread()
       }} exit
       
@@ -174,7 +174,7 @@ embed java {{ extends Thread }}
         return this.currentThread();
       }} exit
       
-      embed cs {{
+      embed csharp {{
         return Thread.CurrentThread;
       }}
       
@@ -188,7 +188,7 @@ embed java {{ extends Thread }}
     Returns 0xffff_ffff if not available on targeted platform.
     */
     {
-      embed py {{
+      embed python {{
         return threading.get_ident()
       }} exit
       
@@ -206,7 +206,7 @@ embed java {{ extends Thread }}
     Returns 0xffff_ffff if not available on targeted platform.
     */
     {
-      embed py {{
+      embed python {{
         return self.ident
       }}
       
@@ -218,7 +218,7 @@ embed java {{ extends Thread }}
         return this->_c_thread->get_id();
       }}
       
-      embed cs {{
+      embed csharp {{
         return this.ManagedThreadId;
       }}
 
@@ -232,7 +232,7 @@ embed java {{ extends Thread }}
     some platforms (e.g. C++).
     */
     {
-      embed py {{
+      embed python {{
         return threading.main_thread()
       }} exit
       
@@ -251,7 +251,7 @@ embed java {{ extends Thread }}
     Returns 0 if this information is not available (e.g. Java, C++).
     */
     {
-      embed py {{
+      embed python {{
         return threading.stack_size()
       }} exit
       
@@ -264,7 +264,7 @@ embed java {{ extends Thread }}
     Returns the number of currently active threads.
     */
     {
-      embed py {{
+      embed python {{
         return threading.active_count()
       }} exit
       
@@ -286,7 +286,7 @@ embed java {{ extends Thread }}
     Returns 'none' if this information is not available (e.g. C++).
     */
     {
-      embed py {{
+      embed python {{
         return threading.enumerate()
       }} exit
       
@@ -302,7 +302,7 @@ embed java {{ extends Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none interrupt() exclude py, java, cpp
+    none interrupt() exclude python, java, cpp
     /**
     Interrupts this thread.
     Raises ThreadException if the caller does  not  have  the  appropriate 
@@ -313,7 +313,7 @@ embed java {{ extends Thread }}
     deadlock prone.
     */
     {
-        embed cs {{
+        embed csharp {{
             try {
                 _cs_thread.Interrupt();
             }
@@ -334,7 +334,7 @@ embed java {{ extends Thread }}
         return this->_c_thread != NULL;
       }} exit
       
-      embed cs {{
+      embed csharp {{
         try {
             return _cs_thread.Name == _cs_thread.CurrentThread.Name;
         }
@@ -348,7 +348,7 @@ embed java {{ extends Thread }}
     }
 
     //-------------------------------------------------------------------------
-    final const bool is_alive() exclude py, java
+    final const bool is_alive() exclude python, java
     /**
     Returns true if this thread has been started and is not stopped.
     Returns false otherwise.
@@ -359,7 +359,7 @@ embed java {{ extends Thread }}
         return this->_c_thread != NULL;
       }} exit
       
-      embed cs {{
+      embed csharp {{
         try {
             return _cs_thread.ThreadState & Running == Running;
         }
@@ -377,7 +377,7 @@ embed java {{ extends Thread }}
     Returns true if this thread is daemonic, and false otherwise.
     */
     {
-      embed py {{
+      embed python {{
         return self.daemon
       }}
       
@@ -385,7 +385,7 @@ embed java {{ extends Thread }}
         return false;
       }}
       
-      embed cs {{
+      embed csharp {{
         try {
             return _cs_thread.IsBackground;
         }
@@ -402,7 +402,7 @@ embed java {{ extends Thread }}
     thread, the external code waits (is blocked) until this threads terminates.
     */
     {
-      embed py {{
+      embed python {{
         try:
             super().join()
         except:
@@ -413,7 +413,7 @@ embed java {{ extends Thread }}
         _c_join();
       }}
       
-      embed cs {{
+      embed csharp {{
         try {
             _cs_thread.Join();
         }
@@ -435,7 +435,7 @@ embed java {{ extends Thread }}
     {
         assert timeout >= 0.0;
         
-      embed py {{
+      embed python {{
         time.sleep( timeout )
       }}
       
@@ -448,7 +448,7 @@ embed java {{ extends Thread }}
         _c_join();
       }}
       
-      embed cs {{
+      embed csharp {{
         try {
             _cs_thread.Join( (int)ut_sec_to_ms(timeout) );
         }
@@ -464,7 +464,7 @@ embed java {{ extends Thread }}
     Returns the name associated with this thread.
     */
     {
-      embed py {{
+      embed python {{
         return self.name
       }}
       
@@ -499,7 +499,7 @@ embed java {{ extends Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none resume() exclude py, java, cpp, cs
+    none resume() exclude python, java, cpp, csharp
     /**
     Resumes this thread after having been stopped.
     Caution:
@@ -513,7 +513,7 @@ embed java {{ extends Thread }}
     Sets the name for this thread.
     */
     {
-      embed py {{
+      embed python {{
         self.name = _name
       }}
       
@@ -525,7 +525,7 @@ embed java {{ extends Thread }}
         this->_c_name = _name;
       }}
       
-      embed cs {{
+      embed csharp {{
         _cs_name = _name;
         if ( _cs_thread != null )
             _cs_thread.Name = _name;
@@ -548,7 +548,7 @@ embed java {{ extends Thread }}
     the threads stacks size programmatically.
     */
     {
-      embed py {{
+      embed python {{
         try:
             threading.stack_size( size )
             return True
@@ -568,7 +568,7 @@ embed java {{ extends Thread }}
     {
         assert duration >= 0.0;
         
-      embed py {{
+      embed python {{
         time.sleep( duration )
       }}
       
@@ -580,7 +580,7 @@ embed java {{ extends Thread }}
         std::this_thread::sleep_for( std::chrono::milliseconds( ut_sec_to_ms(duration) ) );
       }}
       
-      embed cs {{
+      embed csharp {{
         Thread.Sleep( ut_sec_to_ms(duration) );
       }}
     }
@@ -592,7 +592,7 @@ embed java {{ extends Thread }}
     Raises ThreadException if thread cannot be created or run.
     */
     {
-      embed py {{
+      embed python {{
         try:
             super().start()
         except:
@@ -617,7 +617,7 @@ embed java {{ extends Thread }}
         }
       }}
       
-      embed cs {{
+      embed csharp {{
         _cs_thread = new Thread( new ThreadStart(run) );
         if ( _cs_thread == null )
             throw new ThreadException( string.Format("unable to start thread {0}", _cs_name );
@@ -632,7 +632,7 @@ embed java {{ extends Thread }}
     }
 
     //-------------------------------------------------------------------------
-    none stop() exclude py, java, cpp, cs
+    none stop() exclude python, java, cpp, csharp
     /**
     Stops this thread.
     Caution:
@@ -642,7 +642,7 @@ embed java {{ extends Thread }}
     {}
 
     //-------------------------------------------------------------------------
-    none suspend() exclude py, java, cpp, cs
+    none suspend() exclude python, java, cpp, csharp
     /**
     Suspends this thread.
     Caution:
@@ -679,7 +679,7 @@ embed java {{ extends Thread }}
     }
   }} exit
   
-  embed cs {{
+  embed csharp {{
     String  _cs_name;
     Thread  _cs_thread;
   }}
