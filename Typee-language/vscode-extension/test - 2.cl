@@ -1,0 +1,69 @@
+// Example Custom Language file - save as test.cl
+
+// Variable declarations
+int x = 42;
+float pi = 3.14159;
+str name = "Hello";
+bool flag = true;
+
+// Function definition
+int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+
+// For loop
+for (i in [1, 2, 3, 4, 5]) {
+    x += i;
+}
+
+// While loop
+while (x > 0) {
+    x--;
+    if (x == 10) {
+        break;
+    }
+}
+
+// Switch statement
+switch (x) {
+    case 0:
+        nop;
+        break;
+    case 1:
+        x++;
+        break;
+    otherwise:
+        x = 0;
+}
+
+// Lambda function
+lambda int (int a, int b) {
+    return a + b;
+}
+
+// Type casting
+float result = (float)(x);
+
+// Arrays
+int[5] numbers = [1, 2, 3, 4, 5];
+
+// Operators
+x += 10;
+x **= 2;
+x <<= 1;
+
+// Logical operators
+if (x > 0 and y < 10 or not flag) {
+    pass;
+}
+
+/* Multi-line
+   comment
+   example */
+
+// Constants
+const int MAX_SIZE = 100;

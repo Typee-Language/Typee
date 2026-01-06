@@ -1,0 +1,177 @@
+{
+  "name": "T Language",
+  "scopeName": "source.tlang",
+  "fileTypes": ["t", "tlang", "tl", "ty"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#constants" },
+    { "include": "#numbers" },
+    { "include": "#operators" },
+    { "include": "#function-definition" },
+    { "include": "#function-call" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.tlang",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.tlang",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "patterns": [
+            { "include": "#comments" }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.tlang",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.tlang",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.tlang",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.tlang",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.flow.tlang",
+          "match": "\\b(if|elseif|elsif|elif|else|for|while|repeat|until|switch|case|otherwise|break|continue|return|ret)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.tlang",
+          "match": "\\b(and|or|not|is|in)\\b"
+        },
+        {
+          "name": "keyword.other.tlang",
+          "match": "\\b(as|lambda|nop|pass|type|const)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.builtin.tlang",
+          "match": "\\b(bool|char|float|int|uint|str|none)\\b"
+        },
+        {
+          "name": "storage.modifier.tlang",
+          "match": "\\b(const)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.tlang",
+          "match": "\\b(true|True|false|False)\\b"
+        },
+        {
+          "name": "constant.language.null.tlang",
+          "match": "\\b(none)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.tlang",
+          "match": "\\b[1-9][0-9_]*\\.[0-9_]*([eE][+-]?[0-9_]+)?\\b"
+        },
+        {
+          "name": "constant.numeric.hex.tlang",
+          "match": "\\b0[xX][0-9A-Fa-f_]+\\b"
+        },
+        {
+          "name": "constant.numeric.binary.tlang",
+          "match": "\\b0[bB][01_]+\\b"
+        },
+        {
+          "name": "constant.numeric.octal.tmlang",
+          "match": "\\b0[0-7_]+\\b"
+        },
+        {
+          "name": "constant.numeric.decimal.tlang",
+          "match": "\\b([1-9][0-9_]*|0)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.compound.tlang",
+          "match": "(\\+=|-=|\\*\\*=|\\*=|/=|%=|&=|\\|=|\\^=|<<=|>>=)"
+        },
+        {
+          "name": "keyword.operator.assignment.tlang",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.arithmetic.tlang",
+          "match": "(\\+\\+|--|\\*\\*|\\+|-|\\*|/|%)"
+        },
+        {
+          "name": "keyword.operator.comparison.tlang",
+          "match": "(==|!=|<=|>=|<|>)"
+        },
+        {
+          "name": "keyword.operator.bitwise.tlang",
+          "match": "(<<|>>|&|\\||\\^|~)"
+        }
+      ]
+    },
+    "function-definition": {
+      "patterns": [
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(",
+          "captures": {
+            "1": { "name": "entity.name.function.tlang" }
+          }
+        }
+      ]
+    },
+    "function-call": {
+      "patterns": [
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": { "name": "entity.name.function.call.tlang" }
+          }
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.tlang",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}
