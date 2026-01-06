@@ -40,7 +40,7 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 //===========================================================================
 /// \addtogroup TypeeFrontEnd The Typee Language Front-End
-/// {
+/// \{
 namespace ty_fe  //! the Typee Front-End namespace
 {
     //=======================================================================
@@ -217,5 +217,5 @@ namespace ty_fe  //! the Typee Front-End namespace
 
 }  // end of namespace ty_fe
 
-/// }
+/// \}
 
