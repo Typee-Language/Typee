@@ -1,17 +1,27 @@
 .gitignore
+
 .metadata
 /.project
 /.pydevproject
 .settings
 _config.yml
-*.pyc
-__pycache__
-* - Copie.grm
-*-new.grm
-* - Copy.grm
 UML*
 *.prefs
 tmp_data
 src/Utils/desktop.ini
 *.epf
 Scripts
+
+#-- Visual Studio (Code) --
+.vs
+packages
+x64
+
+#-- Python --
+*.pyc
+__pycache__
+
+#-- Typee Grammar --
+* - Copie.grm
+*-new.grm
+* - Copy.grm
