@@ -1,9 +1,35 @@
-# Typee specifics
+#---  Typee specifics  ---
 archive
 default.cfg
 
-# Visual Studio specifics
+
+#---  Typee Grammar  ---
+* - Copie.grm
+*-new.grm
+* - Copy.grm
+
+
+#---  Visual Studio specifics  ---
 .vs
+packages
 x64
 Debug
 Release
+
+
+#---  Python specifics  ---
+*.pyc
+__pycache__
+Scripts
+
+
+#---   Miscelaneous  ---
+.gitignore
+.metadata
+.settings
+_config.yml
+UML*
+*.prefs
+tmp_data
+src/Utils/desktop.ini
+*.epf

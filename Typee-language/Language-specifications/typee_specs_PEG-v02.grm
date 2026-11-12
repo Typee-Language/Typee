@@ -26,7 +26,7 @@
 
 #####   CODE MODULE   #################################################
 
-TCodeModule <- StatementsList* ENDMARKER
+TCodeModule <- StatementsList*  ENDMARKER
 
 ENDMARKER  <- !.
 
@@ -97,8 +97,8 @@ SubscriptionOrSlicing   <- '['  SliceForm  (']' / ')')
 ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  DefinitionBlock
 
 
-Inheritance         <- ':'  InterfaceItem   (','  InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
-                     / ':'  InheritanceItem   (',' InterfaceItem)*
+Inheritance         <- ':'  InterfaceItem  (','  InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
+                     / ':'  InheritanceItem  (',' InterfaceItem)*
 
 
 InheritanceItem     <- AccessQualifier?  DottedName  TemplateArgs?
@@ -149,7 +149,7 @@ AndTest             <- NotTest (AND_TK  NotTest)?
 
 NotTest             <- NOT_TK?  Comparison
 
-CompTest            <- AndTest  (OR_TK  AndTest)                              ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
+CompTest            <- AndTest  (OR_TK  AndTest)                        ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
 
 
 
@@ -294,7 +294,7 @@ OpUser                  <- "@@"
                          / "!!"
                          / "::"
                          / "??"
-                         / "##"                                         ## NOTE added
+                         ##/ "##"                                         ## NOTE added
 
 
 Operator                <- AssignOp
@@ -327,10 +327,10 @@ AssignOp                <- '='
                          / AugmentedAssignOp
 
 AugmentedAssignOp       <- "+="                                         ## NOTE templated augmented assignement operator should be specified
-                         / "-="                                         ## NOTE one way to achieve this: specify a rule with '=' succeeding 
-                         / "**="                                        ## NOTE the templated operator definition with NO spacing
-                         / "*="                                         ## NOTE Caution: not all operators are elligible for augmentation
-                         / "/="                                         ## NOTE for instance: comparison operators
+                         / "-="                                         ##        one way to achieve this: specify a rule with '=' succeeding 
+                         / "**="                                        ##        the templated operator definition with NO spacing.
+                         / "*="                                         ##      Caution: not all operators are elligible for augmentation,
+                         / "/="                                         ##        for instance: comparison operators
                          / "%="
                          / "&="
                          / "|="
@@ -348,7 +348,7 @@ AugmentedAssignOp       <- "+="                                         ## NOTE 
                          / "!!="
                          / "::="
                          / "??="
-                         / "##="
+                         ##/ "##="
 
 
 OperatorCallDef         <- CallOperator  TemplateDef?
@@ -383,9 +383,9 @@ IntegerNumber           <- '0'  OctalNumber
 BinaryNumber            <- [01]  ('_'?  [01])*
 
 
-DecimalPart             <- [0-9]  ('_'?  [0-9])*
+DecimalPart             <- [0-9]  ('_'?  [0-9]+)*
 
-ExponentPart            <- ('e' / 'E')  ('+' / '-')?   DecimalPart
+ExponentPart            <- ('e' / 'E')  ('+' / '-')?  DecimalPart
 
 FractionPart            <- '.'  DecimalPart?
 
@@ -402,8 +402,8 @@ OctalNumber             <- [0-7]  ('_'?  [0-7])*
 #####   STATEMENTS   #################################################
 
 StatementsList          <- DefinitionBlock  Spacing*
-                         / SimpleStatement Spacing*
-                         / CompoundStatement Spacing*
+                         / SimpleStatement  Spacing*
+                         / CompoundStatement  Spacing*
 
 
 SimpleStatement         <- AssertStatement           SimpleStatementEnd
@@ -434,6 +434,7 @@ CompoundStatement       <- DefinitionStatement                          ## NOTE 
                          / RepeatStatement
                          / SwitchStatement
                          / TryStatement
+                         / WhenStatement                                ## ADD
                          / WhileStatement
                          / WithStatement
 
@@ -450,14 +451,17 @@ Comment                 <- "//"  (!EndOfLine .)*  Spacing*
 MultiLinesComment       <- "/*"  (MultiLinesComment  /  !"*/" .)*  "*/"
 
 
-DeclarationStatement    <- FORWARD_TK  AccessQualifier  STATIC_TK  ForwardDeclaration  Spacing*
-                         / FORWARD_TK  AccessQualifier  ForwardDeclaration  Spacing*
-                         / FORWARD_TK  STATIC_TK  ForwardDeclaration  Spacing*
-                         / FORWARD_TK  ForwardDeclaration  Spacing*
-                         / AccessQualifier  STATIC_TK  Declaration  Spacing*
-                         / AccessQualifier  Declaration  Spacing*
-                         / STATIC_TK  Declaration  Spacing*
-                         / Declaration  Spacing*
+##DeclarationStatement    <- FORWARD_TK  AccessQualifier  STATIC_TK  ForwardDeclaration  Spacing*
+##                         / FORWARD_TK  AccessQualifier  ForwardDeclaration  Spacing*
+##                         / FORWARD_TK  STATIC_TK  ForwardDeclaration  Spacing*
+##                         / FORWARD_TK  ForwardDeclaration  Spacing*
+##                         / AccessQualifier  STATIC_TK  Declaration  Spacing*
+##                         / AccessQualifier  Declaration  Spacing*
+##                         / STATIC_TK  Declaration  Spacing*
+##                         / Declaration  Spacing*
+DeclarationStatement    <- FORWARD_TK  AccessQualifier?  STATIC_TK?  ForwardDeclaration  Spacing*
+                         / AccessQualifier  STATIC_TK?  Declaration  Spacing*
+                         / STATIC_TK?  Declaration  Spacing*
 
 
 Declaration             <- MethodConstDeclaration                          
@@ -466,7 +470,7 @@ Declaration             <- MethodConstDeclaration
                          / VolatilesDeclaration
 
 
-ForwardDeclaration      <- VOLATILE_TK    VolatileItem  (','  VolatileItem)*
+ForwardDeclaration      <- VOLATILE_TK  VolatileItem  (','  VolatileItem)*
                          / TypeDeclaration
                          / ClassDeclaration
                          / PropertyDeclaration
@@ -494,9 +498,9 @@ ClassDeclaration        <- CLASS_TK  Identifier  TemplateDef?  Inheritance?
 
 MethodConstDeclaration  <- FunctionDeclaration  CONST_TK          ## NOTE ending const qualifier is only authorized for class methods
 
-PropertyDeclaration     <- PROPERTY_TK    Type  Identifier
+PropertyDeclaration     <- PROPERTY_TK  Type  Identifier
 
-TypeDeclaration         <- TYPE_TK   Identifier
+TypeDeclaration         <- TYPE_TK  Identifier
 
 
 
@@ -510,8 +514,8 @@ DefinitionStatement     <- AccessQualifier  STATIC_TK  Definition
 
 Definition              <- ABSTRACT_TK  MethodDefinition
                          / ABSTRACT_TK  OperatorDefinition
-                         / FINAL_TK     MethodDefinition
-                         / FINAL_TK     OperatorDefinition
+                         / FINAL_TK  MethodDefinition
+                         / FINAL_TK  OperatorDefinition
                          / MethodDefinition
                          / OperatorDefinition
                          / PropertyDeclaration  '='  DefintionBlock    ## NOTE '=' may be suppressed from the rule spec
@@ -658,8 +662,13 @@ TryStatementOtherwise   <- OTHERWISE_TK  ('(' EXCEPTION_TK AS_TK Identifier ')')
 
 TryStatementFinally     <- FINALLY_TK  '{'  StatementsList*  '}'
 
+
+WhenStatement           <- WHEN_TK  Spacing*  '('  Spacing*  Expression  Spacing*  ')'  Spacing*  '{'  WhenClause+  (Spacing* OTHERWISE_TK  StatementsList)?  Spacing*  '}'     ## ADD
+
+WhenClause              <- Spacing*  Expression  Spacing*  ':'  Spacing*  StatementsList
+
                              
-WhileStatement          <- WHILE_TK  '('  Condition  ')'  StatementsList  (OTHERWISE_TK StatementsList)?
+WhileStatement          <- WHILE_TK  '('  Condition  ')'  StatementsList  (OTHERWISE_TK  StatementsList)?
 
 
 WithStatement           <- WITH_TK  '('  WithItem  (',' WithItem)*  ')'  StatementsList
@@ -929,9 +938,11 @@ GenericScalarType           <- "_float_"
                              / "_uint_"
 
 
-ScalarType                  <- "bool"
+ScalarType                  <- "bigint"
+                             / "bool"
                              / "char16"
                              / "char"
+                             / "complex"
                              / "float32"
                              / "float64"
                              / "float128"
