@@ -141,7 +141,7 @@ CompOperator        <- "<=>"
                      / ">="
                      / '>'
                      / IN_TK
-                     / IS_TK   NOT_TK?
+                     / IS_TK  NOT_TK?
                      / NOT_TK IN_TK
 
 
@@ -293,7 +293,7 @@ OpUser                  <- "@@"
                          / "!!"
                          / "::"
                          / "??"
-                         ##/ "##"                                         ## NOTE added
+                         ##/ "##"                                         ## NOTE added, finally removed, see AugmentedAssignOp rule for comment
 
 
 Operator                <- AssignOp
@@ -347,7 +347,7 @@ AugmentedAssignOp       <- "+="                                         ## NOTE 
                          / "!!="
                          / "::="
                          / "??="
-                         ##/ "##="
+                         ##/ "##="                                      ## NOTE added, finally removed
 
 
 OperatorCallDef         <- CallOperator  TemplateDef?
@@ -376,8 +376,8 @@ FloatNumber             <- [1-9]  DecimalPart?  FractionPart  ExponentPart?
 
 
 IntegerNumber           <- '0'  OctalNumber
-                         / '0'  ('b' / 'B')  BinaryNumber
-                         / '0'  ('x' / 'X')  HexadecimalNumber
+                         / '0'  [bB]  BinaryNumber
+                         / '0'  [xX]  HexadecimalNumber
                          / [1-9]  DecimalPart?
                          / '0'
 
@@ -387,7 +387,7 @@ BinaryNumber            <- [01]  ('_'?  [01]+)*
 
 DecimalPart             <- [0-9]  ('_'?  [0-9]+)*
 
-ExponentPart            <- ('e' / 'E')  ('+' / '-')?  ([1-9]  DecimalPart? / '0')
+ExponentPart            <- [eE]  [+-]?  ([1-9]  DecimalPart?  /  '0')
 
 FractionPart            <- '.'  DecimalPart?
 
@@ -417,7 +417,7 @@ Statement               <- StatementsBlock
                          / CompoundStatement
 
 
-StatementsBlock        <-  '{'  StatementsList*  '}'
+StatementsBlock        <-  '{'  Spacing*  StatementsList*  Spacing*  '}'  Spacing*
 
 
 StatementsList          <- Statement*
@@ -696,7 +696,7 @@ TypedTarget             <- SimpleType     Target
                          / DottedName     Target                        ## NOTE DottedName is a type name
                          / Target                                       ## NOTE DottedName is an identifier of a variable for which type is known
 
-Target                  <- DottedName  Spacing*  SubscriptionOrSlicing+  Spacing*   ## NOTE SubscriptionOrSlicing still must be defined
+Target                  <- DottedName  Spacing*  SubscriptionOrSlicing+  Spacing*
                          / DottedName  Spacing*
 
 TargetList              <- TypedTarget  (',' TypedTarget)*
