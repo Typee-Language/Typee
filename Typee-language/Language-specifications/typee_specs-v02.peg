@@ -94,7 +94,7 @@ SubscriptionOrSlicing   <- '['  SliceForm  (']' / ')')
 
 #####   CLASSES   ####################################################
 
-ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  DefinitionBlock
+ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  StatementsBlock
 
 
 Inheritance         <- ':'  InterfaceItem  (','  InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
@@ -176,8 +176,7 @@ ExprList                <- Expression  (',' Expression)*
 
 
 Factor                  <- AtomItem  (OpPower TemplateArgs?  UnaryExpr)*    ## NOTE for a first implementation Templated operators might be abandonned
-                                                                            ## NOTE could AtomElement be preceeded by a unary operator?
-FactorsSeq              <- (OpMul  TemplateArgs?  Factor)*                  ## NOTE for a first implementation Templated operators should be abandonned
+                                                                            ## NOTE could AtomItem be preceeded by a unary operator?
 
 
 FileExpression          <- DottedName  FunctionCall*                        ## NOTE DottedName is either the identifier of a file or the identifier of a method of a file (in which case a function call is mandatory)
@@ -201,7 +200,7 @@ ShiftExpr               <- "<<<"  SpacedTemplateArgs?  ArithmeticExpr       ## N
                          / ">>"   TemplateArgs?  ArithmeticExpr
 
 
-Term                    <- Factor  FactorsSeq*
+Term                    <- Factor  (OpMul  TemplateArgs?  Factor)*          ## NOTE for a first implementation Templated operators should be abandonned
 
 
 UnaryExpr               <- '+'  Factor
@@ -217,7 +216,7 @@ UnaryExpr               <- '+'  Factor
 FunctionDeclaration         <- Type  Identifier  TemplateDef?  FunctionParamsDeclaration  ExcludeStatement?
 
 
-FunctionDefinition          <- FunctionDeclaration  DefinitionBlock
+FunctionDefinition          <- FunctionDeclaration  StatementsBlock
 
 
 CallOperator                <- '('  Spacing*  ')'
@@ -241,7 +240,7 @@ Unnamed                     <- UNNAMED_TK
                              / LAMBDA_TK
 
 
-UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  DefinitionBlock
+UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  StatementsBlock
 
 
 
@@ -355,7 +354,7 @@ OperatorCallDef         <- CallOperator  TemplateDef?
 
 OperatorDeclaration     <- OPERATOR_TK  OperatorSubdef
 
-OperatorDefinition      <- OperatorDeclaration  DefinitionBlock
+OperatorDefinition      <- OperatorDeclaration  StatementsBlock
 
 OperatorSubdef          <- OperatorTemplatedDef  FunctionParamsDeclaration
                          / OperatorCallDef
@@ -401,9 +400,15 @@ OctalNumber             <- [0-7]  ('_'?  [0-7])*
 
 #####   STATEMENTS   #################################################
 
-StatementsList          <- DefinitionBlock  Spacing*
-                         / SimpleStatement  Spacing*
-                         / CompoundStatement  Spacing*
+Statement               <- StatementsBlock
+                         / SimpleStatement
+                         / CompoundStatement
+
+
+StatementsBlock        <-  '{'  StatementsList*  '}'
+
+
+StatementsList          <- Statement*
 
 
 SimpleStatement         <- AssertStatement           SimpleStatementEnd
@@ -423,7 +428,7 @@ SimpleStatement         <- AssertStatement           SimpleStatementEnd
                          / RequireStatement          SimpleStatementEnd
 
 
-SimpleStatementEnd      <- COMMA_TK
+SimpleStatementEnd      <- Spacing*  COMMA_TK
 
 
 CompoundStatement       <- DefinitionStatement                          ## NOTE may not be allowed everywhere
@@ -464,7 +469,8 @@ DeclarationStatement    <- FORWARD_TK  AccessQualifier?  STATIC_TK?  ForwardDecl
                          / STATIC_TK?  Declaration  Spacing*
 
 
-Declaration             <- MethodConstDeclaration                          
+Declaration             <- MethodConstDeclaration
+                         / ConstDeclaration
                          / FunctionDeclaration
                          / VariablesDeclaration
                          / VolatilesDeclaration
@@ -481,7 +487,10 @@ ForwardDeclaration      <- VOLATILE_TK  VolatileItem  (','  VolatileItem)*
                          / Type  OperatorDeclaration
 
 
-FunctionDeclaration     <- Type  Identifier  FunctionParamsDeclaration
+FunctionDeclaration     <- CONST_TK  Type  Identifier  FunctionParamsDeclaration
+
+
+ConstDeclaration        <- Type  Spacing*  Identifier  Spacing*  '='  Spacing*  Expression  Spacing*
 
 
 VariablesDeclaration    <- Type  VariablesDeclList
@@ -504,12 +513,9 @@ TypeDeclaration         <- TYPE_TK  Identifier
 
 
 
-DefinitionStatement     <- AccessQualifier  STATIC_TK  Definition
-                         / AccessQualifier  ClassDefinition
-                         / AccessQualifier  Definition
-                         / STATIC_TK  Definition
-                         / ClassDefinition
-                         / Definition
+DefinitionStatement     <- AccessQualifier  STATIC_TK?  Definition
+                         / AccessQualifier?  ClassDefinition
+                         / STATIC_TK?  Definition
 
 
 Definition              <- ABSTRACT_TK  MethodDefinition
@@ -526,10 +532,7 @@ Definition              <- ABSTRACT_TK  MethodDefinition
                          / VolatileDefinition
 
 
-DefinitionBlock         <-  '{'  StatementsList*  '}'                           ## NOTE shouldn't it be '{' Definition* '}' instead?
-
-
-MethodDefinition        <- FunctionDeclaration  CONST_TK?  DefinitionBlock        ## NOTE ending const qualifier is only authorized for class methods
+MethodDefinition        <- FunctionDeclaration  CONST_TK?  StatementsBlock      ## NOTE ending const qualifier is only authorized for class methods
 
 VolatilesDefinition     <- VOLATILE_TK  NotConstType  Identifier  MemoryAddress  (','  Identifier  MemoryAddress)*  SimpleStatementEnd
 
@@ -663,17 +666,18 @@ TryStatementOtherwise   <- OTHERWISE_TK  ('(' EXCEPTION_TK AS_TK Identifier ')')
 TryStatementFinally     <- FINALLY_TK  '{'  StatementsList*  '}'
 
 
-WhenStatement           <- WHEN_TK  Spacing*  '('  Spacing*  Expression  Spacing*  ')'  Spacing*  '{'  WhenClause+  (Spacing* OTHERWISE_TK  StatementsList)?  Spacing*  '}'     ## ADD
+WhenStatement           <- WHEN_TK  Spacing*  '('  Spacing*  WhenWithItem  (',' WhenWithItem)*  Spacing*  ')'  Spacing*  '{'  WhenClause+  (Spacing* OTHERWISE_TK  StatementsList)?  Spacing*  '}'     ## ADD
 
-WhenClause              <- Spacing*  Expression  Spacing*  ':'  Spacing*  StatementsList
+WhenClause              <- Spacing*  Expression  Spacing*  ':'  Spacing*  StatementsList  Spacing*
+
+WhenWithItem            <- Expression  (AS_TK TypedTarget)?
 
                              
-WhileStatement          <- WHILE_TK  '('  Condition  ')'  StatementsList  (OTHERWISE_TK  StatementsList)?
+WhileStatement          <- WHILE_TK  Spacing*  '('  Spacing*  Condition  Spacing*  ')'  Spacing*  StatementsList  (  Spacing*OTHERWISE_TK  Spacing*  StatementsList)?  Spacing*
 
 
-WithStatement           <- WITH_TK  '('  WithItem  (',' WithItem)*  ')'  StatementsList
+WithStatement           <- WITH_TK  '('  WhenWithItem  (',' WhenWithItem)*  ')'  StatementsList
 
-WithItem                <- Expression  (AS_TK TypedTarget)?
 
 TypedTarget             <- SimpleType     Target
                          / TemplatedType  Target 
@@ -896,7 +900,7 @@ Type                        <- CONST_TK? TemplatedType
 
 
 SimpleType                  <-  AutoType
-                             / '('  Spacing*  TypesList ')' Spacing*
+                             / '('  Spacing*  TypesList  ')'  Spacing*
                              / ContainerType
                              / ENUM_TK
                              / FileType
