@@ -79,7 +79,7 @@ MapForm                 <- ':'  Expression  MapListOrComprehension
 ParenthesisForm         <- '('  ExprList  ')'
 
 
-Reference               <- '@'  DottedName                              ## NOTE which one would better fit?
+Reference               <- '@'  DottedName                              ## NOTE which one would better fit, @ or &?
                          / '&'  DottedName
 
 
@@ -124,13 +124,13 @@ IterComprehension   <- ForComprehension
 
 #####   CONDITIONS   #################################################
 
-Condition           <- CompTest  (IF_TK  '('  CompTest  ')'  ELSE_TK  Expression)
+Condition           <- CompTest  (IF_TK  '('  CompTest  ')'  ELSE_TK  Expression)?
 
 
 
 #####   COMPARISONS   ################################################
 
-Comparison          <- BitorExpr  (CompOperator  BitorEpxr)*            ## NOTE see LL1-v10 for spec of templated comparison operators
+Comparison          <- BitOrExpr  (CompOperator  BitorEpxr)*            ## NOTE see LL1-v10 for spec of templated comparison operators
 
 
 CompOperator        <- "<=>"
@@ -155,14 +155,14 @@ CompTest            <- AndTest  (OR_TK  AndTest)                        ## NOTE 
 
 #####   EXPRESSIONS   ################################################
 
-Expression              <- Condition
+Expression             <- Comparison                                        ## NOTE was previously specified as 'Condition' (error?)
                         / UnnamedFunction
 
 
 IndexingExpression      <- Expression                                       ## NOTE indexing expressions must be integer
 
 
-ArithmeticExpr          <- Term  (OpAdd TemplateArgs? Term)*                ## NOTE for a first implementation Templated operators should be abandonned
+ArithmeticExpr          <- Term  (OpAdd TemplateArgs?  Term)*                ## NOTE for a first implementation Templated operators should be abandonned
 
 
 BitAndExpr              <- ShiftedExpr  ('&'  TemplateArgs?  ShiftedExpr)*  ## NOTE for a first implementation Templated operators should be abandonned
@@ -176,7 +176,7 @@ ExprList                <- Expression  (',' Expression)*
 
 
 Factor                  <- AtomItem  (OpPower TemplateArgs?  UnaryExpr)*    ## NOTE for a first implementation Templated operators might be abandonned
-                                                                            ## NOTE could AtomItem be preceeded by a unary operator?
+                         / '('  Spacing*  Expression  Spacing*  ')'
 
 
 FileExpression          <- DottedName  FunctionCall*                        ## NOTE DottedName is either the identifier of a file or the identifier of a method of a file (in which case a function call is mandatory)
@@ -368,35 +368,47 @@ OperatorTemplatedDef    <- Operator TemplatedDef?
 
 Scalar                  <- FloatNumber    Spacing*
                          / IntegerNumber  Spacing*
+                         / ComplexNumber  Spacing*
 
 
 FloatNumber             <- [1-9]  DecimalPart?  FractionPart  ExponentPart?
+                         / '0'  FractionPart?  ExponentPart?
 
 
 IntegerNumber           <- '0'  OctalNumber
                          / '0'  ('b' / 'B')  BinaryNumber
                          / '0'  ('x' / 'X')  HexadecimalNumber
-                         / [1-9]  DecimalPart
+                         / [1-9]  DecimalPart?
+                         / '0'
 
 
-BinaryNumber            <- [01]  ('_'?  [01])*
+BinaryNumber            <- [01]  ('_'?  [01]+)*
 
 
 DecimalPart             <- [0-9]  ('_'?  [0-9]+)*
 
-ExponentPart            <- ('e' / 'E')  ('+' / '-')?  DecimalPart
+ExponentPart            <- ('e' / 'E')  ('+' / '-')?  ([1-9]  DecimalPart? / '0')
 
 FractionPart            <- '.'  DecimalPart?
 
 
-HexadecimalNumber       <- HexDigit  ('_'?  HexDigit)*
+HexadecimalNumber       <- HexDigit  ('_'?  HexDigit+)*
 
 HexDigit                <- [09AFaf]
 
 
-OctalNumber             <- [0-7]  ('_'?  [0-7])*
+OctalNumber             <- [0-7]  ('_'?  [0-7]+ )*
 
-                         
+
+ComplexNumber           <- COMPLEX_TK  Spacing*  '('  Spacing*  ComplexImPart  Spacing*  ')'  Spacing*
+                         / COMPLEX_TK  Spacing*  '('  Spacing*  ComplexRePart  Spacing*  (','  Spacing*  ComplexImPart  Spacing*)?  ')'  Spacing*
+
+ComplexImPart           <- FloatNumber 'i'
+                         / IntegerNumber 'i'
+
+ComplexRePart           <- FloatNumber
+                         / IntegerNumber
+
 
 #####   STATEMENTS   #################################################
 
@@ -500,7 +512,7 @@ VariablesDeclList       <- VariableDecl  (','  VariableDecl)*  SimpleStatementEn
 VariableDecl            <- Identifier  ('=' Expression)?
 
 
-VolatilesDeclaration    <- VOLATILE_TK  NotConstType  Identifier  (','  Idengtifier)*  SimpleStatementEnd
+VolatilesDeclaration    <- VOLATILE_TK  NotConstType  Identifier  (','  Identifier)*  SimpleStatementEnd
 
 
 ClassDeclaration        <- CLASS_TK  Identifier  TemplateDef?  Inheritance?
@@ -693,13 +705,13 @@ TargetList              <- TypedTarget  (',' TypedTarget)*
 CastOp                  <- CAST_TK  Identifier                          ## NOTE use of CastOp is still to be specified...
 
 
-EnumDeclaration         <- ENUM_TK  Identifier
+EnumDeclaration         <- ENUM_TK  Spacing*  Identifier
 
-EnumDefinition          <-  EnumDeclaration  Spacing*  '{'  Spacing*  EnumItem  Spacing*  (','  Spacing*  EnumItem)*  Spacing*  '}'
+EnumDefinition          <-  EnumDeclaration  Spacing*  '{'  Spacing*  EnumItem  Spacing*  (','  Spacing*  EnumItem)*  Spacing*  '}'  Spacing* 
 
-EnumExpression          <- IntegerNumber
+EnumExpression          <- IntegerNumber  '+'  Identifier
+                         / IntegerNumber                                ## NOTE identifer must be a known enum value identifier
                          / Identifier  '+'  IntegerNumber               ## NOTE identifer must be a known enum value identifier
-                         / IntegerNumber  '+'  Identifier               ## NOTE identifer must be a known enum value identifier
 
 EnumItem                <- Identifier  '+='  IntegerNumber              ## NOTE adds the integer number to the previous enum value
                          / Identifier  '='  EnumExpression
