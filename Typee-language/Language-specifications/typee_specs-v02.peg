@@ -412,15 +412,15 @@ ComplexRePart           <- FloatNumber
 
 #####   STATEMENTS   #################################################
 
-Statement               <- StatementsBlock
-                         / SimpleStatement
-                         / CompoundStatement
+Statement               <- StatementsBlock    Spacing*
+                         / SimpleStatement    Spacing*
+                         / CompoundStatement  Spacing*
 
 
 StatementsBlock        <-  '{'  Spacing*  StatementsList*  Spacing*  '}'  Spacing*
 
 
-StatementsList          <- Statement*
+StatementsList          <- (Spacing*  Statement*)*
 
 
 SimpleStatement         <- AssertStatement           SimpleStatementEnd
@@ -429,6 +429,7 @@ SimpleStatement         <- AssertStatement           SimpleStatementEnd
                          / DeleteStatement           SimpleStatementEnd
                          / DottedName  FunctionCall  SimpleStatementEnd
                          / DottedName  TargetList  AssignmentStatement  SimpleStatementEnd
+                         / EmptyStatement            SimpleStatementEnd*
                          / EnsureStatement           SimpleStatementEnd
                          / FileEndianness
                          / FileFlushing              SimpleStatementEnd
@@ -440,7 +441,7 @@ SimpleStatement         <- AssertStatement           SimpleStatementEnd
                          / RequireStatement          SimpleStatementEnd
 
 
-SimpleStatementEnd      <- Spacing*  COMMA_TK
+SimpleStatementEnd      <- Spacing*  SEMICOLON_TK
 
 
 CompoundStatement       <- DefinitionStatement                          ## NOTE may not be allowed everywhere
@@ -554,6 +555,9 @@ MemoryAddress           <- '@'  IntegerNumber
 DeleteStatement         <- DELETE_TK  IdentifiersList
 
 
+EmptyStatement          <- Spacing*
+
+
 EnsureStatement         <- ENSURE_TK  condition  (',' string)?
 
 
@@ -610,13 +614,13 @@ ReturnStatement         <- RETURN_TK  ExprList?
 RequireStatement        <- REQUIRE_TK  Condition  (',' String)?
 
 
-AccessProtectionStatement   <- ':'?  AccessQualifiers  ':'
+AccessProtectionStatement   <- (':'  Spacing*)?  AccessQualifiers  ':'  Spacing*
 
-AccessQualifiers        <- HIDDEN_TK                                    ## NOTE hidden could be removed and local retained in final specs
-                         / LOCAL_TK
-                         / PRIVATE_TK
-                         / PROTECTED_TK
-                         / PUBLIC_TK
+AccessQualifiers        <- HIDDEN_TK     Spacing*                       ## NOTE hidden could be removed and local retained in final specs
+                         / LOCAL_TK      Spacing*
+                         / PRIVATE_TK    Spacing*
+                         / PROTECTED_TK  Spacing*
+                         / PUBLIC_TK     Spacing*
 
 
 EmbedStatement          <- EMBED_TK  Language  Spacing*  EmbeddedCode
@@ -780,8 +784,6 @@ CAST_TK             <- "cast"               Spacing+
 
 CLASS_TK            <- "class"              Spacing+
 
-COMMA_TK            <- ';'                  Spacing*
-
 CONST_TK            <- "const"              Spacing+
 
 CONTINUE_TK         <- "continue"           Spacing*
@@ -875,6 +877,8 @@ REPEAT_TK           <- "repeat"             Spacing*
 REQUIRE_TK          <- "require"            Spacing+
 
 RETURN_TK           <- ("return" / "ret")   Spacing*                    ## CHK do we keep this alternative?
+
+SEMICOLON_TK        <- ';'                  Spacing*
 
 SET_TK              <- "set"                Spacing*
 
