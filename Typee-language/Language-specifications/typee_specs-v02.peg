@@ -417,26 +417,26 @@ Statement               <- StatementsBlock    Spacing*
                          / CompoundStatement  Spacing*
 
 
-StatementsBlock        <-  '{'  Spacing*  StatementsList*  Spacing*  '}'  Spacing*
+StatementsBlock        <-  '{'  StatementsList  Spacing*  '}'  Spacing*
 
 
 StatementsList          <- (Spacing*  Statement*)*
 
 
-SimpleStatement         <- AssertStatement           SimpleStatementEnd
+SimpleStatement         <- AccessProtectionStatement
+                         / AssertStatement           SimpleStatementEnd
                          / Comment
                          / DeclarationStatement      SimpleStatementEnd     ## NOTE may not be allowed everywhere
                          / DeleteStatement           SimpleStatementEnd
                          / DottedName  FunctionCall  SimpleStatementEnd
-                         / DottedName  TargetList  AssignmentStatement  SimpleStatementEnd
+                         / DottedName  TargetList  AssignmentClause  SimpleStatementEnd
                          / EmptyStatement            SimpleStatementEnd*
                          / EnsureStatement           SimpleStatementEnd
                          / FileEndianness
                          / FileFlushing              SimpleStatementEnd
                          / FlowStatement             SimpleStatementEnd
                          / ImportStatement           SimpleStatementEnd
-                         / NOP_TK                    SimpleStatementEnd
-                         / AccessProtectionStatement
+                         / NoOperationStatement      SimpleStatementEnd
                          / RaiseStatement            SimpleStatementEnd
                          / RequireStatement          SimpleStatementEnd
 
@@ -460,7 +460,7 @@ CompoundStatement       <- DefinitionStatement                          ## NOTE 
 AssertStatement         <- ASSERT_TK  Condition  (',' String)?  Spacing*
 
 
-AssignmentStatement     <- AssignOp  ExprList
+AssignmentClause        <- AssignOp  ExprList
 
 
 Comment                 <- "//"  (!EndOfLine .)*  Spacing*
@@ -603,6 +603,9 @@ ImportFromList          <- ALL_TK  ImportBut
 ImportBut               <- BUT_TK  DottedName  (','  DottedName)*
 
 ModulePath              <- '.'*  DottedName                             ## NOTE a module path should not contain the ".ty" suffix of its related filepath
+
+
+NoOperationStatement     <- NOP_TK  Spacing*
 
 
 RaiseStatement          <- RAISE_TK  Expression  (FROM_TK  Expression)? ## NOTE not all expressions are vaild after "from" - only exception naming expressions are
