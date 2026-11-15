@@ -27,7 +27,6 @@ SOFTWARE.
 
 
 //===========================================================================
-#include <filesystem>
 #include <fstream>
 #include <string>
 
@@ -39,9 +38,8 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 
 //===========================================================================
-/// \addtogroup TypeeFrontEnd The Typee Language Front-End
-/// \{
-namespace ty_fe  //! the Typee Front-End namespace
+/** The Typee Front-End namespace */
+namespace ty_fe
 {
     //=======================================================================
     /** \brief The Front-End parser of Typee-language "T".
@@ -65,9 +63,9 @@ namespace ty_fe  //! the Typee Front-End namespace
 
         //-------------------------------------------------------------------
         /** \brief Constructor (1/2).
-        * \param module_path a const reference to the filepath to the T code to be parsed.
+        * \param module_path the filepath to the T code module to be parsed.
         */
-        FEParser(const std::string& module_path);
+        FEParser(std::string module_path);
 
         //-------------------------------------------------------------------
         /** \brief Constructor (2/2).
@@ -216,6 +214,3 @@ namespace ty_fe  //! the Typee Front-End namespace
     };
 
 }  // end of namespace ty_fe
-
-/// \}
-

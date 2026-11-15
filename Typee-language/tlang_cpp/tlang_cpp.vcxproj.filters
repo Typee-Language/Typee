@@ -32,5 +32,8 @@
     <ClInclude Include="front_end\fe_intermediate_code.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="front_end\peg_parser\typee_language_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

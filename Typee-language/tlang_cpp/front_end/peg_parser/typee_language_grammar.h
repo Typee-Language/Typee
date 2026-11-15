@@ -28,14 +28,11 @@ SOFTWARE.
 
 //===========================================================================
 #include "tao/pegtl.hpp"
-
 namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 
 //===========================================================================
-namespace ty_fe
-{
-namespace ty_grm  //!< the Typee language grammar namespace
+namespace ty_fe::ty_grm  //!< the Typee language grammar namespace
 {
     //=======================================================================
     // Forward declarations
@@ -66,4 +63,3 @@ namespace ty_grm  //!< the Typee language grammar namespace
 
 
 }  // end of namespace ty_fe::grm 
-}  // end of namespace ty_fe

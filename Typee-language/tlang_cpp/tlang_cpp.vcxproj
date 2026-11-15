@@ -158,6 +158,7 @@
     <ClInclude Include="front_end\fe_exceptions.h" />
     <ClInclude Include="front_end\fe_intermediate_code.h" />
     <ClInclude Include="front_end\peg_parser\fe_parser.h" />
+    <ClInclude Include="front_end\peg_parser\typee_language_grammar.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
