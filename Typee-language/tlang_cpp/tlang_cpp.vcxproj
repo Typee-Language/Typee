@@ -151,7 +151,13 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="front_end\peg_parser\fe_parser.cpp" />
     <ClCompile Include="tlang_cpp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="front_end\fe_exceptions.h" />
+    <ClInclude Include="front_end\fe_intermediate_code.h" />
+    <ClInclude Include="front_end\peg_parser\fe_parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

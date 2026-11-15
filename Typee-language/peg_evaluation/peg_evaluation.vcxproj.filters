@@ -18,9 +18,18 @@
     <ClCompile Include="peg_evaluation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="miscelaneous\miscelaneous_evaluation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="miscelaneous\miscelaneous.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="peg_evaluation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="miscelaneous\miscelaneous_evaluation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

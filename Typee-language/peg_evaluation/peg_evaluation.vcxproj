@@ -151,10 +151,13 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="miscelaneous\miscelaneous_evaluation.cpp" />
     <ClCompile Include="peg_evaluation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="miscelaneous\miscelaneous.h" />
+    <ClInclude Include="miscelaneous\miscelaneous_evaluation.h" />
+    <ClInclude Include="peg_evaluation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
