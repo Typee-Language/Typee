@@ -1,0 +1,30 @@
+{
+  "name": "tlang-support",
+  "displayName": "T Language Support",
+  "description": "Syntax highlighting for T Language",
+  "version": "0.1.0",
+  "publisher": "schmouk",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "tlang",
+        "aliases": ["T Language", "Typee Language"],
+        "extensions": [".t", ".ty", ".tl"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tlang",
+        "scopeName": "source.tlang",
+        "path": "./syntaxes/tlang.tmLanguage.json"
+      }
+    ]
+  }
+}

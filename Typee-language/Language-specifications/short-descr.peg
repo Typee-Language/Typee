@@ -1,0 +1,492 @@
+
+#####   CODE MODULE   #################################################
+
+CodeModule      <- StatementsList*  Spacing*  ENDMARKER
+
+ENDMARKER       <- !.
+
+
+
+#####   STATEMENTS   #################################################
+
+Statement               <- StatementsBlock   Spacing*
+                         / SimpleStatement   Spacing*
+                         / CompoundStatement Spacing*
+
+
+StatementsBlock         <- '{'  StatementsList  Spacing*  '}'
+
+
+StatementsList          <- Spacing*  Statement+
+
+
+SimpleStatement         <- Comment              Spacing*
+                         / AssignmentStatement  SimpleStatementEnd
+                         / DeclarationStatement SimpleStatementEnd
+                         / DefinitionStatement  SimpleStatementEnd
+                         / FunctionCall         SimpleStatementEnd
+                         / FlowStatement        SimpleStatementEnd
+                         / NOP_TK               SimpleStatementEnd
+
+
+SimpleStatementEnd      <- Spacing*  SEMI_COLON_TK
+
+
+CompoundStatement       <- ForStatement
+                         / IfStatement
+                         / RepeatStatement
+                         / SwitchStatement
+                         / WhileStatement
+
+
+Comment                 <- "//"  (!EndOfLine .)*
+                         / MultiLinesComment
+
+MultiLinesComment       <- "/*"  (MultiLinesComment  /  !"*/" .)*  "*/"
+
+
+AssignmentStatement     <- DottedName  Spacing*  AssignOp  Spacing*  Expression
+
+
+DeclarationStatement    <- FunctionDeclaration
+                         / VariablesDeclaration
+
+FunctionDeclaration     <- Type  Identifier  FunctionParamsDeclaration
+
+VariablesDeclaration    <- Type  VariablesDeclList
+
+VariablesDeclList       <- VariableDecl  (Spacing*  COMMA_TK  VariableDecl)*  SimpleStatementEnd
+
+VariableDecl            <- Identifier  (Spacing*  '=' Spacing*  Expression)?
+
+
+DefinitionStatement     <- TypeAlias
+                         / Type  Identifier  FunctionDefinition
+
+
+FlowStatement           <- BREAK_TK
+                         / CONTINUE_TK
+                         / ReturnStatement
+
+ReturnStatement         <- RETURN_TK  Expression?
+
+
+ForStatement            <- FOR_TK  '('  Spacing*  Identifier  Spacing*  IN_TK  ExprList  Spacing*  ')'  Spacing*  Statement
+
+
+IfStatement             <- IF_TK  '('  Spacing*  Condition  Spacing*  ')'  Spacing*  Statement  Spacing*  (ELSEIF_TK  '('  Spacing*  Condition  Spacing*  ')'Spacing*    Statement)*  (Spacing*  ELSE_TK  Statement)?  Spacing*  
+
+
+RepeatStatement         <- REPEAT_TK  Statement  Spacing*  UNTIL_TK  '('  Spacing*  Condition  Spacing*  ')'  Spacing*  SimpleStatementEnd
+
+
+SwitchStatement         <- SWITCH_TK  '('  Spacing*  Expression  Spacing*  ')'  Spacing*  SwitchBlock  (Spacing*  OTHERWISE_TK  ':'  Spacing*  Statement)?
+
+SwitchBlock             <- '{'  CaseStatement*  '}'
+
+CaseStatement           <- CASE_TK  Expression  ':'  Statement*  (BREAK_TK SimpleStatementEnd)?
+
+
+WhileStatement          <- WHILE_TK  '('  Spacing*  Condition  Spacing*  ')'  Spacing*  Statement
+
+
+TypeAlias               <- TYPE_TK  Type  Spacing+  AS_TK  Identifier  Spacing*  (COMMA_TK  Type  Spacing+  AS_TK  Identifier  Spacing*)*
+
+
+
+#####   FUNCTIONS   ##################################################
+
+FunctionDeclaration         <- Type  Spacing+  Identifier  Spacing+  FunctionParamsDeclaration
+
+
+FunctionDefinition          <- FunctionDeclaration  Spacing*  StatementsBlock
+
+
+CallOperator                <- '('  Spacing*  ')'
+
+
+FunctionParamsDeclaration   <- '('  Spacing*  TypedParamsList*  Spacing*  ')'
+
+TypedParamsList             <- Type  Spacing*  Identifier (Spacing*  COMMA_TK  Type  Spacing*  Identifier)*
+
+
+FunctionCall                <- '('  Spacing*  FunctionCallArgs*  Spacing*  ')'  Spacing*
+
+FunctionCallArgs            <- Spacing*  (Expression / ForComprehension)  (Spacing*  COMMA_TK  (Expression / ForComprehension))*
+
+
+UnnamedFunction             <- LAMBDA_TK  Type?  Spacing*  FunctionParamsDeclaration  Spacing*  StatementsBlock
+
+
+
+#####   MISCELANEOUS   ###############################################
+
+AlphaChar               <- [A-Za-z]
+
+
+AlphaNumChar            <- [0-9A-Za-z]
+
+
+EndOfLine               <- "\r\n"
+                         / '\n'             ## NOTE 0x0a
+                         / '\r'             ## NOTE 0x0d
+                         / '\v'             ## NOTE 0x0b
+                         / '\f'             ## NOTE 0x0c
+
+
+DottedName              <- Identifier  ('.'  Identifier)*  Spacing*
+
+
+Identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*
+
+
+Spacing                 <- ' '
+                         / '\t'
+                         / EndOfLine
+
+
+
+#####   OPERATORS   ##################################################
+
+OpAdd                   <- '+'
+                         / '-'
+
+OpDecr                  <- "--"
+
+OpIncr                  <- "++"
+
+OpMul                   <- '*'
+                         / '/'
+                         / '%'
+
+OpPower                 <- '**'
+
+
+Operator                <- AssignOp
+                         / OpDecr
+                         / OpIncr
+                         / OpAdd
+                         / OpPower
+                         / OpMul
+                         / "<<"
+                         / ">>"
+                         / "=="
+                         / "!="
+                         / ">="
+                         / ">"
+                         / "<="
+                         / "<"
+                         / '&'
+                         / '|'
+                         / '^'
+                         / '~'
+                         / IN_TK
+
+OperatorAngle           <- ">>"
+                         / "<<"
+
+AssignOp                <- '='
+                         / AugmentedAssignOp
+
+AugmentedAssignOp       <- "+="
+                         / "-="
+                         / "**="
+                         / "*="
+                         / "/="
+                         / "%="
+                         / "&="
+                         / "|="
+                         / "^="
+                         / "<<="
+                         / ">>="
+
+
+
+#####   COMPARISONS / EXPRESSIONS   ##################################
+
+Comparison          <- BitorExpr  (Spacing*  CompOperator  Spacing*  BitorEpxr)*
+
+
+CompOperator            <- "<="
+                        / '<'
+                        / "=="
+                        / "!="
+                        / ">="
+                        / '>'
+                        / IN_TK
+                        / IS_TK   NOT_TK?
+                        / NOT_TK  IN_TK
+
+
+AndTest                 <- NotTest (Spacing*  AND_TK  NotTest)?
+
+NotTest                 <- (NOT_TK)?  Comparison
+
+
+Condition               <- CompTest  Spacing*  (IF_TK  '('  Spacing*  CompTest  Spacing*  ')'  Spacing*  ELSE_TK  Expression)
+
+CompTest                <- AndTest  (Spacing*  OR_TK  AndTest)
+
+
+Expression              <- Condition
+                        / UnnamedFunction
+
+
+ExprList                <- Expression  (Spacing*  COMMA_TK Expression)*
+
+
+ArithmeticExpr          <- Term  Spacing*  (OpAdd  Spacing* Term)*
+
+
+BitAndExpr              <- ShiftedExpr  Spacing*  ('&'  Spacing*  ShiftedExpr)*
+
+BitOrExpr               <- BitXorExpr  Spacing*  ('|'  Spacing*  BitXorExpr)*  
+
+BitXorExpr              <- BitAndExpr  Spacing*  ('^'  Spacing*  BitAndExpr)*  
+
+
+Factor                  <- AtomItem  (Spacing*  OpPower Spacing*  UnaryExpr)*  
+                                                                          
+FactorsSeq              <- (OpMul  Spacing*  Factor)*                
+
+
+ParenthesisedExpr       <- '('  Spacing*  Expression  Spacing*  ')'
+
+
+ShiftedExpr             <- ArithmeticExpr  Spacing*  ShiftExpr*
+
+ShiftExpr               <- "<<"   Spacing*  ArithmeticExpr
+                         / ">>"   Spacing*  ArithmeticExpr
+
+
+Term                    <- Factor  Spacing*  FactorsSeq*
+
+
+UnaryExpr               <- '+'  Factor
+                         / '-'  Factor
+                         / '~'  Factor
+                         / Factor
+
+
+#####   ATOMS   ######################################################
+
+AtomItem                <- Atom
+                         / DottedName  AtomItem1?
+                         / '-'  DottedName  (OpDecr / OpIncr / AtomItem2)*
+                         / CONST_TK?  ScalarType  TypeCasting
+
+AtomItem1               <- OpDecr
+                         / OpIncr
+                         / ForComprehension
+                         / AtomItem2*
+
+AtomItem2               <- FunctionCall  ( ('.' Identifier)?  AtomItem2? )*
+                         / SubscriptionOrSlicing  ( ('.' Identifier)?  AtomItem2? )*
+
+
+Atom                    <- (OpDecr / OpIncr)  DottedName  (OpDecr / OpIncr)?
+                         / '-'?  Scalar
+                         / AtomEnclosure
+                         / String
+                         / FALSE_TK
+                         / TRUE_TK
+
+
+AtomEnclosure           <- BracketForm
+                         / ParenthesisForm
+
+
+BracketForm             <- '['  Spacing*  Expression  Spacing*  ListForm  Spacing*  ']'
+
+
+ListForm                <- '['  Spacing*  Expression  ( Spacing*  ((COMMA_TK  Expression)+ / ForComprehension ))?  Spacing*  ']'
+
+
+ParenthesisForm         <- '('  Spacing*  ExprList  Spacing*  ')'
+
+
+SliceForm               <- Expression  Spacing*  ':'  Spacing*  Expression?  (Spacing*  ':'  Spacing*  Expression?)?
+
+
+SubscriptionOrSlicing   <- '['  Spacing*  SliceForm  Spacing*  ']'
+                         / '['  Spacing*  Expression  Spacing*  ExprList*  Spacing*  ']'
+                         / '['  Spacing*  Expression  Spacing*  IfComprehension  Spacing*  ']'
+
+
+
+#####   COMPREHENSIONS   #############################################
+
+ForComprehension    <- FOR_TK  '('  Spacing*  TargetList  Spacing*  IN_TK  CompTest  Spacing*  IterComprehension?  Spacing*  ')'
+
+
+IfComprehension     <- IF_TK  '('  Spacing*  ConditionOrUnnamedFunc  Spacing*  ')'  Spacing*  IterComprehension?
+
+
+IterComprehension   <- ForComprehension
+                     / IfComprehension
+
+
+TargetList          <- TypedTarget  (Spacing*  COMMA_TK  TypedTarget)*
+
+TypedTarget         <- SimpleType  Spacing*  Target
+                     / DottedName  Spacing*  Target
+                     / Target               
+
+Target              <- DottedName  Spacing*  SubscriptionOrSlicing+  Spacing* 
+                     / DottedName  Spacing*
+
+
+
+#####   SCALARS   ####################################################
+
+Scalar                  <- FloatNumber    Spacing*
+                         / IntegerNumber  Spacing*
+
+
+FloatNumber             <- [1-9]  DecimalPart?  FractionPart  ExponentPart?
+
+
+IntegerNumber           <- '0'  OctalNumber
+                         / '0'  ('b' / 'B')  BinaryNumber
+                         / '0'  ('x' / 'X')  HexadecimalNumber
+                         / [1-9]  DecimalPart
+
+
+BinaryNumber            <- [01]  ('_'?  [01])*
+
+
+DecimalPart             <- [0-9]  ('_'?  [0-9])*
+
+ExponentPart            <- ('e' / 'E')  ('+' / '-')?   DecimalPart
+
+FractionPart            <- '.'  DecimalPart?
+
+
+HexadecimalNumber       <- HexDigit  ('_'?  HexDigit)*
+
+HexDigit                <- [09AFaf]
+
+
+OctalNumber             <- [0-7]  ('_'?  [0-7])*
+
+
+
+#####   STRINGS   ####################################################
+
+String              <- StringLiteral   ('.'  Identifier  Spacing*  FunctionCall)*
+                     / StringInstance  ('.'  Identifier  Spacing*  FunctionCall)*
+
+
+StringInstance      <- DottedName
+                     / StringType  Spacing*  '('  Spacing*  (StringLiteral / StringInstance)  ('.'  Identifier  Spacing*  FunctionCall)*  Spacing*  ')'  ('.'  Identifier  Spacing*  FunctionCall)*
+                     / StringType  '('  ')'  ('.'  Identifier  Spacing*  FunctionCall)*
+                     
+                     
+StringLiteral       <- "'"  (!"'" .)* "'"
+                     / '"'  (!'"' .)* '"'
+
+
+
+#####   TOKENS   ################################################
+
+AND_TK              <- "and"                Spacing*
+
+AS_TK               <- "as"                 Spacing+
+
+BREAK_TK            <- "break"              Spacing*
+
+CASE_TK             <- "case"               Spacing+
+
+COMMA_TK            <- ","                  Spacing*
+
+CONST_TK            <- "const"              Spacing+
+
+CONTINUE_TK         <- "continue"           Spacing*
+
+ELSEIF_TK           <- ("elseif" / "elsif" / "elif")  Spacing*
+
+ELSE_TK             <- "else"               Spacing*
+
+FALSE_TK            <- ("false" / "False")  Spacing*
+
+FOR_TK              <- "for"                Spacing*
+
+IF_TK               <- "if"                 Spacing*
+
+IN_TK               <- "in"                 Spacing*
+
+IS_TK               <- "is"                 Spacing+
+
+LAMBDA_TK           <- "lambda"             Spacing+
+
+NONE_TK             <- "none"               Spacing*
+
+NOP_TK              <- ("nop" / "pass")     Spacing*
+
+NOT_TK              <- "not"                Spacing+
+
+OR_TK               <- "or"                 Spacing+
+
+OTHERWISE_TK        <- "otherwise"          Spacing*
+
+REPEAT_TK           <- "repeat"             Spacing*
+
+RETURN_TK           <- ("return" / "ret")   Spacing*
+
+SEMI_COLON_TK       <- ';'                  Spacing*
+
+SWITCH_TK           <- "switch"             Spacing*
+
+TRUE_TK             <- ("true" / "True")    Spacing*
+
+TYPE_TK             <- "type"               Spacing+
+
+UNTIL_TK            <- "until"              Spacing*
+
+WHILE_TK            <- "while"              Spacing*
+
+
+
+#####   TYPES   #################################################
+
+Type                        <- CONST_TK?  SimpleType
+                             / NONE_TK
+                             / Record
+
+
+SimpleType                  <- '('  Spacing*  TypesList  Spacing* ')'  Spacing*
+                             / ScalarType  Spacing*  FixedDimensions?
+                           
+
+FixedDimensions             <- ( '['  Spacing*  (IntegerNumber / DottedName)  Spacing*  ']'  Spacing* )+
+
+
+ScalarType                  <- "bool"
+                             / "char"
+                             / "float"
+                             / "int"
+                             / "uint"
+                             / StringType
+
+StringType                  <- "str"
+
+
+Record                      <- RECORD_TK  Spacing*  RecordDataBlock  SimpleStatementEnd
+
+RecordDataBlock             <- '{'  Spacing*  RecordDataList?  '}'
+
+RecordDataList              <-  RecordDataDeclaration+   Spacing*
+
+RecordDataDeclaration       <- Type  Spacing*  Identifier  RecordDataInit?  SimpleStatementEnd
+
+RecordDataInit              <- Spacing*  '='  Spacing*  Expression
+
+
+TypeCasting                 <- '('  Spacing*  ScalarType  Spacing*  ')'  Spacing*
+                             / '('  Spacing*  DottedName  Spacing*  ')'  Spacing*
+                             
+
+TypesAndExprsList           <- (Expression / Type)  Spacing*  ( COMMA_TK  (Expression / Type)  Spacing* )*
+
+
+TypesList                   <- Type  Spacing*  ( COMMA_TK  Type  Spacing* )*

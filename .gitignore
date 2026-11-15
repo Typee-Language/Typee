@@ -1,8 +1,32 @@
+#---  Typee specifics  ---
+archive
+default.cfg
+
+
+#---  Typee Grammar  ---
+* - Copie.grm
+*-new.grm
+* - Copy.grm
+
+
+#---  Visual Studio specifics  ---
+.vs
+packages
+x64
+Debug
+Release
+
+
+#---  Python specifics  ---
+*.pyc
+__pycache__
+Scripts
+
+
+#---   Miscelaneous  ---
 .gitignore
 
 .metadata
-/.project
-/.pydevproject
 .settings
 _config.yml
 UML*
@@ -10,18 +34,3 @@ UML*
 tmp_data
 src/Utils/desktop.ini
 *.epf
-Scripts
-
-#-- Visual Studio (Code) --
-.vs
-packages
-x64
-
-#-- Python --
-*.pyc
-__pycache__
-
-#-- Typee Grammar --
-* - Copie.grm
-*-new.grm
-* - Copy.grm
