@@ -1,0 +1,34 @@
+name: clang-tidy
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get -qq update -yq
+        sudo apt-get -qq install -y clang-tidy --no-install-recommends --no-install-suggests
+
+    - name: Generate Compilation Database
+      run: cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+    - name: Run clang-tidy on Header Files
+      continue-on-error: true
+      run: find include/ -type f \( -name "*.hpp" -a ! -name "integer_bswap_win32.hpp" -a ! -name "mmap_file_win32.hpp" \) | xargs -P $(nproc) -I {} clang-tidy -quiet -p build {} -- -std=c++17 -Iinclude
+
+    - name: Run clang-tidy on tests and examples files
+      continue-on-error: true
+      run: find src/ -type f -name "*.cpp" | xargs -P $(nproc) -I {} clang-tidy -quiet -p build {} -- -std=c++17 -Iinclude

@@ -1,0 +1,66 @@
+// Copyright (c) 2020-2026 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef TAO_PEGTL_CONTROL_REMOVE_LAST_STATES_HPP
+#define TAO_PEGTL_CONTROL_REMOVE_LAST_STATES_HPP
+
+#include <cstdlib>
+
+#include "../config.hpp"
+
+#include "internal/shuffle_states.hpp"
+
+namespace TAO_PEGTL_NAMESPACE
+{
+   namespace internal
+   {
+      template< std::size_t N, std::size_t S >
+      struct remove_last_states_count
+      {
+         static_assert( S >= N );
+
+         static constexpr std::size_t count = S - N;
+      };
+
+      template< std::size_t N >
+      struct remove_last_states
+      {
+         template< std::size_t S >
+         static constexpr std::size_t count = remove_last_states_count< N, S >::count;
+
+         template< std::size_t I, std::size_t S >
+         static constexpr std::size_t value = I;
+      };
+
+   }  // namespace internal
+
+   template< typename Base >
+   using remove_last_state_b = internal::shuffle_states< internal::remove_last_states< 1 >, Base >;
+
+   template< template< typename... > class Control, typename Rule >
+   using remove_last_state_r = remove_last_state_b< Control< Rule > >;
+
+   template< template< typename... > class Control >
+   struct remove_last_state_n
+   {
+      template< typename Rule >
+      using type = remove_last_state_r< Control, Rule >;
+   };
+
+   template< std::size_t N, typename Base >
+   using remove_last_states_b = internal::shuffle_states< internal::remove_last_states< N >, Base >;
+
+   template< std::size_t N, template< typename... > class Control, typename Rule >
+   using remove_last_states_r = remove_last_states_b< N, Control< Rule > >;
+
+   template< std::size_t N, template< typename... > class Control >
+   struct remove_last_states_n
+   {
+      template< typename Rule >
+      using type = remove_last_states_r< N, Control, Rule >;
+   };
+
+}  // namespace TAO_PEGTL_NAMESPACE
+
+#endif

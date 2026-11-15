@@ -25,7 +25,6 @@ Scripts
 
 #---   Miscelaneous  ---
 .gitignore
-
 .metadata
 .settings
 _config.yml

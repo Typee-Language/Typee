@@ -1,0 +1,40 @@
+// Copyright (c) 2017-2026 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+
+#if !defined( __cpp_exceptions )
+#include <iostream>
+int main()
+{
+   std::cerr << "Exception support required, example unavailable." << std::endl;
+   return 1;
+}
+#else
+
+#include <iomanip>
+#include <iostream>
+
+#include <tao/pegtl.hpp>
+#include <tao/pegtl/example/proto3.hpp>
+
+namespace pegtl = TAO_PEGTL_NAMESPACE;
+
+int main( int argc, char** argv )  // NOLINT(bugprone-exception-escape)
+{
+   using input_t = pegtl::text_file_input< pegtl::scan::lf_crlf >;
+   for( int i = 1; i < argc; ++i ) {
+      input_t in( argv[ i ] );
+      try {
+         pegtl::parse< pegtl::proto3::proto >( in );
+      }
+      catch( const decltype( in )::parse_error_t& e ) {
+         const auto& p = e.position_object();
+         std::cerr << e.what() << '\n'
+                   << in.line_view_at( p ) << '\n'
+                   << std::setw( int( p.column ) ) << '^' << '\n';
+      }
+   }
+   return 0;
+}
+
+#endif

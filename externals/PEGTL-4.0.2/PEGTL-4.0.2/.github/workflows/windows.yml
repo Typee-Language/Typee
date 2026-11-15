@@ -1,0 +1,67 @@
+name: Windows
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+
+jobs:
+  windows-msvc:
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+        os: [windows-2022, windows-2025]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure Visual Studio Environment
+      uses: ilammy/msvc-dev-cmd@v1.13.0
+
+    - name: Install Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v4
+
+    - name: Configure CMake
+      run: cmake ${{ github.workspace }} -G "Ninja" -B build
+
+    - name: Build project
+      run: cmake --build ${{ github.workspace }}\build --config ${{ matrix.build_type }}
+
+    - name: Run tests
+      working-directory: ${{ github.workspace }}\build
+      run: ctest -C ${{ matrix.build_type }} --output-on-failure
+
+  windows-clang:
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+        os: [windows-2022, windows-2025]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure Visual Studio Environment
+      uses: ilammy/msvc-dev-cmd@v1.13.0
+
+    - name: Install Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v4
+
+    - name: Configure CMake
+      run: cmake -S ${{ github.workspace }} -B build -G "Ninja" -DCMAKE_C_COMPILER=clang-cl -DCMAKE_CXX_COMPILER=clang-cl
+
+    - name: Build project
+      run: cmake --build ${{ github.workspace }}\build --config ${{ matrix.build_type }}
+
+    - working-directory: ${{ github.workspace }}\build
+      run: ctest -C ${{ matrix.build_type }} --output-on-failure

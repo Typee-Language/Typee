@@ -1,0 +1,113 @@
+name: Linux
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+
+jobs:
+  linux-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os: ubuntu-22.04
+            compiler: g++-11
+          - os: ubuntu-24.04
+            compiler: g++-12
+          - os: ubuntu-24.04
+            compiler: g++-13
+          - os: ubuntu-24.04
+            compiler: g++-14
+          - os: ubuntu-22.04
+            compiler: clang++-13
+          - os: ubuntu-22.04
+            compiler: clang++-14
+          - os: ubuntu-22.04
+            compiler: clang++-15
+          - os: ubuntu-24.04
+            compiler: clang++-16
+          - os: ubuntu-24.04
+            compiler: clang++-17
+          - os: ubuntu-24.04
+            compiler: clang++-18
+        build_type: [Release, Debug]
+    runs-on: ${{ matrix.platform.os }}
+
+    steps:
+      - name: Install Dependencies
+        run: |
+          sudo apt -qq update
+          sudo apt -qq install -y ninja-build --no-install-recommends --no-install-suggests
+
+      - uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: |
+          cmake -S $GITHUB_WORKSPACE -B build \
+          -GNinja \
+          -DCMAKE_CXX_COMPILER=${{ matrix.platform.compiler }} \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build project
+        run: cmake --build build/
+
+      - name: Run tests
+        working-directory: build/
+        run: ctest -C ${{ matrix.build_type }} --output-on-failure
+
+  linux-gcc-extra:
+    strategy:
+      fail-fast: false
+      matrix:
+        flags: ["-fno-rtti", "-fno-exceptions"]
+        build_type: [Debug, Release]
+
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: seanmiddleditch/gha-setup-ninja@v5
+
+    - run: cmake -E make_directory build
+
+    - working-directory: build/
+      run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_FLAGS="${{ matrix.flags }}"
+
+    - working-directory: build/
+      run: cmake --build .
+
+    - working-directory: build/
+      run: ctest --output-on-failure
+
+  linux-clang-extra:
+    strategy:
+      fail-fast: false
+      matrix:
+        flags: ["-fno-rtti", "-fno-exceptions", "-fms-extensions"]
+        build_type: [Debug, Release]
+
+    runs-on: ubuntu-24.04
+
+    env:
+      CXX: clang++
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: seanmiddleditch/gha-setup-ninja@v5
+
+    - run: cmake -E make_directory build
+
+    - working-directory: build/
+      run: cmake $GITHUB_WORKSPACE -GNinja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_CXX_FLAGS="${{ matrix.flags }}"
+
+    - working-directory: build/
+      run: cmake --build .
+
+    - working-directory: build/
+      run: ctest --output-on-failure

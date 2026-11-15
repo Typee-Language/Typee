@@ -1,0 +1,117 @@
+// Copyright (c) 2014-2026 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
+
+#include <cassert>
+#include <cstring>
+
+#include <iostream>
+#include <string>
+
+#include <tao/pegtl.hpp>
+
+#include <tao/pegtl/debug/analyze.hpp>
+
+namespace pegtl = TAO_PEGTL_NAMESPACE;
+
+namespace example
+{
+   struct long_literal_id
+      : pegtl::plus< pegtl::not_one7< '[' > >
+   {};
+
+   struct long_literal_open
+      : pegtl::seq< pegtl::one< '[' >, long_literal_id, pegtl::one< '[' > >
+   {};
+
+   struct long_literal_mark
+   {
+      using rule_t = long_literal_mark;
+
+      template< pegtl::apply_mode,
+                pegtl::rewind_mode,
+                template< typename... > class Action,
+                template< typename... > class Control,
+                typename ParseInput,
+                typename... States >
+      static bool match( ParseInput& in, const std::string& id, const std::string& /*unused*/, States&&... /*unused*/ )
+      {
+         if( in.size( id.size() ) >= id.size() ) {
+            if( std::memcmp( in.current(), id.data(), id.size() ) == 0 ) {
+               in.template consume< long_literal_mark >( id.size() );
+               return true;
+            }
+         }
+         return false;
+      }
+   };
+
+   struct long_literal_close
+      : pegtl::seq< pegtl::one< ']' >, long_literal_mark, pegtl::one< ']' > >
+   {};
+
+   struct long_literal_body
+      : pegtl::any7
+   {};
+
+   struct grammar
+      : pegtl::seq< long_literal_open, pegtl::until< long_literal_close, long_literal_body >, pegtl::eof >
+   {};
+
+   template< typename Rule >
+   struct action
+   {};
+
+   template<>
+   struct action< long_literal_id >
+   {
+      template< typename ActionInput >
+      static void apply( const ActionInput& in, std::string& id, const std::string& /*unused*/ )
+      {
+         id = in.string();
+      }
+   };
+
+   template<>
+   struct action< long_literal_body >
+   {
+      template< typename ActionInput >
+      static void apply( const ActionInput& in, const std::string& /*unused*/, std::string& body )
+      {
+         body += in.string_view();
+      }
+   };
+
+}  // namespace example
+
+namespace TAO_PEGTL_NAMESPACE
+{
+   template< typename Name >
+   struct analyze_traits< Name, example::long_literal_mark >
+      : analyze_any_traits<>
+   {};
+
+}  // namespace TAO_PEGTL_NAMESPACE
+
+int main( int argc, char** argv )  // NOLINT(bugprone-exception-escape)
+{
+   if( pegtl::analyze< example::grammar >() != 0 ) {
+      std::cerr << "cycles without progress detected!" << std::endl;
+      return 1;
+   }
+   for( int i = 1; i < argc; ++i ) {
+      std::string id;
+      std::string body;
+
+      pegtl::argv_input< pegtl::scan::lf_crlf > in( argv, i );
+      if( pegtl::parse< example::grammar, example::action >( in, id, body ) ) {
+         std::cout << "long literal id was: " << id << std::endl;
+         std::cout << "long literal body was: " << body << std::endl;
+      }
+      else {
+         std::cerr << "parse error for: " << argv[ i ] << std::endl;
+         return 1;
+      }
+   }
+   return 0;
+}
