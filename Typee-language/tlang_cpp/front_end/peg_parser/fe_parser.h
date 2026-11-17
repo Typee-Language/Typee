@@ -30,11 +30,16 @@ SOFTWARE.
 #include <fstream>
 #include <string>
 
-#include "tao/pegtl.hpp"
+#include "tao/pegtl/ascii.hpp"
+#include "tao/pegtl/config.hpp"
+#include "tao/pegtl/parse.hpp"
+#include "tao/pegtl/text_view_input.hpp"
 namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 #include "../fe_exceptions.h"
 #include "../fe_intermediate_code.h"
+
+#include "typee_language_grammar.h"
 
 
 //===========================================================================
@@ -162,6 +167,7 @@ namespace ty_fe
         * NOTE: a  currently missing parameter is the reference to the IC
         * structure that will be initialized on the fly.
         */
+        template<typename GrammarEntryRule = ty_grm::t_code_module>
         const bool parse();
 
         //-------------------------------------------------------------------
@@ -172,6 +178,7 @@ namespace ty_fe
         * \param module_str a string containing T code to parse.
         * \return true if parsing was ok, or false otherwise.
         */
+        template<typename GrammarEntryRule = ty_grm::t_code_module>
         static const bool parse(const std::string& module_str);
 
         //-------------------------------------------------------------------
@@ -184,6 +191,7 @@ namespace ty_fe
         * \param out_ic a reference to the Intermediate Code structure to be generated.
         * \return true if parsing was ok, or false otherwise.
         */
+        template<typename GrammarEntryRule = ty_grm::t_code_module>
         static const bool parse(const std::string& module_str, FEIntermediateCode& out_ic);
 
         //-------------------------------------------------------------------
@@ -212,5 +220,42 @@ namespace ty_fe
         void _load(std::ifstream& module_fstream);
 
     };
+
+
+    //=====   IMPLEMENTATIONS   ==============================================
+    //-------------------------------------------------------------------
+    template<typename GrammarEntryRule>
+    const bool FEParser::parse()
+    {
+        pegtl::text_view_input<tao::pegtl::ascii::scan::lf_crlf> parsed_str(
+            std::string_view(_module_content.data(), _module_content.length())
+        );  // Notice: this is PEGTL 4.0
+        // PEGTL 3.2 version: pegtl::memory_input parsed_str(_module_content, "");
+        return pegtl::parse<GrammarEntryRule>(parsed_str);
+    }
+
+    //-------------------------------------------------------------------
+    template<typename GrammarEntryRule>
+    const bool FEParser::parse(const std::string& module_str)
+    {
+        pegtl::text_view_input<tao::pegtl::ascii::scan::lf_crlf> parsed_str(
+            std::string_view(module_str.data(), module_str.length())
+        );  // Notice: this is PEGTL 4.0
+        // PEGTL 3.2 version: pegtl::memory_input parsed_str(module_str, "");
+        return pegtl::parse<GrammarEntryRule>(parsed_str);
+    }
+
+    //-------------------------------------------------------------------
+    template<typename GrammarEntryRule>
+    const bool FEParser::parse(const std::string& module_str, FEIntermediateCode& out_ic)
+    {
+        pegtl::text_view_input<tao::pegtl::ascii::scan::lf_crlf> parsed_str(
+            std::string_view(module_str.data(), module_str.length())
+        );  // Notice: this is PEGTL 4.0
+        // PEGTL 3.2 version: pegtl::memory_input parsed_str(module_str, "");
+
+        // CAUTION: next call is INCOMPLETE
+        return pegtl::parse<GrammarEntryRule>(parsed_str);
+    }
 
 }  // end of namespace ty_fe

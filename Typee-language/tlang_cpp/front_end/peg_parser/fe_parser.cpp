@@ -30,18 +30,15 @@ SOFTWARE.
 #include <ios>
 #include <stdexcept>
 #include <string>
-#include <string_view>
 #include <utility>
 
-#include "tao/pegtl/ascii.hpp"
+#include "tao/pegtl.hpp"
 #include "tao/pegtl/config.hpp"
-#include "tao/pegtl/parse.hpp"
-#include "tao/pegtl/text_view_input.hpp"
 namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 #include "../fe_exceptions.h"
+
 #include "fe_parser.h"
-#include "typee_language_grammar.h"
 
 
 //===========================================================================
@@ -60,41 +57,6 @@ namespace ty_fe
     FEParser::FEParser(std::ifstream& module_fstream)
     {
         _load(module_fstream);
-    }
-
-
-    //-------------------------------------------------------------------
-    const bool FEParser::parse()
-    {
-        pegtl::text_view_input<tao::pegtl::ascii::scan::lf_crlf> parsed_str(
-            std::string_view(_module_content.data(), _module_content.length())
-        );  // PEGTL 4.0
-        // PEGTL 3.2 version: pegtl::memory_input parsed_str(_module_content, "");
-        return pegtl::parse< ty_grm::t_code_module >(parsed_str);
-    }
-
-
-    //-------------------------------------------------------------------
-    const bool FEParser::parse(const std::string& module_str)
-    {
-        pegtl::text_view_input<tao::pegtl::ascii::scan::lf_crlf> parsed_str(
-            std::string_view(module_str.data(), module_str.length())
-        );  // PEGTL 4.0
-        // PEGTL 3.2 version: pegtl::memory_input parsed_str(module_str, "");
-        return pegtl::parse< ty_grm::t_code_module >(parsed_str);
-    }
-
-
-    //-------------------------------------------------------------------
-    const bool FEParser::parse(const std::string& module_str, FEIntermediateCode& out_ic)
-    {
-        pegtl::text_view_input<tao::pegtl::ascii::scan::lf_crlf> parsed_str(
-            std::string_view(module_str.data(), module_str.length())
-        );  // PEGTL 4.0
-        // PEGTL 3.2 version: pegtl::memory_input parsed_str(module_str, "");
-        
-        // CAUTION: next call is INCOMPLETE
-        return pegtl::parse< ty_grm::t_code_module >(parsed_str);
     }
 
 
