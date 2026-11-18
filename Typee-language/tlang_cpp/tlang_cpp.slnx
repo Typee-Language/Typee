@@ -3,6 +3,11 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="../peg_evaluation/peg_evaluation.vcxproj" />
+  <Project Path="../peg_evaluation/peg_evaluation.vcxproj">
+    <BuildDependency Project="tlang_cpp.vcxproj" />
+  </Project>
+  <Project Path="../peg_evaluation_tests/peg_evaluation_tests.vcxproj">
+    <BuildDependency Project="tlang_cpp.vcxproj" />
+  </Project>
   <Project Path="tlang_cpp.vcxproj" />
 </Solution>
