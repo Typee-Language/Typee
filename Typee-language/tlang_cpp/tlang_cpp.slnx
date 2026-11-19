@@ -3,11 +3,6 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="../peg_evaluation/peg_evaluation.vcxproj" Id="97da0dfa-e83e-44fc-8d47-39ed11979bc5">
-    <BuildDependency Project="tlang_cpp.vcxproj" />
-  </Project>
-  <Project Path="../peg_evaluation_tests/peg_evaluation_tests.vcxproj" Id="556fdd87-8228-420a-a349-40b4e45ab435">
-    <BuildDependency Project="tlang_cpp.vcxproj" />
-  </Project>
+  <Project Path="../tlang-grammar/cpp/peg_grammar_tests/peg_grammar_tests.vcxproj" />
   <Project Path="tlang_cpp.vcxproj" Id="dfb87768-7370-44e7-80a3-21d7e4fee2b0" />
 </Solution>

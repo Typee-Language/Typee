@@ -27,8 +27,11 @@ SOFTWARE.
 
 //===========================================================================
 #include <string>
+
+#include "../../peg_grammar_rules/miscelaneous/miscelaneous.h"
+
 #include "../peg_evaluation.h"
-#include "miscelaneous.h"
+
 #include "miscelaneous_evaluation.h"
 
 
