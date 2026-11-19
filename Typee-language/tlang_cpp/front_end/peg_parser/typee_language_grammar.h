@@ -28,6 +28,7 @@ SOFTWARE.
 
 //===========================================================================
 #include "tao/pegtl.hpp"
+#include "tao/pegtl/config.hpp"
 namespace pegtl = TAO_PEGTL_NAMESPACE;
 
 
