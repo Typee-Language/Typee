@@ -133,17 +133,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="miscelaneous\miscelaneous_evaluation.cpp" />
-    <ClCompile Include="peg_evaluation.cpp" />
+    <ClCompile Include="..\..\..\tlang_cpp\front_end\peg_parser\fe_parser.cpp" />
+    <ClCompile Include="miscelaneous\miscelaneous_tests.cpp" />
     <ClCompile Include="peg_grammar_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\tlang_cpp\front_end\peg_parser\fe_parser.h" />
     <ClInclude Include="miscelaneous\miscelaneous.h" />
-    <ClInclude Include="miscelaneous\miscelaneous_evaluation.h" />
-    <ClInclude Include="peg_evaluation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

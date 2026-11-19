@@ -3,6 +3,8 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="../tlang-grammar/cpp/peg_grammar_tests/peg_grammar_tests.vcxproj" />
-  <Project Path="tlang_cpp.vcxproj" Id="dfb87768-7370-44e7-80a3-21d7e4fee2b0" />
+  <Project Path="E:/GitHub/Typee/Typee-language/tlang-grammar/cpp/peg_grammar_tests/peg_grammar_tests.vcxproj" Id="38e23ad5-d82d-4af4-a0cf-e845a5a35cdd">
+    <BuildDependency Project="E:/GitHub/Typee/Typee-language/tlang_cpp/tlang_cpp.vcxproj" />
+  </Project>
+  <Project Path="E:/GitHub/Typee/Typee-language/tlang_cpp/tlang_cpp.vcxproj" Id="dfb87768-7370-44e7-80a3-21d7e4fee2b0" />
 </Solution>

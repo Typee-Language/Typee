@@ -71,8 +71,9 @@ struct DottedName :
 
 struct EndOfLine :
     pegtl::sor<
-        pegtl::eolf,  // i.e. "\r\n", "\n\r", '\n', '\r' or end-of-input
-        pegtl::one<'\v', '\f'>
+        //pegtl::eolf,  // i.e. "\r\n", '\n', '\r' or end-of-input
+        pegtl::seq<pegtl::one<'\r'>, pegtl::one<'\n'>>,
+        pegtl::one<'\n', '\r', '\v', '\f'>
     > {};
 
 
