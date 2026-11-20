@@ -50,37 +50,26 @@ namespace tlang_rules
 
 
     //===========================================================================
-    struct AlphaChar :
-        pegtl::ranges<'A', 'Z', 'a', 'z'> {
-    };
+    struct AlphaChar : pegtl::ranges<'A', 'Z', 'a', 'z'> {};
 
 
-    struct AlphaNumChar :
-        pegtl::ranges<'0', '9', 'A', 'Z', 'a', 'z'> {
-    };
+    struct AlphaNumChar : pegtl::ranges<'0', '9', 'A', 'Z', 'a', 'z'> {};
 
 
-    struct Dot :
-        pegtl::one<'.'> {
-    };
+    struct Dot : pegtl::one<'.'> {};
 
 
-    struct DottedName :
-        pegtl::seq <
-        Identifier,
-        pegtl::star< pegtl::seq<Dot, Identifier> >,
-        Spacing0
-        > {
-    };
+    struct DottedName : pegtl::seq<
+                            Identifier,
+                            pegtl::star<pegtl::seq<Dot, Identifier>>
+                        > {};
 
 
-    struct Identifier :
-        pegtl::seq<
-        pegtl::sor<AlphaChar, Underscore>,
-        pegtl::star<pegtl::sor<AlphaNumChar, Underscore>>,
-        Spacing0
-        > {
-    };
+    struct Identifier : pegtl::seq<
+                            pegtl::sor<AlphaChar, Underscore>,
+                            pegtl::star<pegtl::sor<AlphaNumChar, Underscore>>,
+                            Spacing0
+                        > {};
 
 
     struct Spacing0 : pegtl::star<Spacing> {};
@@ -89,8 +78,6 @@ namespace tlang_rules
     struct Spacing1 : pegtl::plus<Spacing> {};
 
 
-    struct Underscore :
-        pegtl::one<'_'> {
-    };
+    struct Underscore : pegtl::one<'_'> {};
 
 }

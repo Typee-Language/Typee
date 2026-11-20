@@ -62,13 +62,21 @@ namespace miscelaneous_rules
         virtual ~MiscelaneousFixtureTest()
         {}
 
+        const bool is_identifier(const char c1, const char c2, const char c3) const noexcept
+        {
+            return (std::isalnum(c2) || c2 == '_') &&
+                (std::isalnum(c3) || c3 == '_') &&
+                (std::isalpha(c1) || c1 == '_');
+        }
+
+
         char ascii_chars[MAX_CHAR_VALUE];
         ty_fe::FEParser fe_parser{ "" };
     };
 
 
     //=====   AlphaChar   =====================================
-    TEST_F(MiscelaneousFixtureTest, TestAlphaCharRuleTest)
+    TEST_F(MiscelaneousFixtureTest, TestAlphaCharRule)
     {
         for (const char c : MiscelaneousFixtureTest::ascii_chars) {
             std::string test_code{ c };
@@ -108,6 +116,65 @@ namespace miscelaneous_rules
             << "end-of-file character finally is a dot?!?";
     }
 
+
+    //=====   DottedName   ====================================
+    /*
+    struct DottedName : pegtl::seq<
+                            Identifier,
+                            pegtl::star<pegtl::seq<Dot, Identifier>>
+                        > {};
+    */
+    TEST_F(MiscelaneousFixtureTest, TestDottedNameRule)
+    {
+        for (const char c : MiscelaneousFixtureTest::ascii_chars) {
+            std::string test_code{ c };
+
+            if (std::isalpha(c) || c == '_') {
+                for (const char c2 : MiscelaneousFixtureTest::ascii_chars) {
+                    if (c2 == '.') {
+                        for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
+                            std::string test_code3{ test_code + c2 + c3 };
+
+                            // Notice: whatever character c3 is, the PEG rule will always evaluate
+                            // as true (maybe by stopping the evaluation on c1 -> an error will be
+                            // later raised then on the dot while parsing the related module code.
+                            ASSERT_TRUE(fe_parser.parse<DottedName>(test_code3))
+                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a dotted name", test_code3, c, c2, c3);
+                            /*for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
+                                std::string test_code3{ test_code + c2 + c3 };
+                                if (std::isalpha(c3) || c3 == '_') {
+                                    ASSERT_TRUE(fe_parser.parse<DottedName>(test_code3))
+                                        << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a dotted name", test_code3, c, c2, c3);
+                                }
+                                else {
+                                    ASSERT_FALSE(fe_parser.parse<DottedName>(test_code3))
+                                        << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should not be recognized as a dotted name", test_code3, c, c2, c3);
+                                }
+                            }*/
+                        }
+                    }
+                    else {
+                        // Notice: c1 is a valid char for an identifier, so whatever are chars c2 and c3
+                        // the PEG rule will always evalaute to true (maybe by stopping the evaluation 
+                        // on c1 -> an error will be later raised then on the dot while parsing the 
+                        // related module code.
+                        for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
+                            std::string test_code3{ test_code + c2 + c3 };
+                            ASSERT_TRUE(fe_parser.parse<DottedName>(test_code3))
+                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a dotted name", test_code3, c, c2, c3);
+                        }
+                    }
+                }
+            }
+            else {
+                ASSERT_FALSE(fe_parser.parse<DottedName>(test_code))
+                    << std::format("test code '{}' (0x{:02x}) finally is recognized as a dotted name while it should not", test_code, c);
+            }
+        }
+
+        ASSERT_FALSE(fe_parser.parse<Identifier>(""))
+            << "end-of-file character finally is an identifier?!?";
+    }
 
     //=====   EndOfLine   =====================================
     TEST_F(MiscelaneousFixtureTest, TestEndOfLineRule)
@@ -166,14 +233,6 @@ namespace miscelaneous_rules
 
 
     //=====   Identifier   ====================================
-    /*
-    struct Identifier :
-        pegtl::seq<
-            pegtl::sor<AlphaChar, Underscore>,
-            pegtl::star<pegtl::sor<AlphaNumChar, Underscore>>,
-            Spacing0
-        > {};
-    */
     TEST_F(MiscelaneousFixtureTest, TestIdentifierRule)
     {
         for (const char c : MiscelaneousFixtureTest::ascii_chars) {
@@ -182,17 +241,27 @@ namespace miscelaneous_rules
             if (std::isalpha(c) || c == '_') {
                 for (const char c2 : MiscelaneousFixtureTest::ascii_chars) {
                     for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
+                        // Notice: when c2 and/or c3 are spaces, the end of the Identifier rule is automatically tested
                         std::string test_code3{ test_code + c2 + c3 };
-                        ASSERT_TRUE(fe_parser.parse<Spacing0>(test_code3))  // Notice: this is ALWAYS true
-                            << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) finally is an optional multiple spacing char?!?", test_code3, c, c2, c3);
+                        if (is_identifier(c, c2, c3)) {  // Notice: defined in the fixture
+                            ASSERT_TRUE(fe_parser.parse<Identifier>(test_code3))
+                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as an identifier", test_code3, c, c2, c3);
+                        }
+                        else {
+                            ASSERT_FALSE(fe_parser.parse<Identifier>(test_code3))
+                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should not be recognized as an identifier", test_code3, c, c2, c3);
+                        }
                     }
                 }
             }
             else {
                 ASSERT_FALSE(fe_parser.parse<Identifier>(test_code))
-                    << std::format("test code '{}' (0x{:02x}) finally is an identifer", test_code, c);
+                    << std::format("test code '{}' (0x{:02x}) finally is recognized as an identifer while it should not", test_code, c);
             }
         }
+
+        ASSERT_FALSE(fe_parser.parse<Identifier>(""))
+            << "end-of-file character finally is an identifier?!?";
     }
 
 
