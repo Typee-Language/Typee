@@ -255,8 +255,6 @@ AlphaNumChar            <- [0-9A-Za-z]
 EndOfLine               <- "\r\n"
                          / '\n'             ## NOTE 0x0a
                          / '\r'             ## NOTE 0x0d
-                         / '\v'             ## NOTE 0x0b
-                         / '\f'             ## NOTE 0x0c
 
 
 DottedName              <- Identifier  ('.'  Identifier)*  Spacing*
@@ -267,7 +265,10 @@ Identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*
 
 Spacing                 <- ' '
                          / '\t'
-                         / EndOfLine
+                         / '\n'             ## NOTE 0x0a
+                         / '\r'             ## NOTE 0x0d
+                         / '\v'             ## NOTE 0x0b
+                         / '\f'             ## NOTE 0x0c
 
 
 

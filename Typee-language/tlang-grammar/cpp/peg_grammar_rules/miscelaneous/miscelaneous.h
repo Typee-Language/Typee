@@ -34,54 +34,63 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 #include "tao/pegtl/ascii.hpp"
 #include "tao/pegtl/rules.hpp"
 
-
-//===========================================================================
-struct AlphaChar;
-struct AlphaNumChar;
-struct Dot;
-struct DottedName;
-using  EndOfLine = pegtl::cr_lf_crlf;
-struct Identifier;
-using  Spacing = pegtl::space;
-struct Spacing0;
-struct Spacing1;
-struct Underscore;
-
-
-//===========================================================================
-struct AlphaChar :
-    pegtl::ranges<'A', 'Z', 'a', 'z'> {};
+namespace tlang_rules
+{
+    //===========================================================================
+    struct AlphaChar;
+    struct AlphaNumChar;
+    struct Dot;
+    struct DottedName;
+    using  EndOfLine = pegtl::cr_lf_crlf;
+    struct Identifier;
+    using  Spacing = pegtl::space;
+    struct Spacing0;
+    struct Spacing1;
+    struct Underscore;
 
 
-struct AlphaNumChar :
-    pegtl::ranges<'0', '9', 'A', 'Z', 'a', 'z'> {};
+    //===========================================================================
+    struct AlphaChar :
+        pegtl::ranges<'A', 'Z', 'a', 'z'> {
+    };
 
 
-struct Dot :
-    pegtl::one<'.'> {};
+    struct AlphaNumChar :
+        pegtl::ranges<'0', '9', 'A', 'Z', 'a', 'z'> {
+    };
 
 
-struct DottedName :
-    pegtl::seq <
+    struct Dot :
+        pegtl::one<'.'> {
+    };
+
+
+    struct DottedName :
+        pegtl::seq <
         Identifier,
         pegtl::star< pegtl::seq<Dot, Identifier> >,
         Spacing0
-    > {};
+        > {
+    };
 
 
-struct Identifier :
-    pegtl::seq<
+    struct Identifier :
+        pegtl::seq<
         pegtl::sor<AlphaChar, Underscore>,
         pegtl::star<pegtl::sor<AlphaNumChar, Underscore>>,
         Spacing0
-    > {};
+        > {
+    };
 
 
-struct Spacing0 : pegtl::star<Spacing> {};
+    struct Spacing0 : pegtl::star<Spacing> {};
 
 
-struct Spacing1 : pegtl::plus<Spacing> {};
+    struct Spacing1 : pegtl::plus<Spacing> {};
 
 
-struct Underscore :
-    pegtl::one<'_'> {};
+    struct Underscore :
+        pegtl::one<'_'> {
+    };
+
+}
