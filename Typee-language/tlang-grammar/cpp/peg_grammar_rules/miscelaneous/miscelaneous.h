@@ -40,9 +40,9 @@ struct AlphaChar;
 struct AlphaNumChar;
 struct Dot;
 struct DottedName;
-struct EndOfLine;
+using  EndOfLine = pegtl::cr_lf_crlf;
 struct Identifier;
-struct Spacing;
+using  Spacing = pegtl::space;
 struct Spacing0;
 struct Spacing1;
 struct Underscore;
@@ -69,14 +69,6 @@ struct DottedName :
     > {};
 
 
-struct EndOfLine :
-    pegtl::sor<
-        //pegtl::eolf,  // i.e. "\r\n", '\n', '\r' or end-of-input
-        pegtl::seq<pegtl::one<'\r'>, pegtl::one<'\n'>>,
-        pegtl::one<'\n', '\r', '\v', '\f'>
-    > {};
-
-
 struct Identifier :
     pegtl::seq<
         pegtl::sor<AlphaChar, Underscore>,
@@ -85,13 +77,9 @@ struct Identifier :
     > {};
 
 
-struct Spacing :
-    pegtl::sor<
-        pegtl::one<' ', '\t'>,
-        EndOfLine
-    > {};
-
 struct Spacing0 : pegtl::star<Spacing> {};
+
+
 struct Spacing1 : pegtl::plus<Spacing> {};
 
 

@@ -47,21 +47,22 @@ namespace miscelaneous_rules
     // Miscelaneous Rules GTest Fixture
     class MiscelaneousFixtureTest : public testing::Test
     {
+    private:
+        static const int MAX_CHAR_VALUE{ 127 };  // We'll deal with sole ASCII characters, and not with char '\0'.
+
     protected:
         MiscelaneousFixtureTest()
             : testing::Test()
         {
-            std::ranges::copy(std::ranges::views::iota(0, 128), ascii_chars);
+            std::ranges::copy(std::ranges::views::iota(1, MAX_CHAR_VALUE+1), ascii_chars);
         }
 
         virtual ~MiscelaneousFixtureTest()
         {}
 
-        char ascii_chars[128];
+        char ascii_chars[MAX_CHAR_VALUE];
         ty_fe::FEParser fe_parser{ "" };
     };
-
-    //char MiscelaneousFixtureTest::ascii_chars[128];
 
 
     //=====   AlphaChar   =====================================
@@ -72,6 +73,9 @@ namespace miscelaneous_rules
             ASSERT_EQ(fe_parser.parse<AlphaChar>(test_code), static_cast<bool>(std::isalpha(c)))
                 << std::format("tested code '{}' finally is not analpha char", c);
         }
+
+        ASSERT_FALSE(fe_parser.parse<AlphaChar>(""))
+            << "end-of-file character finally is an alpha char?!?";
     }
 
 
@@ -83,6 +87,9 @@ namespace miscelaneous_rules
             ASSERT_EQ(fe_parser.parse<AlphaNumChar>(test_code), static_cast<bool>(std::isalnum(c)))
                 << std::format("tested code '{}' finally is not an alphanum char", c);
         }
+
+        ASSERT_FALSE(fe_parser.parse<AlphaNumChar>(""))
+            << "end-of-file character finally is an alphanum char?!?";
     }
 
 
@@ -94,13 +101,16 @@ namespace miscelaneous_rules
             ASSERT_EQ(fe_parser.parse<Dot>(test_code), c == '.')
                 << std::format("tested code '{}' finally is not a dot", c);
         }
+
+        ASSERT_FALSE(fe_parser.parse<Dot>(""))
+            << "end-of-file character finally is a dot?!?";
     }
 
 
     //=====   EndOfLine   =====================================
     TEST_F(MiscelaneousFixtureTest, TestEndOfLineRule)
     {
-        const std::vector<std::string> end_of_lines{ "\n", "\r", "\v", "\f", "\0" };
+        const std::vector<std::string> end_of_lines{ "\n", "\r" };
         for (const char c : MiscelaneousFixtureTest::ascii_chars) {
             std::string test_code{ c };
             const bool is_ok{ std::ranges::find(end_of_lines, test_code) != end_of_lines.end() };
@@ -110,13 +120,10 @@ namespace miscelaneous_rules
         }
 
         std::string test_code{};
-        const std::vector<std::string> end_of_lines_str{ "\n", "\r", "\v", "\f", "\r\n" };
+        const std::vector<std::string> end_of_lines_str{ "\n", "\r", "\r\n" };
         for (const char c1 : MiscelaneousFixtureTest::ascii_chars) {
-            if (c1 == '\0')
-                continue;
-
             switch (c1) {
-            case '\n': case '\v': case '\f':
+            case '\n':
                 test_code = c1;
                 ASSERT_TRUE(fe_parser.parse<EndOfLine>(test_code))
                     << std::format("tested code '{}' (0x{:02x}) finally is not a valid end-of-line", test_code, int(test_code[0]));
@@ -143,14 +150,16 @@ namespace miscelaneous_rules
             default:
                 for (const char c2 : MiscelaneousFixtureTest::ascii_chars) {
                     test_code = c1;
-                    if (c2 != '\0')
-                        test_code += c2;
+                    test_code += c2;
                     ASSERT_FALSE(fe_parser.parse<EndOfLine>(test_code))
                         << std::format("tested code '{}' (0x{:02x}) finally is not a valid end-of-line", test_code, int(test_code[0]));
                 }
                 break;
             }
         }
+
+        ASSERT_FALSE(fe_parser.parse<EndOfLine>(""))
+            << "end-of-file character finally is a dot?!?";
     }
 
 }
