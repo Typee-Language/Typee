@@ -118,12 +118,6 @@ namespace miscelaneous_rules
 
 
     //=====   DottedName   ====================================
-    /*
-    struct DottedName : pegtl::seq<
-                            Identifier,
-                            pegtl::star<pegtl::seq<Dot, Identifier>>
-                        > {};
-    */
     TEST_F(MiscelaneousFixtureTest, TestDottedNameRule)
     {
         for (const char c : MiscelaneousFixtureTest::ascii_chars) {
@@ -134,23 +128,23 @@ namespace miscelaneous_rules
                     if (c2 == '.') {
                         for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
                             std::string test_code3{ test_code + c2 + c3 };
-
-                            // Notice: whatever character c3 is, the PEG rule will always evaluate
-                            // as true (maybe by stopping the evaluation on c1 -> an error will be
-                            // later raised then on the dot while parsing the related module code.
-                            ASSERT_TRUE(fe_parser.parse<DottedName>(test_code3))
-                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a dotted name", test_code3, c, c2, c3);
-                            /*for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
-                                std::string test_code3{ test_code + c2 + c3 };
-                                if (std::isalpha(c3) || c3 == '_') {
+                            if (std::isalpha(c3) || c3 == '_') {
+                                for (const char c4 : MiscelaneousFixtureTest::ascii_chars) {
+                                    test_code3 += c4;
                                     ASSERT_TRUE(fe_parser.parse<DottedName>(test_code3))
-                                        << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a dotted name", test_code3, c, c2, c3);
+                                        << std::format(
+                                                "tested code '{}' (0x{:02x}{:02x}{:02x}{:02x}) should be recognized as a dotted name",
+                                                test_code3, c, c2, c3, c4
+                                           );
                                 }
-                                else {
-                                    ASSERT_FALSE(fe_parser.parse<DottedName>(test_code3))
-                                        << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should not be recognized as a dotted name", test_code3, c, c2, c3);
-                                }
-                            }*/
+                            }
+                            else {
+                                ASSERT_FALSE(fe_parser.parse<DottedName>(test_code3))
+                                    << std::format(
+                                           "tested code '{}' (0x{:02x}{:02x}{:02x}) should not be recognized as a dotted name",
+                                           test_code3, c, c2, c3
+                                       );
+                            }
                         }
                     }
                     else {
@@ -160,21 +154,28 @@ namespace miscelaneous_rules
                         // related module code.
                         for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
                             std::string test_code3{ test_code + c2 + c3 };
-                            ASSERT_TRUE(fe_parser.parse<DottedName>(test_code3))
-                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a dotted name", test_code3, c, c2, c3);
+                            ASSERT_FALSE(fe_parser.parse<DottedName>(test_code3))
+                                << std::format(
+                                       "tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a dotted name",
+                                       test_code3, c, c2, c3
+                                   );
                         }
                     }
                 }
             }
             else {
                 ASSERT_FALSE(fe_parser.parse<DottedName>(test_code))
-                    << std::format("test code '{}' (0x{:02x}) finally is recognized as a dotted name while it should not", test_code, c);
+                    << std::format(
+                           "test code '{}' (0x{:02x}) finally is recognized as a dotted name while it should not",
+                           test_code, c
+                       );
             }
         }
 
         ASSERT_FALSE(fe_parser.parse<Identifier>(""))
             << "end-of-file character finally is an identifier?!?";
     }
+
 
     //=====   EndOfLine   =====================================
     TEST_F(MiscelaneousFixtureTest, TestEndOfLineRule)
@@ -185,7 +186,10 @@ namespace miscelaneous_rules
             const bool is_ok{ std::ranges::find(end_of_lines, test_code) != end_of_lines.end() };
 
             ASSERT_EQ(fe_parser.parse<EndOfLine>(test_code), is_ok)
-                << std::format("tested code '{}' (0x{:02x}) finally is not a valid end-of-line", test_code, int(test_code[0]));
+                << std::format(
+                    "tested code '{}' (0x{:02x}) finally is not a valid end-of-line",
+                    test_code, int(test_code[0])
+                   );
         }
 
         std::string test_code{};
@@ -195,7 +199,10 @@ namespace miscelaneous_rules
             case '\n':
                 test_code = c1;
                 ASSERT_TRUE(fe_parser.parse<EndOfLine>(test_code))
-                    << std::format("tested code '{}' (0x{:02x}) finally is not a valid end-of-line", test_code, int(test_code[0]));
+                    << std::format(
+                        "tested code '{}' (0x{:02x}) finally is not a valid end-of-line",
+                        test_code, int(test_code[0])
+                       );
                 break;
 
             case '\r':
@@ -212,7 +219,10 @@ namespace miscelaneous_rules
                         }
                     }
                     ASSERT_EQ(fe_parser.parse<EndOfLine>(test_code), is_ok)
-                        << std::format("tested code '{}' (0x{:02x},0x{:02x}) finally is not a valid end-of-line", test_code, int(test_code[0]), int(test_code[1]));
+                        << std::format(
+                            "tested code '{}' (0x{:02x},0x{:02x}) finally is not a valid end-of-line",
+                            test_code, int(test_code[0]), int(test_code[1])
+                           );
                 }
                 break;
 
@@ -221,7 +231,10 @@ namespace miscelaneous_rules
                     test_code = c1;
                     test_code += c2;
                     ASSERT_FALSE(fe_parser.parse<EndOfLine>(test_code))
-                        << std::format("tested code '{}' (0x{:02x}) finally is not a valid end-of-line", test_code, int(test_code[0]));
+                        << std::format(
+                            "tested code '{}' (0x{:02x}) finally is not a valid end-of-line",
+                            test_code, int(test_code[0])
+                           );
                 }
                 break;
             }
@@ -241,27 +254,78 @@ namespace miscelaneous_rules
             if (std::isalpha(c) || c == '_') {
                 for (const char c2 : MiscelaneousFixtureTest::ascii_chars) {
                     for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
-                        // Notice: when c2 and/or c3 are spaces, the end of the Identifier rule is automatically tested
+                        // Notice: when c2 and/or c3 are spaces, the end of the Identifier rule is automatically tested (i.e. Spacing rule)
                         std::string test_code3{ test_code + c2 + c3 };
                         if (is_identifier(c, c2, c3)) {  // Notice: defined in the fixture
                             ASSERT_TRUE(fe_parser.parse<Identifier>(test_code3))
-                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as an identifier", test_code3, c, c2, c3);
+                                << std::format(
+                                    "tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as an identifier",
+                                    test_code3, c, c2, c3
+                                );
                         }
                         else {
-                            ASSERT_FALSE(fe_parser.parse<Identifier>(test_code3))
-                                << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) should not be recognized as an identifier", test_code3, c, c2, c3);
+                            ASSERT_TRUE(fe_parser.parse<Identifier>(test_code3))
+                                << std::format(
+                                    "tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as an identifier on first chars",
+                                    test_code3, c, c2, c3
+                                );
                         }
                     }
                 }
             }
             else {
                 ASSERT_FALSE(fe_parser.parse<Identifier>(test_code))
-                    << std::format("test code '{}' (0x{:02x}) finally is recognized as an identifer while it should not", test_code, c);
+                    << std::format(
+                        "test code '{}' (0x{:02x}) finally is recognized as an identifer while it should not",
+                        test_code, c
+                    );
             }
         }
 
         ASSERT_FALSE(fe_parser.parse<Identifier>(""))
             << "end-of-file character finally is an identifier?!?";
+    }
+
+
+    //=====   Name   ==========================================
+    TEST_F(MiscelaneousFixtureTest, TestNameRule)
+    {
+        for (const char c : MiscelaneousFixtureTest::ascii_chars) {
+            std::string test_code{ c };
+
+            if (std::isalpha(c) || c == '_') {
+                for (const char c2 : MiscelaneousFixtureTest::ascii_chars) {
+                    for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
+                        // Notice: when c2 and/or c3 are spaces, the end of the Name rule is automatically tested (i.e. Spacing rule)
+                        std::string test_code3{ test_code + c2 + c3 };
+                        if (is_identifier(c, c2, c3)) {  // Notice: defined in the fixture
+                            ASSERT_TRUE(fe_parser.parse<Name>(test_code3))
+                                << std::format(
+                                    "tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a name",
+                                    test_code3, c, c2, c3
+                                   );
+                        }
+                        else {
+                            ASSERT_TRUE(fe_parser.parse<Name>(test_code3))
+                                << std::format(
+                                    "tested code '{}' (0x{:02x}{:02x}{:02x}) should be recognized as a name on first chars",
+                                    test_code3, c, c2, c3
+                                   );
+                        }
+                    }
+                }
+            }
+            else {
+                ASSERT_FALSE(fe_parser.parse<Name>(test_code))
+                    << std::format(
+                        "test code '{}' (0x{:02x}) finally is recognized as a name while it should not",
+                        test_code, c
+                       );
+            }
+        }
+
+        ASSERT_FALSE(fe_parser.parse<Name>(""))
+            << "end-of-file character finally is a name?!?";
     }
 
 
@@ -285,14 +349,20 @@ namespace miscelaneous_rules
         for (const char c : MiscelaneousFixtureTest::ascii_chars) {
             std::string test_code{ c };
             ASSERT_TRUE(fe_parser.parse<Spacing0>(test_code))  // Notice: this is ALWAYS true
-                << std::format("tested code '{}' (0x{:02x}) finally is not an optional spacing char", test_code, c);
+                << std::format(
+                    "tested code '{}' (0x{:02x}) finally is not an optional spacing char",
+                    test_code, c
+                   );
 
             if (std::isspace(c)) {
                 for (const char c2 : MiscelaneousFixtureTest::ascii_chars) {
                     for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
                         std::string test_code3{ test_code + c2 + c3 };
                         ASSERT_TRUE(fe_parser.parse<Spacing0>(test_code3))  // Notice: this is ALWAYS true
-                            << std::format("tested code '{}' finally is not an optional multiple spacing char", test_code3);
+                            << std::format(
+                                "tested code '{}' finally is not an optional multiple spacing char",
+                                test_code3
+                               );
                     }
                 }
             }
@@ -301,7 +371,10 @@ namespace miscelaneous_rules
                     for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
                         std::string test_code3{ test_code + c2 + c3 };
                         ASSERT_TRUE(fe_parser.parse<Spacing0>(test_code3))  // Notice: this is ALWAYS true
-                            << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) finally is an optional multiple spacing char?!?", test_code3, c, c2, c3);
+                            << std::format(
+                                "tested code '{}' (0x{:02x}{:02x}{:02x}) finally is an optional multiple spacing char?!?",
+                                test_code3, c, c2, c3
+                               );
                     }
                 }
             }
@@ -329,7 +402,10 @@ namespace miscelaneous_rules
                     for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
                         std::string test_code3{ test_code + c2 + c3 };
                         ASSERT_TRUE(fe_parser.parse<Spacing1>(test_code3))
-                            << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) finally is not a multiple spacing char", test_code3, c1, c2, c3);
+                            << std::format(
+                                "tested code '{}' (0x{:02x}{:02x}{:02x}) finally is not a multiple spacing char",
+                                test_code3, c1, c2, c3
+                               );
                     }
                 }
             }
@@ -338,7 +414,10 @@ namespace miscelaneous_rules
                     for (const char c3 : MiscelaneousFixtureTest::ascii_chars) {
                         std::string test_code3{ test_code + c2 + c3 };
                         ASSERT_FALSE(fe_parser.parse<Spacing1>(test_code3))
-                            << std::format("tested code '{}' (0x{:02x}{:02x}{:02x}) finally is a multiple spacing char", test_code3, c1, c2, c3);
+                            << std::format(
+                                "tested code '{}' (0x{:02x}{:02x}{:02x}) finally is a multiple spacing char",
+                                test_code3, c1, c2, c3
+                               );
                     }
                 }
             }
