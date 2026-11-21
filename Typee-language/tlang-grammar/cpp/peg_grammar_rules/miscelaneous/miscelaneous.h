@@ -43,6 +43,7 @@ namespace tlang_rules
     struct DottedName;
     using  EndOfLine = pegtl::cr_lf_crlf;
     struct Identifier;
+    struct Name;
     using  Spacing = pegtl::space;
     struct Spacing0;
     struct Spacing1;
@@ -60,17 +61,30 @@ namespace tlang_rules
 
 
     struct DottedName : pegtl::seq<
-                            Identifier,
-                            pegtl::star<pegtl::seq<Dot, Identifier>>
+                            Name,
+                            pegtl::plus<pegtl::seq<Dot, Spacing0, Name>>
                         > {};
 
 
-    struct Identifier : pegtl::seq<
-                            pegtl::sor<AlphaChar, Underscore>,
-                            pegtl::star<pegtl::sor<AlphaNumChar, Underscore>>,
-                            Spacing0
+    struct Identifier : pegtl::seq<  // Notice: the used rule definition here is the most effective one - see grammar specs doc
+                            Name,
+                            pegtl::star<pegtl::seq<Dot, Spacing0, Name>>
                         > {};
 
+
+    struct Name : pegtl::seq<
+                      pegtl::identifier,  // Notice: PEGTL v.4.0 specifies identifiers exactly as TLang PEG actually does
+                      Spacing0
+                  > {};
+    /**
+    // Should PEGTL specification of 'identifier' accept more chars than
+    // TLang PEGTL does, next definition for rule 'Name' should be used.
+    struct Name : pegtl::seq<
+                      pegtl::sor<AlphaChar, Underscore>,
+                      pegtl::star<pegtl::sor<AlphaNumChar, Underscore>>,
+                      Spacing0
+                  > {};
+    */
 
     struct Spacing0 : pegtl::star<Spacing> {};
 
