@@ -35,8 +35,8 @@ ENDMARKER  <- !.
 #####   ATOMS   ######################################################
 
 AtomItem                <- Atom
-                         / DottedName  AtomItem1?
-                         / '-'  DottedName  AtomItem2*
+                         / Identifier  AtomItem1?                       ## NOTE replaced 'DottedName' with new rule 'Identifier'
+                         / '-'  Identifier  AtomItem2*                  ## NOTE replaced 'DottedName' with new rule 'Identifier'
                          / CONST_TK?  ScalarType  TypeCasting           ## NOTE TO BE CHECKED!!!  Is type casting ok here?!?
 
 AtomItem1               <- OpDecr
@@ -50,7 +50,7 @@ AtomItem2               <- FunctionCall  (('.' Identifier)?  AtomItem2)*
                          / SubscriptionOrSlicing  (('.' Identifier)?  AtomItem2)*
 
 
-Atom                    <- (OpDecr / OpIncr)  DottedName  (OpDecr / OpIncr)?
+Atom                    <- (OpDecr / OpIncr)  Identifier  (OpDecr / OpIncr)?    ## NOTE replaced 'DottedName' with new rule 'Identifier'
                          / '-'?  Scalar
                          / AtomEnclosure
                          / Reference
@@ -66,8 +66,8 @@ AtomEnclosure           <- BracketForm
 BracketForm             <- '['  Expression  (ListForm / MapForm)  ']'
 
 
-IsInstanceOf            <- "->"  Spacing*  DottedName                   ## NOTE dotted name must be the name of a class
-                        <- "isinstanceof"  Spacing+  DottedName
+IsInstanceOf            <- "->"  Spacing*  Identifier                   ## NOTE identifier must be the name of a class (replaces 'DottedName')
+                        <- "isinstanceof"  Spacing+  Identifier         ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
 ListForm                <- '['  Expression  ( (',' Expression)+ / ForComprehension )?  ']'
@@ -79,8 +79,8 @@ MapForm                 <- ':'  Expression  MapListOrComprehension
 ParenthesisForm         <- '('  ExprList  ')'
 
 
-Reference               <- '@'  DottedName                              ## NOTE which one would better fit, @ or &?
-                         / '&'  DottedName
+Reference               <- '@'  Identifer                              ## NOTE which one would better fit, @ or &?
+                         / '&'  Identifier
 
 
 SliceForm               <- Expression  ':'  Expression?  (':'  Expression?)?
@@ -101,12 +101,12 @@ Inheritance         <- ':'  InterfaceItem  (','  InterfaceItem)*  (','  Inherita
                      / ':'  InheritanceItem  (',' InterfaceItem)*
 
 
-InheritanceItem     <- AccessQualifier?  DottedName  TemplateArgs?
+InheritanceItem     <- AccessQualifier?  Identifier  TemplateArgs?      ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
-InterfaceItem       <- IMPLEMENTS_TK  AccessQualifier?  DottedName  TemplateArgs?
-                     / IMPLEMENTS_TK  '('  AccessQualifier?  DottedName  TemplateArgs?  (','  AccessQualifier?  DottedName  TemplateArgs?)*  ')'
-
+InterfaceItem       <- IMPLEMENTS_TK  AccessQualifier?  Identifier  TemplateArgs?
+                     / IMPLEMENTS_TK  '('  AccessQualifier?  Identifier  TemplateArgs?  (','  AccessQualifier?  Identifier  TemplateArgs?)*  ')'
+                        ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
 #####   COMPREHENSIONS   #############################################
@@ -179,8 +179,8 @@ Factor                  <- AtomItem  (OpPower TemplateArgs?  UnaryExpr)*    ## N
                          / '('  Spacing*  Expression  Spacing*  ')'
 
 
-FileExpression          <- DottedName  FunctionCall*                        ## NOTE DottedName is either the identifier of a file or the identifier of a method of a file (in which case a function call is mandatory)
-
+FileExpression          <- Identifier  FunctionCall*                        ## NOTE Identifier is either the identifier of a file or the identifier of a method of a file (in which case a function call is mandatory)
+                                                                            ## NOTE replaced 'DottedName' with new rule 'Identifier'
 MapItem                 <- Expression  ':'  Expression
 
 MapList                 <- (','  MapItem)*
@@ -257,10 +257,14 @@ EndOfLine               <- "\r\n"
                          / '\r'             ## NOTE 0x0d
 
 
-DottedName              <- Identifier  ('.'  Identifier)*  Spacing*
+DottedName              <- Name  ('.'  Spacing*  Name)+  Spacing*               ## NOTE new definition
 
 
-Identifier              <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*
+Identifier              <- DottedName                                           ## NOTE new definition, former one is now named 'Name'
+                         / Name
+
+
+Name                    <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*   ## NOTE new, renaming former 'Identifier'
 
 
 Spacing                 <- ' '
@@ -429,8 +433,8 @@ SimpleStatement         <- AccessProtectionStatement
                          / Comment
                          / DeclarationStatement      SimpleStatementEnd     ## NOTE may not be allowed everywhere
                          / DeleteStatement           SimpleStatementEnd
-                         / DottedName  FunctionCall  SimpleStatementEnd
-                         / DottedName  TargetList  AssignmentClause  SimpleStatementEnd
+                         / Identifier  FunctionCall  SimpleStatementEnd                     ## NOTE replaced 'DottedName' with new rule 'Identifier'
+                         / Identifier  TargetList  AssignmentClause  SimpleStatementEnd     ## NOTE replaced 'DottedName' with new rule 'Identifier'
                          / EmptyStatement            SimpleStatementEnd*
                          / EnsureStatement           SimpleStatementEnd
                          / FileEndianness
@@ -584,7 +588,7 @@ FlowStatement           <- BREAK_TK
                          / ReturnStatement
 
 
-IdentifiersList         <- DottedName  (',' DottedName)*
+IdentifiersList         <- Identifier  (',' Identifier)*            ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
 ImportStatement         <- ImportName
@@ -594,16 +598,17 @@ ImportName              <- IMPORT_TK  ImportAsNames
 
 ImportAsNames           <- ImportAsName  (',' ImportAsName)*
 
-ImportAsName            <- DottedName  (AS_TK Identifier)?
+ImportAsName            <- Identifier  (AS_TK Identifier)?          ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 ImportFrom              <- FROM_TK  ModulePath  IMPORT_TK  ImportFromList
 
 ImportFromList          <- ALL_TK  ImportBut
                          / ImportAsNames
 
-ImportBut               <- BUT_TK  DottedName  (','  DottedName)*
+ImportBut               <- BUT_TK  Identifier  (','  Identifier)*   ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
-ModulePath              <- '.'*  DottedName                             ## NOTE a module path should not contain the ".ty" suffix of its related filepath
+ModulePath              <- '.'*  Identifier                         ## NOTE a module path should not contain the ".ty" suffix of its related filepath
+                                                                    ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
 NoOperationStatement     <- NOP_TK  Spacing*
@@ -635,7 +640,7 @@ EmbeddedCode            <- FilePath  SimpleStatementEnd
 
 ExcludeStatement        <- EXCLUDE_TK  Languages
 
-FilePath                <- '.'*  DottedName                             ## NOTE a file path may be suffixed according to the targetted language conventions
+FilePath                <- '.'*  Identifier                             ## NOTE a file path may be suffixed according to the targetted language conventions
 
 Languages               <- Language  (','  Language)*
 
@@ -701,11 +706,10 @@ WithStatement           <- WITH_TK  '('  WhenWithItem  (',' WhenWithItem)*  ')' 
 
 TypedTarget             <- SimpleType     Target
                          / TemplatedType  Target 
-                         / DottedName     Target                        ## NOTE DottedName is a type name
-                         / Target                                       ## NOTE DottedName is an identifier of a variable for which type is known
+                         / Identifier     Target                        ## NOTE Identifier is a type name
+                         / Target
 
-Target                  <- DottedName  Spacing*  SubscriptionOrSlicing+  Spacing*
-                         / DottedName  Spacing*
+Target                  <- Identifier  Spacing*  (SubscriptionOrSlicing+  Spacing*)?    ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 TargetList              <- TypedTarget  (',' TypedTarget)*
 
@@ -736,7 +740,7 @@ String              <- StringLiteral   ('.'  Identifier  FunctionCall)*
                      / StringInstance  ('.'  Identifier  FunctionCall)*
 
 
-StringInstance      <- DottedName
+StringInstance      <- Identifier                                       ## NOTE replaced 'DottedName' with new rule 'Identifier'
                      / StringType  '('  (StringLiteral / StringInstance)  ('.'  Identifier  FunctionCall)*  ')'  ('.'  Identifier  FunctionCall)*
                      / StringType  '('  ')'  ('.'  Identifier  FunctionCall)*
                      
@@ -760,7 +764,7 @@ TemplateArgs        <- '<'  ( Condition  (',' Condition)* )?  '>'
 TemplateDefs        <- '<'  TemplateSubDef  (',' TempalteSubDef)*  '>'
 
 TempalteSubDef      <- Identifier
-                     / CONST_TK  ScalarTypeOrDottedName  Identifier  ('=' Expression)?
+                     / CONST_TK  ScalarTypeOrIdentifier  Identifier  ('=' Expression)?
 
 
 
@@ -932,7 +936,7 @@ NotConstType                <- TemplatedType
                              / NONE_TK
 
 
-TemplatedType               <- DottedName  ('<' Spacing* TypesAndExprsList Spacing* '>')?  FixedDimensions?
+TemplatedType               <- Identifier  ('<' Spacing* TypesAndExprsList Spacing* '>')?  FixedDimensions?
 
 
 AutoType                    <- '?'  Spacing+  (IN_TK Spacing* '(' Spacing* TypesList ')')?  Spacing*
@@ -948,7 +952,7 @@ ContainerType               <- ArrayType
 FileType                    <-  FILE_TK  ContainedType
 
 
-FixedDimensions             <- ( '[' Spacing* (IntegerNumber / DottedName) Spacing* ']' Spacing* )+
+FixedDimensions             <- ( '[' Spacing* (IntegerNumber / Identifier) Spacing* ']' Spacing* )+
 
 
 GenericContainerType        <- "_container_"
@@ -983,13 +987,16 @@ ScalarType                  <- "bigint"
                              / "bigint"
                              / StringType
 
+ScalarTypeOrIdentifier      <- ScalarType                   ## NOTE added, was missing in previous version of grammar specs
+                             / Identifier
+
 
 StringType                  <- "str16"
                              / "str"
 
 
 TypeCasting                 <- '('  ScalarType  ')'  Spacing*
-                             / '('  DottedName  ')'  Spacing*       ## NOTE dotted name must be an alias to a scalar type
+                             / '('  Identifier  ')'  Spacing*       ## NOTE identifier must be an alias to a scalar type
                              
 
 TypesAndExprsList           <- (Expression / Type)  Spacing*  (',' Spacing* (Expression / Type) Spacing*)*
