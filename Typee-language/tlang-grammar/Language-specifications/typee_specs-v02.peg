@@ -257,11 +257,11 @@ EndOfLine               <- "\r\n"
                          / '\r'             ## NOTE 0x0d
 
 
-DottedName              <- Name  ('.'  Spacing*  Name)+  Spacing*               ## NOTE new definition
+DottedName              <- Name  ('.'  Spacing*  Name)+                         ## NOTE new definition
 
 
 Identifier              <- DottedName                                           ## NOTE new definition, former one is now named 'Name'
-                         / Name
+                         / Name                                                 ## NOTE another possible definition is <- Name ('.' Spacing* Name)*
 
 
 Name                    <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*   ## NOTE new, renaming former 'Identifier'
@@ -768,7 +768,7 @@ TempalteSubDef      <- Identifier
 
 
 
-#####   TOKENS   ################################################
+#####   KEYWORDS   ###################################################
 
 ABSTRACT_TK         <- "abstract"           Spacing+
 
