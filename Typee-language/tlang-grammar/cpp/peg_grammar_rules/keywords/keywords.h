@@ -137,7 +137,7 @@ namespace tlang_rules
     struct From : pegtl::seq<From_kw, pegtl::not_at<NameNextChar>, Spacing1> {};
 
     struct Hidden_kw : TAO_PEGTL_KEYWORD("hidden") {};
-    struct Hidden : pegtl::seq<Hidden_kw, pegtl::not_at<NameNextChar>, Spacing1> {};
+    struct Hidden : pegtl::seq<Hidden_kw, pegtl::not_at<NameNextChar>, Spacing0> {};
 
     struct If_kw : TAO_PEGTL_KEYWORD("if") {};
     struct If : pegtl::seq<If_kw, pegtl::not_at<NameNextChar>, Spacing0> {};
@@ -161,7 +161,7 @@ namespace tlang_rules
     struct List : pegtl::seq<List_kw, pegtl::not_at<NameNextChar>, Spacing0> {};
 
     struct Local_kw : TAO_PEGTL_KEYWORD("local") {};
-    struct Local : pegtl::seq<Local_kw, pegtl::not_at<NameNextChar>, Spacing1> {};
+    struct Local : pegtl::seq<Local_kw, pegtl::not_at<NameNextChar>, Spacing0> {};
 
     struct Map_kw : TAO_PEGTL_KEYWORD("map") {};
     struct Map : pegtl::seq<Map_kw, pegtl::not_at<NameNextChar>, Spacing0> {};

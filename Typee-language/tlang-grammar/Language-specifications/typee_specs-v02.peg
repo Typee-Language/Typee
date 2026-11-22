@@ -312,7 +312,7 @@ FORWARD_KW          <- ("forward" / "fwd")  KeyWordEnd  Spacing+                
 
 FROM_KW             <- "from"               KeyWordEnd  Spacing+
 
-HIDDEN_KW           <- "hidden"             KeyWordEnd  Spacing+                    ## NOTE hidden could be removed and local retained in final specs
+HIDDEN_KW           <- "hidden"             KeyWordEnd  Spacing*                    ## NOTE hidden could be removed and local retained in final specs
 
 IF_KW               <- "if"                 KeyWordEnd  Spacing*
 
@@ -328,7 +328,7 @@ LAMBDA_KW           <- "lambda"             KeyWordEnd  Spacing+
 
 LIST_KW             <- "list"               KeyWordEnd  Spacing*
 
-LOCAL_KW            <- "local"              KeyWordEnd  Spacing+                    ## NOTE hidden could be removed and local retained in final specs
+LOCAL_KW            <- "local"              KeyWordEnd  Spacing*                    ## NOTE hidden could be removed and local retained in final specs
 
 MAP_KW              <- "map"                KeyWordEnd  Spacing*
 
@@ -780,11 +780,11 @@ RequireStatement        <- REQUIRE_KW  Condition  (',' String)?
 
 AccessProtectionStatement   <- (':'  Spacing*)?  AccessQualifiers  ':'  Spacing*
 
-AccessQualifiers        <- HIDDEN_KW     Spacing*                       ## NOTE hidden could be removed and local retained in final specs
-                         / LOCAL_KW      Spacing*
-                         / PRIVATE_KW    Spacing*
-                         / PROTECTED_KW  Spacing*
-                         / PUBLIC_KW     Spacing*
+AccessQualifiers        <- HIDDEN_KW                                ## NOTE hidden could be removed and local retained in final specs
+                         / LOCAL_KW
+                         / PRIVATE_KW
+                         / PROTECTED_KW
+                         / PUBLIC_KW
 
 
 EmbedStatement          <- EMBED_KW  Language  Spacing*  EmbeddedCode

@@ -930,7 +930,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "hidden" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_FALSE(fe_parser.parse<Hidden>(kw));  // Notice: at least one space char is mandatory after this keyword
+            ASSERT_TRUE(fe_parser.parse<Hidden>(kw));
 
             ASSERT_FALSE(fe_parser.parse<Hidden>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Hidden>(std::string("z") + kw));
@@ -1146,7 +1146,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "local" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_FALSE(fe_parser.parse<Local>(kw));  // Notice: at least one space char is mandatory after this keyword
+            ASSERT_TRUE(fe_parser.parse<Local>(kw));
 
             ASSERT_FALSE(fe_parser.parse<Local>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Local>(std::string("z") + kw));
