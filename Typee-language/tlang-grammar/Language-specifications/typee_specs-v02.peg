@@ -37,7 +37,7 @@ ENDMARKER  <- !.
 AtomItem                <- Atom
                          / Identifier  AtomItem1?                       ## NOTE replaced 'DottedName' with new rule 'Identifier'
                          / '-'  Identifier  AtomItem2*                  ## NOTE replaced 'DottedName' with new rule 'Identifier'
-                         / CONST_TK?  ScalarType  TypeCasting           ## NOTE TO BE CHECKED!!!  Is type casting ok here?!?
+                         / CONST_KW?  ScalarType  TypeCasting           ## NOTE TO BE CHECKED!!!  Is type casting ok here?!?
 
 AtomItem1               <- OpDecr
                          / OpIncr
@@ -55,8 +55,8 @@ Atom                    <- (OpDecr / OpIncr)  Identifier  (OpDecr / OpIncr)?    
                          / AtomEnclosure
                          / Reference
                          / String
-                         / FALSE_TK
-                         / TRUE_TK
+                         / FALSE_KW
+                         / TRUE_KW
 
 
 AtomEnclosure           <- BracketForm
@@ -94,7 +94,7 @@ SubscriptionOrSlicing   <- '['  SliceForm  (']' / ')')
 
 #####   CLASSES   ####################################################
 
-ClassDefinition     <- CLASS_TK  Identifier  TemplateDef?  Inheritance?  StatementsBlock
+ClassDefinition     <- CLASS_KW  Identifier  TemplateDef?  Inheritance?  StatementsBlock
 
 
 Inheritance         <- ':'  InterfaceItem  (','  InterfaceItem)*  (','  InheritanceItem  (',' InterfaceItem)*)?
@@ -104,17 +104,17 @@ Inheritance         <- ':'  InterfaceItem  (','  InterfaceItem)*  (','  Inherita
 InheritanceItem     <- AccessQualifier?  Identifier  TemplateArgs?      ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
-InterfaceItem       <- IMPLEMENTS_TK  AccessQualifier?  Identifier  TemplateArgs?
-                     / IMPLEMENTS_TK  '('  AccessQualifier?  Identifier  TemplateArgs?  (','  AccessQualifier?  Identifier  TemplateArgs?)*  ')'
+InterfaceItem       <- IMPLEMENTS_KW  AccessQualifier?  Identifier  TemplateArgs?
+                     / IMPLEMENTS_KW  '('  AccessQualifier?  Identifier  TemplateArgs?  (','  AccessQualifier?  Identifier  TemplateArgs?)*  ')'
                         ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
 #####   COMPREHENSIONS   #############################################
 
-ForComprehension    <- FOR_TK  '('  TargetList  IN_TK  CompTest  IterComprehension?  ')'
+ForComprehension    <- FOR_KW  '('  TargetList  IN_KW  CompTest  IterComprehension?  ')'
 
 
-IfComprehension     <- IF_TK  '('  ConditionOrUnnamedFunc  ')'  IterComprehension?
+IfComprehension     <- IF_KW  '('  ConditionOrUnnamedFunc  ')'  IterComprehension?
 
 
 IterComprehension   <- ForComprehension
@@ -124,7 +124,7 @@ IterComprehension   <- ForComprehension
 
 #####   CONDITIONS   #################################################
 
-Condition           <- CompTest  (IF_TK  '('  CompTest  ')'  ELSE_TK  Expression)?
+Condition           <- CompTest  (IF_KW  '('  CompTest  ')'  ELSE_KW  Expression)?
 
 
 
@@ -140,16 +140,16 @@ CompOperator        <- "<=>"
                      / "!="
                      / ">="
                      / '>'
-                     / IN_TK
-                     / IS_TK  NOT_TK?
-                     / NOT_TK IN_TK
+                     / IN_KW
+                     / IS_KW  NOT_KW?
+                     / NOT_KW IN_KW
 
 
-AndTest             <- NotTest (AND_TK  NotTest)?
+AndTest             <- NotTest (AND_KW  NotTest)?
 
-NotTest             <- NOT_TK?  Comparison
+NotTest             <- NOT_KW?  Comparison
 
-CompTest            <- AndTest  (OR_TK  AndTest)                        ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
+CompTest            <- AndTest  (OR_KW  AndTest)                        ## NOTE CompTest here is a renaming of "OrTest" from LL1-v10
 
 
 
@@ -229,15 +229,15 @@ FunctionCall                <- TemplateArgs*  '('  FunctionCallArgs?  ')'  Spaci
 
 FunctionCallArgs            <- Expression  FunctionCallArgsList*
 
-FunctionCallArgsList        <- (',' Expression)*  (','  ELLIPSIS_TK  Identifier)?
+FunctionCallArgsList        <- (',' Expression)*  (','  ELLIPSIS_KW  Identifier)?
                              / ForComprehension
 
 
 TypedParamsList             <- Type Identifier (','  Type Identifier)*
 
 
-Unnamed                     <- UNNAMED_TK
-                             / LAMBDA_TK
+Unnamed                     <- UNNAMED_KW
+                             / LAMBDA_KW
 
 
 UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  StatementsBlock
@@ -265,6 +265,9 @@ Identifier              <- DottedName                                           
 
 
 Name                    <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*   ## NOTE new, renaming former 'Identifier'
+
+
+SemiColon               <- ';'
 
 
 Spacing                 <- ' '
@@ -318,7 +321,7 @@ Operator                <- AssignOp
                          / '^'
                          / '@'
                          / '#'
-                         / IN_TK
+                         / IN_KW
 
 OperatorAngle           <- ">>>"
                          / ">>"
@@ -357,7 +360,7 @@ AugmentedAssignOp       <- "+="                                         ## NOTE 
 
 OperatorCallDef         <- CallOperator  TemplateDef?
 
-OperatorDeclaration     <- OPERATOR_TK  OperatorSubdef
+OperatorDeclaration     <- OPERATOR_KW  OperatorSubdef
 
 OperatorDefinition      <- OperatorDeclaration  StatementsBlock
 
@@ -405,8 +408,8 @@ HexDigit                <- [09AFaf]
 OctalNumber             <- [0-7]  ('_'?  [0-7]+ )*
 
 
-ComplexNumber           <- COMPLEX_TK  Spacing*  '('  Spacing*  ComplexImPart  Spacing*  ')'  Spacing*
-                         / COMPLEX_TK  Spacing*  '('  Spacing*  ComplexRePart  Spacing*  (','  Spacing*  ComplexImPart  Spacing*)?  ')'  Spacing*
+ComplexNumber           <- COMPLEX_KW  Spacing*  '('  Spacing*  ComplexImPart  Spacing*  ')'  Spacing*
+                         / COMPLEX_KW  Spacing*  '('  Spacing*  ComplexRePart  Spacing*  (','  Spacing*  ComplexImPart  Spacing*)?  ')'  Spacing*
 
 ComplexImPart           <- FloatNumber 'i'
                          / IntegerNumber 'i'
@@ -446,7 +449,7 @@ SimpleStatement         <- AccessProtectionStatement
                          / RequireStatement          SimpleStatementEnd
 
 
-SimpleStatementEnd      <- Spacing*  SEMICOLON_TK
+SimpleStatementEnd      <- Spacing*  SemiColon  Spacing*
 
 
 CompoundStatement       <- DefinitionStatement                          ## NOTE may not be allowed everywhere
@@ -462,7 +465,7 @@ CompoundStatement       <- DefinitionStatement                          ## NOTE 
                          / WithStatement
 
 
-AssertStatement         <- ASSERT_TK  Condition  (',' String)?  Spacing*
+AssertStatement         <- ASSERT_KW  Condition  (',' String)?  Spacing*
 
 
 AssignmentClause        <- AssignOp  ExprList
@@ -474,17 +477,17 @@ Comment                 <- "//"  (!EndOfLine .)*  Spacing*
 MultiLinesComment       <- "/*"  (MultiLinesComment  /  !"*/" .)*  "*/"
 
 
-##DeclarationStatement    <- FORWARD_TK  AccessQualifier  STATIC_TK  ForwardDeclaration  Spacing*
-##                         / FORWARD_TK  AccessQualifier  ForwardDeclaration  Spacing*
-##                         / FORWARD_TK  STATIC_TK  ForwardDeclaration  Spacing*
-##                         / FORWARD_TK  ForwardDeclaration  Spacing*
-##                         / AccessQualifier  STATIC_TK  Declaration  Spacing*
+##DeclarationStatement    <- FORWARD_KW  AccessQualifier  STATIC_KW  ForwardDeclaration  Spacing*
+##                         / FORWARD_KW  AccessQualifier  ForwardDeclaration  Spacing*
+##                         / FORWARD_KW  STATIC_KW  ForwardDeclaration  Spacing*
+##                         / FORWARD_KW  ForwardDeclaration  Spacing*
+##                         / AccessQualifier  STATIC_KW  Declaration  Spacing*
 ##                         / AccessQualifier  Declaration  Spacing*
-##                         / STATIC_TK  Declaration  Spacing*
+##                         / STATIC_KW  Declaration  Spacing*
 ##                         / Declaration  Spacing*
-DeclarationStatement    <- FORWARD_TK  AccessQualifier?  STATIC_TK?  ForwardDeclaration  Spacing*
-                         / AccessQualifier  STATIC_TK?  Declaration  Spacing*
-                         / STATIC_TK?  Declaration  Spacing*
+DeclarationStatement    <- FORWARD_KW  AccessQualifier?  STATIC_KW?  ForwardDeclaration  Spacing*
+                         / AccessQualifier  STATIC_KW?  Declaration  Spacing*
+                         / STATIC_KW?  Declaration  Spacing*
 
 
 Declaration             <- MethodConstDeclaration
@@ -494,7 +497,7 @@ Declaration             <- MethodConstDeclaration
                          / VolatilesDeclaration
 
 
-ForwardDeclaration      <- VOLATILE_TK  VolatileItem  (','  VolatileItem)*
+ForwardDeclaration      <- VOLATILE_KW  VolatileItem  (','  VolatileItem)*
                          / TypeDeclaration
                          / ClassDeclaration
                          / PropertyDeclaration
@@ -505,7 +508,7 @@ ForwardDeclaration      <- VOLATILE_TK  VolatileItem  (','  VolatileItem)*
                          / Type  OperatorDeclaration
 
 
-FunctionDeclaration     <- CONST_TK  Type  Identifier  FunctionParamsDeclaration
+FunctionDeclaration     <- CONST_KW  Type  Identifier  FunctionParamsDeclaration
 
 
 ConstDeclaration        <- Type  Spacing*  Identifier  Spacing*  '='  Spacing*  Expression  Spacing*
@@ -518,28 +521,28 @@ VariablesDeclList       <- VariableDecl  (','  VariableDecl)*  SimpleStatementEn
 VariableDecl            <- Identifier  ('=' Expression)?
 
 
-VolatilesDeclaration    <- VOLATILE_TK  NotConstType  Identifier  (','  Identifier)*  SimpleStatementEnd
+VolatilesDeclaration    <- VOLATILE_KW  NotConstType  Identifier  (','  Identifier)*  SimpleStatementEnd
 
 
-ClassDeclaration        <- CLASS_TK  Identifier  TemplateDef?  Inheritance?
+ClassDeclaration        <- CLASS_KW  Identifier  TemplateDef?  Inheritance?
 
-MethodConstDeclaration  <- FunctionDeclaration  CONST_TK          ## NOTE ending const qualifier is only authorized for class methods
+MethodConstDeclaration  <- FunctionDeclaration  CONST_KW          ## NOTE ending const qualifier is only authorized for class methods
 
-PropertyDeclaration     <- PROPERTY_TK  Type  Identifier
+PropertyDeclaration     <- PROPERTY_KW  Type  Identifier
 
-TypeDeclaration         <- TYPE_TK  Identifier
+TypeDeclaration         <- TYPE_KW  Identifier
 
 
 
-DefinitionStatement     <- AccessQualifier  STATIC_TK?  Definition
+DefinitionStatement     <- AccessQualifier  STATIC_KW?  Definition
                          / AccessQualifier?  ClassDefinition
-                         / STATIC_TK?  Definition
+                         / STATIC_KW?  Definition
 
 
-Definition              <- ABSTRACT_TK  MethodDefinition
-                         / ABSTRACT_TK  OperatorDefinition
-                         / FINAL_TK  MethodDefinition
-                         / FINAL_TK  OperatorDefinition
+Definition              <- ABSTRACT_KW  MethodDefinition
+                         / ABSTRACT_KW  OperatorDefinition
+                         / FINAL_KW  MethodDefinition
+                         / FINAL_KW  OperatorDefinition
                          / MethodDefinition
                          / OperatorDefinition
                          / PropertyDeclaration  '='  DefintionBlock    ## NOTE '=' may be suppressed from the rule spec
@@ -550,20 +553,20 @@ Definition              <- ABSTRACT_TK  MethodDefinition
                          / VolatileDefinition
 
 
-MethodDefinition        <- FunctionDeclaration  CONST_TK?  StatementsBlock      ## NOTE ending const qualifier is only authorized for class methods
+MethodDefinition        <- FunctionDeclaration  CONST_KW?  StatementsBlock      ## NOTE ending const qualifier is only authorized for class methods
 
-VolatilesDefinition     <- VOLATILE_TK  NotConstType  Identifier  MemoryAddress  (','  Identifier  MemoryAddress)*  SimpleStatementEnd
+VolatilesDefinition     <- VOLATILE_KW  NotConstType  Identifier  MemoryAddress  (','  Identifier  MemoryAddress)*  SimpleStatementEnd
 
 MemoryAddress           <- '@'  IntegerNumber
 
 
-DeleteStatement         <- DELETE_TK  IdentifiersList
+DeleteStatement         <- DELETE_KW  IdentifiersList
 
 
 EmptyStatement          <- Spacing*
 
 
-EnsureStatement         <- ENSURE_TK  condition  (',' string)?
+EnsureStatement         <- ENSURE_KW  condition  (',' string)?
 
 
 FileEndianness          <- '<'  FileExpression  FileRWOperation
@@ -582,8 +585,8 @@ FileWriteOperation      <- '['  IndexingExpression  ']'  '='  Expression
                          / ( "<<<" Expression / "<<" Expression )*
 
 
-FlowStatement           <- BREAK_TK
-                         / CONTINUE_TK
+FlowStatement           <- BREAK_KW
+                         / CONTINUE_KW
                          / RaiseStatement
                          / ReturnStatement
 
@@ -594,51 +597,51 @@ IdentifiersList         <- Identifier  (',' Identifier)*            ## NOTE repl
 ImportStatement         <- ImportName
                          / ImportFrom
 
-ImportName              <- IMPORT_TK  ImportAsNames
+ImportName              <- IMPORT_KW  ImportAsNames
 
 ImportAsNames           <- ImportAsName  (',' ImportAsName)*
 
-ImportAsName            <- Identifier  (AS_TK Identifier)?          ## NOTE replaced 'DottedName' with new rule 'Identifier'
+ImportAsName            <- Identifier  (AS_KW Identifier)?          ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
-ImportFrom              <- FROM_TK  ModulePath  IMPORT_TK  ImportFromList
+ImportFrom              <- FROM_KW  ModulePath  IMPORT_KW  ImportFromList
 
-ImportFromList          <- ALL_TK  ImportBut
+ImportFromList          <- ALL_KW  ImportBut
                          / ImportAsNames
 
-ImportBut               <- BUT_TK  Identifier  (','  Identifier)*   ## NOTE replaced 'DottedName' with new rule 'Identifier'
+ImportBut               <- BUT_KW  Identifier  (','  Identifier)*   ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 ModulePath              <- '.'*  Identifier                         ## NOTE a module path should not contain the ".ty" suffix of its related filepath
                                                                     ## NOTE replaced 'DottedName' with new rule 'Identifier'
 
 
-NoOperationStatement     <- NOP_TK  Spacing*
+NoOperationStatement     <- NOP_KW  Spacing*
 
 
-RaiseStatement          <- RAISE_TK  Expression  (FROM_TK  Expression)? ## NOTE not all expressions are vaild after "from" - only exception naming expressions are
+RaiseStatement          <- RAISE_KW  Expression  (FROM_KW  Expression)? ## NOTE not all expressions are vaild after "from" - only exception naming expressions are
 
 
-ReturnStatement         <- RETURN_TK  ExprList?
+ReturnStatement         <- RETURN_KW  ExprList?
 
 
-RequireStatement        <- REQUIRE_TK  Condition  (',' String)?
+RequireStatement        <- REQUIRE_KW  Condition  (',' String)?
 
 
 AccessProtectionStatement   <- (':'  Spacing*)?  AccessQualifiers  ':'  Spacing*
 
-AccessQualifiers        <- HIDDEN_TK     Spacing*                       ## NOTE hidden could be removed and local retained in final specs
-                         / LOCAL_TK      Spacing*
-                         / PRIVATE_TK    Spacing*
-                         / PROTECTED_TK  Spacing*
-                         / PUBLIC_TK     Spacing*
+AccessQualifiers        <- HIDDEN_KW     Spacing*                       ## NOTE hidden could be removed and local retained in final specs
+                         / LOCAL_KW      Spacing*
+                         / PRIVATE_KW    Spacing*
+                         / PROTECTED_KW  Spacing*
+                         / PUBLIC_KW     Spacing*
 
 
-EmbedStatement          <- EMBED_TK  Language  Spacing*  EmbeddedCode
+EmbedStatement          <- EMBED_KW  Language  Spacing*  EmbeddedCode
 
 EmbeddedCode            <- FilePath  SimpleStatementEnd
-                         / "{{"  (!"}}" .)  "}}"  Spacing*  (EXIT_TK  SimpleStatementEnd)?
+                         / "{{"  (!"}}" .)  "}}"  Spacing*  (EXIT_KW  SimpleStatementEnd)?
 
 
-ExcludeStatement        <- EXCLUDE_TK  Languages
+ExcludeStatement        <- EXCLUDE_KW  Languages
 
 FilePath                <- '.'*  Identifier                             ## NOTE a file path may be suffixed according to the targetted language conventions
 
@@ -659,49 +662,49 @@ Language                <- "android"  LanguageVersion?                  ## NOTE 
 LanguageVersion         <- Spacing+  IntegerNumber  ('.'  [0-9]+)*
 
 
-ForStatement            <- FOR_TK  '('  TargetList  IN_TK  ExprList  ')'  StatementsList  (OTHERWISE_TK  StatementsList)?
+ForStatement            <- FOR_KW  '('  TargetList  IN_KW  ExprList  ')'  StatementsList  (OTHERWISE_KW  StatementsList)?
 
 
-ForeverStatement        <- FOREVER_TK  '('  Spacing*  ')'  StatementsList
+ForeverStatement        <- FOREVER_KW  '('  Spacing*  ')'  StatementsList
 
 
-IfStatement             <- IF_TK  '('  Condition  ')'  StatementsList  (ELSEIF_TK  '('  Condition  ')'  StatementsList)*  ((ELSE_TK / OTHERWISE_TK)  StatementsList)?
+IfStatement             <- IF_KW  '('  Condition  ')'  StatementsList  (ELSEIF_KW  '('  Condition  ')'  StatementsList)*  ((ELSE_KW / OTHERWISE_KW)  StatementsList)?
 
 
-RepeatStatement         <- REPEAT_TK  StatementsList  UNTIL_TK  '('  Condition  ')'  SimpleStatementEnd  (OTHERWISE_TK  StatementsList)?
+RepeatStatement         <- REPEAT_KW  StatementsList  UNTIL_KW  '('  Condition  ')'  SimpleStatementEnd  (OTHERWISE_KW  StatementsList)?
 
 
-SwitchStatement         <- SWITCH_TK  '('  Expression  ')'  SwitchBlock  (OTHERWISE_TK  ':'  StatementsList)?
+SwitchStatement         <- SWITCH_KW  '('  Expression  ')'  SwitchBlock  (OTHERWISE_KW  ':'  StatementsList)?
 
 SwitchBlock             <- '{'  CaseStatement*  '}'
 
-CaseStatement           <- CASE_TK  ExprList  ':'  StatementsList*  (BREAK_TK SimpleStatementEnd)?
+CaseStatement           <- CASE_KW  ExprList  ':'  StatementsList*  (BREAK_KW SimpleStatementEnd)?
 
 
-TryStatement            <- TRY_TK  '{'  StatementsList*  '}'  TryStatementExcept  TryStatementOtherwise?  TryStatementFinally?
-                         / TRY_TK  '{'  StatementsList*  '}'  TryStatementFinally
+TryStatement            <- TRY_KW  '{'  StatementsList*  '}'  TryStatementExcept  TryStatementOtherwise?  TryStatementFinally?
+                         / TRY_KW  '{'  StatementsList*  '}'  TryStatementFinally
 
 TryStatementExcept      <- TryExcept  '{'  StatementsList*  '}'
 
-TryExcept               <- EXCEPT_TK  Spacing*  '('  Expression  (AS_TK  Identifier)?  (',' Spacing* Expression (AS_TK Identifier)?)*  ')'
-                         / EXCEPT_TK  Spacing+  ALL_TK  (AS_TK  Identifier)?
+TryExcept               <- EXCEPT_KW  Spacing*  '('  Expression  (AS_KW  Identifier)?  (',' Spacing* Expression (AS_KW Identifier)?)*  ')'
+                         / EXCEPT_KW  Spacing+  ALL_KW  (AS_KW  Identifier)?
 
-TryStatementOtherwise   <- OTHERWISE_TK  ('(' EXCEPTION_TK AS_TK Identifier ')')*  '{'  StatementsList*  '}'
+TryStatementOtherwise   <- OTHERWISE_KW  ('(' EXCEPTION_KW AS_KW Identifier ')')*  '{'  StatementsList*  '}'
 
-TryStatementFinally     <- FINALLY_TK  '{'  StatementsList*  '}'
+TryStatementFinally     <- FINALLY_KW  '{'  StatementsList*  '}'
 
 
-WhenStatement           <- WHEN_TK  Spacing*  '('  Spacing*  WhenWithItem  (',' WhenWithItem)*  Spacing*  ')'  Spacing*  '{'  WhenClause+  (Spacing* OTHERWISE_TK  StatementsList)?  Spacing*  '}'     ## ADD
+WhenStatement           <- WHEN_KW  Spacing*  '('  Spacing*  WhenWithItem  (',' WhenWithItem)*  Spacing*  ')'  Spacing*  '{'  WhenClause+  (Spacing* OTHERWISE_KW  StatementsList)?  Spacing*  '}'     ## ADD
 
 WhenClause              <- Spacing*  Expression  Spacing*  ':'  Spacing*  StatementsList  Spacing*
 
-WhenWithItem            <- Expression  (AS_TK TypedTarget)?
+WhenWithItem            <- Expression  (AS_KW TypedTarget)?
 
                              
-WhileStatement          <- WHILE_TK  Spacing*  '('  Spacing*  Condition  Spacing*  ')'  Spacing*  StatementsList  (  Spacing*OTHERWISE_TK  Spacing*  StatementsList)?  Spacing*
+WhileStatement          <- WHILE_KW  Spacing*  '('  Spacing*  Condition  Spacing*  ')'  Spacing*  StatementsList  (  Spacing*OTHERWISE_KW  Spacing*  StatementsList)?  Spacing*
 
 
-WithStatement           <- WITH_TK  '('  WhenWithItem  (',' WhenWithItem)*  ')'  StatementsList
+WithStatement           <- WITH_KW  '('  WhenWithItem  (',' WhenWithItem)*  ')'  StatementsList
 
 
 TypedTarget             <- SimpleType     Target
@@ -714,10 +717,10 @@ Target                  <- Identifier  Spacing*  (SubscriptionOrSlicing+  Spacin
 TargetList              <- TypedTarget  (',' TypedTarget)*
 
 
-CastOp                  <- CAST_TK  Identifier                          ## NOTE use of CastOp is still to be specified...
+CastOp                  <- CAST_KW  Identifier                          ## NOTE use of CastOp is still to be specified...
 
 
-EnumDeclaration         <- ENUM_TK  Spacing*  Identifier
+EnumDeclaration         <- ENUM_KW  Spacing*  Identifier
 
 EnumDefinition          <-  EnumDeclaration  Spacing*  '{'  Spacing*  EnumItem  Spacing*  (','  Spacing*  EnumItem)*  Spacing*  '}'  Spacing* 
 
@@ -730,7 +733,7 @@ EnumItem                <- Identifier  '+='  IntegerNumber              ## NOTE 
                          / Identifier
 
 
-TypeAlias               <- TYPE_TK  Type  Spacing+  AS_TK  Identifier  Spacing*  (','  Spacing*  Type  Spacing+  AS_TK  Identifier  Spacing*)*
+TypeAlias               <- TYPE_KW  Type  Spacing+  AS_KW  Identifier  Spacing*  (','  Spacing*  Type  Spacing+  AS_KW  Identifier  Spacing*)*
 
 
 
@@ -764,182 +767,180 @@ TemplateArgs        <- '<'  ( Condition  (',' Condition)* )?  '>'
 TemplateDefs        <- '<'  TemplateSubDef  (',' TempalteSubDef)*  '>'
 
 TempalteSubDef      <- Identifier
-                     / CONST_TK  ScalarTypeOrIdentifier  Identifier  ('=' Expression)?
+                     / CONST_KW  ScalarTypeOrIdentifier  Identifier  ('=' Expression)?
 
 
 
 #####   KEYWORDS   ###################################################
 
-ABSTRACT_TK         <- "abstract"           Spacing+
+ABSTRACT_KW         <- "abstract"           Spacing+
 
-ALL_TK              <- "all"                Spacing+
+ALL_KW              <- "all"                Spacing+
 
-AND_TK              <- "and"                Spacing*
+AND_KW              <- "and"                Spacing+
 
-ARRAY_TK            <- "array"              Spacing*
+ARRAY_KW            <- "array"              Spacing*
 
-AS_TK               <- "as"                 Spacing+
+AS_KW               <- "as"                 Spacing+
 
-ASSERT_TK           <- "assert"             Spacing+
+ASSERT_KW           <- "assert"             Spacing+
 
-BREAK_TK            <- "break"              Spacing*
+BREAK_KW            <- "break"              Spacing*
 
-BUT_TK              <- "but"                Spacing+
+BUT_KW              <- "but"                Spacing+
 
-CASE_TK             <- "case"               Spacing+
+CASE_KW             <- "case"               Spacing+
 
-CAST_TK             <- "cast"               Spacing+
+CAST_KW             <- "cast"               Spacing+
 
-CLASS_TK            <- "class"              Spacing+
+CLASS_KW            <- "class"              Spacing+
 
-CONST_TK            <- "const"              Spacing+
+CONST_KW            <- "const"              Spacing+
 
-CONTINUE_TK         <- "continue"           Spacing*
+CONTINUE_KW         <- "continue"           Spacing*
 
-DELETE_TK           <- "del"                Spacing+
+DELETE_KW           <- "del"                Spacing+
 
-ELLIPSIS_TK         <- "..."                Spacing*
+ELLIPSIS_KW         <- "..."                Spacing*
 
-ELSEIF_TK           <- ("elseif" / "elsif" / "elif")  Spacing*
+ELSEIF_KW           <- ("elseif" / "elsif" / "elif")  Spacing*
 
-ELSE_TK             <- "else"               Spacing*
+ELSE_KW             <- "else"               Spacing*
 
-EMBED_TK            <- "embed"              Spacing+
+EMBED_KW            <- "embed"              Spacing+
 
-ENSURE_TK           <- "ensure"             Spacing+
+ENSURE_KW           <- "ensure"             Spacing+
 
-ENUM_TK             <- "enum"               Spacing*
+ENUM_KW             <- "enum"               Spacing*
 
-EXCEPT_TK           <- "except"
+EXCEPT_KW           <- "except"             Spacing*
 
-EXCEPTION_TK        <- "exception"          Spacing*
+EXCEPTION_KW        <- "exception"          Spacing*
 
-EXCLUDE_TK          <- "exclude"            Spacing+
+EXCLUDE_KW          <- "exclude"            Spacing+
    
-EXIT_TK             <- "exit"               Spacing*
+EXIT_KW             <- "exit"               Spacing*
 
-FALSE_TK            <- ("false" / "False")  Spacing*
+FALSE_KW            <- ("false" / "False")  Spacing*
 
-FILE_TK             <- "file"               Spacing+
+FILE_KW             <- "file"               Spacing+
 
-FINAL_TK            <- "final"              Spacing+
+FINAL_KW            <- "final"              Spacing+
 
-FINALLY_TK          <- "finally"            Spacing*
+FINALLY_KW          <- "finally"            Spacing*
 
-FOR_TK              <- "for"                Spacing*
+FOR_KW              <- "for"                Spacing*
 
-FOREVER_TK          <- "forever"            Spacing*
+FOREVER_KW          <- "forever"            Spacing*
 
-FORWARD_TK          <- ("forward" / "fwd")  Spacing+                    ## CHK do we keep this alternative?
+FORWARD_KW          <- ("forward" / "fwd")  Spacing+                    ## CHK do we keep this alternative?
 
-FROM_TK             <- "from"               Spacing+
+FROM_KW             <- "from"               Spacing+
 
-HIDDEN_TK           <- "hidden"             Spacing+                   ## NOTE hidden could be removed and local retained in final specs
+HIDDEN_KW           <- "hidden"             Spacing+                   ## NOTE hidden could be removed and local retained in final specs
 
-IF_TK               <- "if"                 Spacing*
+IF_KW               <- "if"                 Spacing*
 
-IMPLEMENTS_TK       <- "implements"         Spacing+
+IMPLEMENTS_KW       <- "implements"         Spacing+
 
-IMPORT_TK           <- "import"             Spacing+
+IMPORT_KW           <- "import"             Spacing+
 
-IN_TK               <- "in"                 Spacing*
+IN_KW               <- "in"                 Spacing*
 
-IS_TK               <- "is"                 Spacing+
+IS_KW               <- "is"                 Spacing+
 
-LAMBDA_TK           <- "lambda"             Spacing+
+LAMBDA_KW           <- "lambda"             Spacing+
 
-LIST_TK             <- "list"               Spacing*
+LIST_KW             <- "list"               Spacing*
 
-LOCAL_TK            <- "local"              Spacing+                   ## NOTE hidden could be removed and local retained in final specs
+LOCAL_KW            <- "local"              Spacing+                   ## NOTE hidden could be removed and local retained in final specs
 
-MAP_TK              <- "map"                Spacing*
+MAP_KW              <- "map"                Spacing*
 
-ME_TK               <- "me"                 Spacing*
+ME_KW               <- "me"                 Spacing*
 
-NONE_TK             <- ("none" / "None" / "NONE")   Spacing*
+NONE_KW             <- ("none" / "None" / "NONE")   Spacing*
 
-NOP_TK              <- ("nop" / "pass")     Spacing*
+NOP_KW              <- ("nop" / "pass")     Spacing*
 
-NOT_TK              <- "not"                Spacing*
+NOT_KW              <- "not"                Spacing*
 
-OPERATOR_TK         <- "operator"           Spacing*
+OPERATOR_KW         <- "operator"           Spacing*
 
-OR_TK               <- "or"                 Spacing*
+OR_KW               <- "or"                 Spacing*
 
-OTHERWISE_TK        <- "otherwise"          Spacing*
+OTHERWISE_KW        <- "otherwise"          Spacing*
 
-PRINT_TK            <- "print"              Spacing*
+PRINT_KW            <- "print"              Spacing*
 
-PRIVATE_TK          <- "private"            Spacing*
+PRIVATE_KW          <- "private"            Spacing*
 
-PROPERTY_TK         <- "property"           Spacing+
+PROPERTY_KW         <- "property"           Spacing+
 
-PROTECTED_TK        <- "protected"          Spacing*
+PROTECTED_KW        <- "protected"          Spacing*
 
-PUBLIC_TK           <- "public"             Spacing*
+PUBLIC_KW           <- "public"             Spacing*
 
-RAISE_TK            <- "raise"              Spacing+
+RAISE_KW            <- "raise"              Spacing+
 
-REPEAT_TK           <- "repeat"             Spacing*
+REPEAT_KW           <- "repeat"             Spacing*
 
-REQUIRE_TK          <- "require"            Spacing+
+REQUIRE_KW          <- "require"            Spacing+
 
-RETURN_TK           <- ("return" / "ret")   Spacing*                    ## CHK do we keep this alternative?
+RETURN_KW           <- ("return" / "ret")   Spacing*                    ## CHK do we keep this alternative?
 
-SEMICOLON_TK        <- ';'                  Spacing*
+SET_KW              <- "set"                Spacing*
 
-SET_TK              <- "set"                Spacing*
+STATIC_KW           <- "static"             Spacing+
 
-STATIC_TK           <- "static"             Spacing+
+SWITCH_KW           <- "switch"             Spacing*
 
-SWITCH_TK           <- "switch"             Spacing*
+TODO_KW             <- "todo"               Spacing*
 
-TODO_TK             <- "todo"               Spacing*
+TRUE_KW             <- ("true" / "True")    Spacing*
 
-TRUE_TK             <- ("true" / "True")    Spacing*
+TRY_KW              <- "try"                Spacing*
 
-TRY_TK              <- "try"                Spacing*
+TYPE_KW             <- "type"               Spacing+
 
-TYPE_TK             <- "type"               Spacing+
+UNNAMED_KW          <- "unnamed"            Spacing*
 
-UNNAMED_TK          <- "unnamed"            Spacing*
+UNTIL_KW            <- "until"              Spacing*
 
-UNTIL_TK            <- "until"              Spacing*
+VOLATILE_KW         <- "volatile"           Spacing+
 
-VOLATILE_TK         <- "volatile"           Spacing+
+WHEN_KW             <- "when"               Spacing*
 
-WHEN_TK             <- "when"               Spacing*
+WHILE_KW            <- "while"              Spacing*
 
-WHILE_TK            <- "while"              Spacing*
-
-WITH_TK             <- "with"               Spacing*
+WITH_KW             <- "with"               Spacing*
 
 
 
 #####   TYPES   #################################################
 
-Type                        <- CONST_TK? TemplatedType
-                             / CONST_TK? SimpleType
-                             / NONE_TK
+Type                        <- CONST_KW? TemplatedType
+                             / CONST_KW? SimpleType
+                             / NONE_KW
 
 
 SimpleType                  <-  AutoType
                              / '('  Spacing*  TypesList  ')'  Spacing*
                              / ContainerType
-                             / ENUM_TK
+                             / ENUM_KW
                              / FileType
                              / ScalarType  FixedDimensions?
                            
 
 NotConstType                <- TemplatedType
                              / SimpleType
-                             / NONE_TK
+                             / NONE_KW
 
 
 TemplatedType               <- Identifier  ('<' Spacing* TypesAndExprsList Spacing* '>')?  FixedDimensions?
 
 
-AutoType                    <- '?'  Spacing+  (IN_TK Spacing* '(' Spacing* TypesList ')')?  Spacing*
+AutoType                    <- '?'  Spacing+  (IN_KW Spacing* '(' Spacing* TypesList ')')?  Spacing*
 
 
 ContainerType               <- ArrayType
@@ -949,7 +950,7 @@ ContainerType               <- ArrayType
                              / VectorType                       ## ADD to be defined!  ## NOTE may be suppressed, to be decided
 
 
-FileType                    <-  FILE_TK  ContainedType
+FileType                    <-  FILE_KW  ContainedType
 
 
 FixedDimensions             <- ( '[' Spacing* (IntegerNumber / Identifier) Spacing* ']' Spacing* )+
@@ -1005,13 +1006,13 @@ TypesAndExprsList           <- (Expression / Type)  Spacing*  (',' Spacing* (Exp
 TypesList                   <- Type  Spacing*  (',' Spacing* Type Spacing*)*
 
 
-ArrayType                   <- ARRAY_TK  ContainedType
+ArrayType                   <- ARRAY_KW  ContainedType
 
-ListType                    <- LIST_TK  ContainedType?
+ListType                    <- LIST_KW  ContainedType?
 
-MapType                     <- MAP_TK  MapContainedTypes
+MapType                     <- MAP_KW  MapContainedTypes
 
-SetType                     <- SET_TK  ContainedType?
+SetType                     <- SET_KW  ContainedType?
 
 
 ContainedType               <- '<'  Spacing*  Type  Spacing*  '>'  Spacing*

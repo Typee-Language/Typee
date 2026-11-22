@@ -329,6 +329,24 @@ namespace miscelaneous_rules
     }
 
 
+    //=====   SemiColon   =====================================
+    TEST_F(MiscelaneousFixtureTest, TestSemiColon)
+    {
+        for (const char c : MiscelaneousFixtureTest::ascii_chars) {
+            std::string test_code{ c };
+            if (c == ';')
+                ASSERT_TRUE(fe_parser.parse<SemiColon>(test_code))
+                    << std::format("tested code '{}' should not be considered as a semicolon", c);
+            else
+                ASSERT_FALSE(fe_parser.parse<SemiColon>(test_code))
+                    << std::format("tested code '{}' should be considered as a semicolon", c);
+        }
+
+        ASSERT_FALSE(fe_parser.parse<SemiColon>(""))
+            << "end-of-file character finally is a semicolon?!?";
+    }
+
+
     //=====   Spacing   =======================================
     TEST_F(MiscelaneousFixtureTest, TestSpacingRule)
     {

@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\tlang_cpp\front_end\peg_parser\fe_parser.cpp" />
+    <ClCompile Include="keywords\keywords_tests.cpp" />
     <ClCompile Include="miscelaneous\miscelaneous_tests.cpp" />
     <ClCompile Include="peg_grammar_tests.cpp" />
   </ItemGroup>
