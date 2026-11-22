@@ -93,7 +93,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "all" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<All>(kw));
+            ASSERT_FALSE(fe_parser.parse<All>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<All>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<All>(std::string("z") + kw));
@@ -120,7 +120,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "and" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<And>(kw));
+            ASSERT_FALSE(fe_parser.parse<And>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<And>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<And>(std::string("z") + kw));
@@ -174,7 +174,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "as" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<As>(kw));
+            ASSERT_FALSE(fe_parser.parse<As>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<As>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<As>(std::string("z") + kw));
@@ -201,7 +201,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "assert" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Assert>(kw));
+            ASSERT_FALSE(fe_parser.parse<Assert>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Assert>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Assert>(std::string("z") + kw));
@@ -255,7 +255,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "but" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<But>(kw));
+            ASSERT_FALSE(fe_parser.parse<But>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<But>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<But>(std::string("z") + kw));
@@ -282,7 +282,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "case" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Case>(kw));
+            ASSERT_FALSE(fe_parser.parse<Case>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Case>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Case>(std::string("z") + kw));
@@ -309,7 +309,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "cast" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Cast>(kw));
+            ASSERT_FALSE(fe_parser.parse<Cast>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Cast>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Cast>(std::string("z") + kw));
@@ -336,7 +336,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "class" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Class>(kw));
+            ASSERT_FALSE(fe_parser.parse<Class>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Class>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Class>(std::string("z") + kw));
@@ -363,7 +363,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "const" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Const>(kw));
+            ASSERT_FALSE(fe_parser.parse<Const>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Const>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Const>(std::string("z") + kw));
@@ -417,7 +417,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "del" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Delete>(kw));
+            ASSERT_FALSE(fe_parser.parse<Delete>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Delete>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Delete>(std::string("z") + kw));
@@ -525,7 +525,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "embed" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Embed>(kw));
+            ASSERT_FALSE(fe_parser.parse<Embed>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Embed>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Embed>(std::string("z") + kw));
@@ -552,7 +552,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "ensure" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Ensure>(kw));
+            ASSERT_FALSE(fe_parser.parse<Ensure>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Ensure>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Ensure>(std::string("z") + kw));
@@ -660,7 +660,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "exclude" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Exclude>(kw));
+            ASSERT_FALSE(fe_parser.parse<Exclude>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Exclude>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Exclude>(std::string("z") + kw));
@@ -741,7 +741,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "file" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<File>(kw));
+            ASSERT_FALSE(fe_parser.parse<File>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<File>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<File>(std::string("z") + kw));
@@ -768,7 +768,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "final" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Final>(kw));
+            ASSERT_FALSE(fe_parser.parse<Final>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Final>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Final>(std::string("z") + kw));
@@ -876,7 +876,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "forward", "fwd" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Forward>(kw));
+            ASSERT_FALSE(fe_parser.parse<Forward>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Forward>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Forward>(std::string("z") + kw));
@@ -903,7 +903,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "from" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<From>(kw));
+            ASSERT_FALSE(fe_parser.parse<From>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<From>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<From>(std::string("z") + kw));
@@ -930,7 +930,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "hidden" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Hidden>(kw));
+            ASSERT_FALSE(fe_parser.parse<Hidden>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Hidden>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Hidden>(std::string("z") + kw));
@@ -984,7 +984,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "implements" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Implements>(kw));
+            ASSERT_FALSE(fe_parser.parse<Implements>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Implements>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Implements>(std::string("z") + kw));
@@ -1011,7 +1011,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "import" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Import>(kw));
+            ASSERT_FALSE(fe_parser.parse<Import>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Import>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Import>(std::string("z") + kw));
@@ -1065,7 +1065,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "is" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Is>(kw));
+            ASSERT_FALSE(fe_parser.parse<Is>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Is>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Is>(std::string("z") + kw));
@@ -1092,7 +1092,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "lambda" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Lambda>(kw));
+            ASSERT_FALSE(fe_parser.parse<Lambda>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Lambda>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Lambda>(std::string("z") + kw));
@@ -1146,7 +1146,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "local" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Local>(kw));
+            ASSERT_FALSE(fe_parser.parse<Local>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Local>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Local>(std::string("z") + kw));
@@ -1444,7 +1444,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "property" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Property>(kw));
+            ASSERT_FALSE(fe_parser.parse<Property>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Property>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Property>(std::string("z") + kw));
@@ -1525,7 +1525,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "raise" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Raise>(kw));
+            ASSERT_FALSE(fe_parser.parse<Raise>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Raise>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Raise>(std::string("z") + kw));
@@ -1579,7 +1579,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "require" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Require>(kw));
+            ASSERT_FALSE(fe_parser.parse<Require>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Require>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Require>(std::string("z") + kw));
@@ -1660,7 +1660,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "static" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Static>(kw));
+            ASSERT_FALSE(fe_parser.parse<Static>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Static>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Static>(std::string("z") + kw));
@@ -1795,7 +1795,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "type" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Type>(kw));
+            ASSERT_FALSE(fe_parser.parse<Type>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Type>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Type>(std::string("z") + kw));
@@ -1876,7 +1876,7 @@ namespace keywords_rules
         const std::vector<std::string> expected_keywords{ "volatile" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Volatile>(kw));
+            ASSERT_FALSE(fe_parser.parse<Volatile>(kw));  // Notice: at least one space char is mandatory after this keyword
 
             ASSERT_FALSE(fe_parser.parse<Volatile>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Volatile>(std::string("z") + kw));
