@@ -244,6 +244,154 @@ UnnamedFunc                 <- Unnamed  Type?  FunctionParamsDeclaration  Statem
 
 
 
+#####   KEYWORDS   ###################################################
+
+KeyWordEnd          <- !NameThenChar                                ## NOTE new: after full keyword detection none of these specified chars should appear
+
+ABSTRACT_KW         <- "abstract"           KeyWordEnd  Spacing+
+
+ALL_KW              <- "all"                KeyWordEnd  Spacing+
+
+AND_KW              <- "and"                KeyWordEnd  Spacing+
+
+ARRAY_KW            <- "array"              KeyWordEnd  Spacing*
+
+AS_KW               <- "as"                 KeyWordEnd  Spacing+
+
+ASSERT_KW           <- "assert"             KeyWordEnd  Spacing+
+
+BREAK_KW            <- "break"              KeyWordEnd  Spacing*
+
+BUT_KW              <- "but"                KeyWordEnd  Spacing+
+
+CASE_KW             <- "case"               KeyWordEnd  Spacing+
+
+CAST_KW             <- "cast"               KeyWordEnd  Spacing+
+
+CLASS_KW            <- "class"              KeyWordEnd  Spacing+
+
+CONST_KW            <- "const"              KeyWordEnd  Spacing+
+
+CONTINUE_KW         <- "continue"           KeyWordEnd  Spacing*
+
+DELETE_KW           <- "del"                KeyWordEnd  Spacing+
+
+ELLIPSIS_KW         <- "..."                KeyWordEnd  Spacing*
+
+ELSEIF_KW           <- ("elseif" / "elsif" / "elif")  KeyWordEnd  Spacing*
+
+ELSE_KW             <- "else"               KeyWordEnd  Spacing*
+
+EMBED_KW            <- "embed"              KeyWordEnd  Spacing+
+
+ENSURE_KW           <- "ensure"             KeyWordEnd  Spacing+
+
+ENUM_KW             <- "enum"               KeyWordEnd  Spacing*
+
+EXCEPT_KW           <- "except"             KeyWordEnd  Spacing*
+
+EXCEPTION_KW        <- "exception"          KeyWordEnd  Spacing*
+
+EXCLUDE_KW          <- "exclude"            KeyWordEnd  Spacing+
+   
+EXIT_KW             <- "exit"               KeyWordEnd  Spacing*
+
+FALSE_KW            <- ("false" / "False")  KeyWordEnd  Spacing*
+
+FILE_KW             <- "file"               KeyWordEnd  Spacing+
+
+FINAL_KW            <- "final"              KeyWordEnd  Spacing+
+
+FINALLY_KW          <- "finally"            KeyWordEnd  Spacing*
+
+FOR_KW              <- "for"                KeyWordEnd  Spacing*
+
+FOREVER_KW          <- "forever"            KeyWordEnd  Spacing*
+
+FORWARD_KW          <- ("forward" / "fwd")  KeyWordEnd  Spacing+                    ## CHK do we keep this alternative?
+
+FROM_KW             <- "from"               KeyWordEnd  Spacing+
+
+HIDDEN_KW           <- "hidden"             KeyWordEnd  Spacing+                    ## NOTE hidden could be removed and local retained in final specs
+
+IF_KW               <- "if"                 KeyWordEnd  Spacing*
+
+IMPLEMENTS_KW       <- "implements"         KeyWordEnd  Spacing+
+
+IMPORT_KW           <- "import"             KeyWordEnd  Spacing+
+
+IN_KW               <- "in"                 KeyWordEnd  Spacing*
+
+IS_KW               <- "is"                 KeyWordEnd  Spacing+
+
+LAMBDA_KW           <- "lambda"             KeyWordEnd  Spacing+
+
+LIST_KW             <- "list"               KeyWordEnd  Spacing*
+
+LOCAL_KW            <- "local"              KeyWordEnd  Spacing+                    ## NOTE hidden could be removed and local retained in final specs
+
+MAP_KW              <- "map"                KeyWordEnd  Spacing*
+
+ME_KW               <- "me"                 KeyWordEnd  Spacing*
+
+NONE_KW             <- ("none" / "None" / "NONE")   KeyWordEnd  Spacing*            ## NOTE should we keep 'NONE'? (to conform with TRUE_KW and FALSE_KW definitions)
+
+NOP_KW              <- ("nop" / "pass")     KeyWordEnd  Spacing*
+
+NOT_KW              <- "not"                KeyWordEnd  Spacing*
+
+OPERATOR_KW         <- "operator"           KeyWordEnd  Spacing*
+
+OR_KW               <- "or"                 KeyWordEnd  Spacing*
+
+OTHERWISE_KW        <- "otherwise"          KeyWordEnd  Spacing*
+
+PRINT_KW            <- "print"              KeyWordEnd  Spacing*
+
+PRIVATE_KW          <- "private"            KeyWordEnd  Spacing*
+
+PROPERTY_KW         <- "property"           KeyWordEnd  Spacing+
+
+PROTECTED_KW        <- "protected"          KeyWordEnd  Spacing*
+
+PUBLIC_KW           <- "public"             KeyWordEnd  Spacing*
+
+RAISE_KW            <- "raise"              KeyWordEnd  Spacing+
+
+REPEAT_KW           <- "repeat"             KeyWordEnd  Spacing*
+
+REQUIRE_KW          <- "require"            KeyWordEnd  Spacing+
+
+RETURN_KW           <- ("return" / "ret")   KeyWordEnd  Spacing*                    ## CHK do we keep this alternative?
+
+SET_KW              <- "set"                KeyWordEnd  Spacing*
+
+STATIC_KW           <- "static"             KeyWordEnd  Spacing+
+
+SWITCH_KW           <- "switch"             KeyWordEnd  Spacing*
+
+TODO_KW             <- "todo"               KeyWordEnd  Spacing*
+
+TRUE_KW             <- ("true" / "True")    KeyWordEnd  Spacing*
+
+TRY_KW              <- "try"                KeyWordEnd  Spacing*
+
+TYPE_KW             <- "type"               KeyWordEnd  Spacing+
+
+UNNAMED_KW          <- "unnamed"            KeyWordEnd  Spacing*
+
+UNTIL_KW            <- "until"              KeyWordEnd  Spacing*
+
+VOLATILE_KW         <- "volatile"           KeyWordEnd  Spacing+
+
+WHEN_KW             <- "when"               KeyWordEnd  Spacing*
+
+WHILE_KW            <- "while"              KeyWordEnd  Spacing*
+
+WITH_KW             <- "with"               KeyWordEnd  Spacing*
+
+
+
 #####   MISCELANEOUS   ###############################################
 
 AlphaChar               <- [A-Za-z]
@@ -253,18 +401,22 @@ AlphaNumChar            <- [0-9A-Za-z]
 
 
 EndOfLine               <- "\r\n"
-                         / '\n'             ## NOTE 0x0a
-                         / '\r'             ## NOTE 0x0d
+                         / '\n'                                         ## NOTE 0x0a
+                         / '\r'                                         ## NOTE 0x0d
 
 
-DottedName              <- Name  ('.'  Spacing*  Name)+                         ## NOTE new definition
+DottedName              <- Name  ('.'  Spacing*  Name)+                 ## NOTE new definition
 
 
-Identifier              <- DottedName                                           ## NOTE new definition, former one is now named 'Name'
-                         / Name                                                 ## NOTE another possible definition is <- Name ('.' Spacing* Name)*
+Identifier              <- DottedName                                   ## NOTE new definition, former one is now named 'Name'
+                         / Name                                         ## NOTE another possible definition is <- Name ('.' Spacing* Name)*
 
 
-Name                    <- (AlphaChar / '_')  (AlphaNumChar / '_')*  Spacing*   ## NOTE new, renaming former 'Identifier'
+NameFirstChar           <- AlphaChar / '_'                              ## NOTE new
+
+NameThenChar            <- AlphaNumChar / '_'                           ## NOTE new
+
+Name                    <- NameFirstChar  NameThenChar*  Spacing*       ## NOTE new, renaming former 'Identifier'
 
 
 SemiColon               <- ';'
@@ -272,10 +424,10 @@ SemiColon               <- ';'
 
 Spacing                 <- ' '
                          / '\t'
-                         / '\n'             ## NOTE 0x0a
-                         / '\r'             ## NOTE 0x0d
-                         / '\v'             ## NOTE 0x0b
-                         / '\f'             ## NOTE 0x0c
+                         / '\n'                                         ## NOTE 0x0a
+                         / '\r'                                         ## NOTE 0x0d
+                         / '\v'                                         ## NOTE 0x0b
+                         / '\f'                                         ## NOTE 0x0c
 
 
 
@@ -768,152 +920,6 @@ TemplateDefs        <- '<'  TemplateSubDef  (',' TempalteSubDef)*  '>'
 
 TempalteSubDef      <- Identifier
                      / CONST_KW  ScalarTypeOrIdentifier  Identifier  ('=' Expression)?
-
-
-
-#####   KEYWORDS   ###################################################
-
-ABSTRACT_KW         <- "abstract"           Spacing+
-
-ALL_KW              <- "all"                Spacing+
-
-AND_KW              <- "and"                Spacing+
-
-ARRAY_KW            <- "array"              Spacing*
-
-AS_KW               <- "as"                 Spacing+
-
-ASSERT_KW           <- "assert"             Spacing+
-
-BREAK_KW            <- "break"              Spacing*
-
-BUT_KW              <- "but"                Spacing+
-
-CASE_KW             <- "case"               Spacing+
-
-CAST_KW             <- "cast"               Spacing+
-
-CLASS_KW            <- "class"              Spacing+
-
-CONST_KW            <- "const"              Spacing+
-
-CONTINUE_KW         <- "continue"           Spacing*
-
-DELETE_KW           <- "del"                Spacing+
-
-ELLIPSIS_KW         <- "..."                Spacing*
-
-ELSEIF_KW           <- ("elseif" / "elsif" / "elif")  Spacing*
-
-ELSE_KW             <- "else"               Spacing*
-
-EMBED_KW            <- "embed"              Spacing+
-
-ENSURE_KW           <- "ensure"             Spacing+
-
-ENUM_KW             <- "enum"               Spacing*
-
-EXCEPT_KW           <- "except"             Spacing*
-
-EXCEPTION_KW        <- "exception"          Spacing*
-
-EXCLUDE_KW          <- "exclude"            Spacing+
-   
-EXIT_KW             <- "exit"               Spacing*
-
-FALSE_KW            <- ("false" / "False")  Spacing*
-
-FILE_KW             <- "file"               Spacing+
-
-FINAL_KW            <- "final"              Spacing+
-
-FINALLY_KW          <- "finally"            Spacing*
-
-FOR_KW              <- "for"                Spacing*
-
-FOREVER_KW          <- "forever"            Spacing*
-
-FORWARD_KW          <- ("forward" / "fwd")  Spacing+                    ## CHK do we keep this alternative?
-
-FROM_KW             <- "from"               Spacing+
-
-HIDDEN_KW           <- "hidden"             Spacing+                   ## NOTE hidden could be removed and local retained in final specs
-
-IF_KW               <- "if"                 Spacing*
-
-IMPLEMENTS_KW       <- "implements"         Spacing+
-
-IMPORT_KW           <- "import"             Spacing+
-
-IN_KW               <- "in"                 Spacing*
-
-IS_KW               <- "is"                 Spacing+
-
-LAMBDA_KW           <- "lambda"             Spacing+
-
-LIST_KW             <- "list"               Spacing*
-
-LOCAL_KW            <- "local"              Spacing+                   ## NOTE hidden could be removed and local retained in final specs
-
-MAP_KW              <- "map"                Spacing*
-
-ME_KW               <- "me"                 Spacing*
-
-NONE_KW             <- ("none" / "None" / "NONE")   Spacing*
-
-NOP_KW              <- ("nop" / "pass")     Spacing*
-
-NOT_KW              <- "not"                Spacing*
-
-OPERATOR_KW         <- "operator"           Spacing*
-
-OR_KW               <- "or"                 Spacing*
-
-OTHERWISE_KW        <- "otherwise"          Spacing*
-
-PRINT_KW            <- "print"              Spacing*
-
-PRIVATE_KW          <- "private"            Spacing*
-
-PROPERTY_KW         <- "property"           Spacing+
-
-PROTECTED_KW        <- "protected"          Spacing*
-
-PUBLIC_KW           <- "public"             Spacing*
-
-RAISE_KW            <- "raise"              Spacing+
-
-REPEAT_KW           <- "repeat"             Spacing*
-
-REQUIRE_KW          <- "require"            Spacing+
-
-RETURN_KW           <- ("return" / "ret")   Spacing*                    ## CHK do we keep this alternative?
-
-SET_KW              <- "set"                Spacing*
-
-STATIC_KW           <- "static"             Spacing+
-
-SWITCH_KW           <- "switch"             Spacing*
-
-TODO_KW             <- "todo"               Spacing*
-
-TRUE_KW             <- ("true" / "True")    Spacing*
-
-TRY_KW              <- "try"                Spacing*
-
-TYPE_KW             <- "type"               Spacing+
-
-UNNAMED_KW          <- "unnamed"            Spacing*
-
-UNTIL_KW            <- "until"              Spacing*
-
-VOLATILE_KW         <- "volatile"           Spacing+
-
-WHEN_KW             <- "when"               Spacing*
-
-WHILE_KW            <- "while"              Spacing*
-
-WITH_KW             <- "with"               Spacing*
 
 
 

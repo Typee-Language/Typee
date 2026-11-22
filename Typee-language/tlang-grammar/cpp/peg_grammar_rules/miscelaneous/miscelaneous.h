@@ -44,6 +44,9 @@ namespace tlang_rules
     using  EndOfLine = pegtl::cr_lf_crlf;
     struct Identifier;
     struct Name;
+    struct NameFirstChar;
+    struct NameThenChar;
+    struct SemiColon;
     using  Spacing = pegtl::space;
     struct Spacing0;
     struct Spacing1;
@@ -51,10 +54,10 @@ namespace tlang_rules
 
 
     //===========================================================================
-    struct AlphaChar : pegtl::ranges<'A', 'Z', 'a', 'z'> {};
+    struct AlphaChar : pegtl::ranges<'a', 'z', 'A', 'Z'> {};
 
 
-    struct AlphaNumChar : pegtl::ranges<'0', '9', 'A', 'Z', 'a', 'z'> {};
+    struct AlphaNumChar : pegtl::ranges<'a', 'z', '0', '9', 'A', 'Z'> {};
 
 
     struct Dot : pegtl::one<'.'> {};
@@ -85,6 +88,16 @@ namespace tlang_rules
                       Spacing0
                   > {};
     */
+
+
+    struct NameFirstChar : pegtl::sor<AlphaChar, pegtl::one<'_'>> {};
+
+
+    struct NameNextChar : pegtl::sor<AlphaNumChar, pegtl::one<'_'>> {};
+
+
+    struct SemiColon : pegtl::one<';'> {};
+
 
     struct Spacing0 : pegtl::star<Spacing> {};
 

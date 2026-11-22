@@ -329,6 +329,32 @@ namespace miscelaneous_rules
     }
 
 
+    //=====   NameFirstChar   =================================
+    TEST_F(MiscelaneousFixtureTest, TestNameFirstCharRule)
+    {
+        for (const char c : MiscelaneousFixtureTest::ascii_chars) {
+            std::string test_code{ c };
+            ASSERT_EQ(fe_parser.parse<NameFirstChar>(test_code), static_cast<bool>(std::isalpha(c)) || c == '_');
+
+            ASSERT_FALSE(fe_parser.parse<NameFirstChar>(""))
+                << "end-of-file character finally is a first identifier character?!?";
+        }
+    }
+
+
+    //=====   NameNextChar   ==================================
+    TEST_F(MiscelaneousFixtureTest, TestNameNextCharRule)
+    {
+        for (const char c : MiscelaneousFixtureTest::ascii_chars) {
+            std::string test_code{ c };
+            ASSERT_EQ(fe_parser.parse<NameNextChar>(test_code), static_cast<bool>(std::isalnum(c)) || c == '_');
+
+            ASSERT_FALSE(fe_parser.parse<NameNextChar>(""))
+                << "end-of-file character finally is a first identifier character?!?";
+        }
+    }
+
+
     //=====   SemiColon   =====================================
     TEST_F(MiscelaneousFixtureTest, TestSemiColon)
     {
