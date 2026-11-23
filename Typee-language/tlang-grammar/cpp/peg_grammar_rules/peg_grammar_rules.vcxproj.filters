@@ -18,6 +18,9 @@
     <ClInclude Include="miscelaneous\miscelaneous.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="types\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="keywords\keywords.h">

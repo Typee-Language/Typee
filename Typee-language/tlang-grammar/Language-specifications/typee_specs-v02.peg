@@ -155,8 +155,8 @@ CompTest            <- AndTest  (OR_KW  AndTest)                        ## NOTE 
 
 #####   EXPRESSIONS   ################################################
 
-Expression             <- Comparison                                        ## NOTE was previously specified as 'Condition' (error?)
-                        / UnnamedFunction
+Expression             <- Comparison       Spacing*                         ## NOTE was previously specified as 'Condition' (error?)
+                        / UnnamedFunction  Spacing*
 
 
 IndexingExpression      <- Expression                                       ## NOTE indexing expressions must be integer
@@ -383,6 +383,8 @@ TYPE_KW             <- "type"               KeyWordEnd  Spacing+
 UNNAMED_KW          <- "unnamed"            KeyWordEnd  Spacing*
 
 UNTIL_KW            <- "until"              KeyWordEnd  Spacing*
+
+VECTOR_KW           <- "vector"             KeyWordEnd  Spacing*
 
 VOLATILE_KW         <- "volatile"           KeyWordEnd  Spacing+
 
@@ -927,13 +929,12 @@ TempalteSubDef      <- Identifier
 
 #####   TYPES   #################################################
 
-Type                        <- CONST_KW? TemplatedType
-                             / CONST_KW? SimpleType
-                             / NONE_KW
+Type                        <- CONST_KW? (TemplatedType / SimpleType>  Spacing*
+                             / NONE_KW  Spacing*
 
 
 SimpleType                  <-  AutoType
-                             / '('  Spacing*  TypesList  ')'  Spacing*
+                             / '('  Spacing*  TypesList  ')'
                              / ContainerType
                              / ENUM_KW
                              / FileType
@@ -948,7 +949,7 @@ NotConstType                <- TemplatedType
 TemplatedType               <- Identifier  ('<' Spacing* TypesAndExprsList Spacing* '>')?  FixedDimensions?
 
 
-AutoType                    <- AUTOTYPE_KW  (IN_KW Spacing* '(' Spacing* TypesList ')' Spacing*)?
+AutoType                    <- AUTOTYPE_KW  (IN_KW Spacing* '(' Spacing* TypesList ')')?
 
 
 ContainerType               <- ArrayType
@@ -961,51 +962,55 @@ ContainerType               <- ArrayType
 FileType                    <-  FILE_KW  ContainedType
 
 
-FixedDimensions             <- ( '[' Spacing* (IntegerNumber / Identifier) Spacing* ']' Spacing* )+
+FixedDimension              <- '['  Spacing*  Expression  Spacing*  ']'  Spacing*   ## NOTE expression must get integer value
+
+FixedDimensions             <- FixedDimension+
 
 
-GenericContainerType        <- "_container_"
+GenericContainerType        <- "_container_"    KeyWordEnd  Spacing*
 
 
-GenericScalarType           <- "_float_"
-                             / "_int_"
-                             / "_numeric_"
-                             / "_scalar_"
-                             / "_str_"
-                             / "_uint_"
+GenericScalarType           <- "_complex_"      KeyWordEnd  Spacing*
+                             / "_float_"        KeyWordEnd  Spacing*
+                             / "_int_"          KeyWordEnd  Spacing*
+                             / "_numeric_"      KeyWordEnd  Spacing*
+                             / "_scalar_"       KeyWordEnd  Spacing*
+                             / "_str_"          KeyWordEnd  Spacing*
+                             / "_uint_"         KeyWordEnd  Spacing*
 
 
-ScalarType                  <- "bigint"
-                             / "bool"
-                             / "char16"
-                             / "char"
-                             / "complex"
-                             / "float32"
-                             / "float64"
-                             / "float128"
-                             / "int8"
-                             / "int16"
-                             / "int64"
-                             / "int128"
-                             / "slice"
-                             / "uint8"
-                             / "uint16"
-                             / "uint32"
-                             / "uint64"
-                             / "uint128"
-                             / "bigint"
+ScalarType                  <- "bigint"         KeyWordEnd  Spacing*
+                             / "bool"           KeyWordEnd  Spacing*
+                             / "char16"         KeyWordEnd  Spacing*
+                             / "char"           KeyWordEnd  Spacing*
+                             / "complex32"      KeyWordEnd  Spacing*
+                             / "complex64"      KeyWordEnd  Spacing*
+                             / "complex128"     KeyWordEnd  Spacing*
+                             / "float32"        KeyWordEnd  Spacing*
+                             / "float64"        KeyWordEnd  Spacing*
+                             / "float128"       KeyWordEnd  Spacing*
+                             / "int8"           KeyWordEnd  Spacing*
+                             / "int16"          KeyWordEnd  Spacing*
+                             / "int32"          KeyWordEnd  Spacing*
+                             / "int64"          KeyWordEnd  Spacing*
+                             / "int128"         KeyWordEnd  Spacing*
+                             / "slice"          KeyWordEnd  Spacing*
+                             / "uint8"          KeyWordEnd  Spacing*
+                             / "uint16"         KeyWordEnd  Spacing*
+                             / "uint32"         KeyWordEnd  Spacing*
+                             / "uint64"         KeyWordEnd  Spacing*
+                             / "uint128"        KeyWordEnd  Spacing*
                              / StringType
 
 ScalarTypeOrIdentifier      <- ScalarType                   ## NOTE added, was missing in previous version of grammar specs
                              / Identifier
 
 
-StringType                  <- "str16"
-                             / "str"
+StringType                  <- "str16"          KeyWordEnd  Spacing*
+                             / "str"            KeyWordEnd  Spacing*
 
 
-TypeCasting                 <- '('  ScalarType  ')'  Spacing*
-                             / '('  Identifier  ')'  Spacing*       ## NOTE identifier must be an alias to a scalar type
+TypeCasting                 <- '('  (ScalarType / Identifier)  ')'  Spacing*    ## NOTE identifier must be an alias to a scalar type
                              
 
 TypesAndExprsList           <- (Expression / Type)  Spacing*  (',' Spacing* (Expression / Type) Spacing*)*
@@ -1022,11 +1027,13 @@ MapType                     <- MAP_KW  MapContainedTypes
 
 SetType                     <- SET_KW  ContainedType?
 
+VectorType                  <- VECTOR_KW  '<'  Spacing*  Type  Spacing*  '>'  Spacing*  FixedDimension
+
 
 ContainedType               <- '<'  Spacing*  Type  Spacing*  '>'  Spacing*
 
 
-MapContainedType            <- '<'  Spacing*  Type  Spacing*  ','  Spacing*  Type  Spacing*  '>'
+MapContainedTypes           <- '<'  Spacing*  Type  Spacing*  ','  Spacing*  Type  Spacing*  '>'
 
 
 

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="miscelaneous\miscelaneous.h" />
+    <ClInclude Include="types\types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="keywords\keywords.h" />
