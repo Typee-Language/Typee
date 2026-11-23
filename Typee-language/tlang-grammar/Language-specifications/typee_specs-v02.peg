@@ -260,6 +260,8 @@ AS_KW               <- "as"                 KeyWordEnd  Spacing+
 
 ASSERT_KW           <- "assert"             KeyWordEnd  Spacing+
 
+AUTOTYPE_KW         <- "?"                              Spacing+
+
 BREAK_KW            <- "break"              KeyWordEnd  Spacing*
 
 BUT_KW              <- "but"                KeyWordEnd  Spacing+
@@ -278,9 +280,9 @@ DELETE_KW           <- "del"                KeyWordEnd  Spacing+
 
 ELLIPSIS_KW         <- "..."                KeyWordEnd  Spacing*
 
-ELSEIF_KW           <- ("elseif" / "elsif" / "elif")  KeyWordEnd  Spacing*
-
 ELSE_KW             <- "else"               KeyWordEnd  Spacing*
+
+ELSEIF_KW           <- ("elseif" / "elsif" / "elif")  KeyWordEnd  Spacing*
 
 EMBED_KW            <- "embed"              KeyWordEnd  Spacing+
 
@@ -370,7 +372,7 @@ STATIC_KW           <- "static"             KeyWordEnd  Spacing+
 
 SWITCH_KW           <- "switch"             KeyWordEnd  Spacing*
 
-TODO_KW             <- "todo"               KeyWordEnd  Spacing*
+TODO_KW             <- ("todo", "TODO")     KeyWordEnd  Spacing+
 
 TRUE_KW             <- ("true" / "True")    KeyWordEnd  Spacing*
 
@@ -946,7 +948,7 @@ NotConstType                <- TemplatedType
 TemplatedType               <- Identifier  ('<' Spacing* TypesAndExprsList Spacing* '>')?  FixedDimensions?
 
 
-AutoType                    <- '?'  Spacing+  (IN_KW Spacing* '(' Spacing* TypesList ')')?  Spacing*
+AutoType                    <- AUTOTYPE_KW  (IN_KW Spacing* '(' Spacing* TypesList ')' Spacing*)?
 
 
 ContainerType               <- ArrayType
