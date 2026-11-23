@@ -223,8 +223,8 @@ namespace tlang_rules
     struct Switch_kw : TAO_PEGTL_KEYWORD("switch") {};
     struct Switch : pegtl::seq<Switch_kw, pegtl::not_at<NameNextChar>, Spacing0> {};
 
-    struct Todo_kw : TAO_PEGTL_KEYWORD("todo") {};
-    struct Todo : pegtl::seq<Todo_kw, pegtl::not_at<NameNextChar>, Spacing0> {};
+    struct Todo_kw : pegtl::sor<TAO_PEGTL_KEYWORD("todo"), TAO_PEGTL_KEYWORD("TODO")> {};
+    struct Todo : pegtl::seq<Todo_kw, pegtl::not_at<NameNextChar>, Spacing1> {};
 
     struct True_kw : pegtl::sor<TAO_PEGTL_KEYWORD("true"), TAO_PEGTL_KEYWORD("True")> {};
     struct True : pegtl::seq<True_kw, pegtl::not_at<NameNextChar>, Spacing0> {};

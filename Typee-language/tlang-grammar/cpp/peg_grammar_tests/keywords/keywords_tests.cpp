@@ -1711,10 +1711,10 @@ namespace keywords_rules
     //=========================================================
     TEST_F(KeywordsFixtureTest, TestTodoRule)
     {
-        const std::vector<std::string> expected_keywords{ "todo" };
+        const std::vector<std::string> expected_keywords{ "todo", "TODO" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_TRUE(fe_parser.parse<Todo>(kw));
+            ASSERT_FALSE(fe_parser.parse<Todo>(kw));
 
             ASSERT_FALSE(fe_parser.parse<Todo>(std::string(" ") + kw));
             ASSERT_FALSE(fe_parser.parse<Todo>(std::string("z") + kw));
