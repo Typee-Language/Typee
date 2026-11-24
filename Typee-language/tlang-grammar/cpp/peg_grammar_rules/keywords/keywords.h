@@ -34,12 +34,12 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 #include "tao/pegtl/pegtl_string.hpp"
 #include "tao/pegtl/rules.hpp"
 
-#include "../miscelaneous/miscelaneous.h"
+#include "../tlang_grammar_rules.h"
 
 
 namespace tlang_rules
 {
-    //===========================================================================
+    //=======================================================================
     struct Abstract_kw : TAO_PEGTL_KEYWORD("abstract") {};
     struct Abstract : pegtl::seq<Abstract_kw, pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
 

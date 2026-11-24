@@ -35,14 +35,12 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 #include "tao/pegtl/pegtl_string.hpp"
 #include "tao/pegtl/rules.hpp"
 
-#include "../expressions/expressions.h"
-#include "../keywords/keywords.h"
-#include "../miscelaneous/miscelaneous.h"
+#include "../tlang_grammar_rules.h"
 
 
 namespace tlang_rules
 {
-    //===========================================================================
+    //=======================================================================
     struct ArrayType;
     struct AutoType;
     struct ContainedType;
@@ -69,7 +67,7 @@ namespace tlang_rules
     struct VectorType;
 
 
-    //===========================================================================
+    //=======================================================================
     struct ArrayType : pegtl::seq<Array, ContainedType> {};
 
 

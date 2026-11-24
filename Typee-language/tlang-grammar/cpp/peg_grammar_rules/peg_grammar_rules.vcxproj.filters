@@ -21,6 +21,12 @@
     <ClInclude Include="types\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="expressions\expressions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tlang_grammar_rules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="keywords\keywords.h">

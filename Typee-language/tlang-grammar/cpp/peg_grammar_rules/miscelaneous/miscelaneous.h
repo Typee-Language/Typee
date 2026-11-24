@@ -34,26 +34,12 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 #include "tao/pegtl/ascii.hpp"
 #include "tao/pegtl/rules.hpp"
 
+#include "../tlang_grammar_rules.h"
+
+
 namespace tlang_rules
 {
-    //===========================================================================
-    struct AlphaChar;
-    struct AlphaNumChar;
-    struct Dot;
-    struct DottedName;
-    using  EndOfLine = pegtl::cr_lf_crlf;
-    struct Identifier;
-    struct Name;
-    struct NameFirstChar;
-    struct NameThenChar;
-    struct SemiColon;
-    using  Spacing = pegtl::space;
-    struct Spacing0;
-    struct Spacing1;
-    struct Underscore;
-
-
-    //===========================================================================
+    //=======================================================================
     struct AlphaChar : pegtl::ranges<'a', 'z', 'A', 'Z'> {};
 
 
@@ -67,6 +53,9 @@ namespace tlang_rules
                             Name,
                             pegtl::plus<pegtl::seq<Dot, Spacing0, Name>>
                         > {};
+
+
+    struct EndOfLine : pegtl::cr_lf_crlf {};
 
 
     struct Identifier : pegtl::seq<  // Notice: the used rule definition here is the most effective one - see grammar specs doc
@@ -97,6 +86,9 @@ namespace tlang_rules
 
 
     struct SemiColon : pegtl::one<';'> {};
+
+
+    struct Spacing : pegtl::space {};
 
 
     struct Spacing0 : pegtl::star<Spacing> {};

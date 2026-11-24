@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="expressions\expressions.h" />
+    <ClInclude Include="tlang_grammar_rules.h" />
     <ClInclude Include="miscelaneous\miscelaneous.h" />
     <ClInclude Include="types\types.h" />
   </ItemGroup>
