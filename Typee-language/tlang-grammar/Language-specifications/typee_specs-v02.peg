@@ -260,7 +260,7 @@ AS_KW               <- "as"                 KeyWordEnd  Spacing+
 
 ASSERT_KW           <- "assert"             KeyWordEnd  Spacing+
 
-AUTOTYPE_KW         <- "?"                              Spacing+
+AUTO_KW             <- "?"                              Spacing+
 
 BREAK_KW            <- "break"              KeyWordEnd  Spacing*
 
@@ -949,7 +949,7 @@ NotConstType                <- TemplatedType
 TemplatedType               <- Identifier  ('<' Spacing* TypesAndExprsList Spacing* '>')?  FixedDimensions?
 
 
-AutoType                    <- AUTOTYPE_KW  (IN_KW Spacing* '(' Spacing* TypesList ')')?
+Auto                        <- AUTO_KW  (IN_KW Spacing* '(' Spacing* TypesList ')')?
 
 
 ContainerType               <- ArrayType

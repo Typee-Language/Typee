@@ -41,38 +41,11 @@ namespace pegtl = TAO_PEGTL_NAMESPACE;
 namespace tlang_rules
 {
     //=======================================================================
-    struct ArrayType;
-    struct AutoType;
-    struct ContainedType;
-    struct ContainerType;
-    struct FileType;
-    struct FixedDimension;
-    struct FixedDimensions;
-    struct GenericContainerType;
-    struct GenericScalarType;
-    struct ListType;
-    struct MapContainedTypes;
-    struct MapType;
-    struct NotConstType;
-    struct ScalarType;
-    struct ScalarTypeOrIdentifier;
-    struct SetType;
-    struct SimpleType;
-    struct StringType;
-    struct TemplatedType;
-    struct Type;
-    struct TypeCasting;
-    struct TypesAndExprsList;
-    struct TypesList;
-    struct VectorType;
-
-
-    //=======================================================================
     struct ArrayType : pegtl::seq<Array, ContainedType> {};
 
 
     struct AutoType : pegtl::seq<
-                          AutoType,
+                          Auto,
                           pegtl::opt<
                               pegtl::seq<
                                   In,

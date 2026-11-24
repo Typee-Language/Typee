@@ -57,8 +57,8 @@ namespace tlang_rules
     struct Assert_kw;
     struct Assert;
 
-    struct AutoType_kw;
-    struct AutoType;
+    struct Auto_kw;
+    struct Auto;
 
     struct Break_kw;
     struct Break;

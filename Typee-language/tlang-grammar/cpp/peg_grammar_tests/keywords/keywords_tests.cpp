@@ -223,30 +223,30 @@ namespace keywords_rules
 
 
     //=========================================================
-    TEST_F(KeywordsFixtureTest, TestAutoTypeRule)
+    TEST_F(KeywordsFixtureTest, TestAutoRule)
     {
         const std::vector<std::string> expected_keywords{ "?" };
 
         for (const auto& kw : expected_keywords) {
-            ASSERT_FALSE(fe_parser.parse<AutoType>(kw));
-            ASSERT_TRUE(fe_parser.parse<AutoType>(kw + ' '));
+            ASSERT_FALSE(fe_parser.parse<Auto>(kw));
+            ASSERT_TRUE(fe_parser.parse<Auto>(kw + ' '));
 
-            ASSERT_FALSE(fe_parser.parse<AutoType>(std::string(" ") + kw));
-            ASSERT_FALSE(fe_parser.parse<AutoType>(std::string(" ") + kw + " "));
-            ASSERT_FALSE(fe_parser.parse<AutoType>(std::string("z") + kw + " "));
+            ASSERT_FALSE(fe_parser.parse<Auto>(std::string(" ") + kw));
+            ASSERT_FALSE(fe_parser.parse<Auto>(std::string(" ") + kw + " "));
+            ASSERT_FALSE(fe_parser.parse<Auto>(std::string("z") + kw + " "));
 
             for (char c1 : spaces)
-                ASSERT_TRUE(fe_parser.parse<AutoType>(kw + c1));
+                ASSERT_TRUE(fe_parser.parse<Auto>(kw + c1));
 
             for (char c1 : spaces)
                 for (char c2 : spaces)
-                    ASSERT_TRUE(fe_parser.parse<AutoType>(kw + c1 + c2));
+                    ASSERT_TRUE(fe_parser.parse<Auto>(kw + c1 + c2));
 
-            ASSERT_FALSE(fe_parser.parse<AutoType>(kw + '0'))
+            ASSERT_FALSE(fe_parser.parse<Auto>(kw + '0'))
                 << std::format("tested word '{}' finally checks the 'break' keyword?!?", kw + '0');
         }
 
-        ASSERT_FALSE(fe_parser.parse<AutoType>(""))
+        ASSERT_FALSE(fe_parser.parse<Auto>(""))
             << "end-of-file character finally is understood as the 'break' keyword?!?";
     }
 

@@ -58,8 +58,8 @@ namespace tlang_rules
     struct Assert_kw : TAO_PEGTL_KEYWORD("assert") {};
     struct Assert : pegtl::seq<Assert_kw, pegtl::not_at<NameNextChar>, Spacing1> {};
 
-    struct AutoType_kw : TAO_PEGTL_KEYWORD("?") {};
-    struct AutoType : pegtl::seq<AutoType_kw, Spacing1> {};
+    struct Auto_kw : TAO_PEGTL_KEYWORD("?") {};
+    struct Auto : pegtl::seq<Auto_kw, Spacing1> {};
 
     struct Break_kw : TAO_PEGTL_KEYWORD("break") {};
     struct Break : pegtl::seq<Break_kw, pegtl::not_at<NameNextChar>, Spacing0> {};
