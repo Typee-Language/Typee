@@ -99,13 +99,13 @@ namespace tlang_rules
 
 
     struct GenericScalarType : pegtl::sor<
-        pegtl::seq<TAO_PEGTL_KEYWORD("_int_")    , pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
-        pegtl::seq<TAO_PEGTL_KEYWORD("_uint_")   , pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
-        pegtl::seq<TAO_PEGTL_KEYWORD("_float_")  , pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
-        pegtl::seq<TAO_PEGTL_KEYWORD("_numeric_"), pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
-        pegtl::seq<TAO_PEGTL_KEYWORD("_str_")    , pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
-        pegtl::seq<TAO_PEGTL_KEYWORD("_complex_"), pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
-        pegtl::seq<TAO_PEGTL_KEYWORD("_scalar_") , pegtl::not_at<NameNextChar>, pegtl::not_at<NameNextChar>, Spacing0> {};
+        pegtl::seq<TAO_PEGTL_KEYWORD("_int_")    , pegtl::not_at<NameNextChar>, Spacing0>,
+        pegtl::seq<TAO_PEGTL_KEYWORD("_uint_")   , pegtl::not_at<NameNextChar>, Spacing0>,
+        pegtl::seq<TAO_PEGTL_KEYWORD("_float_")  , pegtl::not_at<NameNextChar>, Spacing0>,
+        pegtl::seq<TAO_PEGTL_KEYWORD("_numeric_"), pegtl::not_at<NameNextChar>, Spacing0>,
+        pegtl::seq<TAO_PEGTL_KEYWORD("_str_")    , pegtl::not_at<NameNextChar>, Spacing0>,
+        pegtl::seq<TAO_PEGTL_KEYWORD("_complex_"), pegtl::not_at<NameNextChar>, Spacing0>,
+        pegtl::seq<TAO_PEGTL_KEYWORD("_scalar_") , pegtl::not_at<NameNextChar>, Spacing0>
     > {};
 
 
